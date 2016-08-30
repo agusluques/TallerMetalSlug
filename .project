@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>TallerMetalSlug</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>cola.cpp</name>
+			<type>1</type>
+			<location>/home/pablo/Descargas/cola.cpp</location>
+		</link>
+	</linkedResources>
+</projectDescription>
