@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
 		cout << "5) Recibir" << endl;
 		cout << "6) Lorem Ipsum" << endl;
 		cin >> opc;
+		cin.get();
 		switch(opc){
 				case 1:
 					cout << "Conectando al servidor..." << endl;

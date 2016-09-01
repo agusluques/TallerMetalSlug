@@ -1,4 +1,5 @@
 #include "socket.h"
+#include <pthread.h>
 
 mySocket :: mySocket(char* puerto, char* IP){
 
@@ -38,9 +39,10 @@ void mySocket::enviarMensaje(){
 		cout << "3) Pablo" << endl;
 		cout << "4) Matias" << endl;
 		cin >> opc;
+		cin.get();
 	} while ((opc < 1) || (opc > 4));
 
-	string mensaje ="";
+	/*string mensaje ="";
 	cout << "Escriba el mensaje: " << endl;
 	getline(cin, mensaje);
 
@@ -50,12 +52,13 @@ void mySocket::enviarMensaje(){
 	int tamanio = mensaje.length();
 	int acumulador = 0;
 	int bytesEnviados = 0;
-	bool errorSocket = false;
+	bool errorSocket = false;*/
 
 	char buffer[256];
 	bzero(buffer,256);
 	cout << "Escriba el mensaje: " << endl;
-	fgets(buffer,255,stdin);
+	cin.getline(buffer, 256);
+	//fgets(buffer,255,stdin);
 	int n;
 
 	n = write(sockfd,buffer,strlen(buffer));
