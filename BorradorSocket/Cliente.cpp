@@ -1,4 +1,4 @@
-#include "socket.h"
+#include "socket.hpp"
 
 void error(const char *msg)
 {
@@ -16,46 +16,55 @@ int main(int argc, char *argv[])
     }
 
 	mySocket mySocket(argv[2], argv[1]);
-
+	bool conectado = false;
 	int opc = 0;
 	do{
 		cout << "##### Menu #####" << endl;
-		cout << "1) Conectar" << endl;
-		cout << "2) Desconectar" << endl;
-		cout << "3) Salir" << endl;
-		cout << "4) Enviar" << endl;
-		cout << "5) Recibir" << endl;
-		cout << "6) Lorem Ipsum" << endl;
+		if (!conectado){
+			cout << "1) Conectar" << endl;
+		}
+		else{
+			cout << "1) Desconectar" << endl;
+			cout << "2) Salir" << endl;
+			cout << "3) Enviar" << endl;
+			cout << "4) Recibir" << endl;
+			cout << "5) Lorem Ipsum" << endl;
+		}
 		cin >> opc;
 		cin.get();
 		switch(opc){
 				case 1:
-					cout << "Conectando al servidor..." << endl;
-				    mySocket.conectar();
-				    cout << "Se ha conectado correctamente con el servidor" << endl;
-				    break;
+					switch(conectado){
+						case false:
+							cout << "Conectando al servidor..." << endl;
+						    mySocket.conectar();
+						    cout << "Se ha conectado correctamente con el servidor" << endl;
+						    conectado = true;
+						    break;
+
+						case true:
+							cout << "Desconectando del serrvidor..." << endl;
+							//Implementar el desconectar
+							break;	
+					}	
+					break;					
 
 				case 2:
-					cout << "Desconectando del serrvidor..." << endl;
-					//Implementar el desconectar
-					break;
-
-				case 3:
 					cout << "Cerrando el programa..." << endl;
 					return 0;
 					break;
 
-				case 4:
+				case 3:
 					cout << "Enviando mensajes..." << endl;
 				    mySocket.enviarMensaje(); //corregir
 				    break;
 
-				case 5:
+				case 4:
 					cout << "Recibiendo Datos..." << endl;
 					//Falta implementar
 					break;
 
-				case 6:
+				case 5:
 					cout<< "Lorem Ipsum..." << endl;
 					//Falta implementar
 					break;
@@ -64,7 +73,7 @@ int main(int argc, char *argv[])
 					cout << "Opcion incorrecta. Intente de nuevo" << endl;
 					break;
 			}
-	} while (opc != 3);
+	} while (opc != 2);
 
 
 

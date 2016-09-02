@@ -1,4 +1,4 @@
-#include "socket.h"
+#include "socket.hpp"
 #include <pthread.h>
 
 mySocket :: mySocket(char* puerto, char* IP){

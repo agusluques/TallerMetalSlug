@@ -1,16 +1,7 @@
-/* A simple server in the internet domain using TCP
-   The port number is passed as an argument
-   This version runs forever, forking off a separate
-   process for each connection
-*/
-#include <stdio.h>
 #include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <string>
 #include <pthread.h>
 #include <iostream>
 #define TAM_MAX 8192
