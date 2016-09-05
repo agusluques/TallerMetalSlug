@@ -66,12 +66,12 @@ int main(int argc, char *argv[])
 	servidor.bindear();
 	servidor.escuchar();
 
+	servidor.aceptarClientes();
+
 	pthread_t threadControl;
 	pthread_create(&threadControl, NULL, escuchar_clientes, (void*)&servidor);
 
-	//servidor.aceptarClientes();
-
-	bool abierto = true;
+	/*bool abierto = true;
 	while(abierto){
 		sleep(10);
 		char opc;
@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 			abierto = false;
 		}
 
-	}
+	}*/
 
 	servidor.cerrar();
 

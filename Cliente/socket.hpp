@@ -26,9 +26,10 @@ class mySocket{
 
 	public:
 		mySocket(char* puerto, char* IP);
-		void conectar();
+		bool autenticar();
+		bool conectar();
+		void desconectar();
 		void enviarMensaje();
-		void enviarMensaje(string mensaje);
 		void enviarMensaje(int usuario, char* mensaje, int tamanio);
 		void cerrar();
 		~mySocket();

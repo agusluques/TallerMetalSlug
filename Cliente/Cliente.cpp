@@ -8,8 +8,8 @@ void loremIpsum(int frecEnvio, int cantMax, mySocket* cliente){
 		cout<< "Ingrese en nombre del archivo de texto a utilizar" << endl;
 		cin >> archivo;
 		cout << "NOMBRE DEL ARCHIVO: " << archivo << endl;
-		arch.open(archivo.c_str());
-		//arch.open("/home/franco/workspace/Cliente/src/lorem.txt");
+		//arch.open(archivo.c_str());
+		arch.open("lorem.txt");
 		if(arch.is_open()){
 			error = false;
 		}
@@ -54,11 +54,11 @@ void loremIpsum(int frecEnvio, int cantMax, mySocket* cliente){
 int main(int argc, char *argv[])
 {
 
-    if (argc < 3) {
-    	cout << "Falta proveer datos al programa" << endl;
-    	cout << "Modo de uso: ./Cliente hostname/IP puerto" << endl;
-       exit(0);
-    }
+	if (argc < 3) {
+		cout << "Falta proveer datos al programa" << endl;
+		cout << "Modo de uso: ./Cliente hostname/IP puerto" << endl;
+		exit(0);
+	}
 
 	mySocket Cliente(argv[2], argv[1]);
 	bool conectado = false;
@@ -78,54 +78,54 @@ int main(int argc, char *argv[])
 		cin >> opc;
 		cin.get();
 		switch(opc){
-				case 1:
-					switch(conectado){
-						case false:
-							cout << "Conectando al servidor..." << endl;
-						    Cliente.conectar();
-						    cout << "Se ha conectado correctamente con el servidor" << endl;
-						    conectado = true;
-						    break;
+		case 1:
+			switch(conectado){
+			case false:
+				cout << "Conectando al servidor..." << endl;
+				conectado = Cliente.conectar();
 
-						case true:
-							cout << "Desconectando del serrvidor..." << endl;
-							Cliente.enviarMensaje("/salir");
-							Cliente.cerrar();
-							conectado = false;
-							break;	
-					}	
-					break;					
+				break;
 
-				case 0:
-					cout << "Cerrando el programa..." << endl;
-					return 0;
-					break;
-
-				case 2:
-					cout << "Enviando mensajes..." << endl;
-				    Cliente.enviarMensaje();
-				    break;
-
-				case 3:
-					cout << "Recibiendo Datos..." << endl;
-					//Falta implementar
-					break;
-
-				case 4:
-					cout<< "Lorem Ipsum..." << endl;
-					int frecEnvio, cantMax;
-					cout << "Ingrese la frecuencua de envío de mensajes (En segundos)" << endl;
-					cin >> frecEnvio;
-					cout << "Ingrese la cantMax de mensajes a enviar" << endl;
-					cin >> cantMax;
-					cout << "Frec. envio: " << frecEnvio << endl;
-					cout << "Cant. Max " << cantMax << endl;
-					loremIpsum(frecEnvio, cantMax, &Cliente);
-					break;
-
-				default:
-					cout << "Opcion incorrecta. Intente de nuevo" << endl;
-					break;
+			case true:
+				cout << "Desconectando del serrvidor..." << endl;
+				//Cliente.enviarMensaje("/salir");
+				Cliente.desconectar();
+				Cliente.cerrar();
+				conectado = false;
+				break;
 			}
+			break;
+
+			case 0:
+				cout << "Cerrando el programa..." << endl;
+				return 0;
+				break;
+
+			case 2:
+				cout << "Enviando mensajes..." << endl;
+				Cliente.enviarMensaje();
+				break;
+
+			case 3:
+				cout << "Recibiendo Datos..." << endl;
+				//Falta implementar
+				break;
+
+			case 4:
+				cout<< "Lorem Ipsum..." << endl;
+				int frecEnvio, cantMax;
+				cout << "Ingrese la frecuencua de envío de mensajes (En segundos)" << endl;
+				cin >> frecEnvio;
+				cout << "Ingrese la cantMax de mensajes a enviar" << endl;
+				cin >> cantMax;
+				cout << "Frec. envio: " << frecEnvio << endl;
+				cout << "Cant. Max " << cantMax << endl;
+				loremIpsum(frecEnvio, cantMax, &Cliente);
+				break;
+
+			default:
+				cout << "Opcion incorrecta. Intente de nuevo" << endl;
+				break;
+		}
 	} while (opc != 0);
 }
