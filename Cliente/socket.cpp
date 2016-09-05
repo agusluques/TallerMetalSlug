@@ -3,11 +3,14 @@
 #include <cstring>
 #include <string>
 
+char nombreDeUsuario[50];
+
 struct paquete{
 	int tipo; // tipo de estructura (autenticacion, mensajes)
 	char usuario[50];
 	char pass[50];
 	char mensaje[256];
+	char destinatario[50];
 };
 
 mySocket :: mySocket(char* puerto, char* IP){
@@ -40,6 +43,7 @@ bool mySocket::autenticar(){
 	paqueteAEnviar.tipo = 1; //ASUMO TIPO 1 A LA AUTENTICACION
 	cout << "Escriba su usuario: " << endl;
 	cin.getline(paqueteAEnviar.usuario, 50); /*50 para probar, cambiar*/
+	strcpy(nombreDeUsuario,paqueteAEnviar.usuario);
 	cout << "Escriba su contraseña: " << endl;
 	cin.getline(paqueteAEnviar.pass, 50);
 
@@ -76,7 +80,7 @@ void mySocket::desconectar(){
 	struct paquete paqueteRecibido;
 
 	//ENVIO MENSAJE
-	strcpy(paqueteAEnviar.usuario,"USUARIO ACTUAL"); //VER DE DONDE SACO EL NOMBRE DEL USUARIO ACTUAL
+	strcpy(paqueteAEnviar.usuario,nombreDeUsuario); 
 	paqueteAEnviar.tipo = 3;
 
 	memcpy(buffer, &paqueteAEnviar, sizeof(struct paquete));

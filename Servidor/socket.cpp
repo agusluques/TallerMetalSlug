@@ -3,13 +3,18 @@
 #include <map>
 #include <fstream>
 #include <ctime>
+#include <list>
+
 
 struct paquete{
 	int tipo; // tipo de estructura (autenticacion, mensajes)
 	char usuario[50];
 	char pass[50];
 	char mensaje[256];
+	char destinatario[50];
 };
+
+list<paquete> listaDeMensajes;
 
 void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 {
@@ -62,7 +67,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 		time_t now = time (0);
 		sTm = gmtime (&now);
-		strftime (buffTime, sizeof(buffTime), "%Y-%m-%d %H:%M:%S", sTm);
+		strftime (buffTime, sizeof(buffTime), "%Y-%m-%d %H:%M:%S ", sTm);
 
 		switch(paqueteRecibido.tipo){
 		case 1: //CASO AUTENTICACION
@@ -98,6 +103,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			break;
 		case 2: //CASO MENSAJES
+			// AGREGO EL PAQUETE ENTERO A LISTA DE MENSAJES
+			listaDeMensajes.push_back(paqueteRecibido);
+
 			//cout << "De: " << paqueteRecibido.usuario << endl; //llamar campo1, campo2
 			//cout << "Para: " << paqueteRecibido.pass << endl;  // lo hace mas general
 
