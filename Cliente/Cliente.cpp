@@ -8,8 +8,8 @@ void loremIpsum(int frecEnvio, int cantMax, mySocket* cliente){
 		cout<< "Ingrese en nombre del archivo de texto a utilizar" << endl;
 		cin >> archivo;
 		cout << "NOMBRE DEL ARCHIVO: " << archivo << endl;
-		//arch.open(archivo.c_str());
-		arch.open("lorem.txt");
+		arch.open(archivo.c_str());
+		//arch.open("lorem.txt");
 		if(arch.is_open()){
 			error = false;
 		}
@@ -23,6 +23,7 @@ void loremIpsum(int frecEnvio, int cantMax, mySocket* cliente){
 		tamanioRnd = 1 + rand() % (256);
 		char acumulador[tamanioRnd];
 		char c;
+		cout<<tamanioRnd;
 		for(i=0; i<tamanioRnd; i++){
 			c = arch.get();
 			if(c == EOF){
@@ -37,7 +38,7 @@ void loremIpsum(int frecEnvio, int cantMax, mySocket* cliente){
 			cout << acumulador[j];
 		}
 		cout << endl;
-		//cout << "Acumulador: " << acumulador << endl;
+		cout << "Acumulador: " << acumulador<< endl;
 
 		int usuarioRnd;
 		//variable = limite_inferior + rand() % (limite_superior +1 - limite_inferior) ;
@@ -79,20 +80,15 @@ int main(int argc, char *argv[])
 		cin.get();
 		switch(opc){
 		case 1:
-			switch(conectado){
-			case false:
+			if (!conectado){
 				cout << "Conectando al servidor..." << endl;
 				conectado = Cliente.conectar();
-
-				break;
-
-			case true:
-				cout << "Desconectando del serrvidor..." << endl;
+			} else {
+				cout << "Desconectando del servidor..." << endl;
 				//Cliente.enviarMensaje("/salir");
 				Cliente.desconectar();
 				Cliente.cerrar();
 				conectado = false;
-				break;
 			}
 			break;
 

@@ -165,7 +165,7 @@ void mySocket::enviarMensaje(int destinatario, char* mensaje, int tamanioMensaje
 	unsigned char buffer[sizeof(struct paquete)];
 	struct paquete paqueteAEnviar;
 	struct paquete paqueteRecibido;
-
+	
 	//ENVIO MENSAJE
 	strcpy(paqueteAEnviar.mensaje, mensaje);
 	//strcpy(paqueteAEnviar.pass, destinatario);

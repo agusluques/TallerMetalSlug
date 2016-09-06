@@ -15,6 +15,7 @@ struct paquete{
 };
 
 list<paquete> listaDeMensajes;
+pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
 
 void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 {
@@ -102,9 +103,16 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			}
 
 			break;
-		case 2: //CASO MENSAJES
-			// AGREGO EL PAQUETE ENTERO A LISTA DE MENSAJES
+		case 2: {//CASO MENSAJES
+			// LOCK EL MUTEX PARA AGREGAR EL PAQUETE ENTERO A LISTA DE MENSAJES
+			int a = pthread_mutex_trylock(&mutexLista);
+			if (a != 0) {
+				cout<<"Otro hilo usando la lista"<<endl;
+				}
+			//pthread_mutex_lock (&mutexLista);
+			sleep(30);
 			listaDeMensajes.push_back(paqueteRecibido);
+			pthread_mutex_unlock (&mutexLista);
 
 			//cout << "De: " << paqueteRecibido.usuario << endl; //llamar campo1, campo2
 			//cout << "Para: " << paqueteRecibido.pass << endl;  // lo hace mas general
@@ -126,7 +134,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				abierto = false;
 			}
 
-			break;
+			break;}
 		case 3: //CASO DESCONECTAR
 			abierto = false;
 			cout << paqueteRecibido.usuario << " cerro sesion" << endl;
