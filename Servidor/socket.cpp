@@ -19,6 +19,9 @@ char* archivoUsuarios;
 list<paquete> listaDeMensajes;
 pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
 
+void loggear(string usr, string mensaje);
+void loggear(string mensaje);
+
 void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 {
 	unsigned char buffer[sizeof(struct paquete)];
@@ -26,12 +29,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 	int newsockfd = (long)arg;
 	bool abierto = true;
 
-	ofstream archLog; //esta va en .hpp
-	archLog.open("log.txt", std::fstream::app);
 
 	//INSERTAR EN EL MAPA LOS USUARIOS DESDE UN CSV (*)
 	map<string,string> mapa;
-	ifstream file(archivoUsuarios); //aca va la ruta de argv
+	ifstream file(archivoUsuarios); 
 
 	while(!file.eof()) {
 		string usr;
@@ -56,21 +57,24 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		struct paquete paqueteAEnviar;
 		struct paquete paqueteRecibido;
 
-		char buffTime[20];
-		struct tm *sTm;
+		/*char buffTime[20];
+		struct tm *sTm;*/
 
 		//READ
 		bzero(buffer,sizeof(struct paquete));
 		n = read(newsockfd,buffer,sizeof(struct paquete));
-		if (n < 0) cout << "Error en la lectura" << endl;
+		if (n < 0){
+			cout << "Error en la lectura" << endl;
+			loggear( " Fallo la lectura del socket");
+		}
 
 		memcpy(&paqueteRecibido, buffer, sizeof(struct paquete));
 
 		map<string, string>::iterator it;
 
-		time_t now = time (0);
+		/*time_t now = time (0);
 		sTm = gmtime (&now);
-		strftime (buffTime, sizeof(buffTime), "%Y-%m-%d %H:%M:%S ", sTm);
+		strftime (buffTime, sizeof(buffTime), "%Y-%m-%d %H:%M:%S ", sTm);*/
 
 		switch(paqueteRecibido.tipo){
 		case 1: //CASO AUTENTICACION
@@ -81,17 +85,17 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					strcpy(paqueteAEnviar.mensaje,"Login Correcto");
 					paqueteAEnviar.tipo = true;
 					cout << paqueteRecibido.usuario << " inicio sesion correctamente" << endl;
-					archLog << buffTime << paqueteRecibido.usuario << " inicio sesion correctamente" << endl;
+					loggear( paqueteRecibido.usuario , " inicio sesion correctamente");
 
 				}else{
 					strcpy(paqueteAEnviar.mensaje,"Contraseña Incorrecta");
 					paqueteAEnviar.tipo = false;
-					archLog << buffTime << paqueteRecibido.usuario << " ingreso una contraseña incorrecta" << endl;
+					loggear( paqueteRecibido.usuario , " ingreso una contraseña incorrecta" );
 				}
 			}else{
 				strcpy(paqueteAEnviar.mensaje,"Usuario Incorrecto");
 				paqueteAEnviar.tipo = false;
-				archLog << buffTime << " Se ingreso un usuario incorrecto" << endl;
+				loggear( " Se ingreso un usuario incorrecto" );
 			}
 
 			//RESPONDO
@@ -100,6 +104,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			n = write(newsockfd,buffer, sizeof(struct paquete));
 			if (n < 0){
 				cout << "ERROR writing to socket" << endl;
+				loggear( " Fallo escritura en socket" );
 				close(newsockfd);
 				abierto = false;
 			}
@@ -124,7 +129,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			paqueteAEnviar.tipo = true;
 
 			cout << "Mensaje: " << paqueteRecibido.mensaje << endl;
-			archLog << buffTime << " Se envio un mensaje de: para: mensaje: " << paqueteRecibido.mensaje << endl;
+			loggear( " Se envio un mensaje de: para: mensaje: " , paqueteRecibido.mensaje );
 
 			//RESPONDO
 			bzero(buffer,sizeof(struct paquete));
@@ -132,6 +137,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			n = write(newsockfd,buffer, sizeof(struct paquete));
 			if (n < 0){
 				cout << "ERROR writing to socket" << endl;
+				loggear( " Fallo escritura en socket" );
 				close(newsockfd);
 				abierto = false;
 			}
@@ -140,7 +146,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		case 3: //CASO DESCONECTAR
 			abierto = false;
 			cout << paqueteRecibido.usuario << " cerro sesion" << endl;
-			archLog << buffTime << paqueteRecibido.usuario << " cerro sesion correctamente" << endl;
+			loggear(paqueteRecibido.usuario ," cerro sesion correctamente" );
 			//VER CUANDO SE CIERRA SESION FORZADAMENTE
 
 			strcpy(paqueteAEnviar.mensaje,"sesion cerrada correctamente");
@@ -152,6 +158,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			n = write(newsockfd,buffer, sizeof(struct paquete));
 			if (n < 0){
 				cout << "ERROR writing to socket" << endl;
+				loggear( " Fallo escritura en socket" );
 				close(newsockfd);
 				abierto = false;
 			}
@@ -160,7 +167,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 	}
 
-	archLog.close();
+	
 	//close(newsockfd);*/
 	return NULL;
 }
@@ -170,8 +177,9 @@ mySocketSrv :: mySocketSrv(char* archusr, char* puerto){
 	this->puerto = atoi(puerto);
 	cout << "PUERTO: " << this->puerto << endl;
 	this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (sockfd < 0)
+	if (sockfd < 0){
 		cout << "Error en la apertura del socket" << endl;
+	}
 	bzero((char *) &this->serv_addr, sizeof(this->serv_addr));
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_addr.s_addr = INADDR_ANY;
@@ -222,6 +230,38 @@ void mySocketSrv::enviarMensaje(string mensaje){
 
 void mySocketSrv::cerrar(){
 	close(this->sockfd);
+}
+
+void loggear(string mensaje){
+	ofstream archLog; //esta va en .hpp
+	archLog.open("log.txt", std::fstream::app);
+	char buffTime[20];
+	struct tm *sTm;
+
+	time_t now = time (0);
+	sTm = gmtime (&now);
+	strftime (buffTime, sizeof(buffTime), "%Y-%m-%d %H:%M:%S ", sTm);
+
+	archLog << buffTime << mensaje<< endl;
+
+	archLog.close();
+
+}
+
+void loggear(string usr, string mensaje){
+	ofstream archLog; //esta va en .hpp
+	archLog.open("log.txt", std::fstream::app);
+	char buffTime[20];
+	struct tm *sTm;
+
+	time_t now = time (0);
+	sTm = gmtime (&now);
+	strftime (buffTime, sizeof(buffTime), "%Y-%m-%d %H:%M:%S ", sTm);
+
+	archLog << buffTime << usr << mensaje<<endl;
+
+	archLog.close();
+
 }
 
 mySocketSrv::~mySocketSrv(){}

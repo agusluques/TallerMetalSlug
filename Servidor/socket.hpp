@@ -23,6 +23,8 @@ class mySocketSrv{
 
 	public:
 		mySocketSrv(char* archusr, char* puerto);
+		void loggear(string usr, string mensaje);
+		void loggear(string mensaje);
 		void bindear();
 		void escuchar();
 		void enviarMensaje(string mensaje);
