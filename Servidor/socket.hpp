@@ -22,7 +22,7 @@ class mySocketSrv{
 		struct sockaddr_in serv_addr;
 
 	public:
-		mySocketSrv(char* puerto);
+		mySocketSrv(char* archusr, char* puerto);
 		void bindear();
 		void escuchar();
 		void enviarMensaje(string mensaje);

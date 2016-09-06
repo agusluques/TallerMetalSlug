@@ -14,6 +14,8 @@ struct paquete{
 	char destinatario[50];
 };
 
+char* archivoUsuarios;
+
 list<paquete> listaDeMensajes;
 pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
 
@@ -29,7 +31,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 	//INSERTAR EN EL MAPA LOS USUARIOS DESDE UN CSV (*)
 	map<string,string> mapa;
-	ifstream file("usuarios.csv"); //aca va la ruta de argv
+	ifstream file(archivoUsuarios); //aca va la ruta de argv
 
 	while(!file.eof()) {
 		string usr;
@@ -163,8 +165,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 	return NULL;
 }
 
-mySocketSrv :: mySocketSrv(char* puerto){
-
+mySocketSrv :: mySocketSrv(char* archusr, char* puerto){
+	archivoUsuarios = archusr;
 	this->puerto = atoi(puerto);
 	cout << "PUERTO: " << this->puerto << endl;
 	this->sockfd = socket(AF_INET, SOCK_STREAM, 0);

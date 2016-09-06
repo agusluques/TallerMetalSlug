@@ -1,4 +1,5 @@
 #include "socket.hpp"
+#include <fstream>
 
 #define TAM_MAX 8192
 using namespace std;
@@ -56,13 +57,15 @@ void *escuchar_clientes(void *arg){
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2) {
+    ifstream infile(argv[1]);
+
+    if (argc < 3 || infile.good() == false) {
     	cout << "Falta proveer datos al programa" << endl;
-    	cout << "Modo de uso: ./Servidor puerto" << endl;
+    	cout << "Modo de uso: ./Servidor ArchivoUsuarios.csv puerto" << endl;
        exit(0);
     }
 
-	mySocketSrv servidor(argv[1]);
+	mySocketSrv servidor(argv[1], argv[2]);
 	servidor.bindear();
 	servidor.escuchar();
 
