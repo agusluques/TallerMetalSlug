@@ -4,7 +4,7 @@
 #include <fstream>
 #include <ctime>
 #include <list>
-
+#include <vector>
 
 struct paquete{
 	int tipo; // tipo de estructura (autenticacion, mensajes)
@@ -12,6 +12,7 @@ struct paquete{
 	char pass[50];
 	char mensaje[256];
 	char destinatario[50];
+	int numUsuario;
 };
 
 char* archivoUsuarios;
@@ -21,6 +22,7 @@ pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
 
 void loggear(string usr, string mensaje);
 void loggear(string mensaje);
+void loggear(string usr, string destinatario, string mensaje);
 
 void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 {
@@ -29,9 +31,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 	int newsockfd = (long)arg;
 	bool abierto = true;
 
-
 	//INSERTAR EN EL MAPA LOS USUARIOS DESDE UN CSV (*)
 	map<string,string> mapa;
+	vector<string> usuarios;
 	ifstream file(archivoUsuarios); 
 
 	while(!file.eof()) {
@@ -51,6 +53,15 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		cout << (*it).first << " : " << (*it).second << endl;
 	}
 	cout << endl;
+
+	//VOLCAR USUARIOS DEL MAPA AL VECTOR (*)
+	for(map<string,string>::iterator it = mapa.begin(); it != mapa.end(); ++it) {
+		usuarios.push_back(it->first);
+	}
+	//IMPRIMIR VECTOR
+	for(vector<string>::iterator it = usuarios.begin(); it != usuarios.end(); ++it) {
+		cout << *it << endl;
+	}
 	//(*) ESTO SE HACE EN OTRO LADO
 
 	while (abierto){
@@ -117,7 +128,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				cout<<"Otro hilo usando la lista"<<endl;
 				}
 			//pthread_mutex_lock (&mutexLista);
-			sleep(30);
+			//sleep(30);
 			listaDeMensajes.push_back(paqueteRecibido);
 			pthread_mutex_unlock (&mutexLista);
 
@@ -128,8 +139,11 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			strcpy(paqueteAEnviar.mensaje,"Mensaje recibido con exito");
 			paqueteAEnviar.tipo = true;
 
+			cout << "Nuevo mensaje recibido" << endl;
+			cout << "De: " << paqueteRecibido.usuario << endl;
+			cout << "Para: " << paqueteRecibido.destinatario << endl;
 			cout << "Mensaje: " << paqueteRecibido.mensaje << endl;
-			loggear( " Se envio un mensaje de: para: mensaje: " , paqueteRecibido.mensaje );
+			loggear(paqueteRecibido.usuario, paqueteRecibido.destinatario, paqueteRecibido.mensaje);
 
 			//RESPONDO
 			bzero(buffer,sizeof(struct paquete));
@@ -151,6 +165,22 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			strcpy(paqueteAEnviar.mensaje,"sesion cerrada correctamente");
 			paqueteAEnviar.tipo = true;
+
+			//RESPONDO
+			bzero(buffer,sizeof(struct paquete));
+			memcpy(buffer, &paqueteAEnviar, sizeof(struct paquete));
+			n = write(newsockfd,buffer, sizeof(struct paquete));
+			if (n < 0){
+				cout << "ERROR writing to socket" << endl;
+				loggear( " Fallo escritura en socket" );
+				close(newsockfd);
+				abierto = false;
+			}
+
+			break;
+		case 4: //ENVIAR LOS USUARIOS DISPONIBLES
+			paqueteAEnviar.tipo = usuarios.size();
+			strcpy(paqueteAEnviar.usuario,usuarios[paqueteRecibido.numUsuario].c_str());
 
 			//RESPONDO
 			bzero(buffer,sizeof(struct paquete));
@@ -242,7 +272,7 @@ void loggear(string mensaje){
 	sTm = gmtime (&now);
 	strftime (buffTime, sizeof(buffTime), "%Y-%m-%d %H:%M:%S ", sTm);
 
-	archLog << buffTime << mensaje<< endl;
+	archLog << buffTime << mensaje << endl;
 
 	archLog.close();
 
@@ -256,9 +286,25 @@ void loggear(string usr, string mensaje){
 
 	time_t now = time (0);
 	sTm = gmtime (&now);
+	strftime (buffTime, sizeof(buffTime), "%Y-%m-%d %H:%M:%S", sTm);
+
+	archLog << buffTime << usr << mensaje << endl;
+
+	archLog.close();
+
+}
+
+void loggear(string usr, string destinatario, string mensaje){
+	ofstream archLog; //esta va en .hpp
+	archLog.open("log.txt", std::fstream::app);
+	char buffTime[20];
+	struct tm *sTm;
+
+	time_t now = time (0);
+	sTm = gmtime (&now);
 	strftime (buffTime, sizeof(buffTime), "%Y-%m-%d %H:%M:%S ", sTm);
 
-	archLog << buffTime << usr << mensaje<<endl;
+	archLog << buffTime << "Nuevo mensaje de: " << usr << " Para: " << destinatario << " Contenido: " << mensaje << endl;
 
 	archLog.close();
 

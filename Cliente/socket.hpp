@@ -13,6 +13,7 @@
 #include <iostream>
 #include <cstring>
 #include <fstream>
+#include <vector>
 
 using namespace std;
 
@@ -29,6 +30,8 @@ class mySocket{
 		bool autenticar();
 		bool conectar();
 		void desconectar();
+		void cargarUsuariosDisponibles(vector<string> *usuariosDisponibles);
+		void mostrarUsuariosDisponibles(vector<string> usuariosDisponibles);
 		void enviarMensaje();
 		void enviarMensaje(int usuario, char* mensaje, int tamanio);
 		void cerrar();

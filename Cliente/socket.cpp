@@ -11,7 +11,10 @@ struct paquete{
 	char pass[50];
 	char mensaje[256];
 	char destinatario[50];
+	int numUsuario;
 };
+
+char miUsuario[50];
 
 mySocket :: mySocket(char* puerto, char* IP){
 
@@ -44,6 +47,7 @@ bool mySocket::autenticar(){
 	cout << "Escriba su usuario: " << endl;
 	cin.getline(paqueteAEnviar.usuario, 50); /*50 para probar, cambiar*/
 	strcpy(nombreDeUsuario,paqueteAEnviar.usuario);
+	strcpy(miUsuario,nombreDeUsuario);
 	cout << "Escriba su contraseña: " << endl;
 	cin.getline(paqueteAEnviar.pass, 50);
 
@@ -99,29 +103,83 @@ void mySocket::desconectar(){
 	cout << "Mensaje del servidor: " << paqueteRecibido.mensaje << endl;
 }
 
+void mySocket::cargarUsuariosDisponibles(vector<string> *usuariosDisponibles){
+	unsigned char buffer[sizeof(struct paquete)];
+	struct paquete paqueteAEnviar;
+	struct paquete paqueteRecibido;
+	int cantUsuariosDisponibles;
+
+	//SOLICITO USUARIOS
+	paqueteAEnviar.tipo = 4; //ASUMO TIPO 4 A PEDIDO DE USUARIOS
+	paqueteAEnviar.numUsuario = 0; //pido primer usuario
+	memcpy(buffer, &paqueteAEnviar, sizeof(struct paquete));
+
+	int n = write(sockfd,buffer, sizeof(struct paquete));
+	if (n < 0) cout << "Error en la escritura" << endl;
+
+	//LEO RESPUESTA
+	bzero(buffer,sizeof(struct paquete));
+
+	n = read(sockfd,buffer,sizeof(struct paquete));
+	if (n < 0) cout << "Error en la lectura" << endl;
+
+	memcpy(&paqueteRecibido, buffer, sizeof(struct paquete));
+
+	//LLENADO DEL VECTOR DE USUARIOS DISPONIBLES
+	cantUsuariosDisponibles = paqueteRecibido.tipo;
+
+	for(int i = 0; i < cantUsuariosDisponibles; i++){
+		//SOLICITO USUARIOS
+		paqueteAEnviar.tipo = 4;
+		paqueteAEnviar.numUsuario = i; //*
+		bzero(buffer,sizeof(struct paquete));
+		memcpy(buffer, &paqueteAEnviar, sizeof(struct paquete));
+		int n = write(sockfd,buffer, sizeof(struct paquete));
+		if (n < 0) cout << "Error en la escritura" << endl;
+
+		//LEO USUARIOS
+		bzero(buffer,sizeof(struct paquete));
+		n = read(sockfd,buffer,sizeof(struct paquete));
+		if (n < 0) cout << "Error en la lectura" << endl;
+		memcpy(&paqueteRecibido, buffer, sizeof(struct paquete));
+
+		usuariosDisponibles->push_back(paqueteRecibido.usuario);
+	}
+}
+
+void mySocket::mostrarUsuariosDisponibles(vector<string> usuariosDisponibles){
+	//IMPRIMIR VECTOR
+	int i = 1;
+	for(vector<string>::iterator it = usuariosDisponibles.begin(); it != usuariosDisponibles.end(); ++it) {
+		cout << i << " " << *it << endl;
+		i ++;
+	}
+}
+
 void mySocket::enviarMensaje(){
 	unsigned char buffer[sizeof(struct paquete)];
 	struct paquete paqueteAEnviar;
 	struct paquete paqueteRecibido;
 
-	int opc;
-	do{
+	vector<string> usuariosDisponibles;
+
+	int numUsuario;
 		cout << "A continuacion se presenta el listado de usuarios existenes" << endl;
-		//Faltaria generar la lista de usuarios
+		cargarUsuariosDisponibles(&usuariosDisponibles);
+	do{
 		cout << "Ingrese el numero de usuario al que desea enviar el mensaje" << endl;
-		cout << "1) Franco" << endl;
-		cout << "2) Agustin" << endl;
-		cout << "3) Pablo" << endl;
-		cout << "4) Matias" << endl;
-		cin >> opc;
+		mostrarUsuariosDisponibles(usuariosDisponibles);
+		cin >> numUsuario;
 		cin.get();
-	} while ((opc < 1) || (opc > 4));
+	} while ((numUsuario < 1) || (numUsuario > usuariosDisponibles.size()));
 
 	//ENVIO MENSAJE
 	cout << "Escriba el mensaje: " << endl;
 	cin.getline(paqueteAEnviar.mensaje, 50);
 
 	paqueteAEnviar.tipo = 2; //ASUMO TIPO 2 A LOS MSJS
+	strcpy(paqueteAEnviar.destinatario,usuariosDisponibles[numUsuario-1].c_str());
+	strcpy(paqueteAEnviar.usuario,miUsuario);
 	memcpy(buffer, &paqueteAEnviar, sizeof(struct paquete));
 
 	int n = write(sockfd,buffer, sizeof(struct paquete));

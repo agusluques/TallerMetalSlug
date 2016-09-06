@@ -25,6 +25,7 @@ class mySocketSrv{
 		mySocketSrv(char* archusr, char* puerto);
 		void loggear(string usr, string mensaje);
 		void loggear(string mensaje);
+		void loggear(string usr, string destinatario, string mensaje);
 		void bindear();
 		void escuchar();
 		void enviarMensaje(string mensaje);
