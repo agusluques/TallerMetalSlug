@@ -32,6 +32,7 @@ class mySocket{
 		void desconectar();
 		void cargarUsuariosDisponibles(vector<string> *usuariosDisponibles);
 		void mostrarUsuariosDisponibles(vector<string> usuariosDisponibles);
+		int	 cantidadUsuariosDisponibles();
 		void enviarMensaje();
 		void enviarMensaje(int usuario, char* mensaje, int tamanio);
 		void cerrar();

@@ -103,15 +103,13 @@ void mySocket::desconectar(){
 	cout << "Mensaje del servidor: " << paqueteRecibido.mensaje << endl;
 }
 
-void mySocket::cargarUsuariosDisponibles(vector<string> *usuariosDisponibles){
+int mySocket::cantidadUsuariosDisponibles(){
 	unsigned char buffer[sizeof(struct paquete)];
 	struct paquete paqueteAEnviar;
 	struct paquete paqueteRecibido;
-	int cantUsuariosDisponibles;
 
-	//SOLICITO USUARIOS
-	paqueteAEnviar.tipo = 4; //ASUMO TIPO 4 A PEDIDO DE USUARIOS
-	paqueteAEnviar.numUsuario = 0; //pido primer usuario
+	//SOLICITO CANTIDAD DE USUARIOS
+	paqueteAEnviar.tipo = 5; //ASUMO TIPO 5 A PEDIDO DE CANTIDAD DE USUARIOS
 	memcpy(buffer, &paqueteAEnviar, sizeof(struct paquete));
 
 	int n = write(sockfd,buffer, sizeof(struct paquete));
@@ -125,12 +123,18 @@ void mySocket::cargarUsuariosDisponibles(vector<string> *usuariosDisponibles){
 
 	memcpy(&paqueteRecibido, buffer, sizeof(struct paquete));
 
-	//LLENADO DEL VECTOR DE USUARIOS DISPONIBLES
-	cantUsuariosDisponibles = paqueteRecibido.tipo;
+	return paqueteRecibido.tipo;
+}
+
+void mySocket::cargarUsuariosDisponibles(vector<string> *usuariosDisponibles){
+	unsigned char buffer[sizeof(struct paquete)];
+	struct paquete paqueteAEnviar;
+	struct paquete paqueteRecibido;
+	int cantUsuariosDisponibles = cantidadUsuariosDisponibles();
 
 	for(int i = 0; i < cantUsuariosDisponibles; i++){
 		//SOLICITO USUARIOS
-		paqueteAEnviar.tipo = 4;
+		paqueteAEnviar.tipo = 4; //ASUMO TIPO 4 A PEDIDO DE USUARIOS
 		paqueteAEnviar.numUsuario = i; //*
 		bzero(buffer,sizeof(struct paquete));
 		memcpy(buffer, &paqueteAEnviar, sizeof(struct paquete));
@@ -151,7 +155,7 @@ void mySocket::mostrarUsuariosDisponibles(vector<string> usuariosDisponibles){
 	//IMPRIMIR VECTOR
 	int i = 1;
 	for(vector<string>::iterator it = usuariosDisponibles.begin(); it != usuariosDisponibles.end(); ++it) {
-		cout << i << " " << *it << endl;
+		cout << i << ") " << *it << endl;
 		i ++;
 	}
 }
@@ -224,10 +228,15 @@ void mySocket::enviarMensaje(int destinatario, char* mensaje, int tamanioMensaje
 	struct paquete paqueteAEnviar;
 	struct paquete paqueteRecibido;
 	
+	vector<string> usuariosDisponibles;
+
+	cargarUsuariosDisponibles(&usuariosDisponibles);
+
 	//ENVIO MENSAJE
-	strcpy(paqueteAEnviar.mensaje, mensaje);
-	//strcpy(paqueteAEnviar.pass, destinatario);
 	paqueteAEnviar.tipo = 2;
+	strcpy(paqueteAEnviar.usuario,miUsuario);
+	strcpy(paqueteAEnviar.destinatario,usuariosDisponibles[destinatario].c_str());
+	strcpy(paqueteAEnviar.mensaje, mensaje);
 
 	memcpy(buffer, &paqueteAEnviar, sizeof(struct paquete));
 

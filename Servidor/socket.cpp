@@ -58,10 +58,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 	for(map<string,string>::iterator it = mapa.begin(); it != mapa.end(); ++it) {
 		usuarios.push_back(it->first);
 	}
-	//IMPRIMIR VECTOR
-	for(vector<string>::iterator it = usuarios.begin(); it != usuarios.end(); ++it) {
-		cout << *it << endl;
-	}
 	//(*) ESTO SE HACE EN OTRO LADO
 
 	while (abierto){
@@ -179,8 +175,22 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			break;
 		case 4: //ENVIAR LOS USUARIOS DISPONIBLES
-			paqueteAEnviar.tipo = usuarios.size();
 			strcpy(paqueteAEnviar.usuario,usuarios[paqueteRecibido.numUsuario].c_str());
+
+			//RESPONDO
+			bzero(buffer,sizeof(struct paquete));
+			memcpy(buffer, &paqueteAEnviar, sizeof(struct paquete));
+			n = write(newsockfd,buffer, sizeof(struct paquete));
+			if (n < 0){
+				cout << "ERROR writing to socket" << endl;
+				loggear( " Fallo escritura en socket" );
+				close(newsockfd);
+				abierto = false;
+			}
+
+			break;
+		case 5: //ENVIAR CANTIDAD USUARIOS DISPONIBLES
+			paqueteAEnviar.tipo = usuarios.size();
 
 			//RESPONDO
 			bzero(buffer,sizeof(struct paquete));
