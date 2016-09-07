@@ -22,9 +22,9 @@ mySocket :: mySocket(char* puerto, char* IP){
 	cout << "PUERTO: " << this->puerto << endl;
 	this->IP = IP;
 	cout << "IP: " << this->IP << endl;
-	this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (sockfd < 0)
-		cout << "Error en la apertura del socket" << endl;
+	//this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	//if (sockfd < 0)
+	//	cout << "Error en la apertura del socket" << endl;
 	this->server = gethostbyname(IP);
 	if (this->server == NULL) {
 		cout << "Error: No existe el host indicado" << endl;
@@ -70,6 +70,9 @@ bool mySocket::autenticar(){
 }
 
 bool mySocket::conectar(){
+	this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	if (sockfd < 0)
+		cout << "Error en la apertura del socket" << endl;	
 	if (connect(this->sockfd,(struct sockaddr *) &this->serv_addr,sizeof(this->serv_addr)) < 0){
 		cout << "Error intentado conectar" << endl;
 		exit(0);
