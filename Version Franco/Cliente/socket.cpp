@@ -17,6 +17,47 @@ bool mySocket::conexion(){
 	return (this->conectado);
 }
 
+bool mySocket::autenticar(){
+	//PEDIR LISTA DE USUARIOS!
+	char codigo = '1';
+	int usuario;
+	string linea;
+
+	enviarMensaje(&codigo, sizeof(char));
+
+	cout << "Escriba su usuario: 1,2,3..." << endl;
+	cin >> usuario;
+	cin.get();
+
+	enviarMensaje(&usuario, sizeof(int));
+
+	cout << "Escriba su contraseña: " << endl;
+	getline(cin, linea);
+	char* cstr = new char [linea.length()];
+	strcpy (cstr, linea.c_str());
+
+	int tamanioContrasenia = linea.length();
+
+	enviarMensaje(&tamanioContrasenia, sizeof(int));
+	enviarMensaje(cstr, tamanioContrasenia*(sizeof(char)));
+
+	delete[] cstr;
+	linea.clear();
+
+	//LEO RESPUESTA
+	int tam, respuesta;
+
+	recibirMensaje(&respuesta, sizeof(int));
+
+	recibirMensaje(&tam, sizeof(int));
+
+	char mensaje[tam];
+	recibirMensaje(&mensaje, sizeof(char)*tam);
+	cout << "Mensaje del servidor: " << mensaje << endl;
+
+	return respuesta;
+}
+
 void mySocket::conectar(){
 	this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0)
@@ -25,10 +66,10 @@ void mySocket::conectar(){
     	cout << "Error intentado conectar" << endl;
     	exit(0);
     }
-	this->conectado = true;
-	char codigo;
-	codigo = '1';
-	enviarMensaje(&codigo, sizeof(char));
+
+	pedirUsuarios();
+
+	this->conectado = autenticar();
 }
 
 void mySocket::enviarMensaje(){
@@ -36,11 +77,9 @@ void mySocket::enviarMensaje(){
 	do{
 		cout << "A continuacion se presenta el listado de usuarios existenes" << endl;
 		cout << "Ingrese el numero de usuario al que desea enviar el mensaje" << endl;
-		//Faltaria generar la lista de usuarios
-		cout << "1) Franco" << endl;
-		cout << "2) Agustin" << endl;
-		cout << "3) Pablo" << endl;
-		cout << "4) Matias" << endl;
+
+		pedirUsuarios();
+
 		cin >> opc;
 		cin.get();
 	} while ((opc < 1) || (opc > 4));
@@ -127,6 +166,51 @@ void mySocket::recibirMensaje(void* buffer, int tamanio){
 
 void mySocket::desconectar(){
 	this->conectado = false;
+}
+
+int mySocket::cantidadUsuariosDisponibles(){
+	char codigo;
+	codigo = '8';
+	enviarMensaje(&codigo, sizeof(char));
+
+	int cantidad;
+	recibirMensaje(&cantidad, sizeof(int));
+
+	return cantidad;
+}
+
+void mySocket::pedirUsuarios(){
+	vector<string> usuariosDisponibles;
+
+	int cantUsuariosDisponibles = cantidadUsuariosDisponibles();
+
+	cout << cantUsuariosDisponibles << endl;
+
+	for(int i = 0; i < cantUsuariosDisponibles; i++){
+		//SOLICITO USUARIOS
+		char codigo;
+		codigo = '7';
+		enviarMensaje(&codigo, sizeof(char));
+
+		int numeroUsuario = i;
+		enviarMensaje(&numeroUsuario, sizeof(int));
+
+		//LEO USUARIOS
+		int tamMensaje;
+		recibirMensaje(&tamMensaje, sizeof(int));
+
+		char mensaje[tamMensaje];
+		recibirMensaje(&mensaje, sizeof(char)*tamMensaje);
+
+		usuariosDisponibles.push_back(mensaje);
+	}
+
+	//IMPRIMIR VECTOR
+	int i = 1;
+	for(vector<string>::iterator it = usuariosDisponibles.begin(); it != usuariosDisponibles.end(); ++it) {
+		cout << i << ") " << *it << endl;
+		i++;
+	}
 }
 
 void mySocket::cerrar(){
