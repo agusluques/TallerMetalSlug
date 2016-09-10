@@ -1,5 +1,12 @@
 #include "socket.hpp"
 #include <pthread.h>
+#include <list>
+#include "mensajeClass.hpp"
+#include "usuarioClass.hpp"
+
+list<mensajeClass> listaDeMensajes;
+list<usuarioClass> listaDeUsuarios;
+pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
 
 void recibirMensaje(int sockfd, void* buffer, int tamanio){
 	int acumulador = 0, bytesRecibidos = 0;
@@ -25,6 +32,28 @@ void enviarMensaje(int sockfd, void* mensaje, int tamanioMensaje){
 		}
 		bytesEnviados += n;
 	}
+}
+
+void buscarNombreUsuario(char * nombreRetorno, int numeroUsuario){
+	list<usuarioClass>::iterator it = listaDeUsuarios.begin();
+	advance(it, numeroUsuario);
+	nombreRetorno = (*it).nombre;
+}
+
+void agregaraLista(int usrAutor, int usrDest, char * mensaje){
+	char * nombreAutor;
+	char * nombreDestino;
+	buscarNombreUsuario(nombreAutor, usrAutor);
+	buscarNombreUsuario(nombreDestino, usrDest);
+	mensajeClass mensajeObj(nombreAutor, nombreDestino, mensaje);
+
+	int a = pthread_mutex_trylock(&mutexLista);
+	if (a != 0) {
+		cout<<"Otro hilo usando la lista"<<endl;
+	}
+
+	listaDeMensajes.push_back(mensajeObj);
+	pthread_mutex_unlock (&mutexLista);
 }
 
 void *atender_cliente(void *arg) //FUNCION PROTOCOLO
@@ -64,9 +93,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
         			case '4':
         			{
         				cout << "Entro a /4 que es enviar" << endl;
-        				int tam, usr;
-        				recibirMensaje(newsockfd, &usr, sizeof(int));
-        				cout << "Numero de Usuario: " << usr << endl;
+        				int tam, usrDest;
+        				recibirMensaje(newsockfd, &usrDest, sizeof(int));
+        				cout << "Numero de usuario Destino: " << usrDest << endl;
         				recibirMensaje(newsockfd, &tam, sizeof(int));
         				cout << "Tamanio del mensaje: " << tam << endl;
         				//char mensaje[(tam+1)];
@@ -74,7 +103,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
         				recibirMensaje(newsockfd, &mensaje, sizeof(char)*tam);
         				//mensaje[tam] = '\n';
         				cout << "Mensaje: " << mensaje << endl;
-        				//agregaraLista(int usr, char* msj);
+        				agregaraLista(4, usrDest, mensaje);//OJOOO, el 4 deberia ser el 
+        												//numero del usuario que envia msje!!!!
         				break;
         			}
         			case '5':

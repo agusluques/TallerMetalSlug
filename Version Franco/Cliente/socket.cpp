@@ -82,12 +82,12 @@ void mySocket::enviarMensaje(){
 	delete[] cstr;*/
 }
 
-void mySocket::enviarMensaje(int usuario, char* mensaje, int tamanioMensaje){
+void mySocket::enviarMensaje(int destino, char* mensaje, int tamanioMensaje){
 
 	char codigo;
 	codigo = '4';
 	enviarMensaje(&codigo, sizeof(char));
-	enviarMensaje(&usuario, sizeof(int));
+	enviarMensaje(&destino, sizeof(int));
 	enviarMensaje(&tamanioMensaje, sizeof(int));
 	enviarMensaje(mensaje, tamanioMensaje*(sizeof(char)));
 }
