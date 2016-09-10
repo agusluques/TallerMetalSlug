@@ -4,9 +4,9 @@
 class mensajeClass
 {
 public:
-	char * usrAutor;
-	char * usrDestino;
-	char * mensaje;
+	char usrAutor[50];
+	char usrDestino[50];
+	char mensaje[256];
 	mensajeClass(char * autor, char * destino, char * mensajeEnviado);
 	//~mensajeClass();
 	

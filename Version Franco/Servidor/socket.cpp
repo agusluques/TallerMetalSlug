@@ -90,8 +90,8 @@ usuarioClass buscarUsuario(int numeroUsuario){
 }
 
 void agregaraLista(int usrAutor, int usrDest, char * mensaje){
-	char * nombreAutor;
-	char * nombreDestino;
+	char nombreAutor[50];
+	char nombreDestino[50];
 	buscarNombreUsuario(nombreAutor, usrAutor);
 	buscarNombreUsuario(nombreDestino, usrDest);
 	mensajeClass mensajeObj(nombreAutor, nombreDestino, mensaje);
