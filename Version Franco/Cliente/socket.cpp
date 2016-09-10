@@ -18,7 +18,6 @@ bool mySocket::conexion(){
 }
 
 bool mySocket::autenticar(){
-	//PEDIR LISTA DE USUARIOS!
 	char codigo = '1';
 	int usuario;
 	string linea;
@@ -82,7 +81,7 @@ void mySocket::enviarMensaje(){
 
 		cin >> opc;
 		cin.get();
-	} while ((opc < 1) || (opc > 4));
+	} while ((opc < 1) || (opc > cantidadUsuariosDisponibles()));
 
 	bool terminado = false;
 	//int tamAcumulado = 0;
