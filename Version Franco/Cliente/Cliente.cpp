@@ -99,24 +99,18 @@ int main(int argc, char *argv[])
 		cin.get();
 		switch(opc){
 				case '1':
-					switch(Cliente.conexion()){
-						case false:
-							cout << "Conectando al servidor..." << endl;
-						    Cliente.conectar();
-						    cout << "Se ha conectado correctamente con el servidor" << endl;
-						    conectado = true;
-							pthread_t threadControl;
-							pthread_create(&threadControl, NULL , controlarConexion, (void*)&Cliente);
-						    break;
-
-						case true:
-							if(!Cliente.conexion()){
-								break;
-							}
-							cout << "Desconectando del serrvidor..." << endl;
-							Cliente.cerrar();
-							Cliente.desconectar();
-							break;	
+					if(!Cliente.conexion()){
+						cout << "Conectando al servidor..." << endl;
+					    Cliente.conectar();
+					    cout << "Se ha conectado correctamente con el servidor" << endl;
+					    conectado = true;
+						pthread_t threadControl;
+						pthread_create(&threadControl, NULL , controlarConexion, (void*)&Cliente);
+					}else{
+						cout << "Desconectando del serrvidor..." << endl;
+						Cliente.cerrar();
+						Cliente.desconectar();
+							
 					}	
 					break;					
 
