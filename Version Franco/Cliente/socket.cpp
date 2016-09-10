@@ -1,7 +1,7 @@
 #include "socket.hpp"
 #include <pthread.h>
 
-mySocket :: mySocket(char* puerto, char* IP){
+mySocket::mySocket(char* puerto, char* IP){
 
 	this->puerto = atoi(puerto);
 	cout << "PUERTO: " << this->puerto << endl;
@@ -10,8 +10,12 @@ mySocket :: mySocket(char* puerto, char* IP){
 	server.sin_addr.s_addr = inet_addr(IP);
     server.sin_family = AF_INET;
     server.sin_port = htons(this->puerto);
+    this->conectado = false;
 }
 
+bool mySocket::conexion(){
+	return (this->conectado);
+}
 
 void mySocket::conectar(){
 	this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -21,6 +25,7 @@ void mySocket::conectar(){
     	cout << "Error intentado conectar" << endl;
     	exit(0);
     }
+	this->conectado = true;
 	char codigo;
 	codigo = '1';
 	enviarMensaje(&codigo, sizeof(char));
@@ -40,16 +45,17 @@ void mySocket::enviarMensaje(){
 		cin.get();
 	} while ((opc < 1) || (opc > 4));
 
-	/*
 	bool terminado = false;
 	//int tamAcumulado = 0;
 	//int cantEnters = 0;
 	string mensaje;
+	int linea;
 	cout << "Escriba su mensaje: " << endl;
 	while(!terminado){
 		getline(cin, mensaje);
 		//cin.get();
 		if(mensaje.length() != 0){
+			linea ++;
 			char* cstr = new char [mensaje.length()+1];
 			strcpy (cstr, mensaje.c_str());
 			enviarMensaje(opc, cstr, mensaje.length()+1);
@@ -57,15 +63,15 @@ void mySocket::enviarMensaje(){
 			delete[] cstr;
 			//cantEnters = 0;
 			cout << endl;
-			cout << "Presione enter para confirmar" << endl;
+			cout << "Linea " << linea << " enviada. Presione enter para continuar" << endl;
 			//cin.get();
 		} else {
 			terminado = true;
 		}
 	}
 	//terminado = false;
-	*/
 
+	/*
 	string mensaje;
 	cout << "Escriba el mensaje: " << endl;
 	getline(cin, mensaje);
@@ -73,7 +79,7 @@ void mySocket::enviarMensaje(){
 	//char* cstr = new char [mensaje.length()];
 	strcpy (cstr, mensaje.c_str());
 	enviarMensaje(opc, cstr, mensaje.length()+1);
-	delete[] cstr;
+	delete[] cstr;*/
 }
 
 void mySocket::enviarMensaje(int usuario, char* mensaje, int tamanioMensaje){
@@ -86,7 +92,7 @@ void mySocket::enviarMensaje(int usuario, char* mensaje, int tamanioMensaje){
 	enviarMensaje(mensaje, tamanioMensaje*(sizeof(char)));
 }
 
-void mySocket::enviarMensaje(void* mensaje, int tamanioMensaje){
+bool mySocket::enviarMensaje(void* mensaje, int tamanioMensaje){
 	int bytesEnviados = 0;
 	bool errorSocket = false;
 	while((bytesEnviados < tamanioMensaje) && (!errorSocket)){
@@ -96,6 +102,7 @@ void mySocket::enviarMensaje(void* mensaje, int tamanioMensaje){
 		}
 		bytesEnviados += n;
 	}
+	return errorSocket;
 }
 
 void mySocket::recibirMensaje(){
@@ -116,6 +123,10 @@ void mySocket::recibirMensaje(void* buffer, int tamanio){
 			acumulador += bytesRecibidos;
 		}
 	}
+}
+
+void mySocket::desconectar(){
+	this->conectado = false;
 }
 
 void mySocket::cerrar(){

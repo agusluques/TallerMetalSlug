@@ -50,6 +50,24 @@ void loremIpsum(int frecEnvio, int cantMax, mySocket* cliente){
 	arch.close();
 }
 
+void* controlarConexion(void *arg){
+
+    mySocket* cliente;
+    cliente = (mySocket*) arg;
+
+    while(cliente->conexion() == true){
+    	sleep(10);
+    	char codigo;
+    	codigo = '0';
+    	//cliente->enviarMensaje(&codigo, sizeof(char));
+    	if(cliente->enviarMensaje(&codigo, sizeof(char))){
+    		cliente->desconectar();
+    		cout << "Se perdio la conexion con el servidor" << endl;
+    	}
+    }
+	return NULL;
+}
+
 int main(int argc, char *argv[])
 {
 
@@ -62,9 +80,12 @@ int main(int argc, char *argv[])
 	mySocket Cliente(argv[2], argv[1]);
 	bool conectado = false;
 	char opc = '0';
+
+
+
 	do{
 		cout << "##### Menu #####" << endl;
-		if (!conectado){
+		if (!Cliente.conexion()){
 			cout << "1) Conectar" << endl;
 			cout << "0) Salir" << endl;
 		}
@@ -78,18 +99,23 @@ int main(int argc, char *argv[])
 		cin.get();
 		switch(opc){
 				case '1':
-					switch(conectado){
+					switch(Cliente.conexion()){
 						case false:
 							cout << "Conectando al servidor..." << endl;
 						    Cliente.conectar();
 						    cout << "Se ha conectado correctamente con el servidor" << endl;
 						    conectado = true;
+							pthread_t threadControl;
+							pthread_create(&threadControl, NULL , controlarConexion, (void*)&Cliente);
 						    break;
 
 						case true:
+							if(!Cliente.conexion()){
+								break;
+							}
 							cout << "Desconectando del serrvidor..." << endl;
 							Cliente.cerrar();
-							conectado = false;
+							Cliente.desconectar();
 							break;	
 					}	
 					break;					
@@ -100,12 +126,18 @@ int main(int argc, char *argv[])
 					break;
 
 				case '2':
+					if(!Cliente.conexion()){
+						break;
+					}
 					cout << "Enviando mensajes..." << endl;
 				    Cliente.enviarMensaje();
 				    break;
 
 				case '3':
 				{
+					if(!Cliente.conexion()){
+						break;
+					}
 					cout << "Recibiendo Datos..." << endl;
 					//Falta implementar
 					int tam;
@@ -121,6 +153,9 @@ int main(int argc, char *argv[])
 				}
 				case '4':
 				{
+					if(!Cliente.conexion()){
+						break;
+					}
 					cout<< "Lorem Ipsum..." << endl;
 					int frecEnvio, cantMax;
 					cout << "Ingrese la frecuencua de envío de mensajes (Mensajes/Segundo)" << endl;

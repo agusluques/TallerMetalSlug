@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 	servidor.escuchar();
 
 	pthread_t threadControl;
-	pthread_create(&threadControl, NULL, escuchar_clientes, (void*)&servidor);
+	pthread_create(&threadControl, NULL , escuchar_clientes, (void*)&servidor);
 
 	bool abierto = true;
 	while(abierto){

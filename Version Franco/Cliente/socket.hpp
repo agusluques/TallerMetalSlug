@@ -15,6 +15,7 @@
 #include <fstream>
 #include<arpa/inet.h>
 #include <vector>
+#include <pthread.h>
 
 using namespace std;
 
@@ -25,16 +26,19 @@ class mySocket{
 		struct sockaddr_in server;
 		//string address;
 		//struct hostent* server;
+		bool conectado;
 
 	public:
 		mySocket(char* puerto, char* IP);
 		void conectar();
 		void enviarMensaje();
 		void enviarMensaje(int usuario, char* mensaje, int tamanio);
-		void enviarMensaje(void* mensaje, int tamanioMensaje);
+		bool enviarMensaje(void* mensaje, int tamanioMensaje);
 		void recibirMensaje();
 		void recibirMensaje(void* buffer, int tamanio);
 		void cerrar();
+		void desconectar();
+		bool conexion();
 		~mySocket();
 };
 

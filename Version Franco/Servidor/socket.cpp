@@ -42,7 +42,12 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
     	switch(codigo){
 
-        			case '1':
+    				case '0':
+    					cout << "Entro a /0 que es para detectar la conexion" << endl;
+    					cout << "Si imprime esto esta conectado todavia" << endl;
+    					break;
+
+    				case '1':
         				cout << "Entro a /1 que es conectar" << endl;
         				//Enviar Lista
         				break;
@@ -88,7 +93,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
         		}
      }
     //close(newsockfd);
-    return NULL;
+    pthread_exit(NULL);
 }
 
 mySocketSrv :: mySocketSrv(char* puerto){
