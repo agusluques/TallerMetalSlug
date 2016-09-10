@@ -12,6 +12,7 @@ mySocket :: mySocket(char* puerto, char* IP){
     server.sin_port = htons(this->puerto);
 }
 
+
 void mySocket::conectar(){
 	this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0)
@@ -39,30 +40,39 @@ void mySocket::enviarMensaje(){
 		cin.get();
 	} while ((opc < 1) || (opc > 4));
 
-	/*char buffer[256];
-	bzero(buffer,256);
-	cout << "Escriba el mensaje: " << endl;
-	cin.getline(buffer, 256);*/
+	/*
+	bool terminado = false;
+	//int tamAcumulado = 0;
+	//int cantEnters = 0;
+	string mensaje;
+	cout << "Escriba su mensaje: " << endl;
+	while(!terminado){
+		getline(cin, mensaje);
+		//cin.get();
+		if(mensaje.length() != 0){
+			char* cstr = new char [mensaje.length()+1];
+			strcpy (cstr, mensaje.c_str());
+			enviarMensaje(opc, cstr, mensaje.length()+1);
+			//tamAcumulado += (mensaje.length()+1);
+			delete[] cstr;
+			//cantEnters = 0;
+			cout << endl;
+			cout << "Presione enter para confirmar" << endl;
+			//cin.get();
+		} else {
+			terminado = true;
+		}
+	}
+	//terminado = false;
+	*/
 
 	string mensaje;
 	cout << "Escriba el mensaje: " << endl;
 	getline(cin, mensaje);
-	//char* cstr = new char [mensaje.length()+1];
-	char* cstr = new char [mensaje.length()];
-	strcpy (cstr, mensaje.c_str());
-	enviarMensaje(opc, cstr, mensaje.length());
-	delete[] cstr;
-}
-
-void mySocket::enviarMensaje(string mensaje){
-
 	char* cstr = new char [mensaje.length()+1];
+	//char* cstr = new char [mensaje.length()];
 	strcpy (cstr, mensaje.c_str());
-
-
-	int n = write(sockfd,cstr,mensaje.length());
-	if (n < 0)
-		cout << "Error en la escritura" << endl;
+	enviarMensaje(opc, cstr, mensaje.length()+1);
 	delete[] cstr;
 }
 

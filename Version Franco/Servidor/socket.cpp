@@ -69,6 +69,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
         				recibirMensaje(newsockfd, &mensaje, sizeof(char)*tam);
         				//mensaje[tam] = '\n';
         				cout << "Mensaje: " << mensaje << endl;
+        				//agregaraLista(int usr, char* msj);
         				break;
         			}
         			case '5':

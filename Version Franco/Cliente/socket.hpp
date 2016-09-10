@@ -14,6 +14,7 @@
 #include <cstring>
 #include <fstream>
 #include<arpa/inet.h>
+#include <vector>
 
 using namespace std;
 
@@ -29,7 +30,6 @@ class mySocket{
 		mySocket(char* puerto, char* IP);
 		void conectar();
 		void enviarMensaje();
-		void enviarMensaje(string mensaje);
 		void enviarMensaje(int usuario, char* mensaje, int tamanio);
 		void enviarMensaje(void* mensaje, int tamanioMensaje);
 		void recibirMensaje();

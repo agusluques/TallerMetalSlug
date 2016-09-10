@@ -9,7 +9,6 @@ void loremIpsum(int frecEnvio, int cantMax, mySocket* cliente){
 		cin >> archivo;
 		cout << "NOMBRE DEL ARCHIVO: " << archivo << endl;
 		arch.open(archivo.c_str());
-		//arch.open("/home/franco/workspace/Cliente/src/lorem.txt");
 		if(arch.is_open()){
 			error = false;
 		}
@@ -20,12 +19,10 @@ void loremIpsum(int frecEnvio, int cantMax, mySocket* cliente){
 	tamanioRnd = 1 + rand() % (200);
 	cout << "Tamanio del mensaje: " << tamanioRnd << endl;
 	while (cantEnvios < cantMax){
-		//Enviar
 		int i;
-		//char acumulador[tamanioRnd - 1];
-		char acumulador[tamanioRnd];
+		char acumulador[tamanioRnd + 1];
 		char c;
-		for(i=0; i<(tamanioRnd /*-1*/); i++){
+		for(i=0; i<tamanioRnd; i++){
 			c = arch.get();
 			if(c == EOF){
 				arch.clear();
@@ -35,20 +32,15 @@ void loremIpsum(int frecEnvio, int cantMax, mySocket* cliente){
 				acumulador[i] = c;
 			}
 		}
-		//acumulador[tamanioRnd] = '\n';
+		acumulador[tamanioRnd] = '\0';
 
-		/*
-		for(int j = 0; j < tamanioRnd; j++){
-			cout << acumulador[j];
-		}
-		cout << endl;*/
 		cout << "Acumulador: " << acumulador << endl;
 
 		int usuarioRnd;
 		//variable = limite_inferior + rand() % (limite_superior +1 - limite_inferior) ;
 		usuarioRnd = 0 + rand() % (5);
 		cout << "Usuario: " << usuarioRnd << endl;
-		cliente->enviarMensaje(usuarioRnd, acumulador, tamanioRnd*(sizeof(char)));
+		cliente->enviarMensaje(usuarioRnd, acumulador, (tamanioRnd+1)*(sizeof(char)));
 		cantEnvios++;
 		usleep(1000000/frecEnvio);
 	}
