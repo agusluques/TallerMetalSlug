@@ -32,10 +32,10 @@ bool mySocket::autenticar(){
 
 	cout << "Escriba su contraseña: " << endl;
 	getline(cin, linea);
-	char* cstr = new char [linea.length()];
+	char* cstr = new char [linea.length() + 1];
 	strcpy (cstr, linea.c_str());
 
-	int tamanioContrasenia = linea.length();
+	int tamanioContrasenia = linea.length()+1;
 
 	enviarMensaje(&tamanioContrasenia, sizeof(int));
 	enviarMensaje(cstr, tamanioContrasenia*(sizeof(char)));
@@ -87,7 +87,7 @@ void mySocket::enviarMensaje(){
 	//int tamAcumulado = 0;
 	//int cantEnters = 0;
 	string mensaje;
-	int linea;
+	int linea = 0;
 	cout << "Escriba su mensaje: " << endl;
 	while(!terminado){
 		getline(cin, mensaje);
@@ -185,7 +185,7 @@ void mySocket::pedirUsuarios(){
 
 	cout << cantUsuariosDisponibles << endl;
 
-	for(int i = 0; i < cantUsuariosDisponibles; i++){
+	for(int i = 1; i < cantUsuariosDisponibles; i++){
 		//SOLICITO USUARIOS
 		char codigo;
 		codigo = '7';

@@ -5,9 +5,12 @@
 #include "mensajeClass.hpp"
 #include "usuarioClass.hpp"
 
+
 list<mensajeClass> listaDeMensajes;
 list<usuarioClass> listaDeUsuarios;
+//list<mensajeClass> listaDeMensajesAlCliente;
 pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutexListaRecibir = PTHREAD_MUTEX_INITIALIZER;
 
 void cargarUsuarios(){
 	//INSERTAR EN LA LISTA LOS USUARIOS DESDE UN CSV (*)
@@ -66,9 +69,9 @@ void enviarMensaje(int sockfd, void* mensaje, int tamanioMensaje){
 }
 
 void responderLogin(int newsockfd, int respuesta, string mensaje){
-	char* cstr = new char [mensaje.length()];
+	char* cstr = new char [mensaje.length()+1];
 	strcpy (cstr, mensaje.c_str());
-	int tamanioMensaje = mensaje.length();
+	int tamanioMensaje = mensaje.length()+1;
 
 	enviarMensaje(newsockfd, &respuesta, sizeof(int));
 	enviarMensaje(newsockfd, &tamanioMensaje, sizeof(int));
@@ -79,20 +82,20 @@ void responderLogin(int newsockfd, int respuesta, string mensaje){
 
 void buscarNombreUsuario(char *nombreRetorno, int numeroUsuario){
 	list<usuarioClass>::iterator it = listaDeUsuarios.begin();
-	advance(it, numeroUsuario);
+	advance(it, numeroUsuario-1);
 	strcpy(nombreRetorno,(*it).nombreUsuario().c_str());
 }
 
 usuarioClass buscarUsuario(int numeroUsuario){
 	list<usuarioClass>::iterator it = listaDeUsuarios.begin();
-	advance(it, numeroUsuario);
+	advance(it, numeroUsuario-1);
 	return (*it);
 }
 
-void agregaraLista(int usrAutor, int usrDest, char * mensaje){
+void agregaraLista(int numeroCliente, int usrDest, char * mensaje){
 	char nombreAutor[50];
 	char nombreDestino[50];
-	buscarNombreUsuario(nombreAutor, usrAutor);
+	buscarNombreUsuario(nombreAutor, numeroCliente);
 	buscarNombreUsuario(nombreDestino, usrDest);
 	mensajeClass mensajeObj(nombreAutor, nombreDestino, mensaje);
 
@@ -105,11 +108,13 @@ void agregaraLista(int usrAutor, int usrDest, char * mensaje){
 	pthread_mutex_unlock (&mutexLista);
 }
 
+
 void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 {
 	//char buffer[TAM_MAX];
 	int newsockfd = (long)arg;
 	bool abierto = true;
+	int numeroCliente;
 
 	while (abierto){
 
@@ -130,7 +135,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			int tamContrasenia, usr;
 			recibirMensaje(newsockfd, &usr, sizeof(int));
-			usr = usr - 1;
+			usr = usr;
 			char nombre[50];
 			buscarNombreUsuario(nombre,usr);
 			cout << "Nombre de Usuario: " << nombre << endl;
@@ -144,6 +149,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			//VALIDO DATOS ASUMO QUE EL USUARIO ES CORRECTO
 			usuarioClass usuario = buscarUsuario(usr);
+			numeroCliente = usr;
 
 			char mensaje[256];
 			bool respuesta = usuario.validarUsuario(contrasenia,mensaje);
@@ -174,14 +180,47 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			recibirMensaje(newsockfd, &mensaje, sizeof(char)*tam);
 			//mensaje[tam] = '\n';
 			cout << "Mensaje: " << mensaje << endl;
-			agregaraLista(4, usrDest, mensaje);//OJOOO, el 4 deberia ser el
-			//numero del usuario que envia msje!!!!
+			agregaraLista(numeroCliente, usrDest, mensaje);
 			break;
 		}
 		case '5':
+		{
 			cout << "Entro a /5 que es recibir" << endl;
-			//Mandarle los mensajes
+
+			for (list<mensajeClass>::iterator i = listaDeMensajes.begin(); i != listaDeMensajes.end(); ++i)
+			{
+				char nombre[50];
+				buscarNombreUsuario(nombre, numeroCliente);
+				if ((*i).nombreDestinatario().compare(nombre) == 0 ){
+					string mensaje = (*i).getMensaje();
+					char* cstr = new char [mensaje.length()+1];
+					strcpy (cstr, mensaje.c_str());
+					int tamanioMensaje = mensaje.length()+1;
+
+					string usuario = (*i).nombreAutor();
+					char* cstr2 = new char [usuario.length()+1];
+					strcpy (cstr2, usuario.c_str());
+					int tamanioUsuario = usuario.length()+1;
+
+					enviarMensaje(newsockfd, &tamanioMensaje, sizeof(int));
+					enviarMensaje(newsockfd, cstr, tamanioMensaje*(sizeof(char)));
+					enviarMensaje(newsockfd, &tamanioUsuario, sizeof(int));
+					enviarMensaje(newsockfd, cstr2, tamanioUsuario*(sizeof(char)));
+
+					delete[] cstr2;
+					delete[] cstr;
+
+					i = listaDeMensajes.erase(i);
+					i--;
+				}
+			}
+
+			int tamanioMensaje = 0;
+
+			enviarMensaje(newsockfd, &tamanioMensaje, sizeof(int));
+
 			break;
+		}
 
 		case '6':
 			cout << "Entro a /6 que es Lorem Ipsum" << endl;
@@ -237,8 +276,10 @@ mySocketSrv :: mySocketSrv(char* puerto){
 }
 
 void mySocketSrv::bindear(){
-	if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
+	if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0){
 		cout << "ERROR on binding" << endl;
+		exit(0);
+	}
 }
 
 void mySocketSrv::escuchar(){
@@ -280,5 +321,7 @@ void mySocketSrv::enviarMensaje(string mensaje){
 void mySocketSrv::cerrar(){
 	close(this->sockfd);
 }
+
+
 
 mySocketSrv::~mySocketSrv(){}

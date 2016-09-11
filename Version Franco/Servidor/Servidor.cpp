@@ -30,14 +30,14 @@ int main(int argc, char *argv[])
 
 	bool abierto = true;
 	while(abierto){
-		/*sleep(10);
+		sleep(10);
 		char opc;
 		system("clear");
 		cout << "Si desea cerrar el servidor ingrese 'S'" << endl;
 		cin >> opc;
 		if (opc == 'S'){
 			abierto = false;
-		}*/
+		}
 
 	}
 

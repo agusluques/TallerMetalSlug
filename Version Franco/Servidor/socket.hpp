@@ -20,8 +20,10 @@ class mySocketSrv{
 		int sockfd;
 		int puerto;
 		struct sockaddr_in serv_addr;
+		int numeroCliente;
 
 	public:
+		
 		mySocketSrv(char* puerto);
 		void bindear();
 		void escuchar();
@@ -29,6 +31,8 @@ class mySocketSrv{
 		//void recibirMensaje(void* buffer, int tamanio);
 		void aceptarClientes();
 		void cerrar();
+		void setNumeroCliente(int usr);
+		int getNumeroCliente();
 		~mySocketSrv();
 };
 

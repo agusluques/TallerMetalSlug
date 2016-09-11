@@ -104,8 +104,8 @@ int main(int argc, char *argv[])
 					    Cliente.conectar();
 					    cout << "Se ha conectado correctamente con el servidor" << endl;
 					    conectado = true;
-						pthread_t threadControl;
-						pthread_create(&threadControl, NULL , controlarConexion, (void*)&Cliente);
+						//pthread_t threadControl;
+						//pthread_create(&threadControl, NULL , controlarConexion, (void*)&Cliente);
 					}else{
 						cout << "Desconectando del serrvidor..." << endl;
 						Cliente.cerrar();
@@ -133,16 +133,22 @@ int main(int argc, char *argv[])
 						break;
 					}
 					cout << "Recibiendo Datos..." << endl;
-					//Falta implementar
-					int tam;
-					Cliente.recibirMensaje();
-					Cliente.recibirMensaje(&tam, sizeof(int));
-					cout << "Tamanio del mensaje: " << tam << endl;
-					//cha mensaje[(tam+1)];
+					int tam = 1;
 					char mensaje[tam];
-					Cliente.recibirMensaje(&mensaje, sizeof(char)*tam);
-					//mensaje[tam] = '\n';
-					cout << "Mensaje: " << mensaje << endl;
+					int tam2;
+					char usuario[tam2];
+					Cliente.recibirMensaje();
+					while(tam != 0){
+						Cliente.recibirMensaje(&tam, sizeof(int));
+						if (tam != 0){
+							cout << "Tamanio del mensaje: " << tam << endl;
+							Cliente.recibirMensaje(&mensaje, sizeof(char)*tam);
+							cout << "Mensaje: " << mensaje << endl;
+							Cliente.recibirMensaje(&tam2, sizeof(int));
+							Cliente.recibirMensaje(&usuario, sizeof(char)*tam2);
+							cout << "De: "<<usuario<<endl;
+						}
+					}
 					break;
 				}
 				case '4':
