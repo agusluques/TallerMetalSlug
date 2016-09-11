@@ -202,6 +202,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					strcpy (cstr2, usuario.c_str());
 					int tamanioUsuario = usuario.length()+1;
 
+					/*cout<<"tam mensaje; " <<tamanioMensaje<<endl;
+					cout<<"mensaje; "<< cstr<<endl;
+					cout<<"tam usuario; " <<tamanioUsuario<<endl;
+					cout<<"tusuario; "<< cstr2<<endl;*/
 					enviarMensaje(newsockfd, &tamanioMensaje, sizeof(int));
 					enviarMensaje(newsockfd, cstr, tamanioMensaje*(sizeof(char)));
 					enviarMensaje(newsockfd, &tamanioUsuario, sizeof(int));

@@ -134,17 +134,19 @@ int main(int argc, char *argv[])
 					}
 					cout << "Recibiendo Datos..." << endl;
 					int tam = 1;
-					char mensaje[tam];
+					
 					int tam2;
-					char usuario[tam2];
+					
 					Cliente.recibirMensaje();
 					while(tam != 0){
 						Cliente.recibirMensaje(&tam, sizeof(int));
+						char mensaje[tam];
 						if (tam != 0){
 							cout << "Tamanio del mensaje: " << tam << endl;
 							Cliente.recibirMensaje(&mensaje, sizeof(char)*tam);
 							cout << "Mensaje: " << mensaje << endl;
 							Cliente.recibirMensaje(&tam2, sizeof(int));
+							char usuario[tam2];
 							Cliente.recibirMensaje(&usuario, sizeof(char)*tam2);
 							cout << "De: "<<usuario<<endl;
 						}
