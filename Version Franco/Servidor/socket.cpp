@@ -135,7 +135,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			enviarMensaje(newsockfd, &tamLista, sizeof(int));
 			int tamContrasenia, usr;
 			recibirMensaje(newsockfd, &usr, sizeof(int));
-			usr = usr;
+			//usr = usr;
 			char nombre[50];
 			buscarNombreUsuario(nombre,usr);
 			cout << "Nombre de Usuario: " << nombre << endl;
@@ -149,10 +149,15 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			//VALIDO DATOS ASUMO QUE EL USUARIO ES CORRECTO
 			usuarioClass usuario = buscarUsuario(usr);
-			numeroCliente = usr;
 
 			char mensaje[256];
 			bool respuesta = usuario.validarUsuario(contrasenia,mensaje);
+
+			if (respuesta){
+				list<usuarioClass>::iterator it = listaDeUsuarios.begin();
+				advance(it, usr-1);
+				memcpy(&(*it),&usuario,sizeof(usuarioClass));
+			}
 
 			responderLogin(newsockfd,respuesta,mensaje);
 

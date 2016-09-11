@@ -10,6 +10,7 @@ public:
 	char pass[50];
 	bool conectado;
 	usuarioClass(char * usuario, char * contrasenia);
+	bool estaConectado();
 	bool validarUsuario(char *contrasenia, char *mensaje);
 	std::string nombreUsuario();
 	//~usuarioClass();

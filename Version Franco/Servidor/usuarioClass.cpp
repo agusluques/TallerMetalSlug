@@ -10,6 +10,10 @@ usuarioClass::usuarioClass(char *usuario, char *contrasenia){
 	this->conectado = false;
 }
 
+bool usuarioClass::estaConectado(){
+	return this->conectado;
+}
+
 bool usuarioClass::validarUsuario(char *contrasenia, char *mensaje) {
 	if (this->conectado){
 		strcpy(mensaje,"Usuario esta conectado");
