@@ -19,15 +19,19 @@ bool mySocket::conexion(){
 
 bool mySocket::autenticar(){
 	char codigo = '1';
+	char usrnum;
 	int usuario;
 	string linea;
 
 	enviarMensaje(&codigo, sizeof(char));
-
-	cout << "Escriba su usuario: 1,2,3..." << endl;
-	cin >> usuario;
-	cin.get();
-
+	int tamLista;
+	recibirMensaje(&tamLista, sizeof(int));
+	do {
+		cout << "Ingrese numero de usuario" << endl;
+		cin >> usrnum;
+		cin.get();
+	}while ((usrnum< 48) || (usrnum>(48+tamLista)));
+	usuario = atoi(&usrnum);
 	enviarMensaje(&usuario, sizeof(int));
 
 	cout << "Escriba su contraseña: " << endl;
@@ -185,7 +189,7 @@ void mySocket::pedirUsuarios(){
 
 	cout << cantUsuariosDisponibles << endl;
 
-	for(int i = 1; i < cantUsuariosDisponibles; i++){
+	for(int i = 1; i <= cantUsuariosDisponibles; i++){
 		//SOLICITO USUARIOS
 		char codigo;
 		codigo = '7';

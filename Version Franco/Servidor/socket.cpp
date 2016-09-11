@@ -8,13 +8,14 @@
 
 list<mensajeClass> listaDeMensajes;
 list<usuarioClass> listaDeUsuarios;
+char* archivoUsuarios;
 //list<mensajeClass> listaDeMensajesAlCliente;
 pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutexListaRecibir = PTHREAD_MUTEX_INITIALIZER;
 
 void cargarUsuarios(){
 	//INSERTAR EN LA LISTA LOS USUARIOS DESDE UN CSV (*)
-	ifstream file("usuarios.csv");
+	ifstream file(archivoUsuarios);
 
 	while(!file.eof()) {
 		string usr;
@@ -35,11 +36,9 @@ void cargarUsuarios(){
 
 		listaDeUsuarios.push_back(nuevoUsuario);
 	}
-	//IMPRIMIR LISTA (*)
-	for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); it++)
-		cout << it->nombreUsuario() << endl;
 
-	//(*) ESTO SE HACE EN OTRO LADO
+	file.close();
+
 }
 
 void recibirMensaje(int sockfd, void* buffer, int tamanio){
@@ -132,7 +131,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 		case '1': {
 			cout << "Entro a /1 que es conectar" << endl;
-
+			int tamLista = listaDeUsuarios.size();
+			enviarMensaje(newsockfd, &tamLista, sizeof(int));
 			int tamContrasenia, usr;
 			recibirMensaje(newsockfd, &usr, sizeof(int));
 			usr = usr;
@@ -264,8 +264,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 	pthread_exit(NULL);
 }
 
-mySocketSrv :: mySocketSrv(char* puerto){
-
+mySocketSrv :: mySocketSrv(char* archusr, char* puerto){
+	archivoUsuarios = archusr;
 	this->puerto = atoi(puerto);
 	cout << "PUERTO: " << this->puerto << endl;
 	this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
