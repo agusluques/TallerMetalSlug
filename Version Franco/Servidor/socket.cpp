@@ -6,12 +6,31 @@
 #include "usuarioClass.hpp"
 
 
+
+
 list<mensajeClass> listaDeMensajes;
 list<usuarioClass> listaDeUsuarios;
 char* archivoUsuarios;
 //list<mensajeClass> listaDeMensajesAlCliente;
 pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutexListaRecibir = PTHREAD_MUTEX_INITIALIZER;
+
+
+void loggear(string usr, string destinatario, string mensaje){
+	ofstream archLog; //esta va en .hpp
+	archLog.open("log.txt", std::fstream::app);
+	char buffTime[20];
+	struct tm *sTm;
+
+	time_t now = time (0);
+	sTm = gmtime (&now);
+	strftime (buffTime, sizeof(buffTime), "%Y-%m-%d %H:%M:%S ", sTm);
+
+	archLog << buffTime << " Nuevo mensaje de: " << usr << " Para: " << destinatario << " Contenido: " << mensaje << endl;
+
+	archLog.close();
+
+}
 
 void cargarUsuarios(){
 	//INSERTAR EN LA LISTA LOS USUARIOS DESDE UN CSV (*)
@@ -104,6 +123,7 @@ void agregaraLista(int numeroCliente, int usrDest, char * mensaje){
 	}
 
 	listaDeMensajes.push_back(mensajeObj);
+	loggear(mensajeObj.nombreAutor(),mensajeObj.nombreDestinatario(),mensajeObj.getMensaje());
 	pthread_mutex_unlock (&mutexLista);
 }
 
@@ -114,6 +134,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 	int newsockfd = (long)arg;
 	bool abierto = true;
 	int numeroCliente;
+	usuarioClass* userPoint= NULL;
 
 	while (abierto){
 
@@ -158,6 +179,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				list<usuarioClass>::iterator it = listaDeUsuarios.begin();
 				advance(it, usr-1);
 				memcpy(&(*it),&usuario,sizeof(usuarioClass));
+				userPoint=&usuario;
 			}
 
 			responderLogin(newsockfd,respuesta,mensaje);
@@ -165,8 +187,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 		case '2':
-			cout << "Entro a /2 que es descsonectar" << endl;
+			cout << "Entro a /2 que es desconectar" << endl;
 			abierto = false;
+			userPoint->desconectar();
 			break;
 
 		case '3':
@@ -187,12 +210,16 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			//mensaje[tam] = '\n';
 			cout << "Mensaje: " << mensaje << endl;
 
+
 			if(usrDest == listaDeUsuarios.size()+1){ //caso envio a todos
 				for(int i = 1; i <= listaDeUsuarios.size(); i++){
+				  if (i != numeroCliente){
 					agregaraLista(numeroCliente, i, mensaje);
+				  }
 				}
-			}else agregaraLista(numeroCliente, usrDest, mensaje);
-
+			}else
+				if (usrDest != numeroCliente)
+					agregaraLista(numeroCliente, usrDest, mensaje);
 			break;
 		}
 		case '5':
@@ -335,6 +362,8 @@ void mySocketSrv::enviarMensaje(string mensaje){
 	if (n < 0)
 		cout << "Error en la escritura" << endl;
 }
+
+
 
 void mySocketSrv::cerrar(){
 	close(this->sockfd);

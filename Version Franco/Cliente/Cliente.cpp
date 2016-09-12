@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
 					if(!Cliente.conexion()){
 						cout << "Conectando al servidor..." << endl;
 					    Cliente.conectar();
-					    cout << "Se ha conectado correctamente con el servidor" << endl;
+					    //cout << "Se ha conectado correctamente con el servidor" << endl;
 					    conectado = true;
 					}else{
 						cout << "Desconectando del serrvidor..." << endl;
