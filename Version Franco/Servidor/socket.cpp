@@ -149,6 +149,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			//VALIDO DATOS ASUMO QUE EL USUARIO ES CORRECTO
 			usuarioClass usuario = buscarUsuario(usr);
+			numeroCliente = usr;
 
 			char mensaje[256];
 			bool respuesta = usuario.validarUsuario(contrasenia,mensaje);
@@ -185,12 +186,20 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			recibirMensaje(newsockfd, &mensaje, sizeof(char)*tam);
 			//mensaje[tam] = '\n';
 			cout << "Mensaje: " << mensaje << endl;
-			agregaraLista(numeroCliente, usrDest, mensaje);
+
+			if(usrDest == listaDeUsuarios.size()+1){ //caso envio a todos
+				for(int i = 1; i <= listaDeUsuarios.size(); i++){
+					agregaraLista(numeroCliente, i, mensaje);
+				}
+			}else agregaraLista(numeroCliente, usrDest, mensaje);
+
 			break;
 		}
 		case '5':
 		{
 			cout << "Entro a /5 que es recibir" << endl;
+
+			cout << "cant msjs: " << listaDeMensajes.size() << endl;
 
 			for (list<mensajeClass>::iterator i = listaDeMensajes.begin(); i != listaDeMensajes.end(); ++i)
 			{

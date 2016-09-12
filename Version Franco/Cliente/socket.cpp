@@ -82,10 +82,11 @@ void mySocket::enviarMensaje(){
 		cout << "Ingrese el numero de usuario al que desea enviar el mensaje" << endl;
 
 		pedirUsuarios();
+		cout << cantidadUsuariosDisponibles()+1 << ") Todos" << endl;
 
 		cin >> opc;
 		cin.get();
-	} while ((opc < 1) || (opc > cantidadUsuariosDisponibles()));
+	} while ((opc < 1) || (opc > cantidadUsuariosDisponibles()+1));
 
 	bool terminado = false;
 	//int tamAcumulado = 0;
