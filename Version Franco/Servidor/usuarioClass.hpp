@@ -17,7 +17,7 @@ public:
 	bool validarUsuario(char *contrasenia, char *mensaje);
 	void loggear(std::string mensaje);
 	std::string nombreUsuario();
-	//~usuarioClass();
+	// ~usuarioClass();
 	
 };
 

@@ -38,7 +38,7 @@ bool usuarioClass::validarUsuario(char *contrasenia, char *mensaje) {
 		return true;
 	}else{
 		strcpy(mensaje,"Contraseña incorrecta");
-		// si se quisiera controlar cantidad de veces para ingresar la contraseña aqui iria otro log.
+		// si se quisiera controlar cantidad de veces para ingresar la contraseña aca iria otro log.
 		return false;
 	}
 }

@@ -151,7 +151,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 
 		case '1': {
-			cout << "Entro a /1 que es conectar" << endl;
+			cout << "Entro a /1 que es conectar " << endl;
 			int tamLista = listaDeUsuarios.size();
 			enviarMensaje(newsockfd, &tamLista, sizeof(int));
 			int tamContrasenia, usr;
