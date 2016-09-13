@@ -189,12 +189,17 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			break;
 		}
-		case '2':
+		case '2':{
 			//cout << "Entro a /2 que es desconectar" << endl;
 			abierto = false;
 			userPoint->desconectar();
-			break;
 
+			list<usuarioClass>::iterator it = listaDeUsuarios.begin();
+			advance(it, numeroCliente-1);
+			memcpy(&(*it),userPoint,sizeof(usuarioClass));
+
+			break;
+		}
 		case '3':
 			//cout << "Entro a /3 que es salir" << endl;
 			break;
