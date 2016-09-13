@@ -16,6 +16,8 @@ void loremIpsum(int frecEnvio, int cantMax, mySocket* cliente){
 	cout << "El archivo " << archivo << " fue abierto correctamente" << endl;
 	int cantEnvios = 0;
 	int tamanioRnd;
+	int usuarioRnd;
+	usuarioRnd = 0 + rand() % (5);
 	tamanioRnd = 1 + rand() % (200);
 	cout << "Tamanio del mensaje: " << tamanioRnd << endl;
 	while (cantEnvios < cantMax){
@@ -36,9 +38,6 @@ void loremIpsum(int frecEnvio, int cantMax, mySocket* cliente){
 
 		cout << "Acumulador: " << acumulador << endl;
 
-		int usuarioRnd;
-		//variable = limite_inferior + rand() % (limite_superior +1 - limite_inferior) ;
-		usuarioRnd = 0 + rand() % (5);
 		cout << "Usuario: " << usuarioRnd << endl;
 		cliente->enviarMensaje(usuarioRnd, acumulador, (tamanioRnd+1)*(sizeof(char)));
 		cantEnvios++;

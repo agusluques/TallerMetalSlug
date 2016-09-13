@@ -213,13 +213,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			if(usrDest == listaDeUsuarios.size()+1){ //caso envio a todos
 				for(int i = 1; i <= listaDeUsuarios.size(); i++){
-				  if (i != numeroCliente){
 					agregaraLista(numeroCliente, i, mensaje);
-				  }
 				}
-			}else
-				if (usrDest != numeroCliente)
-					agregaraLista(numeroCliente, usrDest, mensaje);
+			}else	agregaraLista(numeroCliente, usrDest, mensaje);
 			break;
 		}
 		case '5':
