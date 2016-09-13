@@ -4,9 +4,7 @@
 
 using namespace std;
 
-usuarioClass::usuarioClass(){
 
-}
 
 usuarioClass::usuarioClass(char *usuario, char *contrasenia){
 	strcpy(this->nombre,usuario);

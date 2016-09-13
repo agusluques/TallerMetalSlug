@@ -5,7 +5,7 @@
 #include "mensajeClass.hpp"
 #include "usuarioClass.hpp"
 
-
+#define DEBUG 1
 
 
 list<mensajeClass> listaDeMensajes;
@@ -25,8 +25,12 @@ void loggear(string usr, string destinatario, string mensaje){
 	time_t now = time (0);
 	sTm = gmtime (&now);
 	strftime (buffTime, sizeof(buffTime), "%Y-%m-%d %H:%M:%S", sTm);
-
-	archLog << buffTime << " Nuevo mensaje de: " << usr << " Para: " << destinatario << " Contenido: " << mensaje << endl;
+	if (DEBUG == 2)
+	{
+		archLog << buffTime << " Nuevo mensaje de: " << usr << " Para: " << destinatario << " Contenido: " << mensaje << endl;
+	}else {
+		archLog << buffTime << " Nuevo mensaje de: " << usr << " Para: " << destinatario << endl;
+	}
 
 	archLog.close();
 
@@ -141,31 +145,31 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		int tamanio = (sizeof(char));
 		char codigo;
 		recibirMensaje(newsockfd, &codigo, tamanio);
-		cout << "Codigo: " << codigo << endl;
+		//cout << "Codigo: " << codigo << endl;
 
 		switch(codigo){
 
 		case '0':
-			cout << "Entro a /0 que es para detectar la conexion" << endl;
-			cout << "Si imprime esto esta conectado todavia" << endl;
+			//cout << "Entro a /0 que es para detectar la conexion" << endl;
+			//cout << "Si imprime esto esta conectado todavia" << endl;
 			break;
 
 		case '1': {
-			cout << "Entro a /1 que es conectar " << endl;
+			//cout << "Entro a /1 que es conectar " << endl;
 			int tamLista = listaDeUsuarios.size();
 			enviarMensaje(newsockfd, &tamLista, sizeof(int));
 			int tamContrasenia, usr;
 			recibirMensaje(newsockfd, &usr, sizeof(int));
 			char nombre[50];
 			buscarNombreUsuario(nombre,usr);
-			cout << "Nombre de Usuario: " << nombre << endl;
+			//cout << "Nombre de Usuario: " << nombre << endl;
 
 			recibirMensaje(newsockfd, &tamContrasenia, sizeof(int));
-			cout << "Tamaño Contraseña: " << tamContrasenia << endl;
+			//cout << "Tamaño Contraseña: " << tamContrasenia << endl;
 			char contrasenia[tamContrasenia];
 			recibirMensaje(newsockfd, &contrasenia, sizeof(char)*tamContrasenia);
 
-			cout << "Contraseña: " << contrasenia << endl;
+			//cout << "Contraseña: " << contrasenia << endl;
 
 			//VALIDO DATOS ASUMO QUE EL USUARIO ES CORRECTO
 			usuarioClass usuario = buscarUsuario(usr);
@@ -186,28 +190,28 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 		case '2':
-			cout << "Entro a /2 que es desconectar" << endl;
+			//cout << "Entro a /2 que es desconectar" << endl;
 			abierto = false;
 			userPoint->desconectar();
 			break;
 
 		case '3':
-			cout << "Entro a /3 que es salir" << endl;
+			//cout << "Entro a /3 que es salir" << endl;
 			break;
 
 		case '4':
 		{
-			cout << "Entro a /4 que es enviar" << endl;
+			//cout << "Entro a /4 que es enviar" << endl;
 			int tam, usrDest;
 			recibirMensaje(newsockfd, &usrDest, sizeof(int));
-			cout << "Numero de usuario Destino: " << usrDest << endl;
+			//cout << "Numero de usuario Destino: " << usrDest << endl;
 			recibirMensaje(newsockfd, &tam, sizeof(int));
-			cout << "Tamanio del mensaje: " << tam << endl;
+			//cout << "Tamanio del mensaje: " << tam << endl;
 			//char mensaje[(tam+1)];
 			char mensaje[tam];
 			recibirMensaje(newsockfd, &mensaje, sizeof(char)*tam);
 			//mensaje[tam] = '\n';
-			cout << "Mensaje: " << mensaje << endl;
+			//cout << "Mensaje: " << mensaje << endl;
 
 
 			if(usrDest == listaDeUsuarios.size()+1){ //caso envio a todos
@@ -219,9 +223,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 		case '5':
 		{
-			cout << "Entro a /5 que es recibir" << endl;
+			//cout << "Entro a /5 que es recibir" << endl;
 
-			cout << "cant msjs: " << listaDeMensajes.size() << endl;
+			//cout << "cant msjs: " << listaDeMensajes.size() << endl;
 
 			for (list<mensajeClass>::iterator i = listaDeMensajes.begin(); i != listaDeMensajes.end(); ++i)
 			{
@@ -263,12 +267,12 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case '6':
-			cout << "Entro a /6 que es Lorem Ipsum" << endl;
+			//cout << "Entro a /6 que es Lorem Ipsum" << endl;
 			//Recibir los mensajes
 			break;
 
 		case '7':{
-			cout << "entro a /7 que es peticion de usuarios" << endl;
+			//cout << "entro a /7 que es peticion de usuarios" << endl;
 
 			int numeroUsuario;
 			recibirMensaje(newsockfd, &numeroUsuario, sizeof(int));
@@ -285,14 +289,14 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 		case '8':{
-			cout << "entro a /8 que es peticion de cantidad de usuarios" << endl;
+			//cout << "entro a /8 que es peticion de cantidad de usuarios" << endl;
 			int cantidad = listaDeUsuarios.size();
 			enviarMensaje(newsockfd,&cantidad,sizeof(int));
 
 			break;
 		}
 		default:
-			cout << "No deberia ingresar aca" << endl;
+			//cout << "No deberia ingresar aca" << endl;
 			break;
 		}
 	}

@@ -188,7 +188,7 @@ void mySocket::pedirUsuarios(){
 
 	int cantUsuariosDisponibles = cantidadUsuariosDisponibles();
 
-	cout << cantUsuariosDisponibles << endl;
+	//cout << cantUsuariosDisponibles << endl;
 
 	for(int i = 1; i <= cantUsuariosDisponibles; i++){
 		//SOLICITO USUARIOS
