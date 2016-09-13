@@ -14,6 +14,7 @@ public:
 	usuarioClass(char * usuario, char * contrasenia);
 	bool estaConectado();
 	void desconectar();
+	void recibir();
 	bool validarUsuario(char *contrasenia, char *mensaje);
 	void loggear(std::string mensaje);
 	std::string nombreUsuario();

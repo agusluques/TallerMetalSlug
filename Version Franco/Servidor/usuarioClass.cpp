@@ -18,27 +18,31 @@ bool usuarioClass::estaConectado(){
 	return this->conectado;
 }
 
+void usuarioClass::recibir(){
+	loggear(" pidio recibir mensajes");
+}
+
 void usuarioClass::desconectar(){
 	this->conectado=false;
-	loggear(" Se ha desconectado");
+	loggear(" se ha desconectado");
 
 }
 
 bool usuarioClass::validarUsuario(char *contrasenia, char *mensaje) {
 	if (this->conectado){
 		strcpy(mensaje,"Usuario esta conectado");
-		// usuario intento de doble conexion, aqui iria otro posible logeo
+		loggear(" se intento conectar y ya estaba conectado");
 		return false;
 	}
 
 	if (strcmp(this->pass,contrasenia) == 0){
 		strcpy(mensaje,"Inicio de sesion exitoso");
-		loggear(" Inicio sesion exitosamente");
+		loggear(" inicio sesion exitosamente");
 		this->conectado = true;
 		return true;
 	}else{
 		strcpy(mensaje,"Contraseña incorrecta");
-		// si se quisiera controlar cantidad de veces para ingresar la contraseña aca iria otro log.
+		loggear(" ingreso mal la contraseña ");
 		return false;
 	}
 }

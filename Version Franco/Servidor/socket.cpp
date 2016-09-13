@@ -24,7 +24,7 @@ void loggear(string usr, string destinatario, string mensaje){
 
 	time_t now = time (0);
 	sTm = gmtime (&now);
-	strftime (buffTime, sizeof(buffTime), "%Y-%m-%d %H:%M:%S ", sTm);
+	strftime (buffTime, sizeof(buffTime), "%Y-%m-%d %H:%M:%S", sTm);
 
 	archLog << buffTime << " Nuevo mensaje de: " << usr << " Para: " << destinatario << " Contenido: " << mensaje << endl;
 
@@ -156,7 +156,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			enviarMensaje(newsockfd, &tamLista, sizeof(int));
 			int tamContrasenia, usr;
 			recibirMensaje(newsockfd, &usr, sizeof(int));
-			//usr = usr;
 			char nombre[50];
 			buscarNombreUsuario(nombre,usr);
 			cout << "Nombre de Usuario: " << nombre << endl;
@@ -259,7 +258,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			int tamanioMensaje = 0;
 
 			enviarMensaje(newsockfd, &tamanioMensaje, sizeof(int));
-
+			userPoint->recibir();
 			break;
 		}
 
