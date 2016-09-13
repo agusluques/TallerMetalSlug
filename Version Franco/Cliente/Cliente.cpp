@@ -17,10 +17,10 @@ void loremIpsum(int frecEnvio, int cantMax, mySocket* cliente){
 	int cantEnvios = 0;
 	int tamanioRnd;
 	int usuarioRnd;
-	usuarioRnd = 0 + rand() % (5);
+	usuarioRnd = 0 + rand() % (cliente->cantidadUsuariosDisponibles());
 	tamanioRnd = 1 + rand() % (200);
 	cout << "Tamanio del mensaje: " << tamanioRnd << endl;
-	while (cantEnvios < cantMax){
+	while ((cantEnvios < cantMax) && (cliente->conexion() == true)){
 		int i;
 		char acumulador[tamanioRnd + 1];
 		char c;
@@ -55,13 +55,16 @@ void* controlarConexion(void *arg){
     cliente = (mySocket*) arg;
 
     while(cliente->conexion() == true){
-    	sleep(10);
+    	sleep(1);
     	char codigo;
     	codigo = '0';
     	//cliente->enviarMensaje(&codigo, sizeof(char));
-    	if(cliente->enviarMensaje(&codigo, sizeof(char))){
-    		cliente->desconectar();
+    	if((cliente->enviarMensaje(&codigo, sizeof(char)) == true) && (cliente->conexion() == true)){
+		//cout << "entro a antes de desconectar " << endl;    		
+		cliente->desconectar();
     		cout << "Se perdio la conexion con el servidor" << endl;
+    	} else {
+    		//cout << "Sigo conectado" << endl;
     	}
     }
 	return NULL;
@@ -77,7 +80,7 @@ int main(int argc, char *argv[])
     }
 
 	mySocket Cliente(argv[2], argv[1]);
-	bool conectado = false;
+	//bool conectado = false;
 	char opc = '0';
 
 
@@ -102,7 +105,8 @@ int main(int argc, char *argv[])
 						cout << "Conectando al servidor..." << endl;
 					    Cliente.conectar();
 					    //cout << "Se ha conectado correctamente con el servidor" << endl;
-					    conectado = true;
+    					    pthread_t threadControl;
+					    pthread_create(&threadControl, NULL , controlarConexion, (void*)&Cliente);
 					}else{
 						cout << "Desconectando del serrvidor..." << endl;
 						Cliente.cerrar();

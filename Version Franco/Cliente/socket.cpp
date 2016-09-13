@@ -139,9 +139,12 @@ bool mySocket::enviarMensaje(void* mensaje, int tamanioMensaje){
 	int bytesEnviados = 0;
 	bool errorSocket = false;
 	while((bytesEnviados < tamanioMensaje) && (!errorSocket)){
-		int n = write(sockfd, mensaje, tamanioMensaje - bytesEnviados);
+		//cout << "entro antes del" << endl;
+		int n = send(sockfd, mensaje, tamanioMensaje - bytesEnviados, MSG_NOSIGNAL);
+		//cout << "n: " << n << endl;		
 		if(n < 0){
 			errorSocket = true;
+			//cout << "Entro a TRUE" << endl;
 		}
 		bytesEnviados += n;
 	}
