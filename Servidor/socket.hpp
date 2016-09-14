@@ -20,16 +20,21 @@ class mySocketSrv{
 		int sockfd;
 		int puerto;
 		struct sockaddr_in serv_addr;
+		int numeroCliente;
 
 	public:
+		
 		mySocketSrv(char* archusr, char* puerto);
-		void loggearInterno(string mensaje);
-		void loggear(string usr, string destinatario, string mensaje);
 		void bindear();
 		void escuchar();
 		void enviarMensaje(string mensaje);
+		void loggearInterno(string mensaje);
+		void loggearServer (string mensaje);
+		void recibirMensaje(void* buffer, int tamanio );
 		void aceptarClientes();
 		void cerrar();
+		void setNumeroCliente(int usr);
+		int getNumeroCliente();
 		~mySocketSrv();
 };
 

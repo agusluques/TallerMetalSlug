@@ -13,7 +13,9 @@
 #include <iostream>
 #include <cstring>
 #include <fstream>
+#include<arpa/inet.h>
 #include <vector>
+#include <pthread.h>
 
 using namespace std;
 
@@ -21,21 +23,25 @@ class mySocket{
 	private:
 		int sockfd;
 		int puerto;
-		char* IP;
-		struct sockaddr_in serv_addr;
-		struct hostent* server;
+		struct sockaddr_in server;
+		//string address;
+		//struct hostent* server;
+		bool conectado;
 
 	public:
 		mySocket(char* puerto, char* IP);
 		bool autenticar();
-		bool conectar();
-		void desconectar();
-		void cargarUsuariosDisponibles(vector<string> *usuariosDisponibles);
-		void mostrarUsuariosDisponibles(vector<string> usuariosDisponibles);
-		int	 cantidadUsuariosDisponibles();
+		void conectar();
 		void enviarMensaje();
 		void enviarMensaje(int usuario, char* mensaje, int tamanio);
+		bool enviarMensaje(void* mensaje, int tamanioMensaje);
+		void recibirMensaje();
+		void recibirMensaje(void* buffer, int tamanio);
+		int cantidadUsuariosDisponibles();
+		void pedirUsuarios();
 		void cerrar();
+		void desconectar();
+		bool conexion();
 		~mySocket();
 };
 
