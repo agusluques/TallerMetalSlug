@@ -1,5 +1,20 @@
 #include "socket.hpp"
 
+void loggearCliente(string mensaje){
+	ofstream archLog; //esta va en .hpp
+	archLog.open("log.txt", std::fstream::app);
+	char buffTime[20];
+	struct tm *sTm;
+
+	time_t now = time (0);
+	sTm = gmtime (&now);
+	strftime (buffTime, sizeof(buffTime), "%Y-%m-%d %H:%M:%S", sTm);
+
+	archLog << buffTime << mensaje << endl;
+
+	archLog.close();
+}
+
 void loremIpsum(int frecEnvio, int cantMax, mySocket* cliente){
 	ifstream arch;
 	string archivo;
@@ -61,8 +76,9 @@ void* controlarConexion(void *arg){
     	//cliente->enviarMensaje(&codigo, sizeof(char));
     	if((cliente->enviarMensaje(&codigo, sizeof(char)) == true) && (cliente->conexion() == true)){
 		//cout << "entro a antes de desconectar " << endl;    		
-		cliente->desconectar();
+			cliente->desconectar();
     		cout << "Se perdio la conexion con el servidor" << endl;
+    		loggearCliente(" Se perdio la conexion con el servidor");
     	} else {
     		//cout << "Sigo conectado" << endl;
     	}
@@ -105,7 +121,7 @@ int main(int argc, char *argv[])
 						cout << "Conectando al servidor..." << endl;
 					    Cliente.conectar();
 					    //cout << "Se ha conectado correctamente con el servidor" << endl;
-    					    pthread_t threadControl;
+    					pthread_t threadControl;
 					    pthread_create(&threadControl, NULL , controlarConexion, (void*)&Cliente);
 					}else{
 						cout << "Desconectando del serrvidor..." << endl;

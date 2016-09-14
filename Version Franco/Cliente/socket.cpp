@@ -88,7 +88,7 @@ void mySocket::enviarMensaje(){
 		cin.get();
 	} while ((opc < 1) || (opc > cantidadUsuariosDisponibles()+1));
 
-	bool terminado = false;
+	/*bool terminado = false;
 	//int tamAcumulado = 0;
 	//int cantEnters = 0;
 	string mensaje;
@@ -111,18 +111,27 @@ void mySocket::enviarMensaje(){
 		} else {
 			terminado = true;
 		}
-	}
-	//terminado = false;
-
-	/*
+	}*/
+	int tamAcumulado = 0;
+	int enters = 0;
+	bool terminado = false;
 	string mensaje;
-	cout << "Escriba el mensaje: " << endl;
-	getline(cin, mensaje);
-	char* cstr = new char [mensaje.length()+1];
-	//char* cstr = new char [mensaje.length()];
-	strcpy (cstr, mensaje.c_str());
-	enviarMensaje(opc, cstr, mensaje.length()+1);
-	delete[] cstr;*/
+	string mensajeTotal = "";
+	cout << "Escriba su mensaje: (Ingrese /enviar para enviar) " << endl;
+	while(!terminado){
+		getline(cin, mensaje);
+		if(mensaje.compare("/enviar") == 0){
+			terminado = true;
+		} else {
+			mensajeTotal = mensajeTotal + mensaje + '\n';
+			tamAcumulado += (mensaje.length()+1);
+		}
+	}
+	cout << "Mensaje total: " << mensajeTotal << endl;
+	char* cstr = new char [mensajeTotal.length()+1];
+	strcpy (cstr, mensajeTotal.c_str());
+	enviarMensaje(opc, cstr, mensajeTotal.length()+1);
+	delete[] cstr;
 }
 
 void mySocket::enviarMensaje(int destino, char* mensaje, int tamanioMensaje){
@@ -142,7 +151,7 @@ bool mySocket::enviarMensaje(void* mensaje, int tamanioMensaje){
 		//cout << "entro antes del" << endl;
 		int n = send(sockfd, mensaje, tamanioMensaje - bytesEnviados, MSG_NOSIGNAL);
 		//cout << "n: " << n << endl;		
-		if(n < 0){
+		if(n <= 0){
 			errorSocket = true;
 			//cout << "Entro a TRUE" << endl;
 		}

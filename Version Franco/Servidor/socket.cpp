@@ -370,8 +370,8 @@ void mySocketSrv::aceptarClientes(){
 		    loggearInterno( " ERROR ON ACCEPT");
 		}else {
 			pthread_create(&thread, NULL, atender_cliente, (void*)(long)newsockfd);
-			printf("Conectado!\n");
-			printf("Leyendo mensaje...\n");
+			/*printf("Conectado!\n");
+			printf("Leyendo mensaje...\n");*/
 		}
 
 	} /* end of while */
