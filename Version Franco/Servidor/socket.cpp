@@ -33,7 +33,21 @@ void loggear(string usr, string destinatario, string mensaje){
 	}
 
 	archLog.close();
+}
 
+void loggearServer(string mensaje){
+	ofstream archLog; //esta va en .hpp
+	archLog.open("log.txt", std::fstream::app);
+	char buffTime[20];
+	struct tm *sTm;
+
+	time_t now = time (0);
+	sTm = gmtime (&now);
+	strftime (buffTime, sizeof(buffTime), "%Y-%m-%d %H:%M:%S", sTm);
+
+	archLog << buffTime << " MENSAJE SERVIDOR : " << mensaje << endl;
+
+	archLog.close();
 }
 
 void cargarUsuarios(){
@@ -71,6 +85,7 @@ void recibirMensaje(int sockfd, void* buffer, int tamanio){
 		bytesRecibidos = read(sockfd, buffer, tamanio);
 		if (bytesRecibidos == (-1)){
 			cout << "Error al recibir datos SOCKET" << endl;
+			loggearServer( " ERROR AL RECIBIR DATOS SOCKET");
 			errorSocket = true;
 		} else {
 			acumulador += bytesRecibidos;
@@ -314,8 +329,10 @@ mySocketSrv :: mySocketSrv(char* archusr, char* puerto){
 	this->puerto = atoi(puerto);
 	cout << "PUERTO: " << this->puerto << endl;
 	this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (sockfd < 0)
+	if (sockfd < 0){
 		cout << "Error en la apertura del socket" << endl;
+		loggearInterno( " ERROR EN LA APERTURA DEL SOCKET");
+	}
 	bzero((char *) &this->serv_addr, sizeof(this->serv_addr));
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_addr.s_addr = INADDR_ANY;
@@ -327,12 +344,14 @@ mySocketSrv :: mySocketSrv(char* archusr, char* puerto){
 void mySocketSrv::bindear(){
 	if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0){
 		cout << "ERROR on binding" << endl;
+		loggearInterno( " ERROR ON BINDING " );
 		exit(0);
 	}
 }
 
 void mySocketSrv::escuchar(){
 	listen(sockfd,6);
+	loggearInterno( " INICIO DE ACTIVIDAD DEL SERVIDOR");
 	cout << "Escuchando cliente...\n" << endl;
 }
 
@@ -346,9 +365,10 @@ void mySocketSrv::aceptarClientes(){
 		pthread_t thread;//CREO UN THREAD
 
 		newsockfd = accept(sockfd, &cli_addr, &clilen);
-		if (newsockfd < 0)
+		if (newsockfd < 0){
 			cout << "ERROR on accept" << endl;
-		else {
+		    loggearInterno( " ERROR ON ACCEPT");
+		}else {
 			pthread_create(&thread, NULL, atender_cliente, (void*)(long)newsockfd);
 			printf("Conectado!\n");
 			printf("Leyendo mensaje...\n");
@@ -363,14 +383,31 @@ void mySocketSrv::enviarMensaje(string mensaje){
 	strcpy (cstr, mensaje.c_str());
 
 	int n = write(sockfd,cstr,mensaje.length());
-	if (n < 0)
+	if (n < 0){
 		cout << "Error en la escritura" << endl;
+	    loggearInterno( " ERROR EN LA ESCRITURA");
+	}
 }
 
+void mySocketSrv::loggearInterno(string mensaje){
+	ofstream archLog; //esta va en .hpp
+	archLog.open("log.txt", std::fstream::app);
+	char buffTime[20];
+	struct tm *sTm;
+
+	time_t now = time (0);
+	sTm = gmtime (&now);
+	strftime (buffTime, sizeof(buffTime), "%Y-%m-%d %H:%M:%S", sTm);
+
+	archLog << buffTime << " MENSAJE INTERNO : " << mensaje << endl;
+
+	archLog.close();
+}
 
 
 void mySocketSrv::cerrar(){
 	close(this->sockfd);
+	loggearInterno( " SE CERRO EL SOCKET");
 }
 
 

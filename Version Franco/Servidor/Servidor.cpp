@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
 		cout << "Si desea cerrar el servidor ingrese 'S'" << endl;
 		cin >> opc;
 		if (opc == 'S'){
+			servidor.loggearInterno( " FIN DE ACTIVIDAD DEL SERVIDOR");
 			abierto = false;
 		}
 

@@ -28,7 +28,9 @@ class mySocketSrv{
 		void bindear();
 		void escuchar();
 		void enviarMensaje(string mensaje);
-		//void recibirMensaje(void* buffer, int tamanio );
+		void loggearInterno(string mensaje);
+		void loggearServer (string mensaje);
+		void recibirMensaje(void* buffer, int tamanio );
 		void aceptarClientes();
 		void cerrar();
 		void setNumeroCliente(int usr);
