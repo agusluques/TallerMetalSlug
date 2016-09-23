@@ -32,6 +32,7 @@ class mySocket{
 		mySocket(char* puerto, char* IP);
 		bool autenticar();
 		void conectar();
+		int getFD();
 		void enviarMensaje();
 		void enviarMensaje(int usuario, char* mensaje, int tamanio);
 		bool enviarMensaje(void* mensaje, int tamanioMensaje);

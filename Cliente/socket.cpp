@@ -75,6 +75,10 @@ void mySocket::conectar(){
 	this->conectado = autenticar();
 }
 
+int mySocket::getFD(){
+	return this->sockfd;
+}
+
 void mySocket::enviarMensaje(){
 	int opc;
 	do{
@@ -113,7 +117,7 @@ void mySocket::enviarMensaje(){
 		}
 	}*/
 	int tamAcumulado = 0;
-	int enters = 0;
+	//int enters = 0;
 	bool terminado = false;
 	string mensaje;
 	string mensajeTotal = "";

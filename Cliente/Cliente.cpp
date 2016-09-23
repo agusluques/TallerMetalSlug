@@ -74,14 +74,28 @@ void* controlarConexion(void *arg){
     	char codigo;
     	codigo = '0';
     	//cliente->enviarMensaje(&codigo, sizeof(char));
-    	if((cliente->enviarMensaje(&codigo, sizeof(char)) == true) && (cliente->conexion() == true)){
+    	if((cliente->enviarMensaje(&codigo, sizeof(char)) == true) &&	 (cliente->conexion() == true)){
 		//cout << "entro a antes de desconectar " << endl;    		
 			cliente->desconectar();
     		cout << "Se perdio la conexion con el servidor" << endl;
     		loggearCliente(" Se perdio la conexion con el servidor");
-    	} else {
-    		//cout << "Sigo conectado" << endl;
     	}
+
+    	struct timeval tv;
+    	tv.tv_sec = 10;  /* 10 Secs Timeout */
+    	tv.tv_usec = 0;  // Not init'ing this can cause strange errors
+    	setsockopt(cliente->getFD(), SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));
+
+    	char cod = 'q';
+    	int data = recv(cliente->getFD(), &cod, sizeof(char), 0);
+    	if(data == -1){
+    		cout << "Se cayo la conexion!" << endl;
+    		cliente->desconectar();
+    		loggearCliente(" Se cayo la conexion!");
+    	}
+    	//cliente->recibirMensaje(&cod, sizeof(char));
+    	cout << "Codigo: " << cod << endl;
+
     }
 	return NULL;
 }

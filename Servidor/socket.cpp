@@ -5,7 +5,7 @@
 #include "mensajeClass.hpp"
 #include "usuarioClass.hpp"
 
-#define DEBUG 1
+#define DEBUG 2
 
 
 list<mensajeClass> listaDeMensajes;
@@ -165,9 +165,14 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		switch(codigo){
 
 		case '0':
+		{
+			char cod = '0';
+			enviarMensaje(newsockfd, &cod, sizeof(char));
 			//cout << "Entro a /0 que es para detectar la conexion" << endl;
 			//cout << "Si imprime esto esta conectado todavia" << endl;
 			break;
+		}
+
 
 		case '1': {
 			//cout << "Entro a /1 que es conectar " << endl;
