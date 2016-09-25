@@ -93,16 +93,17 @@ void recibirMensaje(int sockfd, void* buffer, int tamanio){
 	}
 }
 
-void enviarMensaje(int sockfd, void* mensaje, int tamanioMensaje){
+bool enviarMensaje(int sockfd, void* mensaje, int tamanioMensaje){
 	int bytesEnviados = 0;
 	bool errorSocket = false;
 	while((bytesEnviados < tamanioMensaje) && (!errorSocket)){
-		int n = write(sockfd, mensaje, tamanioMensaje - bytesEnviados);
+		int n = send(sockfd, mensaje, tamanioMensaje - bytesEnviados, MSG_NOSIGNAL);
 		if(n < 0){
 			errorSocket = true;
 		}
 		bytesEnviados += n;
 	}
+	return errorSocket;
 }
 
 void responderLogin(int newsockfd, int respuesta, string mensaje){
@@ -157,19 +158,39 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 	while (abierto){
 
-		int tamanio = (sizeof(char));
-		char codigo;
-		recibirMensaje(newsockfd, &codigo, tamanio);
+		//int tamanio = (sizeof(char));
+		//char codigo;
+		//recibirMensaje(newsockfd, &codigo, tamanio);
 		//cout << "Codigo: " << codigo << endl;
+
+    	struct timeval tv;
+    	tv.tv_sec = 10;  /* 10 Secs Timeout */
+    	tv.tv_usec = 0;  // Not init'ing this can cause strange errors
+    	setsockopt(newsockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));
+
+    	char codigo;
+    	int data = recv(newsockfd, &codigo, sizeof(char), 0);
+    	cout << "DATA: " << data << endl;
+    	if(data < 0){
+    		cout << "Se cayo la conexion con el cliente X!" << endl;
+    		abierto = false;
+			// LOGUEARLO
+			// PONER COMO DESCONECTADO AL USUARIO QUE SE PERDIO LA CONEXION
+    	}
+    	//cliente->recibirMensaje(&cod, sizeof(char));
+    	cout << "Codigo: " << codigo << endl;
+
 
 		switch(codigo){
 
 		case '0':
 		{
 			char cod = '0';
-			enviarMensaje(newsockfd, &cod, sizeof(char));
-			//cout << "Entro a /0 que es para detectar la conexion" << endl;
-			//cout << "Si imprime esto esta conectado todavia" << endl;
+			if(enviarMensaje(newsockfd, &cod, sizeof(char)) == true){
+				cout << "Se perdio la conexion con el cliente X" << endl;
+				// LOGUEARLO
+				// PONER COMO DESCONECTADO AL USUARIO QUE SE PERDIO LA CONEXION
+			}
 			break;
 		}
 
