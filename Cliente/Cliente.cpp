@@ -88,7 +88,7 @@ void* controlarConexion(void *arg){
 
     	char cod = 'q';
     	int data = recv(cliente->getFD(), &cod, sizeof(char), 0);
-    	if(data == -1){
+    	if(data == -1 && (cliente->conexion() == true)){
     		cout << "Se cayo la conexion!" << endl;
     		cliente->desconectar();
     		loggearCliente(" Se cayo la conexion!");
