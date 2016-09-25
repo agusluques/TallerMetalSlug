@@ -190,6 +190,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				cout << "Se perdio la conexion con el cliente X" << endl;
 				// LOGUEARLO
 				// PONER COMO DESCONECTADO AL USUARIO QUE SE PERDIO LA CONEXION
+				abierto = false;
 			}
 			break;
 		}
