@@ -189,7 +189,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			if(enviarMensaje(newsockfd, &cod, sizeof(char)) == true){
 				cout << "Se perdio la conexion con el cliente X" << endl;
 				// LOGUEARLO
-				// PONER COMO DESCONECTADO AL USUARIO QUE SE PERDIO LA CONEXION
+				// PONER COMO DESCONECTADO AL USUARIO QUE SE PERDIO LA CONEXIÓN
 				abierto = false;
 			}
 			break;
