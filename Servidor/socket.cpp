@@ -172,10 +172,16 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
     	int data = recv(newsockfd, &codigo, sizeof(char), 0);
     	cout << "DATA: " << data << endl;
     	if(data < 0){
-    		cout << "Se cayo la conexion con el cliente X!" << endl;
+    		cout << "Se cayo la conexion con el cliente " << userPoint->nombreUsuario() << endl;
+
+    		userPoint->desconectar();
+    		list<usuarioClass>::iterator it = listaDeUsuarios.begin();
+    		advance(it, numeroCliente-1);
+    		memcpy(&(*it),userPoint,sizeof(usuarioClass));
+
+    		userPoint->loggear(" perdio la conexion con el servidor (se corto internet)");
+
     		abierto = false;
-			// LOGUEARLO
-			// PONER COMO DESCONECTADO AL USUARIO QUE SE PERDIO LA CONEXION
     	}
     	//cliente->recibirMensaje(&cod, sizeof(char));
     	cout << "Codigo: " << codigo << endl;
@@ -187,9 +193,15 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		{
 			char cod = '0';
 			if(enviarMensaje(newsockfd, &cod, sizeof(char)) == true){
-				cout << "Se perdio la conexion con el cliente X" << endl;
-				// LOGUEARLO
-				// PONER COMO DESCONECTADO AL USUARIO QUE SE PERDIO LA CONEXIÓN
+				cout << "Se perdio la conexion con el cliente " << userPoint->nombreUsuario() << endl;
+
+				userPoint->desconectar();
+				list<usuarioClass>::iterator it = listaDeUsuarios.begin();
+				advance(it, numeroCliente-1);
+				memcpy(&(*it),userPoint,sizeof(usuarioClass));
+
+				userPoint->loggear(" perdio la conexion con el servidor (mata proceso)");
+
 				abierto = false;
 			}
 			break;
