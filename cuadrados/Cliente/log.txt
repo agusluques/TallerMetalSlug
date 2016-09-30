@@ -1,0 +1,18 @@
+2016-09-30 01:10:40 Se cayo la conexion!
+2016-09-30 01:39:25 Se perdio la conexion con el servidor
+2016-09-30 01:47:01 Se cayo la conexion!
+2016-09-30 01:47:08 Se cayo la conexion!
+2016-09-30 01:51:03 Se cayo la conexion!
+2016-09-30 01:56:32 Se cayo la conexion!
+2016-09-30 01:58:48 Se cayo la conexion!
+2016-09-30 02:04:27 Se cayo la conexion!
+2016-09-30 02:27:30 Se cayo la conexion!
+2016-09-30 02:28:27 Se cayo la conexion!
+2016-09-30 02:29:58 Se cayo la conexion!
+2016-09-30 02:35:18 Se perdio la conexion con el servidor
+2016-09-30 02:37:44 Se perdio la conexion con el servidor
+2016-09-30 02:39:09 Se perdio la conexion con el servidor
+2016-09-30 02:39:10 Se perdio la conexion con el servidor
+2016-09-30 02:43:17 Se perdio la conexion con el servidor
+2016-09-30 02:50:57 Se perdio la conexion con el servidor
+2016-09-30 02:56:29 Se perdio la conexion con el servidor
