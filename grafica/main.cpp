@@ -2,6 +2,7 @@
 #include <cstring>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <unistd.h>
 #include "rapidxml.hpp"
 #include "rapidxml_print.hpp"
 #include "rapidxml_utils.hpp"
@@ -21,6 +22,8 @@ const int SCREEN_HEIGHT = 230;
 int ANCHO;
 int ALTO;
 
+const int jumpHeight = 90;
+
 SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 SDL_Window* windowARenderizar;
@@ -29,8 +32,8 @@ SDL_Rect torzo[6][1];
 SDL_Rect pierna[6][1];
 LTexture spritePersonaje;
 LTexture spriteFondo;
-int xcord = 100;
-int ycord = 100;
+int xcord = 0;
+int ycord = 0;
 int spX=0;
 int spY=0;
 
@@ -73,6 +76,7 @@ bool inicializarVentana(int ancho, int alto){
 			}
 		}
 	}
+	ycord = alto - 50;
 
 	return exito;
 
@@ -209,34 +213,82 @@ int main(int argc, char const *argv[])
 	
 	bool salir = false;
 
+
 	SDL_Event evento;
 
-
+	SDL_RendererFlip flipType = SDL_FLIP_NONE;
 	while( !salir ){
+		bool jumping = false;
+		bool falling = false;
+		int jump = 0;
 		//Handle events on queue
-		while( SDL_PollEvent( &evento ) != 0 ){
+		while( (SDL_PollEvent( &evento ) != 0) || (jumping) || (falling)){
 			//User requests quit
 			if( evento.type == SDL_QUIT ){
 				salir = true;
-			} else if (evento.type == SDL_KEYDOWN){
+			} else if (evento.type == SDL_KEYDOWN ){
 				 switch( evento.key.keysym.sym ){
 				 	case SDLK_RIGHT: 
 				 		xcord +=3;
 				 		spX++;
 				 		if (spX == 6) spX=0;
-				 		if(xcord >= (camera.x + ANCHO*3/4)){
-				 			camera.x += 10;
-				 		}
+			 			flipType = SDL_FLIP_NONE;
 				 		break;
-				 }
 
+			 		case SDLK_LEFT:
+			 			xcord -=3;
+			 			spX++;
+			 			if (spX == 6) spX=0;
+				 		//if(xcord <= (camera.x + ANCHO*3/4)){
+				 		//	camera.x += 10;
+				 		//}
+				 		flipType = SDL_FLIP_HORIZONTAL;
+				 		if(xcord < 0) xcord = 0;
+				 		break;
+
+				 	case SDLK_UP:
+				 		if(jumping || falling){
+				 			break;
+				 		}
+				 		jumping = true;
+				 		//	ycord -= 1;
+			 		break;
+				}
 			}
+				if (jumping){
+					jump += 1;
+					ycord -= 1;
+					if (jump >= jumpHeight){
+						falling = true;
+						jumping = false;
+					}
+				} else if (falling){
+					jump -= 1;
+					ycord += 1;
+					if (jump <= 0){
+						falling = false;
+					}
+				}
 
 		SDL_RenderClear( window );
 		spriteFondo.render(0, 0 , &camera, 1);
-		spritePersonaje.render( xcord, ycord, &torzo[ spX ][0] ,0);
-		spritePersonaje.render( xcord, ycord+23, &pierna[spX][0] ,0);
-		SDL_RenderPresent( window );	
+		//spritePersonaje.render( xcord, ycord, &torzo[ spX ][0] ,0);
+		//spritePersonaje.render( xcord, ycord+23, &pierna[spX][0] ,0);
+
+		spritePersonaje.render( xcord, ycord, &torzo[ spX ][0] , 0, NULL, flipType);
+		spritePersonaje.render( xcord, ycord+23, &pierna[spX][0] ,0, NULL, flipType);
+		/*
+		if(!invertir){
+			spritePersonaje.render( xcord, ycord, &torzo[ spX ][0] ,0);
+			spritePersonaje.render( xcord, ycord+23, &pierna[spX][0] ,0);
+		} else {
+			LTexture tmp = rotozoomSurfaceXY(spritePersonaje, 0, -1, 1, 0);
+			tmp.render(xcord, ycord, &torzo[ spX ][0] ,0);
+			tmp.render(xcord, ycord+23, &pierna[spX][0] ,0);
+		}*/
+
+		SDL_RenderPresent( window );
+		//flipType = SDL_FLIP_NONE;
 		}
 	}
 
