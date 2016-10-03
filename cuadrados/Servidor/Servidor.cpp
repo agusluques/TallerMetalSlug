@@ -16,14 +16,12 @@ void *escuchar_clientes(void *arg){
 
 int main(int argc, char *argv[])
 {
-	ifstream infile(argv[1]);
-    if (argc < 3 || infile.good() == false) {
+    if (argc < 2) {
     	cout << "Falta proveer datos al programa" << endl;
-    	cout << "Modo de uso: "<< argv[0]<< " ArchivoUsuarios.csv puerto" << endl;
+    	cout << "Modo de uso: "<< argv[0]<< " puerto" << endl;
        exit(0);
     }
-    infile.close();
-	mySocketSrv servidor(argv[1], argv[2]);
+	mySocketSrv servidor(argv[1]);
 	servidor.bindear();
 	servidor.escuchar();
 

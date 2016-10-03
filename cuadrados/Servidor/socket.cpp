@@ -12,7 +12,7 @@ list<DibujableServer> listaDibujables;
 
 list<mensajeClass> listaDeMensajes;
 list<string> listaDeUsuarios;
-char* archivoUsuarios;
+
 //list<mensajeClass> listaDeMensajesAlCliente;
 pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutexListaRecibir = PTHREAD_MUTEX_INITIALIZER;
@@ -347,8 +347,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 	pthread_exit(NULL);
 }
 
-mySocketSrv :: mySocketSrv(char* archusr, char* puerto){
-	archivoUsuarios = archusr;
+mySocketSrv :: mySocketSrv(char* puerto){
 	this->puerto = atoi(puerto);
 	cout << "PUERTO: " << this->puerto << endl;
 	this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -361,14 +360,14 @@ mySocketSrv :: mySocketSrv(char* archusr, char* puerto){
 	serv_addr.sin_addr.s_addr = INADDR_ANY;
 	serv_addr.sin_port = htons(this->puerto);
 
-	//cargo un fondo cualquiera
+	/*//cargo un fondo cualquiera
 	//ver los valores del id
 	DibujableServer nuevo;
 	nuevo.setId(0);
 	nuevo.setSpriteId("fondo");
 	nuevo.setX(0);
 	nuevo.setY(0);
-	listaDibujables.push_back(nuevo);
+	listaDibujables.push_back(nuevo);*/
 }
 
 void mySocketSrv::bindear(){

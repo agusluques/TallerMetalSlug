@@ -9,8 +9,17 @@ using namespace std;
 class Dibujable {
 private:
 	int id;
-	SDL_Surface *sprite; //esta se la puede variar segun el movimiento
+	SDL_Surface *sprite;
 	SDL_Rect posicion;
+
+	//agus
+	SDL_Rect torzo[6][1];
+	SDL_Rect pierna[6][1];
+	int xcord;
+	int ycord;
+	int spX;
+	int spY;
+
 public:
 	Dibujable();
 	virtual ~Dibujable();

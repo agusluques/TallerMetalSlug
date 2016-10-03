@@ -4,6 +4,11 @@ Dibujable::Dibujable() {
 	posicion.x = 0;
 	posicion.y = 0;
 	sprite = NULL;
+
+	xcord = 100;
+	ycord = 100;
+	spX = 0;
+	spY = 0;
 }
 
 void Dibujable::moverX(int movimiento){

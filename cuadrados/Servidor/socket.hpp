@@ -24,7 +24,7 @@ class mySocketSrv{
 
 	public:
 		
-		mySocketSrv(char* archusr, char* puerto);
+		mySocketSrv(char* puerto);
 		void bindear();
 		void escuchar();
 		void enviarMensaje(string mensaje);

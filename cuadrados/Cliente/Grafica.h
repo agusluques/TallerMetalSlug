@@ -4,8 +4,27 @@
 #include "Dibujable.h"
 #include <list>
 
+#include <iostream>
+#include <cstring>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include "rapidxml.hpp"
+#include "rapidxml_print.hpp"
+#include "rapidxml_utils.hpp"
+#include "LTexture.h"
+
 #ifndef GRAFICA_H_
 #define GRAFICA_H_
+
+using namespace rapidxml;
+
+//The dimensions of the level
+const int LEVEL_WIDTH = 2451;
+const int LEVEL_HEIGHT = 300;
+
+//Screen dimension constants
+const int SCREEN_WIDTH = 310;
+const int SCREEN_HEIGHT = 230;
 
 class Grafica {
 private:
@@ -18,7 +37,20 @@ private:
 	//SURFACE FONDO
 	SDL_Surface* gFondoSurface;
 
-	list<Dibujable> listaDibujable;
+	list<LTexture> listaDibujable;
+
+	//lo de agus
+	SDL_Rect camera; // = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+
+	SDL_Window* windowARenderizar;
+	SDL_Renderer* window;
+	LTexture spriteFondo;
+	SDL_Texture *mTexture;
+
+	//Image dimensions
+	int mWidth;
+	int mHeight;
+
 public:
 	Grafica();
 	virtual ~Grafica();
@@ -36,10 +68,53 @@ public:
 	void mensajeRight(int idObjeto);
 
 	void mostrarDibujables();
-	Dibujable buscarDibujable(int id);
-	void nuevoDibujable(Dibujable nuevo);
-	void actualizarDibujable(Dibujable nuevo);
+	LTexture buscarDibujable(int id);
+	void nuevoDibujable(int idObjeto, int posX, int posY);
+	void actualizarDibujable(LTexture nuevo);
 	void borrarDibujable(int id);
+
+	//lo de agus
+	bool inicializarVentana(int ancho, int alto);
+	bool inicializarFondo(char* path);
+	bool inicializarPersonaje(char* path, int ancho, int alto);
+	int cantidadDeHijos(xml_node<> *nodo);
+	bool parsearXML(const char* direccion);
+
+	void free() {
+		//Free texture if it exists
+		if( mTexture != NULL ) {
+			SDL_DestroyTexture( mTexture );
+			mTexture = NULL;
+			mWidth = 0;
+			mHeight = 0;
+		}
+	}
+
+	bool loadFromFile( std::string path ) {
+		free();
+
+		//SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
+		SDL_Surface* loadedSurface = IMG_Load( "Clark.png" );
+
+		if( loadedSurface == NULL ) {
+			printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
+		}
+		else {
+			//this->mTexture = SDL_CreateTextureFromSurface( window, loadedSurface );
+			this->mTexture = IMG_LoadTexture(window, "Clark.png");
+			if( this->mTexture == NULL ) {
+				printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
+			}
+			else {
+				mWidth = loadedSurface->w;
+				mHeight = loadedSurface->h;
+			}
+			SDL_FreeSurface( loadedSurface );
+		}
+
+		return (mTexture != NULL);
+	}
+
 };
 
 #endif /* SERVIDOR_H_ */

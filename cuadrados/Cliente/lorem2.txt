@@ -1,3 +1,0 @@
-Esta es una prueba para ver como funciona con archivos mas chicos.
-Deberia ir repitiendo los mensajes.
-Esperemos que funcione.

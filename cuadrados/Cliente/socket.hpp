@@ -17,7 +17,6 @@
 #include <vector>
 #include <pthread.h>
 
-#include "Dibujable.h"
 #include "Grafica.h"
 
 using namespace std;

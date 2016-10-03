@@ -149,7 +149,6 @@ void mySocket::iniciarGrafica(){
 
 	bool quit = false;
 	SDL_Event event;
-	const Uint8* teclas;
 
 	//pido cantidad de objetos a dibujar
 	char codigo;
@@ -191,26 +190,10 @@ void mySocket::iniciarGrafica(){
 		recibirMensaje(&posY, sizeof(int));
 		cout << posY << endl;
 
-		Dibujable nuevo;
-		nuevo.setId(idObjeto);
-		nuevo.setX(posX);
-		nuevo.setY(posY);
-
-		if (strcmp(spriteId,"fondo") == 0){
-			nuevo.setSprite("img/fondo.bmp");
-		}else
-			nuevo.setSprite("img/cuadrado.bmp");
-
-		grafica.nuevoDibujable(nuevo);
+		grafica.nuevoDibujable(idObjeto,posX,posY);
 	}
 
 	while( !quit ) {
-
-		//recibo si hay cambios
-		recibirMensaje();
-
-		//MOSTRAR VENTANA
-		grafica.mostrarDibujables();
 
 		//SALIR CON ESC O CERRAR VENTANA
 		while( SDL_PollEvent(&event) != 0 ) {
@@ -219,99 +202,29 @@ void mySocket::iniciarGrafica(){
 				quit = true;
 			}
 
-			/*//variar velocidad si es un toqe o mantengo apretado
-			//If a key was pressed
-			if( event.type == SDL_KEYDOWN && event.key.repeat == 0 ) {
-				//Adjust the velocity
-				switch( event.key.keysym.sym ) {
-				case SDLK_UP:{
-					//hardcodeo
-					strcpy(&codigo,"U");
-					enviarMensaje(&codigo, sizeof(char));
-					break;
-				}
-				case SDLK_DOWN:{
-					//hardcodeo
-					strcpy(&codigo,"D");
-					enviarMensaje(&codigo, sizeof(char));
-					break;
-				}
-				case SDLK_LEFT:{
-					//hardcodeo
-					strcpy(&codigo,"L");
-					enviarMensaje(&codigo, sizeof(char));
-					break;
-				}
-				case SDLK_RIGHT:{
-					//hardcodeo
-					strcpy(&codigo,"R");
-					enviarMensaje(&codigo, sizeof(char));
-					break;
-				}
-				}
-			}
-			//If a key was released
-			else if( event.type == SDL_KEYUP && event.key.repeat == 0 ) {
-				//Adjust the velocity
-				switch( event.key.keysym.sym ) {
-				case SDLK_UP:{
-					//hardcodeo
-					strcpy(&codigo,"U");
-					enviarMensaje(&codigo, sizeof(char));
-					//grafica.mensajeUp();
-					break;
-				}
-				case SDLK_DOWN:{
-					//hardcodeo
-					strcpy(&codigo,"D");
-					enviarMensaje(&codigo, sizeof(char));
-					//grafica.mensajeUp();
-					break;
-				}
-				case SDLK_LEFT:{
-					//hardcodeo
-					strcpy(&codigo,"L");
-					enviarMensaje(&codigo, sizeof(char));
-					//grafica.mensajeUp();
-					break;
-				}
-				case SDLK_RIGHT:{
-					//hardcodeo
-					strcpy(&codigo,"R");
-					enviarMensaje(&codigo, sizeof(char));
-					//grafica.mensajeUp();
-					break;
-				}
-				}
-			}*/
-
 			if( event.type == SDL_KEYDOWN ) {
 				char codigo;
 
 				switch( event.key.keysym.sym ) {
-				case SDLK_UP: {
+				case SDLK_UP:
 					strcpy(&codigo,"U");
 					enviarMensaje(&codigo, sizeof(char));
-					//grafica.mensajeUp();
 					break;
-				}
-				case SDLK_DOWN: {
+
+				case SDLK_DOWN:
 					//hardcodeo
 					strcpy(&codigo,"D");
 					enviarMensaje(&codigo, sizeof(char));
-					//grafica.mensajeDown();
 					break;
-				}
+
 				case SDLK_LEFT:
 					strcpy(&codigo,"L");
 					enviarMensaje(&codigo, sizeof(char));
-					//grafica.mensajeLeft();
 					break;
 
 				case SDLK_RIGHT:
 					strcpy(&codigo,"R");
 					enviarMensaje(&codigo, sizeof(char));
-					//grafica.mensajeRight();
 					break;
 
 				default:
@@ -320,6 +233,11 @@ void mySocket::iniciarGrafica(){
 			}
 		}
 
+		//recibo si hay cambios
+		recibirMensaje();
+
+		//MOSTRAR VENTANA
+		grafica.mostrarDibujables();
 
 	}
 
