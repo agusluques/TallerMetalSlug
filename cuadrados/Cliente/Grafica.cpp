@@ -88,7 +88,8 @@ void Grafica::setSurface(SDL_Surface* surface){
 void Grafica::mensajeUp(int idObjeto){
 	LTexture aux = buscarDibujable(idObjeto);
 	//if (aux.posicionY() > 0) {
-	aux.moverY(-6);
+	//aux.moverY(-6);
+	aux.moverArriba(6);
 	actualizarDibujable(aux);
 	//}
 }
@@ -96,7 +97,8 @@ void Grafica::mensajeUp(int idObjeto){
 void Grafica::mensajeDown(int idObjeto){
 	LTexture aux = buscarDibujable(idObjeto);
 	//if (aux.posicionY() <= SCREEN_HEIGHT - 50){
-	aux.moverY(6);
+	//aux.moverY(6);
+	aux.moverAbajo(6);
 	actualizarDibujable(aux);
 	//}
 }
@@ -104,7 +106,8 @@ void Grafica::mensajeDown(int idObjeto){
 void Grafica::mensajeLeft(int idObjeto){
 	LTexture aux = buscarDibujable(idObjeto);
 	//if (aux.posicionX() > 0){
-	aux.moverX(-6);
+	//aux.moverX(-6);
+	aux.moverIzquierda(6);
 	actualizarDibujable(aux);
 	//}
 }
@@ -112,7 +115,8 @@ void Grafica::mensajeLeft(int idObjeto){
 void Grafica::mensajeRight(int idObjeto){
 	LTexture aux = buscarDibujable(idObjeto);
 	//if (aux.posicionX() <= SCREEN_WIDTH - 50){
-	aux.moverX(6);
+	//aux.moverX(6);
+	aux.moverDerecha(6);
 	actualizarDibujable(aux);
 	//}
 }

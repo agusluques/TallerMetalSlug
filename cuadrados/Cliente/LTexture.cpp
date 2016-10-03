@@ -6,6 +6,8 @@ LTexture::LTexture() {
 	ycord = 0;
 	spX = 0;
 	spY = 0;
+
+	flipType = SDL_FLIP_NONE;
 }
 
 LTexture::~LTexture() {
@@ -15,12 +17,6 @@ LTexture::~LTexture() {
 
 void LTexture::render(SDL_Renderer *window, SDL_Texture *mTexture){
 	SDL_Rect renderQuad;
-	renderQuad.x = xcord;
-	renderQuad.y = ycord;
-	renderQuad.w = torzo[ spX ][0].w;
-	renderQuad.h = torzo[ spX ][0].h;
-
-	SDL_RenderCopy( window, mTexture, &torzo[ spX ][0], &renderQuad );
 
 	//duplico para las pieras..
 	renderQuad.x = xcord;
@@ -28,11 +24,34 @@ void LTexture::render(SDL_Renderer *window, SDL_Texture *mTexture){
 	renderQuad.w = pierna[ spX ][0].w;
 	renderQuad.h = pierna[ spX ][0].h;
 
-	SDL_RenderCopy( window, mTexture, &pierna[ spX ][0], &renderQuad );
+	SDL_RenderCopyEx( window, mTexture, &pierna[ spX ][0], &renderQuad, 0, NULL, flipType );
+//	SDL_RenderCopy( window, mTexture, &pierna[ spX ][0], &renderQuad );
+
+	renderQuad.x = xcord;
+	renderQuad.y = ycord;
+	renderQuad.w = torzo[ spX ][0].w;
+	renderQuad.h = torzo[ spX ][0].h;
+
+	SDL_RenderCopyEx( window, mTexture, &torzo[ spX ][0], &renderQuad, 0, NULL, flipType );
+//	SDL_RenderCopy( window, mTexture, &torzo[ spX ][0], &renderQuad );
 }
 
 void LTexture::moverX(int movimiento){
 	this->xcord += movimiento;
+	this-> spX++;
+	if (spX == 6) spX=0;
+}
+
+void LTexture::moverDerecha(int movimiento){
+	flipType = SDL_FLIP_NONE;
+	this->xcord += movimiento;
+	this-> spX++;
+	if (spX == 6) spX=0;
+}
+
+void LTexture::moverIzquierda(int movimiento){
+	flipType = SDL_FLIP_HORIZONTAL;
+	this->xcord -= movimiento;
 	this-> spX++;
 	if (spX == 6) spX=0;
 }
@@ -42,6 +61,19 @@ void LTexture::moverY(int movimiento){
 	this-> spX++;
 	if (spX == 6) spX=0;
 }
+
+void LTexture::moverArriba(int movimiento){
+	this->ycord -= movimiento;
+	this-> spX++;
+	if (spX == 6) spX=0;
+}
+
+void LTexture::moverAbajo(int movimiento){
+	this->ycord += movimiento;
+	this-> spX++;
+	if (spX == 6) spX=0;
+}
+
 
 void LTexture::setX(int movimiento){
 	this->xcord = movimiento;

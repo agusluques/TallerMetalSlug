@@ -20,15 +20,22 @@ private:
 	int spX;
 	int spY;
 
+	SDL_RendererFlip flipType;
+
 public:
 	LTexture();
 	~LTexture();
 	void free();
-	//void render( int x, int y, SDL_Rect* clip = NULL , int flag = 0);
 	void render(SDL_Renderer *window, SDL_Texture *mTexture);
 
 	void moverX(int movimiento);
+	void moverDerecha(int movimiento);
+	void moverIzquierda(int movimiento);
+
 	void moverY(int movimiento);
+	void moverArriba(int movimiento);
+	void moverAbajo(int movimiento);
+
 	void setX(int movimiento);
 	void setY(int movimiento);
 	void setId(int id);
