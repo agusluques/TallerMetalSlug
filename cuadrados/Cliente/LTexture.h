@@ -13,8 +13,7 @@ class LTexture {
 private:
 	int id;
 
-	SDL_Rect torzo[6][1];
-	SDL_Rect pierna[6][1];
+	SDL_Rect cuerpo[6][1];
 	int xcord;
 	int ycord;
 	int spX;
