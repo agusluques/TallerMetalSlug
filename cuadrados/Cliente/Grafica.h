@@ -62,10 +62,8 @@ public:
 	SDL_Window* getWindow();
 	SDL_Surface* getSurface();
 	void setSurface(SDL_Surface* surface);
-	void mensajeUp(int idObjeto);
-	void mensajeDown(int idObjeto);
-	void mensajeLeft(int idObjeto);
-	void mensajeRight(int idObjeto);
+
+	void actualizar(int idObjeto,int x,int y);
 
 	void mostrarDibujables();
 	LTexture buscarDibujable(int id);

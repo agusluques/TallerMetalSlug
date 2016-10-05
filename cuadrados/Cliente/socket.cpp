@@ -89,32 +89,23 @@ void mySocket::recibirMensaje(){
 	codigo = '5';
 	enviarMensaje(&codigo, sizeof(char));
 
-	int tam = 1;
+	int corte = 1;
 
-	while(tam != 0){
-		recibirMensaje(&tam, sizeof(int));
-		if (tam != 0){
-			char mensaje[tam];
+	while(corte != 0){
+		recibirMensaje(&corte, sizeof(int));
+		if (corte != 0){
+			int x,y;
 			int idObjeto;
 
-			cout << "Tamanio del mensaje: " << tam << endl;
-			recibirMensaje(&mensaje, sizeof(char)*tam);
-			cout << "Mensaje: " << mensaje << endl;
+			cout << "Corte: " << corte << endl;
 			recibirMensaje(&idObjeto, sizeof(int));
 			cout << "id objeto: " << idObjeto << endl;
+			recibirMensaje(&x, sizeof(int));
+			cout << "X: " << x << endl;
+			recibirMensaje(&y, sizeof(int));
+			cout << "Y: " << y << endl;
 
-			if (strcmp(mensaje,"U") == 0){
-				grafica.mensajeUp(idObjeto);
-			}else
-				if (strcmp(mensaje,"D") == 0) {
-					grafica.mensajeDown(idObjeto);
-				}else
-					if (strcmp(mensaje,"L") == 0){
-						grafica.mensajeLeft(idObjeto);
-					}else
-						if (strcmp(mensaje,"R") == 0){
-							grafica.mensajeRight(idObjeto);
-						}
+			grafica.actualizar(idObjeto, x, y);
 		}
 	}
 }

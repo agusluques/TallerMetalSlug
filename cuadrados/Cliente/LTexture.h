@@ -27,13 +27,7 @@ public:
 	void free();
 	void render(SDL_Renderer *window, SDL_Texture *mTexture);
 
-	void moverX(int movimiento);
-	void moverDerecha(int movimiento);
-	void moverIzquierda(int movimiento);
-
-	void moverY(int movimiento);
-	void moverArriba(int movimiento);
-	void moverAbajo(int movimiento);
+	void actualizar(int x, int y);
 
 	void setX(int movimiento);
 	void setY(int movimiento);

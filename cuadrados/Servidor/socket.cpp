@@ -100,13 +100,13 @@ void buscarNombreUsuario(char *nombreRetorno, int numeroUsuario){
 	strcpy(nombreRetorno,(*it).c_str());
 }
 
-void agregaraLista(int numeroCliente, int usrDest, char *mensaje){
+void agregaraLista(int numeroCliente, int usrDest, int x, int y){
 	char nombreAutor[50];
 	char nombreDestino[50];
 	buscarNombreUsuario(nombreAutor, numeroCliente);
 	buscarNombreUsuario(nombreDestino, usrDest);
 
-	mensajeClass mensajeObj(nombreAutor, nombreDestino, mensaje, numeroCliente);
+	mensajeClass mensajeObj(nombreAutor, nombreDestino, numeroCliente, x, y);
 
 	int a = pthread_mutex_trylock(&mutexLista);
 	/*if (a != 0) {
@@ -114,7 +114,7 @@ void agregaraLista(int numeroCliente, int usrDest, char *mensaje){
 	}*/
 
 	listaDeMensajes.push_back(mensajeObj);
-	loggear(mensajeObj.nombreAutor(),mensajeObj.nombreDestinatario(),mensajeObj.getMensaje());
+	//loggear(mensajeObj.nombreAutor(),mensajeObj.nombreDestinatario(),mensajeObj.getMensaje());
 	pthread_mutex_unlock (&mutexLista);
 }
 
@@ -230,23 +230,15 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				char nombre[50];
 				buscarNombreUsuario(nombre, numeroCliente);
 				if ((*i).nombreDestinatario().compare(nombre) == 0 ){
-					string mensaje = (*i).getMensaje();
-					char* cstr = new char [mensaje.length()+1];
-					strcpy (cstr, mensaje.c_str());
-					int tamanioMensaje = mensaje.length()+1;
+					int  xCord = (*i).getX();
+					int  yCord = (*i).getY();
 					int idObjeto = (*i).getidObjeto();
+					int corte = 1;
 
-					string usuario = (*i).nombreAutor();
-					char* cstr2 = new char [usuario.length()+1];
-					strcpy (cstr2, usuario.c_str());
-					int tamanioUsuario = usuario.length()+1;
-
-					enviarMensaje(newsockfd, &tamanioMensaje, sizeof(int));
-					enviarMensaje(newsockfd, cstr, tamanioMensaje*(sizeof(char)));
+					enviarMensaje(newsockfd, &corte, sizeof(int));
 					enviarMensaje(newsockfd, &idObjeto, sizeof(int));
-
-					delete[] cstr2;
-					delete[] cstr;
+					enviarMensaje(newsockfd, &xCord, sizeof(int));
+					enviarMensaje(newsockfd, &yCord, sizeof(int));
 
 					i = listaDeMensajes.erase(i);
 					i--;
@@ -293,49 +285,82 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'U':{
-			/* ESTO ES PARA MODIFICAR LA LISTA DE OBJ DEL SERVIDOR..
-			 * Q CUANDO UN CLIENTE NUEVO SE CONECTA DURANTE EL JUEGO, COPIA ESOS DATOS
+			// ESTO ES PARA MODIFICAR LA LISTA DE OBJ DEL SERVIDOR..
+			// Q CUANDO UN CLIENTE NUEVO SE CONECTA DURANTE EL JUEGO, COPIA ESOS DATOS
 			//modifico el dibujable de la lista del servidor
+			int nuevaCordX, nuevaCordY;
 			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
 				if ((*it).id == numeroCliente){
 					//hacer metodo mover up y q sume solo en la clase dibujableServer...
-					it->x = it->x - 2;
+					nuevaCordY = it->y = it->y - 2;
+					nuevaCordX = it->x;
 				}
-			}*/
+			}
 
 			//envio a todos el mensaje de q se modifico un objeto
 			for(int i = 1; i <= listaDeUsuarios.size(); i++){
-				char codigo[1];
-				strcpy(codigo,"U");
 				//el servidor va a poner en la lista los msjs para todos
 				//el msj contiene el id del objeto a mover y su nueva posicion
-				agregaraLista(numeroCliente, i, codigo);
+				agregaraLista(numeroCliente, i, nuevaCordX, nuevaCordY);
 			}
 
 			break;
 		}
 		case 'D':{
-			for(int i = 1; i <= listaDeUsuarios.size(); i++){
-				char codigo[1];
-				strcpy(codigo,"D");
-				agregaraLista(numeroCliente, i, codigo);
+			int nuevaCordX, nuevaCordY;
+			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
+				if ((*it).id == numeroCliente){
+					//hacer metodo mover up y q sume solo en la clase dibujableServer...
+					nuevaCordY = it->y = it->y + 2;
+					nuevaCordX = it->x;
+				}
 			}
+
+			//envio a todos el mensaje de q se modifico un objeto
+			for(int i = 1; i <= listaDeUsuarios.size(); i++){
+				//el servidor va a poner en la lista los msjs para todos
+				//el msj contiene el id del objeto a mover y su nueva posicion
+				agregaraLista(numeroCliente, i, nuevaCordX, nuevaCordY);
+			}
+
 			break;
 		}
 		case 'L':{
-			for(int i = 1; i <= listaDeUsuarios.size(); i++){
-				char codigo[1];
-				strcpy(codigo,"L");
-				agregaraLista(numeroCliente, i, codigo);
+			int nuevaCordX, nuevaCordY;
+			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
+				if ((*it).id == numeroCliente){
+					//hacer metodo mover up y q sume solo en la clase dibujableServer...
+					nuevaCordY = it->y;
+					nuevaCordX = it->x = it->x -2;
+				}
 			}
+
+			//envio a todos el mensaje de q se modifico un objeto
+			for(int i = 1; i <= listaDeUsuarios.size(); i++){
+				//el servidor va a poner en la lista los msjs para todos
+				//el msj contiene el id del objeto a mover y su nueva posicion
+				agregaraLista(numeroCliente, i, nuevaCordX, nuevaCordY);
+			}
+
 			break;
 		}
 		case 'R':{
-			for(int i = 1; i <= listaDeUsuarios.size(); i++){
-				char codigo[1];
-				strcpy(codigo,"R");
-				agregaraLista(numeroCliente, i, codigo);
+			int nuevaCordX, nuevaCordY;
+			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
+				if ((*it).id == numeroCliente){
+					//hacer metodo mover up y q sume solo en la clase dibujableServer...
+					nuevaCordY = it->y;
+					nuevaCordX = it->x = it->x +2;
+				}
 			}
+
+			//envio a todos el mensaje de q se modifico un objeto
+			for(int i = 1; i <= listaDeUsuarios.size(); i++){
+				//el servidor va a poner en la lista los msjs para todos
+				//el msj contiene el id del objeto a mover y su nueva posicion
+				agregaraLista(numeroCliente, i, nuevaCordX, nuevaCordY);
+			}
+
 			break;
 		}
 		default:

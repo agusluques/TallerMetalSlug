@@ -6,16 +6,17 @@ class mensajeClass
 private:
 	char usrAutor[50];
 	char usrDestino[50];
-	//char mensaje;
-	std::string mensaje;
 	int idObjeto;
+	int x;
+	int y;
 public:
 	mensajeClass();
-	mensajeClass(char * autor, char * destino, char * mensajeEnviado, int id);
+	mensajeClass(char * autor, char * destino, int id, int x, int y);
 	std::string nombreDestinatario();
 	std::string nombreAutor();
-	std::string getMensaje();
 	int getidObjeto();
+	int getX();
+	int getY();
 	//~mensajeClass();
 	
 };

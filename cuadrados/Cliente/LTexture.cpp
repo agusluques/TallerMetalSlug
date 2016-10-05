@@ -27,44 +27,13 @@ void LTexture::render(SDL_Renderer *window, SDL_Texture *mTexture){
 //	SDL_RenderCopy( window, mTexture, &cuerpo[ spX ][0], &renderQuad );
 }
 
-void LTexture::moverX(int movimiento){
-	this->xcord += movimiento;
+void LTexture::actualizar(int x, int y){
+	if(this->xcord > x)	flipType = SDL_FLIP_HORIZONTAL; else flipType = SDL_FLIP_NONE;
+	this->xcord = x;
+	this->ycord = y;
 	this-> spX++;
 	if (spX == 6) spX=0;
 }
-
-void LTexture::moverDerecha(int movimiento){
-	flipType = SDL_FLIP_NONE;
-	this->xcord += movimiento;
-	this-> spX++;
-	if (spX == 6) spX=0;
-}
-
-void LTexture::moverIzquierda(int movimiento){
-	flipType = SDL_FLIP_HORIZONTAL;
-	this->xcord -= movimiento;
-	this-> spX++;
-	if (spX == 6) spX=0;
-}
-
-void LTexture::moverY(int movimiento){
-	this->ycord += movimiento;
-	this-> spX++;
-	if (spX == 6) spX=0;
-}
-
-void LTexture::moverArriba(int movimiento){
-	this->ycord -= movimiento;
-	this-> spX++;
-	if (spX == 6) spX=0;
-}
-
-void LTexture::moverAbajo(int movimiento){
-	this->ycord += movimiento;
-	this-> spX++;
-	if (spX == 6) spX=0;
-}
-
 
 void LTexture::setX(int movimiento){
 	this->xcord = movimiento;
