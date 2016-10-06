@@ -3,9 +3,6 @@
 #include <cstring>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "rapidxml.hpp"
-#include "rapidxml_print.hpp"
-#include "rapidxml_utils.hpp"
 
 Grafica::Grafica() {
 	gWindow = NULL;
@@ -23,7 +20,6 @@ Grafica::~Grafica() {
 	// TODO Auto-generated destructor stub
 }
 
-using namespace rapidxml;
 using namespace std;
 
 bool Grafica::hayColision(SDL_Rect *a , SDL_Rect *b) {
@@ -37,11 +33,10 @@ bool Grafica::hayColision(SDL_Rect *a , SDL_Rect *b) {
 }
 
 //INICIAR SDL
-bool Grafica::init() {
-	bool exito;
+bool Grafica::init(int ancho, int alto) {
+	bool exito = true;
 
-	//aca se recibirian los datos ya parseados
-	exito = parsearXML("ej.xml");
+	exito = inicializarVentana(ancho , alto);
 	if (!exito){
 		cerr<<"Cerrando todo"<<endl;
 	}
@@ -199,54 +194,4 @@ bool Grafica::inicializarPersonaje(char* path, int ancho, int alto){
 	return exito;
 }
 
-int Grafica::cantidadDeHijos(xml_node<> *nodo){
-	int c = 0;
-	for (xml_node<> *hijo = nodo->first_node(); hijo != NULL; hijo = hijo->next_sibling()){
-		c++;
-	}
-
-	return c;
-}
-
-bool Grafica::parsearXML(const char* direccion){
-	bool exito = true;
-
-	file<> xmlFile(direccion);
-	xml_document<> doc;    // character type defaults to char
-	doc.parse<0>(xmlFile.data());    // 0 means default parse flags
-
-	xml_node<> *ventana = doc.first_node("ventana");
-	xml_node<> *ancho = ventana->first_node("ancho");
-	xml_node<> *alto = ventana->first_node("alto");
-
-	exito = inicializarVentana(atoi(ancho->value()), atoi(alto->value()));
-	if(!exito) cout<<"Fallo en crear ventana"<<endl;
-
-	xml_node<> *capas = doc.first_node("capas");
-	xml_node<> *capa1 = capas->first_node("capa");
-	xml_node<> *fondoXML = capa1->first_node("imagen_fondo");
-
-	exito = inicializarFondo(fondoXML->value());
-	if(!exito) cout<<"Fallo en crear fondo"<<endl;
-
-	xml_node<> *sprites = doc.first_node("sprites");
-	xml_node<> *sprite = sprites->first_node();
-	xml_node<> *parado = NULL;
-	bool encontrado = false;
-	while (!encontrado && sprite != NULL){
-		if (strcmp(sprite->first_node("id")->value(),"personaje-parado") == 0 ){
-			parado = sprite;
-			encontrado = true;
-		}else{
-			sprite = sprite->next_sibling();
-		}
-	}
-	if (encontrado){
-		exito = inicializarPersonaje(parado->first_node("path")->value(), atoi(parado->first_node("ancho")->value()),
-				atoi(parado->first_node("alto")->value()));
-		exito = true;
-	}
-
-	return exito;
-}
 

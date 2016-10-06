@@ -136,13 +136,38 @@ void mySocket::cerrar(){
 }
 
 void mySocket::iniciarGrafica(){
-	grafica.init();
+	//pido informacion de la ventana
+	char codigo;
+	codigo = '3';
+	enviarMensaje(&codigo, sizeof(char));
+	int anchoVentana, altoVentana;
+	recibirMensaje(&anchoVentana, sizeof(int));
+	recibirMensaje(&altoVentana, sizeof(int));
+
+	grafica.init(anchoVentana, altoVentana);
+
+	//pido informacion de los fondos
+	codigo = '4';
+	enviarMensaje(&codigo, sizeof(char));
+	int cantidad;
+	recibirMensaje(&cantidad, sizeof(int));
+	
+	for (int i = 0; i<cantidad; i++){
+		int anchoFondo, zIndex, tamId;
+		recibirMensaje(&tamId, sizeof(int));
+		char idFondo[tamId];
+		recibirMensaje(&idFondo, sizeof(char)*tamId);
+		recibirMensaje(&anchoFondo, sizeof(int));
+		recibirMensaje(&zIndex, sizeof(int));
+		
+		grafica.inicializarFondo(idFondo);
+	}
+
 
 	bool quit = false;
 	SDL_Event event;
 
 	//pido cantidad de objetos a dibujar
-	char codigo;
 	codigo = '6';
 	enviarMensaje(&codigo, sizeof(char));
 	int cantObjetos;

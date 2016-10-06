@@ -24,7 +24,7 @@ class mySocketSrv{
 
 	public:
 		
-		mySocketSrv(char* puerto);
+		mySocketSrv(char* puerto, char* xml);
 		void bindear();
 		void escuchar();
 		void enviarMensaje(string mensaje);
@@ -35,6 +35,7 @@ class mySocketSrv{
 		void cerrar();
 		void setNumeroCliente(int usr);
 		int getNumeroCliente();
+		void cargarFondos(char* xml);
 		~mySocketSrv();
 };
 

@@ -1,22 +1,14 @@
 #include <iostream>
-#include <SDL2/SDL.h>
 #include <string>
 #include "Dibujable.h"
 #include <list>
-
-#include <iostream>
 #include <cstring>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "rapidxml.hpp"
-#include "rapidxml_print.hpp"
-#include "rapidxml_utils.hpp"
 #include "LTexture.h"
 
 #ifndef GRAFICA_H_
 #define GRAFICA_H_
-
-using namespace rapidxml;
 
 //The dimensions of the level
 const int LEVEL_WIDTH = 2451;
@@ -54,7 +46,7 @@ private:
 public:
 	Grafica();
 	virtual ~Grafica();
-	bool init();
+	bool init(int ancho, int alto);
 	void close();
 	void mostrar();
 	bool hayColision(SDL_Rect *a , SDL_Rect *b);
@@ -75,8 +67,6 @@ public:
 	bool inicializarVentana(int ancho, int alto);
 	bool inicializarFondo(char* path);
 	bool inicializarPersonaje(char* path, int ancho, int alto);
-	int cantidadDeHijos(xml_node<> *nodo);
-	bool parsearXML(const char* direccion);
 
 	void free() {
 		//Free texture if it exists

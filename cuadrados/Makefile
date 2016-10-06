@@ -8,6 +8,7 @@ OTRAS2 = Dibujable.cpp
 OTRAS3 = Grafica.cpp
 OTRAS4 = DibujableServer.cpp
 OTRAS5 = LTexture.cpp
+OTRAS6 = FondoServer.cpp
 
 CLIENTE = Cliente
 SERVIDOR = Servidor
@@ -21,7 +22,7 @@ cliente:
 
 servidor:
 	$(CXX) $(SERVIDOR)/$(SERVIDOR).cpp $(SERVIDOR)/$(LIBRERIAS) $(SERVIDOR)/$(OTRAS) \
-	$(SERVIDOR)/$(OTRAS1) $(SERVIDOR)/$(OTRAS4) $(CXXFLAGS) -o $(SERVIDOR)/servidor
+	$(SERVIDOR)/$(OTRAS1) $(SERVIDOR)/$(OTRAS4) $(SERVIDOR)/$(OTRAS6) $(CXXFLAGS) -o $(SERVIDOR)/servidor
 
 clean:
 	rm -f $(CLIENTE)/cliente $(SERVIDOR)/servidor

@@ -16,12 +16,28 @@ void *escuchar_clientes(void *arg){
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2) {
+	char* archivo;
+	if (argc < 2) {
     	cout << "Falta proveer datos al programa" << endl;
-    	cout << "Modo de uso: "<< argv[0]<< " puerto" << endl;
+    	cout << "Modo de uso: "<< argv[0]<< " puerto archivo.xml" << endl;
        exit(0);
     }
-	mySocketSrv servidor(argv[1]);
+    
+	if (argv[2] != NULL){
+		ifstream infile(argv[2]);
+		if (infile.good() == false) {
+			cout << "El archivo "<<argv[2]<<" no existe"<<endl;
+			exit(0);
+		}
+		infile.close();
+		archivo = argv[2];
+	}
+	else{
+		string aux = "ej.xml";
+		archivo = &aux[0];
+	}
+	mySocketSrv servidor(argv[1],archivo);
+
 	servidor.bindear();
 	servidor.escuchar();
 

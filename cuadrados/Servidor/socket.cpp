@@ -5,10 +5,20 @@
 #include "mensajeClass.hpp"
 #include "usuarioClass.hpp"
 #include "DibujableServer.h"
+#include "FondoServer.h"
+#include "rapidxml.hpp"
+#include "rapidxml_print.hpp"
+#include "rapidxml_utils.hpp"
 
 #define DEBUG 2
 
+using namespace rapidxml;
+using namespace std;
+
 list<DibujableServer> listaDibujables;
+list<FondoServer> listaFondos;
+int ANCHO_VENTANA;
+int ALTO_VENTANA;
 
 list<mensajeClass> listaDeMensajes;
 list<string> listaDeUsuarios;
@@ -92,6 +102,33 @@ void responderLogin(int newsockfd, int respuesta, string mensaje){
 	enviarMensaje(newsockfd, cstr, tamanioMensaje*(sizeof(char)));
 
 	delete[] cstr;
+}
+
+void mySocketSrv::cargarFondos(char* xml){
+	file<> xmlFile(xml);
+	xml_document<> doc;    // character type defaults to char
+	doc.parse<0>(xmlFile.data());    // 0 means default parse flags
+
+	xml_node<> *ventana = doc.first_node("ventana");
+	xml_node<> *ancho = ventana->first_node("ancho");
+	xml_node<> *alto = ventana->first_node("alto");
+	
+	ANCHO_VENTANA = atoi(ancho->value());
+	ALTO_VENTANA = atoi(alto->value());
+
+	xml_node<> *capas = doc.first_node("capas");
+	xml_node<> *capa1 = capas->first_node("capa");
+	xml_node<> *fondoXML = capa1->first_node("imagen_fondo");
+	xml_node<> *anchoFondo = fondoXML->next_sibling("ancho");
+	xml_node<> *zFondo = anchoFondo->next_sibling("z-index");
+
+	FondoServer nuevo;
+	nuevo.setAncho(atoi(anchoFondo->value()));
+	nuevo.setSpriteId(fondoXML->value());
+	nuevo.setZindex(atoi(zFondo->value()));
+	listaFondos.push_back(nuevo);
+
+
 }
 
 void buscarNombreUsuario(char *nombreRetorno, int numeroUsuario){
@@ -221,6 +258,31 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			advance(it, numeroCliente-1);
 			it = listaDeUsuarios.erase(it);
 			//nose si esta bien este .erase
+			break;
+		}
+		case '3':{
+			//cout << "Entro a /3 que es ventana" << endl;
+			enviarMensaje(newsockfd, &ANCHO_VENTANA, sizeof(int));
+			enviarMensaje(newsockfd, &ALTO_VENTANA, sizeof(int));
+						
+			break;
+		}
+		case '4':{
+			//cout << "Entro a /4 que es fondos" << endl;
+			int tamano = listaFondos.size();
+			enviarMensaje(newsockfd, &tamano, sizeof(int));
+			for(list<FondoServer>::iterator i =listaFondos.begin(); i != listaFondos.end();++i){
+				int ancho = (*i).ancho;
+				int z = (*i).zindex;
+				int tamFondoId = sizeof((*i).spriteId);
+				char spriteId[tamFondoId];
+				strcpy(spriteId, (*i).spriteId.c_str());
+				
+				enviarMensaje(newsockfd, &tamFondoId, sizeof(int));
+				enviarMensaje(newsockfd, &spriteId, sizeof(char)*tamFondoId);
+				enviarMensaje(newsockfd, &ancho, sizeof(int));
+				enviarMensaje(newsockfd, &z, sizeof(int));
+			}
 			break;
 		}
 		case '5': {
@@ -372,7 +434,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 	pthread_exit(NULL);
 }
 
-mySocketSrv :: mySocketSrv(char* puerto){
+mySocketSrv :: mySocketSrv(char* puerto, char* xml){
+	//cargo fondos
+	cargarFondos(xml);
+
 	this->puerto = atoi(puerto);
 	cout << "PUERTO: " << this->puerto << endl;
 	this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
