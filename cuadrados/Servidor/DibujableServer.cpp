@@ -14,6 +14,14 @@ void DibujableServer::setY(int pos) {
 	y = pos;
 }
 
+void DibujableServer::setSpY(int pos) {
+	this->spY = pos;
+}
+
+void DibujableServer::setSpX(int pos) {
+	this->spX = pos;
+}
+
 void DibujableServer::setSpriteId(string idSprite) {
 	//strcpy(spriteId,idSprite.c_str());
 	spriteId = idSprite;

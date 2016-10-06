@@ -80,9 +80,9 @@ void Grafica::setSurface(SDL_Surface* surface){
 	gCurrentSurface = surface;
 }
 
-void Grafica::actualizar(int idObjeto,int x,int y){
+void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy){
 	LTexture aux = buscarDibujable(idObjeto);
-	aux.actualizar( x,  y);
+	aux.actualizar( x,  y, spx, spy);
 	actualizarDibujable(aux);
 }
 
@@ -96,7 +96,7 @@ void Grafica::mostrarDibujables(){
 	SDL_RenderPresent( window );
 }
 
-void Grafica::nuevoDibujable(int idObjeto, int posX, int posY) {
+void Grafica::nuevoDibujable(int idObjeto, int posX, int posY, int spx, int spy) {
 	//if (strcmp(spriteId,"fondo") == 0){
 	//nuevo.inicializarTexture("Clark.png");
 	//}else
@@ -105,6 +105,9 @@ void Grafica::nuevoDibujable(int idObjeto, int posX, int posY) {
 	nuevo.setId(idObjeto);
 	nuevo.setX(posX);
 	nuevo.setY(posY);
+	nuevo.setSpX(spx);
+	nuevo.setSpY(spy);
+	
 	nuevo.inicializarTexture(); //pasar nombre como parametro
 
 	listaDibujable.push_back(nuevo);

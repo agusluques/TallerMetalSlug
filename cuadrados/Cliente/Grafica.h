@@ -55,11 +55,11 @@ public:
 	SDL_Surface* getSurface();
 	void setSurface(SDL_Surface* surface);
 
-	void actualizar(int idObjeto,int x,int y);
+	void actualizar(int idObjeto,int x,int y, int spx, int spy);
 
 	void mostrarDibujables();
 	LTexture buscarDibujable(int id);
-	void nuevoDibujable(int idObjeto, int posX, int posY);
+	void nuevoDibujable(int idObjeto, int posX, int posY, int spx, int spy);
 	void actualizarDibujable(LTexture nuevo);
 	void borrarDibujable(int id);
 

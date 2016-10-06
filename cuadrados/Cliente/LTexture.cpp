@@ -27,12 +27,12 @@ void LTexture::render(SDL_Renderer *window, SDL_Texture *mTexture){
 //	SDL_RenderCopy( window, mTexture, &cuerpo[ spX ][0], &renderQuad );
 }
 
-void LTexture::actualizar(int x, int y){
+void LTexture::actualizar(int x, int y, int spx, int spy){
 	if(this->xcord > x)	flipType = SDL_FLIP_HORIZONTAL; else flipType = SDL_FLIP_NONE;
 	this->xcord = x;
 	this->ycord = y;
-	this-> spX++;
-	if (spX == 6) spX=0;
+	this-> spX = spx;
+	this-> spY = spy;
 }
 
 void LTexture::setX(int movimiento){
@@ -41,6 +41,14 @@ void LTexture::setX(int movimiento){
 
 void LTexture::setY(int movimiento){
 	this->ycord = movimiento;
+}
+
+void LTexture::setSpX(int movimiento){
+	this->spX = movimiento;
+}
+
+void LTexture::setSpY(int movimiento){
+	this->spY = movimiento;
 }
 
 void LTexture::setId(int id){

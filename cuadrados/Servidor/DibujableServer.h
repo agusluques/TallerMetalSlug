@@ -11,10 +11,14 @@ public:
 	string spriteId;
 	int x;
 	int y;
+	int spX;
+	int spY;
 
 	DibujableServer();
 	void setX(int pos);
 	void setY(int pos);
+	void setSpX(int pos);
+	void setSpY(int pos);
 	void setSpriteId(string idSprite);
 	void setId(int id);
 	virtual ~DibujableServer();

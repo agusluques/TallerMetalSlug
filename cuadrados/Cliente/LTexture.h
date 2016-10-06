@@ -27,10 +27,12 @@ public:
 	void free();
 	void render(SDL_Renderer *window, SDL_Texture *mTexture);
 
-	void actualizar(int x, int y);
+	void actualizar(int x, int y, int spx, int spy);
 
 	void setX(int movimiento);
 	void setY(int movimiento);
+	void setSpX(int movimiento);
+	void setSpY(int movimiento);
 	void setId(int id);
 	int getId();
 	int posicionX();

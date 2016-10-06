@@ -7,12 +7,14 @@ using namespace std;
 mensajeClass::mensajeClass(){}
 
 
-mensajeClass::mensajeClass(char * autor, char * destino, int id, int x, int y){
+mensajeClass::mensajeClass(char * autor, char * destino, int id, int x, int y, int spx, int spy){
 	strcpy(this->usrAutor, autor);
 	strcpy(this->usrDestino, destino);
 	this->idObjeto = id;
 	this->x = x;
 	this->y = y;
+	this->spX = spx;
+	this->spY = spy;
 }
 
 string mensajeClass::nombreDestinatario(){
@@ -31,6 +33,13 @@ int mensajeClass::getY(){
 	return this->y;
 }
 
+int mensajeClass::getSpX(){
+	return this->spX;
+}
+
+int mensajeClass::getSpY(){
+	return this->spY;
+}
 
 int mensajeClass::getidObjeto(){
 	return this->idObjeto;

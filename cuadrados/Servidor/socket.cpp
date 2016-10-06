@@ -137,13 +137,13 @@ void buscarNombreUsuario(char *nombreRetorno, int numeroUsuario){
 	strcpy(nombreRetorno,(*it).c_str());
 }
 
-void agregaraLista(int numeroCliente, int usrDest, int x, int y){
+void agregaraLista(int numeroCliente, int usrDest, int x, int y, int spx, int spy){
 	char nombreAutor[50];
 	char nombreDestino[50];
 	buscarNombreUsuario(nombreAutor, numeroCliente);
 	buscarNombreUsuario(nombreDestino, usrDest);
 
-	mensajeClass mensajeObj(nombreAutor, nombreDestino, numeroCliente, x, y);
+	mensajeClass mensajeObj(nombreAutor, nombreDestino, numeroCliente, x, y, spx, spy);
 
 	int a = pthread_mutex_trylock(&mutexLista);
 	/*if (a != 0) {
@@ -242,7 +242,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				nuevo.setId(listaDeUsuarios.size());
 				nuevo.setSpriteId("player");
 				nuevo.setX(1 + rand() % (150));
-				nuevo.setY(1 + rand() % (150));
+				nuevo.setY(ALTO_VENTANA - 50);
+				nuevo.setSpX (0);
+				nuevo.setSpY(0);
 				listaDibujables.push_back(nuevo);
 			}
 
@@ -294,6 +296,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				if ((*i).nombreDestinatario().compare(nombre) == 0 ){
 					int  xCord = (*i).getX();
 					int  yCord = (*i).getY();
+					int spX = (*i).getSpX();
+					int spY = (*i).getSpY();
 					int idObjeto = (*i).getidObjeto();
 					int corte = 1;
 
@@ -301,6 +305,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					enviarMensaje(newsockfd, &idObjeto, sizeof(int));
 					enviarMensaje(newsockfd, &xCord, sizeof(int));
 					enviarMensaje(newsockfd, &yCord, sizeof(int));
+					enviarMensaje(newsockfd, &spX, sizeof(int));
+					enviarMensaje(newsockfd, &spY, sizeof(int));
 
 					i = listaDeMensajes.erase(i);
 					i--;
@@ -343,6 +349,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			//posicion y
 			enviarMensaje(newsockfd,&(*it).y,sizeof(int));
 
+			enviarMensaje(newsockfd,&(*it).spX,sizeof(int));
+
+			enviarMensaje(newsockfd,&(*it).spY,sizeof(int));
+
 			break;
 		}
 
@@ -350,12 +360,16 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			// ESTO ES PARA MODIFICAR LA LISTA DE OBJ DEL SERVIDOR..
 			// Q CUANDO UN CLIENTE NUEVO SE CONECTA DURANTE EL JUEGO, COPIA ESOS DATOS
 			//modifico el dibujable de la lista del servidor
-			int nuevaCordX, nuevaCordY;
+			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
 				if ((*it).id == numeroCliente){
 					//hacer metodo mover up y q sume solo en la clase dibujableServer...
 					nuevaCordY = it->y = it->y - 2;
 					nuevaCordX = it->x;
+					nuevoSpX = it->spX = it->spX+1;				//COMENTARIO: DEBO CAMBIAR DE LINEA
+					if (nuevoSpX > 5) nuevoSpX = it->spX = 0;	//DE SPRITE PARA QUE SUBA
+					nuevoSpY = it->spY;
+
 				}
 			}
 
@@ -363,18 +377,21 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			for(int i = 1; i <= listaDeUsuarios.size(); i++){
 				//el servidor va a poner en la lista los msjs para todos
 				//el msj contiene el id del objeto a mover y su nueva posicion
-				agregaraLista(numeroCliente, i, nuevaCordX, nuevaCordY);
+				agregaraLista(numeroCliente, i, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
 			}
 
 			break;
 		}
 		case 'D':{
-			int nuevaCordX, nuevaCordY;
+			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
 				if ((*it).id == numeroCliente){
 					//hacer metodo mover up y q sume solo en la clase dibujableServer...
 					nuevaCordY = it->y = it->y + 2;
 					nuevaCordX = it->x;
+					nuevoSpX = it->spX = it->spX+1;				//COMENTARIO: DEBO CAMBIAR DE LINEA
+					if (nuevoSpX > 5) nuevoSpX = it->spX = 0;	//DE SPRITE PARA QUE BAJE?
+					nuevoSpY = it->spY;
 				}
 			}
 
@@ -382,18 +399,21 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			for(int i = 1; i <= listaDeUsuarios.size(); i++){
 				//el servidor va a poner en la lista los msjs para todos
 				//el msj contiene el id del objeto a mover y su nueva posicion
-				agregaraLista(numeroCliente, i, nuevaCordX, nuevaCordY);
+				agregaraLista(numeroCliente, i, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
 			}
 
 			break;
 		}
 		case 'L':{
-			int nuevaCordX, nuevaCordY;
+			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
 				if ((*it).id == numeroCliente){
 					//hacer metodo mover up y q sume solo en la clase dibujableServer...
 					nuevaCordY = it->y;
 					nuevaCordX = it->x = it->x -2;
+					nuevoSpX = it->spX = it->spX+1;
+					if (nuevoSpX > 5) nuevoSpX = it->spX = 0;
+					nuevoSpY = it->spY;
 				}
 			}
 
@@ -401,18 +421,21 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			for(int i = 1; i <= listaDeUsuarios.size(); i++){
 				//el servidor va a poner en la lista los msjs para todos
 				//el msj contiene el id del objeto a mover y su nueva posicion
-				agregaraLista(numeroCliente, i, nuevaCordX, nuevaCordY);
+				agregaraLista(numeroCliente, i, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
 			}
 
 			break;
 		}
 		case 'R':{
-			int nuevaCordX, nuevaCordY;
+			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
 				if ((*it).id == numeroCliente){
 					//hacer metodo mover up y q sume solo en la clase dibujableServer...
 					nuevaCordY = it->y;
 					nuevaCordX = it->x = it->x +2;
+					nuevoSpX = it->spX = it->spX+1;
+					if (nuevoSpX > 5) nuevoSpX = it->spX = 0;
+					nuevoSpY = it->spY;
 				}
 			}
 
@@ -420,7 +443,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			for(int i = 1; i <= listaDeUsuarios.size(); i++){
 				//el servidor va a poner en la lista los msjs para todos
 				//el msj contiene el id del objeto a mover y su nueva posicion
-				agregaraLista(numeroCliente, i, nuevaCordX, nuevaCordY);
+				agregaraLista(numeroCliente, i, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
 			}
 
 			break;

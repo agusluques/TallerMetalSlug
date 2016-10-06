@@ -9,14 +9,19 @@ private:
 	int idObjeto;
 	int x;
 	int y;
+	int spX;
+	int spY;
+
 public:
 	mensajeClass();
-	mensajeClass(char * autor, char * destino, int id, int x, int y);
+	mensajeClass(char * autor, char * destino, int id, int x, int y, int spx, int spy);
 	std::string nombreDestinatario();
 	std::string nombreAutor();
 	int getidObjeto();
 	int getX();
 	int getY();
+	int getSpX();
+	int getSpY();
 	//~mensajeClass();
 	
 };

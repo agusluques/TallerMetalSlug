@@ -94,7 +94,7 @@ void mySocket::recibirMensaje(){
 	while(corte != 0){
 		recibirMensaje(&corte, sizeof(int));
 		if (corte != 0){
-			int x,y;
+			int x,y, spx, spy;
 			int idObjeto;
 
 			cout << "Corte: " << corte << endl;
@@ -104,8 +104,12 @@ void mySocket::recibirMensaje(){
 			cout << "X: " << x << endl;
 			recibirMensaje(&y, sizeof(int));
 			cout << "Y: " << y << endl;
+			recibirMensaje(&spx, sizeof(int));
+			cout << "SpriteX: " << spx << endl;
+			recibirMensaje(&spy, sizeof(int));
+			cout << "SpriteY: " << spy << endl;
 
-			grafica.actualizar(idObjeto, x, y);
+			grafica.actualizar(idObjeto, x, y, spx, spy);
 		}
 	}
 }
@@ -206,7 +210,16 @@ void mySocket::iniciarGrafica(){
 		recibirMensaje(&posY, sizeof(int));
 		cout << posY << endl;
 
-		grafica.nuevoDibujable(idObjeto,posX,posY);
+		int spx;
+		recibirMensaje(&spx, sizeof(int));
+		cout << spx << endl;
+
+		int spy;
+		recibirMensaje(&spy, sizeof(int));
+		cout << spy << endl;
+
+
+		grafica.nuevoDibujable(idObjeto,posX,posY, spx, spy);
 	}
 
 	while( !quit ) {
