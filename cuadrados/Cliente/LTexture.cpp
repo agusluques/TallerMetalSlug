@@ -15,15 +15,15 @@ LTexture::~LTexture() {
 	//free();
 }
 
-void LTexture::render(SDL_Renderer *window, SDL_Texture *mTexture){
+void LTexture::render(SDL_Renderer *window, SDL_Texture *mTexture, int ancho, int alto){
 	SDL_Rect renderQuad;
 
 	renderQuad.x = xcord;
 	renderQuad.y = ycord;
 
 	//esto entra por el xml
-	renderQuad.w = 60;
-	renderQuad.h = 70;
+	renderQuad.w = ancho;
+	renderQuad.h = alto;
 	//renderQuad.w = player[ spX ][0].w;
 	//renderQuad.h = player[ spX ][0].h;
 

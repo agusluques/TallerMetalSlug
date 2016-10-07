@@ -23,7 +23,7 @@ int ALTO_VENTANA;
 list<mensajeClass> listaDeMensajes;
 list<usuarioClass> listaDeUsuarios;
 
-//esto se lee del xml
+//esto se lee del xml, en caso que no haya nada es 2 por defecto.
 int cantidadJugadores = 2;
 
 //list<mensajeClass> listaDeMensajesAlCliente;
@@ -106,6 +106,16 @@ void responderLogin(int newsockfd, int respuesta, string mensaje, int numeroClie
 	enviarMensaje(newsockfd, &numeroCliente, sizeof(int));
 
 	delete[] cstr;
+}
+
+void cantidadDeJugadores(char* xml){
+	file<> xmlFile(xml);
+	xml_document<> doc;    // character type defaults to char
+	doc.parse<0>(xmlFile.data());    // 0 means default parse flags
+
+	xml_node<> *cantidad = doc.first_node("cantidadDeJugadores");
+	if (cantidad != NULL) cantidadJugadores = atoi(cantidad->value());
+
 }
 
 void mySocketSrv::cargarFondos(char* xml){
@@ -535,7 +545,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 mySocketSrv :: mySocketSrv(char* puerto, char* xml){
 	//cargo fondos
+
 	cargarFondos(xml);
+	cantidadDeJugadores(xml);
 
 	this->puerto = atoi(puerto);
 	cout << "PUERTO: " << this->puerto << endl;

@@ -40,7 +40,8 @@ bool Grafica::init(int ancho, int alto) {
 	if (!exito){
 		cerr<<"Cerrando todo"<<endl;
 	}
-
+	anchoVentana = ancho;
+	altoVentana = alto;
 	return exito;
 }
 
@@ -91,13 +92,13 @@ void Grafica::mostrarDibujables(){
 	SDL_RenderClear( window );
 
 	for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
-		(*i).render(window, mTexture);
-	}
-
+		(*i).render(window, mTexture, anchoVentana/12, altoVentana/10);//si cambian el ancho y alto de 
+	}																   //la ventana, el tam de los tipos
+																	   //se ajusta con el /10
 	//manera fea de mostrar primero al cliente
 	list<LTexture>::iterator i = listaDibujable.begin();
 	advance(i,numeroCliente - 1);
-	(*i).render(window, mTexture);
+	(*i).render(window, mTexture, anchoVentana/12, altoVentana/10);
 
 	SDL_RenderPresent( window );
 }

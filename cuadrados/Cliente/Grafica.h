@@ -11,12 +11,12 @@
 #define GRAFICA_H_
 
 //The dimensions of the level
-const int LEVEL_WIDTH = 2451;
-const int LEVEL_HEIGHT = 300;
+//const int LEVEL_WIDTH = 2451;
+//const int LEVEL_HEIGHT = 300;
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 310;
-const int SCREEN_HEIGHT = 230;
+//const int SCREEN_WIDTH = 310;
+//const int SCREEN_HEIGHT = 230;
 
 class Grafica {
 private:
@@ -42,6 +42,9 @@ private:
 	//Image dimensions
 	int mWidth;
 	int mHeight;
+
+	int anchoVentana;
+	int altoVentana;
 
 public:
 	int numeroCliente;

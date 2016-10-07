@@ -27,7 +27,7 @@ public:
 	LTexture();
 	~LTexture();
 	void free();
-	void render(SDL_Renderer *window, SDL_Texture *mTexture);
+	void render(SDL_Renderer *window, SDL_Texture *mTexture, int ancho, int alto);
 
 	void actualizar(int x, int y, int spx, int spy);
 
