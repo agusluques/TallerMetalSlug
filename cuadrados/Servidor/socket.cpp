@@ -92,7 +92,7 @@ bool enviarMensaje(int sockfd, void* mensaje, int tamanioMensaje){
 	return errorSocket;
 }
 
-void responderLogin(int newsockfd, int respuesta, string mensaje){
+void responderLogin(int newsockfd, int respuesta, string mensaje, int numeroCliente){
 	char* cstr = new char [mensaje.length()+1];
 	strcpy (cstr, mensaje.c_str());
 	int tamanioMensaje = mensaje.length()+1;
@@ -100,6 +100,7 @@ void responderLogin(int newsockfd, int respuesta, string mensaje){
 	enviarMensaje(newsockfd, &respuesta, sizeof(int));
 	enviarMensaje(newsockfd, &tamanioMensaje, sizeof(int));
 	enviarMensaje(newsockfd, cstr, tamanioMensaje*(sizeof(char)));
+	enviarMensaje(newsockfd, &numeroCliente, sizeof(int));
 
 	delete[] cstr;
 }
@@ -282,7 +283,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				strcpy(mensaje,"Bienvenido nuevamente");
 				respuesta = true;
 			}
-			responderLogin(newsockfd,respuesta,mensaje);
+			responderLogin(newsockfd,respuesta,mensaje, numeroCliente);
 
 			break;
 		}

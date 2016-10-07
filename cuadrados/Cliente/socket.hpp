@@ -31,6 +31,8 @@ class mySocket{
 		bool conectado;
 		Grafica grafica;
 	public:
+		int numeroCliente;
+
 		mySocket(char* puerto, char* IP);
 		bool autenticar(string nombre);
 		void conectar();

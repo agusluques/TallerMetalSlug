@@ -43,6 +43,8 @@ bool mySocket::autenticar(string nombre){
 	recibirMensaje(&mensaje, sizeof(char)*tam);
 	cout << "Mensaje del servidor: " << mensaje << endl;
 
+	recibirMensaje(&this->numeroCliente, sizeof(int));
+
 	return respuesta;
 }
 
@@ -224,6 +226,8 @@ void mySocket::iniciarGrafica(){
 	SDL_Event event;
 
 	cargarDibujables();
+
+	grafica.setIdCliente(numeroCliente);
 
 	while( !quit ) {
 

@@ -94,6 +94,11 @@ void Grafica::mostrarDibujables(){
 		(*i).render(window, mTexture);
 	}
 
+	//manera fea de mostrar primero al cliente
+	list<LTexture>::iterator i = listaDibujable.begin();
+	advance(i,numeroCliente - 1);
+	(*i).render(window, mTexture);
+
 	SDL_RenderPresent( window );
 }
 

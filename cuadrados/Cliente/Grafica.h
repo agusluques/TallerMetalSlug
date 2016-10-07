@@ -44,6 +44,8 @@ private:
 	int mHeight;
 
 public:
+	int numeroCliente;
+
 	Grafica();
 	virtual ~Grafica();
 	bool init(int ancho, int alto);
@@ -101,6 +103,10 @@ public:
 		}
 
 		return (mTexture != NULL);
+	}
+
+	void setIdCliente(int numCliente){
+		this->numeroCliente = numCliente;
 	}
 
 };
