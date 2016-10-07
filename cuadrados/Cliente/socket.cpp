@@ -139,39 +139,9 @@ void mySocket::cerrar(){
 	close(this->sockfd);
 }
 
-void mySocket::iniciarGrafica(){
-	//pido informacion de la ventana
-	char codigo;
-	codigo = '3';
-	enviarMensaje(&codigo, sizeof(char));
-	int anchoVentana, altoVentana;
-	recibirMensaje(&anchoVentana, sizeof(int));
-	recibirMensaje(&altoVentana, sizeof(int));
-
-	grafica.init(anchoVentana, altoVentana);
-
-	//pido informacion de los fondos
-	codigo = '4';
-	enviarMensaje(&codigo, sizeof(char));
-	int cantidad;
-	recibirMensaje(&cantidad, sizeof(int));
-	
-	for (int i = 0; i<cantidad; i++){
-		int anchoFondo, zIndex, tamId;
-		recibirMensaje(&tamId, sizeof(int));
-		char idFondo[tamId];
-		recibirMensaje(&idFondo, sizeof(char)*tamId);
-		recibirMensaje(&anchoFondo, sizeof(int));
-		recibirMensaje(&zIndex, sizeof(int));
-		
-		grafica.inicializarFondo(idFondo);
-	}
-
-
-	bool quit = false;
-	SDL_Event event;
-
+void mySocket::cargarDibujables(){
 	//pido cantidad de objetos a dibujar
+	char codigo;
 	codigo = '6';
 	enviarMensaje(&codigo, sizeof(char));
 	int cantObjetos;
@@ -218,15 +188,50 @@ void mySocket::iniciarGrafica(){
 		recibirMensaje(&spy, sizeof(int));
 		cout << spy << endl;
 
-
 		grafica.nuevoDibujable(idObjeto,posX,posY, spx, spy);
 	}
+}
+
+void mySocket::iniciarGrafica(){
+	//pido informacion de la ventana
+	char codigo;
+	codigo = '3';
+	enviarMensaje(&codigo, sizeof(char));
+	int anchoVentana, altoVentana;
+	recibirMensaje(&anchoVentana, sizeof(int));
+	recibirMensaje(&altoVentana, sizeof(int));
+
+	grafica.init(anchoVentana, altoVentana);
+
+	//pido informacion de los fondos
+	codigo = '4';
+	enviarMensaje(&codigo, sizeof(char));
+	int cantidad;
+	recibirMensaje(&cantidad, sizeof(int));
+	
+	for (int i = 0; i<cantidad; i++){
+		int anchoFondo, zIndex, tamId;
+		recibirMensaje(&tamId, sizeof(int));
+		char idFondo[tamId];
+		recibirMensaje(&idFondo, sizeof(char)*tamId);
+		recibirMensaje(&anchoFondo, sizeof(int));
+		recibirMensaje(&zIndex, sizeof(int));
+		
+		grafica.inicializarFondo(idFondo);
+	}
+
+	bool quit = false;
+	SDL_Event event;
+
+	cargarDibujables();
 
 	while( !quit ) {
 
 		//SALIR CON ESC O CERRAR VENTANA
 		while( SDL_PollEvent(&event) != 0 ) {
 			if( event.type == SDL_QUIT ) {
+				strcpy(&codigo,"C");
+				enviarMensaje(&codigo, sizeof(char));
 				grafica.close();
 				quit = true;
 			}
@@ -241,7 +246,6 @@ void mySocket::iniciarGrafica(){
 					break;
 
 				case SDLK_DOWN:
-					//hardcodeo
 					strcpy(&codigo,"D");
 					enviarMensaje(&codigo, sizeof(char));
 					break;

@@ -13,7 +13,9 @@ class LTexture {
 private:
 	int id;
 
-	SDL_Rect cuerpo[6][1];
+	//SDL_Rect cuerpo[6][1];
+	SDL_Rect player[6][2];
+
 	int xcord;
 	int ycord;
 	int spX;

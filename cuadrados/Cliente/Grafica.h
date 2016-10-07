@@ -82,14 +82,14 @@ public:
 		free();
 
 		//SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
-		SDL_Surface* loadedSurface = IMG_Load( "Clark.png" );
+		SDL_Surface* loadedSurface = IMG_Load( "Clarkcopia.png" );
 
 		if( loadedSurface == NULL ) {
 			printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
 		}
 		else {
 			//this->mTexture = SDL_CreateTextureFromSurface( window, loadedSurface );
-			this->mTexture = IMG_LoadTexture(window, "Clark.png");
+			this->mTexture = IMG_LoadTexture(window, "Clarkcopia.png");
 			if( this->mTexture == NULL ) {
 				printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
 			}

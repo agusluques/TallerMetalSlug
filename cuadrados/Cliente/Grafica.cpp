@@ -81,6 +81,7 @@ void Grafica::setSurface(SDL_Surface* surface){
 }
 
 void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy){
+	/* usar avance de la lista */
 	LTexture aux = buscarDibujable(idObjeto);
 	aux.actualizar( x,  y, spx, spy);
 	actualizarDibujable(aux);
@@ -174,7 +175,7 @@ bool Grafica::inicializarVentana(int ancho, int alto){
 		}
 	}
 
-	loadFromFile("Clark.png");
+	loadFromFile("Clarkcopia.png");
 
 	return exito;
 

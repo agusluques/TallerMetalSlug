@@ -46,6 +46,7 @@ class mySocket{
 		void desconectar();
 		bool conexion();
 
+		void cargarDibujables();
 		void iniciarGrafica();
 		~mySocket();
 };

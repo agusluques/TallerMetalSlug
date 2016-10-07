@@ -6,20 +6,25 @@
 
 class usuarioClass
 {
-public:
+private:
 	char nombre[50];
-	char pass[50];
 	bool conectado;
+	int numeroCliente;
+public:
 	usuarioClass();
-	usuarioClass(char * usuario, char * contrasenia);
+
+	usuarioClass(char *usuario, int numCliente);
 	bool estaConectado();
+	void conectar();
 	void desconectar();
-	void recibir();
-	bool validarUsuario(char *contrasenia, char *mensaje);
-	void loggear(std::string mensaje);
 	std::string nombreUsuario();
-	// ~usuarioClass();
-	
+	int numCliente(){
+		return this->numeroCliente;
+	}
+
+	void loggear(std::string mensaje);
+
+	~usuarioClass();
 };
 
 #endif

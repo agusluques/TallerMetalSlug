@@ -4,45 +4,24 @@
 
 using namespace std;
 
-
-
-usuarioClass::usuarioClass(char *usuario, char *contrasenia){
+usuarioClass::usuarioClass(char *usuario, int numCliente){
 	strcpy(this->nombre,usuario);
-	strcpy(this->pass,contrasenia);
-	this->conectado = false;
+	this->conectado = true;
+	this->numeroCliente = numCliente;
 }
 
 bool usuarioClass::estaConectado(){
 	return this->conectado;
 }
 
-void usuarioClass::recibir(){
-	loggear(" pidio recibir mensajes");
+void usuarioClass::conectar(){
+	this->conectado = true;
+	loggear(" se ha desconectado");
 }
 
 void usuarioClass::desconectar(){
 	this->conectado=false;
 	loggear(" se ha desconectado");
-
-}
-
-bool usuarioClass::validarUsuario(char *contrasenia, char *mensaje) {
-	if (this->conectado){
-		strcpy(mensaje,"Usuario esta conectado");
-		loggear(" se intento conectar y ya estaba conectado");
-		return false;
-	}
-
-	if (strcmp(this->pass,contrasenia) == 0){
-		strcpy(mensaje,"Inicio de sesion exitoso");
-		loggear(" inicio sesion exitosamente");
-		this->conectado = true;
-		return true;
-	}else{
-		strcpy(mensaje,"Contraseña incorrecta");
-		loggear(" ingreso mal la contraseña ");
-		return false;
-	}
 }
 
 string usuarioClass::nombreUsuario(){
@@ -62,5 +41,9 @@ void usuarioClass::loggear(string mensaje){
 	archLog << buffTime << " " << nombreUsuario() << mensaje << endl;
 
 	archLog.close();
+
+}
+
+usuarioClass::~usuarioClass(){
 
 }

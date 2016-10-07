@@ -21,7 +21,7 @@ int ANCHO_VENTANA;
 int ALTO_VENTANA;
 
 list<mensajeClass> listaDeMensajes;
-list<string> listaDeUsuarios;
+list<usuarioClass> listaDeUsuarios;
 
 //list<mensajeClass> listaDeMensajesAlCliente;
 pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
@@ -112,7 +112,7 @@ void mySocketSrv::cargarFondos(char* xml){
 	xml_node<> *ventana = doc.first_node("ventana");
 	xml_node<> *ancho = ventana->first_node("ancho");
 	xml_node<> *alto = ventana->first_node("alto");
-	
+
 	ANCHO_VENTANA = atoi(ancho->value());
 	ALTO_VENTANA = atoi(alto->value());
 
@@ -132,9 +132,9 @@ void mySocketSrv::cargarFondos(char* xml){
 }
 
 void buscarNombreUsuario(char *nombreRetorno, int numeroUsuario){
-	list<string>::iterator it = listaDeUsuarios.begin();
+	list<usuarioClass>::iterator it = listaDeUsuarios.begin();
 	advance(it, numeroUsuario-1);
-	strcpy(nombreRetorno,(*it).c_str());
+	strcpy(nombreRetorno,(*it).nombreUsuario().c_str());
 }
 
 void agregaraLista(int numeroCliente, int usrDest, int x, int y, int spx, int spy){
@@ -155,6 +155,14 @@ void agregaraLista(int numeroCliente, int usrDest, int x, int y, int spx, int sp
 	pthread_mutex_unlock (&mutexLista);
 }
 
+void enviarAConectados(int numeroCliente, int nuevaCordX, int nuevaCordY, int nuevoSpX, int nuevoSpY){
+	//envio a todos los q esten online el mensaje de q se modifico un objeto
+	for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+		if((*it).estaConectado()){
+			agregaraLista(numeroCliente, (*it).numCliente(), nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
+		}
+	}
+}
 
 void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 {
@@ -221,19 +229,42 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			//VALIDO SI EL NOMBRE YA EXISTE
 			bool respuesta = true;
+			bool estabaDesconectado = false;
 			char mensaje[256];
 
 			//comparo con todos los usuarios q esten si existe devuelvo error
-			for (list<string>::iterator i = listaDeUsuarios.begin(); i != listaDeUsuarios.end(); ++i) {
-				if ((*i).compare(nombre) == 0){
+			for (list<usuarioClass>::iterator i = listaDeUsuarios.begin(); i != listaDeUsuarios.end(); ++i) {
+				if ((*i).nombreUsuario().compare(nombre) == 0){
+					if(!(*i).estaConectado()){
+						estabaDesconectado = true;
+						(*i).conectar();
+						numeroCliente = (*i).numCliente();
+
+						//mandar msj a todos q volvio asi no esta mas gris
+						int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
+						for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
+							if ((*it).id == numeroCliente){
+								//hacer metodo mover up y q sume solo en la clase dibujableServer...
+								nuevaCordY = it->y;
+								nuevaCordX = it->x;
+								//parado
+								nuevoSpX = it->spX = 0;
+								nuevoSpY = it->spY = 1;
+							}
+						}
+
+						//envio a todos los q esten online el mensaje de q se modifico un objeto
+						enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
+					}
 					respuesta = false;
 					strcpy(mensaje,"El nombre ya esta en uso");
 				}
 			}
 
 			if (respuesta){
-				strcpy(mensaje,"Nombre ingresado");
-				listaDeUsuarios.push_back(nombre);
+				strcpy(mensaje,"Bienvenido");
+				usuarioClass nuevoUsuario(nombre, listaDeUsuarios.size()+1);
+				listaDeUsuarios.push_back(nuevoUsuario);
 
 				numeroCliente = listaDeUsuarios.size();
 
@@ -242,12 +273,15 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				nuevo.setId(listaDeUsuarios.size());
 				nuevo.setSpriteId("player");
 				nuevo.setX(1 + rand() % (150));
-				nuevo.setY(ALTO_VENTANA - 50);
+				//nuevo.setY(ALTO_VENTANA - 50);
+				nuevo.setY(ALTO_VENTANA - 100);
 				nuevo.setSpX (0);
-				nuevo.setSpY(0);
+				nuevo.setSpY(1);
 				listaDibujables.push_back(nuevo);
+			}else if(estabaDesconectado){
+				strcpy(mensaje,"Bienvenido nuevamente");
+				respuesta = true;
 			}
-
 			responderLogin(newsockfd,respuesta,mensaje);
 
 			break;
@@ -256,17 +290,17 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			//cout << "Entro a /2 que es desconectar" << endl;
 			abierto = false;
 
-			list<string>::iterator it = listaDeUsuarios.begin();
+			list<usuarioClass>::iterator it = listaDeUsuarios.begin();
 			advance(it, numeroCliente-1);
-			it = listaDeUsuarios.erase(it);
-			//nose si esta bien este .erase
+			it->desconectar();
+
 			break;
 		}
 		case '3':{
 			//cout << "Entro a /3 que es ventana" << endl;
 			enviarMensaje(newsockfd, &ANCHO_VENTANA, sizeof(int));
 			enviarMensaje(newsockfd, &ALTO_VENTANA, sizeof(int));
-						
+
 			break;
 		}
 		case '4':{
@@ -279,7 +313,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				int tamFondoId = sizeof((*i).spriteId);
 				char spriteId[tamFondoId];
 				strcpy(spriteId, (*i).spriteId.c_str());
-				
+
 				enviarMensaje(newsockfd, &tamFondoId, sizeof(int));
 				enviarMensaje(newsockfd, &spriteId, sizeof(char)*tamFondoId);
 				enviarMensaje(newsockfd, &ancho, sizeof(int));
@@ -359,26 +393,26 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		case 'U':{
 			// ESTO ES PARA MODIFICAR LA LISTA DE OBJ DEL SERVIDOR..
 			// Q CUANDO UN CLIENTE NUEVO SE CONECTA DURANTE EL JUEGO, COPIA ESOS DATOS
+			//**CON UN MAPA ACCEDO MAS RAPIDO LLEGADO AL CASO DE QUE SEAN BANDA DE OBJETOS
 			//modifico el dibujable de la lista del servidor
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
+
+			/*
+			 * USAR AVANCE EN LA LISTA
+			 * */
 			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
+				//ACA AVANZAR
 				if ((*it).id == numeroCliente){
 					//hacer metodo mover up y q sume solo en la clase dibujableServer...
 					nuevaCordY = it->y = it->y - 2;
 					nuevaCordX = it->x;
 					nuevoSpX = it->spX = it->spX+1;				//COMENTARIO: DEBO CAMBIAR DE LINEA
 					if (nuevoSpX > 5) nuevoSpX = it->spX = 0;	//DE SPRITE PARA QUE SUBA
-					nuevoSpY = it->spY;
-
+					nuevoSpY = it->spY = 0;
 				}
 			}
 
-			//envio a todos el mensaje de q se modifico un objeto
-			for(int i = 1; i <= listaDeUsuarios.size(); i++){
-				//el servidor va a poner en la lista los msjs para todos
-				//el msj contiene el id del objeto a mover y su nueva posicion
-				agregaraLista(numeroCliente, i, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
-			}
+			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
 
 			break;
 		}
@@ -391,16 +425,12 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					nuevaCordX = it->x;
 					nuevoSpX = it->spX = it->spX+1;				//COMENTARIO: DEBO CAMBIAR DE LINEA
 					if (nuevoSpX > 5) nuevoSpX = it->spX = 0;	//DE SPRITE PARA QUE BAJE?
-					nuevoSpY = it->spY;
+					nuevoSpY = it->spY = 0;
 				}
 			}
 
-			//envio a todos el mensaje de q se modifico un objeto
-			for(int i = 1; i <= listaDeUsuarios.size(); i++){
-				//el servidor va a poner en la lista los msjs para todos
-				//el msj contiene el id del objeto a mover y su nueva posicion
-				agregaraLista(numeroCliente, i, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
-			}
+			//envio a todos los q esten online el mensaje de q se modifico un objeto
+			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
 
 			break;
 		}
@@ -413,16 +443,12 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					nuevaCordX = it->x = it->x -2;
 					nuevoSpX = it->spX = it->spX+1;
 					if (nuevoSpX > 5) nuevoSpX = it->spX = 0;
-					nuevoSpY = it->spY;
+					nuevoSpY = it->spY = 0;
 				}
 			}
 
-			//envio a todos el mensaje de q se modifico un objeto
-			for(int i = 1; i <= listaDeUsuarios.size(); i++){
-				//el servidor va a poner en la lista los msjs para todos
-				//el msj contiene el id del objeto a mover y su nueva posicion
-				agregaraLista(numeroCliente, i, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
-			}
+			//envio a todos los q esten online el mensaje de q se modifico un objeto
+			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
 
 			break;
 		}
@@ -435,16 +461,48 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					nuevaCordX = it->x = it->x +2;
 					nuevoSpX = it->spX = it->spX+1;
 					if (nuevoSpX > 5) nuevoSpX = it->spX = 0;
-					nuevoSpY = it->spY;
+					nuevoSpY = it->spY = 0;
 				}
 			}
 
-			//envio a todos el mensaje de q se modifico un objeto
-			for(int i = 1; i <= listaDeUsuarios.size(); i++){
-				//el servidor va a poner en la lista los msjs para todos
-				//el msj contiene el id del objeto a mover y su nueva posicion
-				agregaraLista(numeroCliente, i, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
+			//envio a todos los q esten online el mensaje de q se modifico un objeto
+			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
+
+			break;
+		}
+		case 'C':{
+			//caso cerrar ventana grafica
+			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
+			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
+				if ((*it).id == numeroCliente){
+					//hacer metodo mover up y q sume solo en la clase dibujableServer...
+					nuevaCordX = it->x;
+					nuevaCordY = it->y;
+					//momia
+					nuevoSpX = it->spX = 1;
+					nuevoSpY = it->spY = 1;
+				}
 			}
+
+			//envio a todos los q esten online el mensaje de q se modifico un objeto
+			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
+
+			break;
+		}
+		case 'S':{
+			//caso se queda parado
+
+			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
+			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
+				if ((*it).id == numeroCliente){
+					//sprite parado
+					nuevoSpX = it->spX = 1;
+					nuevoSpY = it->spY = 1;
+				}
+			}
+
+			//envio a todos los q esten online el mensaje de q se modifico un objeto
+			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
 
 			break;
 		}

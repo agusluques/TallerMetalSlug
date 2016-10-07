@@ -20,10 +20,14 @@ void LTexture::render(SDL_Renderer *window, SDL_Texture *mTexture){
 
 	renderQuad.x = xcord;
 	renderQuad.y = ycord;
-	renderQuad.w = cuerpo[ spX ][0].w;
-	renderQuad.h = cuerpo[ spX ][0].h;
 
-	SDL_RenderCopyEx( window, mTexture, &cuerpo[ spX ][0], &renderQuad, 0, NULL, flipType );
+	//esto entra por el xml
+	renderQuad.w = 60;
+	renderQuad.h = 70;
+	//renderQuad.w = player[ spX ][0].w;
+	//renderQuad.h = player[ spX ][0].h;
+
+	SDL_RenderCopyEx( window, mTexture, &player[spX][spY], &renderQuad, 0, NULL, flipType );
 //	SDL_RenderCopy( window, mTexture, &cuerpo[ spX ][0], &renderQuad );
 }
 
@@ -60,7 +64,7 @@ int LTexture::getId(){
 }
 
 void LTexture::inicializarTexture(){
-	cuerpo[0][0].x=8; cuerpo[0][0].y=443;
+	/*cuerpo[0][0].x=8; cuerpo[0][0].y=443;
 	cuerpo[0][0].w=35; cuerpo[0][0].h=50;
 
 	cuerpo[1][0].x=57; cuerpo[1][0].y=441;
@@ -76,5 +80,36 @@ void LTexture::inicializarTexture(){
 	cuerpo[4][0].w=35; cuerpo[4][0].h=50;
 
 	cuerpo[5][0].x=200; cuerpo[5][0].y=441;
-	cuerpo[5][0].w=35; cuerpo[5][0].h=50;
+	cuerpo[5][0].w=35; cuerpo[5][0].h=50;*/
+
+	//CORRIENDO
+	player[0][0].x=0; player[0][0].y=50;
+	player[0][0].w=30; player[0][0].h=40;
+
+	player[1][0].x=40; player[1][0].y=50;
+	player[1][0].w=30; player[1][0].h=40;
+
+	player[2][0].x=80; player[2][0].y=50;
+	player[2][0].w=30; player[2][0].h=40;
+
+	player[3][0].x=120; player[3][0].y=50;
+	player[3][0].w=30; player[3][0].h=40;
+
+	player[4][0].x=160; player[4][0].y=50;
+	player[4][0].w=30; player[4][0].h=40;
+
+	player[5][0].x=200; player[5][0].y=50;
+	player[5][0].w=30; player[5][0].h=40;
+
+	//PARADO
+	player[0][1].x=0; player[0][1].y=0;
+	player[0][1].w=30; player[0][1].h=40;
+
+	// sprite gris cuando se cierra la ventana.. ver cuando se mata el cliente q onda..
+	//momia
+	player[1][1].x = 0; player[1][1].y = 100;
+	player[1][1].w = 30; player[1][1].h = 40;
+	//zombi
+	player[2][1].x = 40; player[2][1].y = 100;
+	player[2][1].w = 30; player[2][1].h = 40;
 }
