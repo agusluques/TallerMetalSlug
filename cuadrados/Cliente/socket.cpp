@@ -96,22 +96,48 @@ void mySocket::recibirMensaje(){
 	while(corte != 0){
 		recibirMensaje(&corte, sizeof(int));
 		if (corte != 0){
-			int x,y, spx, spy;
-			int idObjeto;
-
 			cout << "Corte: " << corte << endl;
-			recibirMensaje(&idObjeto, sizeof(int));
-			cout << "id objeto: " << idObjeto << endl;
-			recibirMensaje(&x, sizeof(int));
-			cout << "X: " << x << endl;
-			recibirMensaje(&y, sizeof(int));
-			cout << "Y: " << y << endl;
-			recibirMensaje(&spx, sizeof(int));
-			cout << "SpriteX: " << spx << endl;
-			recibirMensaje(&spy, sizeof(int));
-			cout << "SpriteY: " << spy << endl;
 
-			grafica.actualizar(idObjeto, x, y, spx, spy);
+			int tipoMensaje;
+			recibirMensaje(&tipoMensaje, sizeof(int));
+			cout << "Tipo de mensaje: " << tipoMensaje << endl;
+
+			switch(tipoMensaje){
+				case 1:{
+					//recibo grafica jugadores
+					int x,y, spx, spy, idObjeto;
+
+					recibirMensaje(&idObjeto, sizeof(int));
+					cout << "id objeto: " << idObjeto << endl;
+					recibirMensaje(&x, sizeof(int));
+					cout << "X: " << x << endl;
+					recibirMensaje(&y, sizeof(int));
+					cout << "Y: " << y << endl;
+					recibirMensaje(&spx, sizeof(int));
+					cout << "SpriteX: " << spx << endl;
+					recibirMensaje(&spy, sizeof(int));
+					cout << "SpriteY: " << spy << endl;
+
+					grafica.actualizar(idObjeto, x, y, spx, spy);
+
+					break;
+				}
+				case 2:
+					//recibo fondo
+
+					break;
+				case 3:{
+					//recibo mensaje
+					int tam;
+
+					recibirMensaje(&tam, sizeof(int));
+					char mensaje[tam];
+					recibirMensaje(&mensaje, sizeof(char)*tam);
+					cout << "(*)Mensaje: " << mensaje << endl;
+
+					break;
+				}
+			}
 		}
 	}
 }

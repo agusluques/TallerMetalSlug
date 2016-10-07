@@ -15,6 +15,14 @@ mensajeClass::mensajeClass(char * autor, char * destino, int id, int x, int y, i
 	this->y = y;
 	this->spX = spx;
 	this->spY = spy;
+
+	tipoMensaje = 1;
+}
+
+mensajeClass::mensajeClass(int tipo, char *destino, string mensajeEnviado){
+	this->mensaje = string(mensajeEnviado);
+	strcpy(this->usrDestino, destino);
+	tipoMensaje = tipo;
 }
 
 string mensajeClass::nombreDestinatario(){

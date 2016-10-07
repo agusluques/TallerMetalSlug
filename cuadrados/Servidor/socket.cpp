@@ -169,6 +169,22 @@ void agregaraLista(int numeroCliente, int usrDest, int x, int y, int spx, int sp
 	pthread_mutex_unlock (&mutexLista);
 }
 
+void enviarMensajeAConectados(string mensaje){
+	//envio a todos los q esten online el mensaje
+	for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+		if((*it).estaConectado()){
+			//mensajes = tipo 3
+			char nombreDestino[50];
+			buscarNombreUsuario(nombreDestino, (*it).numCliente());
+
+			mensajeClass mensajeObj(3,nombreDestino,mensaje);
+			int a = pthread_mutex_trylock(&mutexLista);
+			listaDeMensajes.push_back(mensajeObj);
+			pthread_mutex_unlock (&mutexLista);
+		}
+	}
+}
+
 void enviarAConectados(int numeroCliente, int nuevaCordX, int nuevaCordY, int nuevoSpX, int nuevoSpY){
 	//envio a todos los q esten online el mensaje de q se modifico un objeto
 	for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
@@ -340,21 +356,53 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			for (list<mensajeClass>::iterator i = listaDeMensajes.begin(); i != listaDeMensajes.end(); ++i) {
 				char nombre[50];
+				//****me puedo ahorrar esta busqueda, guardando el id y no el nombre
 				buscarNombreUsuario(nombre, numeroCliente);
 				if ((*i).nombreDestinatario().compare(nombre) == 0 ){
-					int  xCord = (*i).getX();
-					int  yCord = (*i).getY();
-					int spX = (*i).getSpX();
-					int spY = (*i).getSpY();
-					int idObjeto = (*i).getidObjeto();
 					int corte = 1;
-
 					enviarMensaje(newsockfd, &corte, sizeof(int));
-					enviarMensaje(newsockfd, &idObjeto, sizeof(int));
-					enviarMensaje(newsockfd, &xCord, sizeof(int));
-					enviarMensaje(newsockfd, &yCord, sizeof(int));
-					enviarMensaje(newsockfd, &spX, sizeof(int));
-					enviarMensaje(newsockfd, &spY, sizeof(int));
+
+					//envio tipo de mensaje
+					int tipoMensaje = (*i).getTipoMensaje();
+					enviarMensaje(newsockfd, &tipoMensaje, sizeof(int));
+
+					cout << "TIPO MSJ: " << tipoMensaje << endl;
+
+					switch(tipoMensaje){
+					case 1:{
+						//envio de grafica
+						int  xCord = (*i).getX();
+						int  yCord = (*i).getY();
+						int spX = (*i).getSpX();
+						int spY = (*i).getSpY();
+						int idObjeto = (*i).getidObjeto();
+
+						enviarMensaje(newsockfd, &idObjeto, sizeof(int));
+						enviarMensaje(newsockfd, &xCord, sizeof(int));
+						enviarMensaje(newsockfd, &yCord, sizeof(int));
+						enviarMensaje(newsockfd, &spX, sizeof(int));
+						enviarMensaje(newsockfd, &spY, sizeof(int));
+
+						break;
+					}
+					case 2:
+						//envio de fondo
+
+						break;
+
+					case 3:{
+						//envio de mensajes
+						string mensaje = (*i).getMensaje();
+						char* cstr = new char [mensaje.length()+1];
+						strcpy (cstr, mensaje.c_str());
+						int tamanioMensaje = mensaje.length()+1;
+
+						enviarMensaje(newsockfd, &tamanioMensaje, sizeof(int));
+						enviarMensaje(newsockfd, cstr, tamanioMensaje*(sizeof(char)));
+
+						break;
+					}
+					}
 
 					i = listaDeMensajes.erase(i);
 					i--;
@@ -513,6 +561,13 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			//envio a todos los q esten online el mensaje de q se modifico un objeto
 			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
 
+			//envio un msj a todos los q esten online q se desconecto el usuario
+			list<usuarioClass>::iterator it = listaDeUsuarios.begin();
+			advance(it, numeroCliente-1);
+
+			string mensaje = (*it).nombreUsuario() + " Se ah desconectado";
+			enviarMensajeAConectados(mensaje);
+
 			break;
 		}
 		case 'S':{
@@ -545,7 +600,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 mySocketSrv :: mySocketSrv(char* puerto, char* xml){
 	//cargo fondos
-
 	cargarFondos(xml);
 	cantidadDeJugadores(xml);
 
