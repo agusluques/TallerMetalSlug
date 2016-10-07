@@ -497,7 +497,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
 				if ((*it).id == numeroCliente){
 					//sprite parado
-					nuevoSpX = it->spX = 1;
+					nuevaCordX = it->x;
+					nuevaCordY = it->y;
+					nuevoSpX = it->spX = 0;
 					nuevoSpY = it->spY = 1;
 				}
 			}

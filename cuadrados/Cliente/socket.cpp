@@ -229,10 +229,12 @@ void mySocket::iniciarGrafica(){
 
 	grafica.setIdCliente(numeroCliente);
 
+	bool quieto = true;
+
 	while( !quit ) {
 
 		//SALIR CON ESC O CERRAR VENTANA
-		while( SDL_PollEvent(&event) != 0 ) {
+		/*while( SDL_PollEvent(&event) != 0 ) {
 			if( event.type == SDL_QUIT ) {
 				strcpy(&codigo,"C");
 				enviarMensaje(&codigo, sizeof(char));
@@ -265,6 +267,72 @@ void mySocket::iniciarGrafica(){
 					break;
 
 				default:
+					break;
+				}
+			}
+		}*/
+
+		while( SDL_PollEvent(&event) != 0 ) {
+			if( event.type == SDL_QUIT ) {
+				strcpy(&codigo,"C");
+				enviarMensaje(&codigo, sizeof(char));
+				grafica.close();
+				quit = true;
+			}
+
+			if( event.type == SDL_KEYDOWN ) {
+				char codigo;
+
+				switch( event.key.keysym.sym ) {
+				case SDLK_UP:
+					strcpy(&codigo,"U");
+					enviarMensaje(&codigo, sizeof(char));
+					quieto = false;
+					break;
+
+				case SDLK_DOWN:
+					//hardcodeo
+					strcpy(&codigo,"D");
+					enviarMensaje(&codigo, sizeof(char));
+					quieto = false;
+					break;
+
+				case SDLK_LEFT:
+					strcpy(&codigo,"L");
+					enviarMensaje(&codigo, sizeof(char));
+					quieto = false;
+					break;
+
+				case SDLK_RIGHT:
+					strcpy(&codigo,"R");
+					enviarMensaje(&codigo, sizeof(char));
+					quieto = false;
+					break;
+
+				default:
+					break;
+				}
+			}else if( event.type == SDL_KEYUP && event.key.repeat == 0 && !quieto ) {
+				char codigo;
+				//cuando suelto tecla dejo al personaje parado
+				switch( event.key.keysym.sym ) {
+				case SDLK_LEFT:
+					strcpy(&codigo,"S");
+					enviarMensaje(&codigo, sizeof(char));
+					quieto = true;
+					event.type = SDL_FIRSTEVENT;
+					break;
+				case SDLK_RIGHT:
+					strcpy(&codigo,"S");
+					enviarMensaje(&codigo, sizeof(char));
+					quieto = true;
+					event.type = SDL_FIRSTEVENT;
+					break;
+				case SDLK_UP:
+					strcpy(&codigo,"S");
+					enviarMensaje(&codigo, sizeof(char));
+					quieto = true;
+					event.type = SDL_FIRSTEVENT;
 					break;
 				}
 			}
