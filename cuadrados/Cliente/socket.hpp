@@ -49,7 +49,7 @@ class mySocket{
 		bool conexion();
 
 		void cargarDibujables();
-		void iniciarGrafica();
+		bool iniciarGrafica();
 		~mySocket();
 };
 

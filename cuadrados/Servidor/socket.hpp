@@ -21,7 +21,6 @@ class mySocketSrv{
 		int puerto;
 		struct sockaddr_in serv_addr;
 		int numeroCliente;
-
 	public:
 		
 		mySocketSrv(char* puerto, char* xml);

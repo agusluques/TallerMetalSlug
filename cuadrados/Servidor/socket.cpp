@@ -23,6 +23,9 @@ int ALTO_VENTANA;
 list<mensajeClass> listaDeMensajes;
 list<usuarioClass> listaDeUsuarios;
 
+//esto se lee del xml
+int cantidadJugadores = 2;
+
 //list<mensajeClass> listaDeMensajesAlCliente;
 pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutexListaRecibir = PTHREAD_MUTEX_INITIALIZER;
@@ -360,6 +363,18 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			break;
 		}
+
+		case '7': {
+			//pido si puede empezar el juego
+			bool respuesta = false;
+			if (listaDeUsuarios.size() == cantidadJugadores){
+				respuesta = true;
+			}
+			enviarMensaje(newsockfd,&respuesta,sizeof(bool));
+
+			break;
+		}
+
 		case '9':{
 			//caso envio objetos dibujables
 			int numeroUsuario;

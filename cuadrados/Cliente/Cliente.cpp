@@ -100,7 +100,6 @@ int main(int argc, char *argv[])
 				break;
 
 			case '5': {
-				cout << "Inicio grafica" << endl;
 
 				Cliente.iniciarGrafica();
 

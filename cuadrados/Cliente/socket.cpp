@@ -194,9 +194,21 @@ void mySocket::cargarDibujables(){
 	}
 }
 
-void mySocket::iniciarGrafica(){
-	//pido informacion de la ventana
+bool mySocket::iniciarGrafica(){
+	//chequeo que esten todos los jugadores
 	char codigo;
+	codigo = '7';
+	enviarMensaje(&codigo, sizeof(char));
+	bool puedoComenzar;
+	recibirMensaje(&puedoComenzar, sizeof(bool));
+	if (!puedoComenzar){
+		cout << "Faltan ingresar jugadores" << endl;
+		return false;
+	}
+
+	cout << "Inicio grafica" << endl;
+
+	//pido informacion de la ventana
 	codigo = '3';
 	enviarMensaje(&codigo, sizeof(char));
 	int anchoVentana, altoVentana;
@@ -347,6 +359,8 @@ void mySocket::iniciarGrafica(){
 	}
 
 	grafica.close();
+
+	return true;
 }
 
 mySocket::~mySocket(){}
