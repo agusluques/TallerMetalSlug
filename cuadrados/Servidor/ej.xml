@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <ventana>
-	<ancho>800</ancho>
+	<ancho>300</ancho>
 	<alto>600</alto>
 </ventana>
 
@@ -56,5 +56,5 @@
 </capas>
 
 <cantidadDeJugadores>
-	1
+	2
 </cantidadDeJugadores>

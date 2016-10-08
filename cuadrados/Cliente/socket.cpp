@@ -137,6 +137,12 @@ void mySocket::recibirMensaje(){
 
 					break;
 				}
+				case 4:{
+					grafica.close();
+					iniciarGrafica();
+
+					break;
+				}
 			}
 		}
 	}
@@ -346,6 +352,12 @@ bool mySocket::iniciarGrafica(){
 					enviarMensaje(&codigo, sizeof(char));
 					quieto = false;
 					break;
+
+				case SDLK_r:
+					strcpy(&codigo,"i");
+					enviarMensaje(&codigo, sizeof(char));
+					grafica.clear();
+					iniciarGrafica();
 
 				default:
 					break;

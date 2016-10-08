@@ -45,6 +45,11 @@ bool Grafica::init(int ancho, int alto) {
 	return exito;
 }
 
+void Grafica::clear() {
+	close();
+	listaDibujable.clear();
+}
+
 //CERRAR SDL Y LIBERAR SURFACE
 void Grafica::close() {
 	//LIBERO SURFACE

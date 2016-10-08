@@ -68,6 +68,9 @@ public:
 	void actualizarDibujable(LTexture nuevo);
 	void borrarDibujable(int id);
 
+
+	void clear();
+
 	//lo de agus
 	bool inicializarVentana(int ancho, int alto);
 	bool inicializarFondo(char* path);

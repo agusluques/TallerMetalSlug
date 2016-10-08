@@ -19,6 +19,7 @@ list<DibujableServer> listaDibujables;
 list<FondoServer> listaFondos;
 int ANCHO_VENTANA;
 int ALTO_VENTANA;
+char* archivoXml;
 
 list<mensajeClass> listaDeMensajes;
 list<usuarioClass> listaDeUsuarios;
@@ -118,7 +119,7 @@ void cantidadDeJugadores(char* xml){
 
 }
 
-void mySocketSrv::cargarFondos(char* xml){
+void cargarFondos(char* xml){
 	file<> xmlFile(xml);
 	xml_document<> doc;    // character type defaults to char
 	doc.parse<0>(xmlFile.data());    // 0 means default parse flags
@@ -328,6 +329,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 		case '3':{
 			//cout << "Entro a /3 que es ventana" << endl;
+			cargarFondos(archivoXml);
 			enviarMensaje(newsockfd, &ANCHO_VENTANA, sizeof(int));
 			enviarMensaje(newsockfd, &ALTO_VENTANA, sizeof(int));
 
@@ -335,6 +337,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 		case '4':{
 			//cout << "Entro a /4 que es fondos" << endl;
+			cargarFondos(archivoXml);
 			int tamano = listaFondos.size();
 			enviarMensaje(newsockfd, &tamano, sizeof(int));
 			for(list<FondoServer>::iterator i =listaFondos.begin(); i != listaFondos.end();++i){
@@ -589,17 +592,51 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			break;
 		}
+		
+		case 'i':{
+			int x, y;
+			
+			/*for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+				if((*it).estaConectado()){
+					//mensajes = tipo 3
+					char nombreDestino[50];
+					buscarNombreUsuario(nombreDestino, (*it).numCliente());
+
+					mensajeClass mensajeObj(4,nombreDestino,NULL);
+					int a = pthread_mutex_trylock(&mutexLista);
+					listaDeMensajes.push_back(mensajeObj);
+					pthread_mutex_unlock (&mutexLista);
+				}
+			}*/
+			listaDibujables.clear();
+			for(int i = 1; i <= listaDeUsuarios.size(); i++){
+				DibujableServer nuevo;
+				nuevo.setId(i);
+				nuevo.setSpriteId("player");
+				nuevo.setX(1+rand() % (150));
+				//nuevo.setY(ALTO_VENTANA - 50);
+				nuevo.setY(ALTO_VENTANA-100);
+				nuevo.setSpX (0);
+				nuevo.setSpY(1);
+				listaDibujables.push_back(nuevo);
+			}
+			break;
+		}
+	
+	
 		default:
 			//cout << "No deberia ingresar aca" << endl;
 			break;
 		}
-	}
+
+}
 	//close(newsockfd);
 	pthread_exit(NULL);
 }
 
 mySocketSrv :: mySocketSrv(char* puerto, char* xml){
 	//cargo fondos
+	archivoXml = xml;
 	cargarFondos(xml);
 	cantidadDeJugadores(xml);
 

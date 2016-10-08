@@ -21,8 +21,8 @@ class mySocketSrv{
 		int puerto;
 		struct sockaddr_in serv_addr;
 		int numeroCliente;
+
 	public:
-		
 		mySocketSrv(char* puerto, char* xml);
 		void bindear();
 		void escuchar();
@@ -34,7 +34,6 @@ class mySocketSrv{
 		void cerrar();
 		void setNumeroCliente(int usr);
 		int getNumeroCliente();
-		void cargarFondos(char* xml);
 		~mySocketSrv();
 };
 
