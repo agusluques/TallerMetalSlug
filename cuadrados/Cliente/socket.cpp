@@ -119,6 +119,7 @@ void mySocket::recibirMensaje(){
 					cout << "SpriteY: " << spy << endl;
 
 					grafica.actualizar(idObjeto, x, y, spx, spy);
+					grafica.avanzarCamara (x);
 
 					break;
 				}

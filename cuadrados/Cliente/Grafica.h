@@ -31,12 +31,17 @@ private:
 
 	list<LTexture> listaDibujable;
 
+
 	//lo de agus
 	SDL_Rect camera; // = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+
+    SDL_Rect renderQuad;
+    SDL_Rect renderQuad2;
 
 	SDL_Window* windowARenderizar;
 	SDL_Renderer* window;
 	LTexture spriteFondo;
+	SDL_Texture *fondoText;
 	SDL_Texture *mTexture;
 
 	//Image dimensions
@@ -45,6 +50,10 @@ private:
 
 	int anchoVentana;
 	int altoVentana;
+
+	//fondo camara
+	int centro;
+	int centro2;
 
 public:
 	int numeroCliente;
@@ -67,13 +76,14 @@ public:
 	void nuevoDibujable(int idObjeto, int posX, int posY, int spx, int spy);
 	void actualizarDibujable(LTexture nuevo);
 	void borrarDibujable(int id);
+	void avanzarCamara (int avance);
 
 
 	void clear();
 
 	//lo de agus
 	bool inicializarVentana(int ancho, int alto);
-	bool inicializarFondo(char* path);
+	bool inicializarFondo(char *path);
 	bool inicializarPersonaje(char* path, int ancho, int alto);
 
 	void free() {
@@ -102,10 +112,10 @@ public:
 				printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
 			}
 			else {
-				mWidth = loadedSurface->w;
-				mHeight = loadedSurface->h;
+				//mWidth = loadedSurface->w;
+				//mHeight = loadedSurface->h;
 			}
-			SDL_FreeSurface( loadedSurface );
+			//SDL_FreeSurface( loadedSurface );
 		}
 
 		return (mTexture != NULL);

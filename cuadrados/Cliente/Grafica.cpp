@@ -12,6 +12,8 @@ Grafica::Grafica() {
 
 	windowARenderizar = NULL;
 	window = NULL;
+	centro = 180;
+	centro2=0;
 
 	mTexture = NULL;
 }
@@ -96,7 +98,36 @@ void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy){
 void Grafica::mostrarDibujables(){
 	SDL_RenderClear( window );
 
-	for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
+	renderQuad.x = 0 ;
+    renderQuad.y = 150 ;
+	renderQuad.w = 2000;
+	renderQuad.h = 400;
+
+	renderQuad2.x = 30;
+	renderQuad2.y = 472;
+    renderQuad2.w = 2000;
+    renderQuad2.h = 700;
+
+    SDL_RenderCopy (window, fondoText, &renderQuad2, &renderQuad );
+
+
+
+    renderQuad.x = centro2 ;
+    renderQuad.y = 150 ;
+    renderQuad.w = 2000;
+    renderQuad.h = 400;
+
+    renderQuad2.x = centro;
+    renderQuad2.y = 230;
+    renderQuad2.w = 2000;
+    renderQuad2.h = 200;
+
+
+
+    SDL_RenderCopy (window, fondoText, &renderQuad2 , &renderQuad);
+
+
+    for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
 		(*i).render(window, mTexture, anchoVentana/12, altoVentana/10);//si cambian el ancho y alto de 
 	}																   //la ventana, el tam de los tipos
 																	   //se ajusta con el /10
@@ -185,20 +216,29 @@ bool Grafica::inicializarVentana(int ancho, int alto){
 			}
 		}
 	}
-
+	char paath= 'a';
+    char *path = &paath;
+	inicializarFondo(path);
 	loadFromFile("Clarkcopia.png");
 
 	return exito;
 
 }
 
-bool Grafica::inicializarFondo(char* path){
+bool Grafica::inicializarFondo(char *path){
 	bool exito = true;
 
-	/*if (!spriteFondo.loadFromFile(path)){
-		cout<< "NO SE PUDO CARGAR EL FONDO"<<endl;
-		exito = false;
-	}*/
+
+    gFondoSurface = IMG_Load( "fondo-capas.png");
+
+    if( gFondoSurface == NULL ) {
+    	cout << "No se pudo cargar la imagen " << "fondo-capas.png" << "SDL Error: " << SDL_GetError() << endl;
+    }
+
+    fondoText = SDL_CreateTextureFromSurface(window, gFondoSurface);
+    SDL_FreeSurface(gFondoSurface);
+
+
 
 	return exito;
 }
@@ -206,7 +246,24 @@ bool Grafica::inicializarFondo(char* path){
 bool Grafica::inicializarPersonaje(char* path, int ancho, int alto){
 	bool exito = true;
 
+
+
 	return exito;
+}
+
+void Grafica::avanzarCamara (int posicion){
+
+  centro = posicion - 150;
+  if (centro < 180)
+	  centro= 180;
+  renderQuad2.x=centro;
+
+  centro2= centro - posicion;
+  renderQuad.x= centro2;
+  SDL_RenderCopy (window, fondoText, &renderQuad2, &renderQuad );
+  SDL_RenderPresent( window );
+
+
 }
 
 
