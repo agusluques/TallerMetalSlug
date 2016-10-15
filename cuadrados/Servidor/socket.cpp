@@ -533,7 +533,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			}
 
 			//envio a todos los q esten online el mensaje de q se modifico un objeto
-			bool avanzar;
+			bool avanzar = false;
 			if(xMin > 300){
 				avanzar = true;
 			}
@@ -560,7 +560,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			}
 
 			//envio a todos los q esten online el mensaje de q se modifico un objeto
-			bool avanzar;
+			bool avanzar = false;
 			if(xMin > 300){
 				avanzar = true;
 			}
