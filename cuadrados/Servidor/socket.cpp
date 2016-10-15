@@ -23,6 +23,7 @@ char* archivoXml;
 
 list<mensajeClass> listaDeMensajes;
 list<usuarioClass> listaDeUsuarios;
+int xMin;
 
 //esto se lee del xml, en caso que no haya nada es 2 por defecto.
 int cantidadJugadores = 2;
@@ -152,13 +153,13 @@ void buscarNombreUsuario(char *nombreRetorno, int numeroUsuario){
 	strcpy(nombreRetorno,(*it).nombreUsuario().c_str());
 }
 
-void agregaraLista(int numeroCliente, int usrDest, int x, int y, int spx, int spy){
+void agregaraLista(int numeroCliente, int usrDest, int x, int y, int spx, int spy, bool avanzar){
 	char nombreAutor[50];
 	char nombreDestino[50];
 	buscarNombreUsuario(nombreAutor, numeroCliente);
 	buscarNombreUsuario(nombreDestino, usrDest);
 
-	mensajeClass mensajeObj(nombreAutor, nombreDestino, numeroCliente, x, y, spx, spy);
+	mensajeClass mensajeObj(nombreAutor, nombreDestino, numeroCliente, x, y, spx, spy, avanzar);
 
 	int a = pthread_mutex_trylock(&mutexLista);
 	/*if (a != 0) {
@@ -186,11 +187,11 @@ void enviarMensajeAConectados(string mensaje){
 	}
 }
 
-void enviarAConectados(int numeroCliente, int nuevaCordX, int nuevaCordY, int nuevoSpX, int nuevoSpY){
+void enviarAConectados(int numeroCliente, int nuevaCordX, int nuevaCordY, int nuevoSpX, int nuevoSpY, bool avanzar){
 	//envio a todos los q esten online el mensaje de q se modifico un objeto
 	for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 		if((*it).estaConectado()){
-			agregaraLista(numeroCliente, (*it).numCliente(), nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
+			agregaraLista(numeroCliente, (*it).numCliente(), nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, avanzar);
 		}
 	}
 }
@@ -285,7 +286,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						}
 
 						//envio a todos los q esten online el mensaje de q se modifico un objeto
-						enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
+						enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, false);
 					}
 					respuesta = false;
 					strcpy(mensaje,"El nombre ya esta en uso");
@@ -379,12 +380,14 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						int spX = (*i).getSpX();
 						int spY = (*i).getSpY();
 						int idObjeto = (*i).getidObjeto();
+						bool puedeAvanzar = (*i).getBoolAvanzar();
 
 						enviarMensaje(newsockfd, &idObjeto, sizeof(int));
 						enviarMensaje(newsockfd, &xCord, sizeof(int));
 						enviarMensaje(newsockfd, &yCord, sizeof(int));
 						enviarMensaje(newsockfd, &spX, sizeof(int));
 						enviarMensaje(newsockfd, &spY, sizeof(int));
+						enviarMensaje(newsockfd, &puedeAvanzar, sizeof(bool));
 
 						break;
 					}
@@ -489,7 +492,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				}
 			}
 
-			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
+			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, false);
 
 			break;
 		}
@@ -507,13 +510,18 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			}
 
 			//envio a todos los q esten online el mensaje de q se modifico un objeto
-			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
+			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, false);
 
 			break;
 		}
 		case 'L':{
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
+			xMin = 10000;
 			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
+				if((*it).x < xMin){
+					xMin = it->x;
+				}
+
 				if ((*it).id == numeroCliente){
 					//hacer metodo mover up y q sume solo en la clase dibujableServer...
 					nuevaCordY = it->y;
@@ -525,13 +533,22 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			}
 
 			//envio a todos los q esten online el mensaje de q se modifico un objeto
-			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
-
+			bool avanzar;
+			if(xMin > 300){
+				avanzar = true;
+			}
+			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, avanzar);
+			cout <<"XMIN: " << xMin << endl;
 			break;
 		}
 		case 'R':{
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
+			xMin = 10000;
 			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
+				if((*it).x < xMin){
+					xMin = it->x;
+				}
+
 				if ((*it).id == numeroCliente){
 					//hacer metodo mover up y q sume solo en la clase dibujableServer...
 					nuevaCordY = it->y;
@@ -543,8 +560,12 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			}
 
 			//envio a todos los q esten online el mensaje de q se modifico un objeto
-			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
-
+			bool avanzar;
+			if(xMin > 300){
+				avanzar = true;
+			}
+			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, avanzar);
+			cout <<"XMIN: " << xMin << endl;
 			break;
 		}
 		case 'C':{
@@ -562,7 +583,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			}
 
 			//envio a todos los q esten online el mensaje de q se modifico un objeto
-			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
+			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, false);
 
 			//envio un msj a todos los q esten online q se desconecto el usuario
 			list<usuarioClass>::iterator it = listaDeUsuarios.begin();
@@ -588,7 +609,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			}
 
 			//envio a todos los q esten online el mensaje de q se modifico un objeto
-			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY);
+			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, false);
 
 			break;
 		}

@@ -106,6 +106,7 @@ void mySocket::recibirMensaje(){
 				case 1:{
 					//recibo grafica jugadores
 					int x,y, spx, spy, idObjeto;
+					bool avanzar = false;
 
 					recibirMensaje(&idObjeto, sizeof(int));
 					cout << "id objeto: " << idObjeto << endl;
@@ -117,6 +118,8 @@ void mySocket::recibirMensaje(){
 					cout << "SpriteX: " << spx << endl;
 					recibirMensaje(&spy, sizeof(int));
 					cout << "SpriteY: " << spy << endl;
+					recibirMensaje(&avanzar, sizeof(bool));
+					cout << "Puede avanzar: " << avanzar << endl;
 
 					grafica.actualizar(idObjeto, x, y, spx, spy);
 					grafica.avanzarCamara (x);

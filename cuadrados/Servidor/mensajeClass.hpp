@@ -13,12 +13,13 @@ private:
 	int y;
 	int spX;
 	int spY;
+	bool avanzar;
 
 	int tipoMensaje;
 	string mensaje;
 public:
 	mensajeClass();
-	mensajeClass(char * autor, char * destino, int id, int x, int y, int spx, int spy);
+	mensajeClass(char * autor, char * destino, int id, int x, int y, int spx, int spy, bool avanzar);
 	mensajeClass(int tipo, char *destino, string mensajeEnviado);
 	std::string nombreDestinatario();
 	std::string nombreAutor();
@@ -27,6 +28,7 @@ public:
 	int getY();
 	int getSpX();
 	int getSpY();
+	int getBoolAvanzar();
 
 	int getTipoMensaje(){
 		return tipoMensaje;

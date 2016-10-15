@@ -7,7 +7,7 @@ using namespace std;
 mensajeClass::mensajeClass(){}
 
 
-mensajeClass::mensajeClass(char * autor, char * destino, int id, int x, int y, int spx, int spy){
+mensajeClass::mensajeClass(char * autor, char * destino, int id, int x, int y, int spx, int spy, bool avanzar){
 	strcpy(this->usrAutor, autor);
 	strcpy(this->usrDestino, destino);
 	this->idObjeto = id;
@@ -15,6 +15,7 @@ mensajeClass::mensajeClass(char * autor, char * destino, int id, int x, int y, i
 	this->y = y;
 	this->spX = spx;
 	this->spY = spy;
+	this->avanzar = avanzar;
 
 	tipoMensaje = 1;
 }
@@ -51,4 +52,8 @@ int mensajeClass::getSpY(){
 
 int mensajeClass::getidObjeto(){
 	return this->idObjeto;
+}
+
+int mensajeClass::getBoolAvanzar(){
+	return this->avanzar;
 }
