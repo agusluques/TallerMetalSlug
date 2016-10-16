@@ -35,10 +35,10 @@ bool Grafica::hayColision(SDL_Rect *a , SDL_Rect *b) {
 }
 
 //INICIAR SDL
-bool Grafica::init(int ancho, int alto) {
+bool Grafica::init(int ancho, int alto, int numeroCliente) {
 	bool exito = true;
 
-	exito = inicializarVentana(ancho , alto);
+	exito = inicializarVentana(ancho , alto, numeroCliente);
 	if (!exito){
 		cerr<<"Cerrando todo"<<endl;
 	}
@@ -183,7 +183,7 @@ void Grafica::borrarDibujable(int id) {
 }
 
 //LO DE AGUS
-bool Grafica::inicializarVentana(int ancho, int alto){
+bool Grafica::inicializarVentana(int ancho, int alto, int numeroCliente){
 	bool exito = true;
 	window = NULL;
 	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
@@ -219,7 +219,15 @@ bool Grafica::inicializarVentana(int ancho, int alto){
 	char paath= 'a';
     char *path = &paath;
 	inicializarFondo(path);
-	loadFromFile("Clarkcopia.png");
+
+	string result;
+	stringstream sstm;
+	sstm << "Clark" << numeroCliente << ".png";
+	result = sstm.str();
+	cout << "Clark Imagen: " << result << endl;
+
+	loadFromFile(result);
+	//loadFromFile("Clarkcopia.png");
 
 	return exito;
 

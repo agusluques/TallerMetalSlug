@@ -70,36 +70,51 @@ int mySocket::getFD(){
 }
 
 bool mySocket::enviarMensaje(void* mensaje, int tamanioMensaje){
-	//int bytesEnviados = 0;
+	int bytesEnviados = 0;
 	bool errorSocket = false;
-	//while((bytesEnviados < tamanioMensaje) && (!errorSocket)){
-	//cout << "entro antes del" << endl;
-	//int n = send(sockfd, mensaje, tamanioMensaje - bytesEnviados, MSG_NOSIGNAL);
-	int n = write(sockfd, mensaje, tamanioMensaje);
-	//cout << "n: " << n << endl;
-	if(n < 0){
-		errorSocket = true;
-		//cout << "Entro a TRUE" << endl;
+	while((bytesEnviados < tamanioMensaje) && (!errorSocket)){
+		//cout << "entro antes del" << endl;
+		int n = send(sockfd, mensaje, tamanioMensaje - bytesEnviados, MSG_NOSIGNAL);
+		//int n = write(sockfd, mensaje, tamanioMensaje);
+		//cout << "n: " << n << endl;
+		if(n < 0){
+			errorSocket = true;
+			//cout << "Entro a TRUE" << endl;
+		}
+		bytesEnviados += n;
 	}
-	//bytesEnviados += n;
-	//}
 	return errorSocket;
 }
 
-void mySocket::recibirMensaje(){
+bool mySocket::recibirMensaje(){
+	bool error = false;
 	char codigo;
 	codigo = '5';
-	enviarMensaje(&codigo, sizeof(char));
+	error = enviarMensaje(&codigo, sizeof(char));
+	if(error){
+		cout << "ENTRO A ERROR" << endl;
+	}
 
 	int corte = 1;
 
 	while(corte != 0){
-		recibirMensaje(&corte, sizeof(int));
+		error = recibirMensaje(&corte, sizeof(int));
 		if (corte != 0){
+			if(error){
+				cout << "ENTRO A ERROR 1" << endl;
+				corte = 0;
+				this->desconectar();
+				break;
+			}	
 			cout << "Corte: " << corte << endl;
 
 			int tipoMensaje;
-			recibirMensaje(&tipoMensaje, sizeof(int));
+			error = recibirMensaje(&tipoMensaje, sizeof(int));
+			if(error){
+				cout << "ENTRO A ERROR 2" << endl;
+				corte = 0;
+				break;
+			}	
 			cout << "Tipo de mensaje: " << tipoMensaje << endl;
 
 			switch(tipoMensaje){
@@ -108,17 +123,17 @@ void mySocket::recibirMensaje(){
 					int x,y, spx, spy, idObjeto;
 					bool avanzar = false;
 
-					recibirMensaje(&idObjeto, sizeof(int));
+					error = recibirMensaje(&idObjeto, sizeof(int));
 					cout << "id objeto: " << idObjeto << endl;
-					recibirMensaje(&x, sizeof(int));
+					error = recibirMensaje(&x, sizeof(int));
 					cout << "X: " << x << endl;
-					recibirMensaje(&y, sizeof(int));
+					error = recibirMensaje(&y, sizeof(int));
 					cout << "Y: " << y << endl;
-					recibirMensaje(&spx, sizeof(int));
+					error = recibirMensaje(&spx, sizeof(int));
 					cout << "SpriteX: " << spx << endl;
-					recibirMensaje(&spy, sizeof(int));
+					error = recibirMensaje(&spy, sizeof(int));
 					cout << "SpriteY: " << spy << endl;
-					recibirMensaje(&avanzar, sizeof(bool));
+					error = recibirMensaje(&avanzar, sizeof(bool));
 					cout << "Puede avanzar: " << avanzar << endl;
 
 					grafica.actualizar(idObjeto, x, y, spx, spy);
@@ -134,9 +149,9 @@ void mySocket::recibirMensaje(){
 					//recibo mensaje
 					int tam;
 
-					recibirMensaje(&tam, sizeof(int));
+					error = recibirMensaje(&tam, sizeof(int));
 					char mensaje[tam];
-					recibirMensaje(&mensaje, sizeof(char)*tam);
+					error = recibirMensaje(&mensaje, sizeof(char)*tam);
 					cout << "(*)Mensaje: " << mensaje << endl;
 
 					break;
@@ -150,20 +165,28 @@ void mySocket::recibirMensaje(){
 			}
 		}
 	}
+	return error;
 }
 
-void mySocket::recibirMensaje(void* buffer, int tamanio){
+bool mySocket::recibirMensaje(void* buffer, int tamanio){
 	int acumulador = 0, bytesRecibidos = 0;
-	//bool errorSocket = false;
-	//while ((acumulador < tamanio) && (errorSocket == false)){
-	bytesRecibidos = read(this->sockfd, buffer, tamanio);
-	if (bytesRecibidos == (-1)){
-		cout << "Error al recibir datos SOCKET" << endl;
-		//		errorSocket = true;
-		//	} else {
-		//		acumulador += bytesRecibidos;
-		//	}
+
+	struct timeval tv;
+	tv.tv_sec = 10;  // 10 Secs Timeout
+	tv.tv_usec = 0;  // Not init'ing this can cause strange errors
+	setsockopt(this->sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));
+
+	bool errorSocket = false;
+	while ((acumulador < tamanio) && (errorSocket == false)){
+		bytesRecibidos = read(this->sockfd, buffer, tamanio);
+		if (bytesRecibidos < 0){
+			cout << "Se cayo la conexion con el servidor" << endl;
+			errorSocket = true;
+		} else {
+			acumulador += bytesRecibidos;
+		}
 	}
+	return errorSocket;
 }
 
 void mySocket::desconectar(){
@@ -250,8 +273,9 @@ bool mySocket::iniciarGrafica(){
 	int anchoVentana, altoVentana;
 	recibirMensaje(&anchoVentana, sizeof(int));
 	recibirMensaje(&altoVentana, sizeof(int));
+	//recibirMensaje(&, sizeof(int));
 
-	grafica.init(anchoVentana, altoVentana);
+	grafica.init(anchoVentana, altoVentana, numeroCliente);
 
 	//pido informacion de los fondos
 	codigo = '4';
@@ -280,45 +304,6 @@ bool mySocket::iniciarGrafica(){
 	bool quieto = true;
 
 	while( !quit ) {
-
-		//SALIR CON ESC O CERRAR VENTANA
-		/*while( SDL_PollEvent(&event) != 0 ) {
-			if( event.type == SDL_QUIT ) {
-				strcpy(&codigo,"C");
-				enviarMensaje(&codigo, sizeof(char));
-				grafica.close();
-				quit = true;
-			}
-
-			if( event.type == SDL_KEYDOWN ) {
-				char codigo;
-
-				switch( event.key.keysym.sym ) {
-				case SDLK_UP:
-					strcpy(&codigo,"U");
-					enviarMensaje(&codigo, sizeof(char));
-					break;
-
-				case SDLK_DOWN:
-					strcpy(&codigo,"D");
-					enviarMensaje(&codigo, sizeof(char));
-					break;
-
-				case SDLK_LEFT:
-					strcpy(&codigo,"L");
-					enviarMensaje(&codigo, sizeof(char));
-					break;
-
-				case SDLK_RIGHT:
-					strcpy(&codigo,"R");
-					enviarMensaje(&codigo, sizeof(char));
-					break;
-
-				default:
-					break;
-				}
-			}
-		}*/
 
 		while( SDL_PollEvent(&event) != 0 ) {
 			if( event.type == SDL_QUIT ) {
@@ -393,11 +378,16 @@ bool mySocket::iniciarGrafica(){
 		}
 
 		//recibo si hay cambios
-		recibirMensaje();
-
-		//MOSTRAR VENTANA
-		grafica.mostrarDibujables();
-
+		bool huboError = false;
+		huboError = recibirMensaje();
+		if(huboError){
+			cout << "Hubo error" << endl;
+			grafica.close();
+			quit = true;
+		} else {
+			//MOSTRAR VENTANA
+			grafica.mostrarDibujables();
+		}
 	}
 
 	grafica.close();

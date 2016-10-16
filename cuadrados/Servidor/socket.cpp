@@ -69,31 +69,31 @@ void loggearServer(string mensaje){
 
 void recibirMensaje(int sockfd, void* buffer, int tamanio){
 	int acumulador = 0, bytesRecibidos = 0;
-	//bool errorSocket = false;
-	//while ((acumulador < tamanio) && (errorSocket == false)){
+	bool errorSocket = false;
+	while ((acumulador < tamanio) && (errorSocket == false)){
 	bytesRecibidos = read(sockfd, buffer, tamanio);
-	if (bytesRecibidos == (-1)){
+	if ((bytesRecibidos < 0) && (errorSocket == false)){
 		cout << "Error al recibir datos SOCKET" << endl;
 		loggearServer( " ERROR AL RECIBIR DATOS SOCKET");
-		//		errorSocket = true;
-		//	} else {
-		//		acumulador += bytesRecibidos;
+		errorSocket = true;
+		} else {
+			acumulador += bytesRecibidos;
+		}
 	}
-	//}
 }
 
 bool enviarMensaje(int sockfd, void* mensaje, int tamanioMensaje){
-	//int bytesEnviados = 0;
+	int bytesEnviados = 0;
 	bool errorSocket = false;
 
-	//while((bytesEnviados < tamanioMensaje) && (!errorSocket)){
-	//int n = send(sockfd, mensaje, tamanioMensaje - bytesEnviados, MSG_NOSIGNAL);
-	int n = write(sockfd, mensaje, tamanioMensaje);
-	if(n < 0){
-		errorSocket = true;
+	while((bytesEnviados < tamanioMensaje) && (!errorSocket)){
+		int n = send(sockfd, mensaje, tamanioMensaje - bytesEnviados, MSG_NOSIGNAL);
+		if(n < 0){
+			errorSocket = true;
+		} else {
+			bytesEnviados += n;
+		}
 	}
-	//bytesEnviados += n;
-	//}
 	return errorSocket;
 }
 
@@ -211,25 +211,32 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		//recibirMensaje(newsockfd, &codigo, tamanio);
 		//cout << "Codigo: " << codigo << endl;
 
-		/*struct timeval tv;
+		struct timeval tv;
 		tv.tv_sec = 10;  // 10 Secs Timeout
 		tv.tv_usec = 0;  // Not init'ing this can cause strange errors
 		setsockopt(newsockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));
-		 */
+		
 		char codigo;
 		int data = read(newsockfd, &codigo, sizeof(char));
-		/*if(data < 0){
-			cout << "Se cayo la conexion con el cliente " << userPoint->nombreUsuario() << endl;
+		cout << "DATA: " << data << endl;
+		cout << "CODIGO: " << codigo << endl;
+		if(data < 0){
+			cout << "Se cayo la conexion con el cliente " << endl;
 
+			/*
 			userPoint->desconectar();
 			list<usuarioClass>::iterator it = listaDeUsuarios.begin();
 			advance(it, numeroCliente-1);
 			memcpy(&(*it),userPoint,sizeof(usuarioClass));
 
 			userPoint->loggear(" perdio la conexion con el servidor (se corto internet)");
-
+			*/
 			abierto = false;
-		}*/
+
+			list<usuarioClass>::iterator it = listaDeUsuarios.begin();
+			advance(it, numeroCliente-1);
+			it->desconectar();
+		}
 		//cliente->recibirMensaje(&cod, sizeof(char));
 
 		switch(codigo){

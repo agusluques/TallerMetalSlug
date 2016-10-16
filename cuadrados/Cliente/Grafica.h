@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "LTexture.h"
+#include <sstream>
 
 #ifndef GRAFICA_H_
 #define GRAFICA_H_
@@ -60,7 +61,7 @@ public:
 
 	Grafica();
 	virtual ~Grafica();
-	bool init(int ancho, int alto);
+	bool init(int ancho, int alto, int numeroCliente);
 	void close();
 	void mostrar();
 	bool hayColision(SDL_Rect *a , SDL_Rect *b);
@@ -82,7 +83,7 @@ public:
 	void clear();
 
 	//lo de agus
-	bool inicializarVentana(int ancho, int alto);
+	bool inicializarVentana(int ancho, int alto, int numeroCliente);
 	bool inicializarFondo(char *path);
 	bool inicializarPersonaje(char* path, int ancho, int alto);
 

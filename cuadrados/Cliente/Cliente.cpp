@@ -85,8 +85,8 @@ int main(int argc, char *argv[])
 					cout << "Conectando al servidor..." << endl;
 					Cliente.conectar();
 					//cout << "Se ha conectado correctamente con el servidor" << endl;
-					pthread_t threadControl;
-					pthread_create(&threadControl, NULL , controlarConexion, (void*)&Cliente);
+					//pthread_t threadControl;
+					//pthread_create(&threadControl, NULL , controlarConexion, (void*)&Cliente);
 				}else{
 					cout << "Desconectando del servidor..." << endl;
 					Cliente.cerrar();

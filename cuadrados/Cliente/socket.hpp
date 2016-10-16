@@ -40,8 +40,8 @@ class mySocket{
 		void enviarMensaje();
 		void enviarMensaje(int usuario, char* mensaje, int tamanio);
 		bool enviarMensaje(void* mensaje, int tamanioMensaje);
-		void recibirMensaje();
-		void recibirMensaje(void* buffer, int tamanio);
+		bool recibirMensaje();
+		bool recibirMensaje(void* buffer, int tamanio);
 		int cantidadUsuariosDisponibles();
 		void pedirUsuarios();
 		void cerrar();
