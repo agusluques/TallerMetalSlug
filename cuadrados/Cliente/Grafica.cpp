@@ -216,18 +216,9 @@ bool Grafica::inicializarVentana(int ancho, int alto, int numeroCliente){
 			}
 		}
 	}
-	char paath= 'a';
-    char *path = &paath;
-	inicializarFondo(path);
+	
 
-	string result;
-	stringstream sstm;
-	sstm << "Clark" << numeroCliente << ".png";
-	result = sstm.str();
-	cout << "Clark Imagen: " << result << endl;
-
-	loadFromFile(result);
-	//loadFromFile("Clarkcopia.png");
+	loadFromFile("Clarkcopia.png");
 
 	return exito;
 
@@ -236,11 +227,10 @@ bool Grafica::inicializarVentana(int ancho, int alto, int numeroCliente){
 bool Grafica::inicializarFondo(char *path){
 	bool exito = true;
 
-
-    gFondoSurface = IMG_Load( "fondo-capas.png");
+    gFondoSurface = IMG_Load(path);
 
     if( gFondoSurface == NULL ) {
-    	cout << "No se pudo cargar la imagen " << "fondo-capas.png" << "SDL Error: " << SDL_GetError() << endl;
+    	cout << "No se pudo cargar la imagen " << path << "SDL Error: " << SDL_GetError() << endl;
     }
 
     fondoText = SDL_CreateTextureFromSurface(window, gFondoSurface);

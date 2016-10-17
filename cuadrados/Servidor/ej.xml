@@ -36,25 +36,14 @@
 <capas>
 	
 	<capa>
-		<imagen_fondo>fondo1.png</imagen_fondo>
+		<imagen_fondo>fondo-capa.png</imagen_fondo>
 		<ancho> 500</ancho>
 		<z-index>1</z-index>
 	</capa>
 
-	<capa>
-		<imagen_fondo>fondo2.png</imagen_fondo>
-		<ancho> 500</ancho>
-		<z-index>2</z-index>
-	</capa>
-
-	<capa>
-		<imagen_fondo>fondo3.png</imagen_fondo>
-		<ancho> 500</ancho>
-		<z-index>3</z-index>
-	</capa>
 
 </capas>
 
 <cantidadDeJugadores>
-	2
+	1
 </cantidadDeJugadores>

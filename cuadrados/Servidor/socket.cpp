@@ -132,17 +132,22 @@ void cargarFondos(char* xml){
 	ANCHO_VENTANA = atoi(ancho->value());
 	ALTO_VENTANA = atoi(alto->value());
 
+
 	xml_node<> *capas = doc.first_node("capas");
 	xml_node<> *capa1 = capas->first_node("capa");
-	xml_node<> *fondoXML = capa1->first_node("imagen_fondo");
-	xml_node<> *anchoFondo = fondoXML->next_sibling("ancho");
-	xml_node<> *zFondo = anchoFondo->next_sibling("z-index");
+	while (capa1){
+		xml_node<> *fondoXML = capa1->first_node("imagen_fondo");
+		xml_node<> *anchoFondo = fondoXML->next_sibling("ancho");
+		xml_node<> *zFondo = anchoFondo->next_sibling("z-index");
 
-	FondoServer nuevo;
-	nuevo.setAncho(atoi(anchoFondo->value()));
-	nuevo.setSpriteId(fondoXML->value());
-	nuevo.setZindex(atoi(zFondo->value()));
-	listaFondos.push_back(nuevo);
+		FondoServer nuevo;
+		nuevo.setAncho(atoi(anchoFondo->value()));
+		nuevo.setSpriteId(fondoXML->value());
+		nuevo.setZindex(atoi(zFondo->value()));
+		listaFondos.push_back(nuevo);
+
+		capa1 = capa1->next_sibling();
+	}
 
 
 }
@@ -218,8 +223,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		
 		char codigo;
 		int data = read(newsockfd, &codigo, sizeof(char));
-		cout << "DATA: " << data << endl;
-		cout << "CODIGO: " << codigo << endl;
+		//cout << "DATA: " << data << endl;
+		//cout << "CODIGO: " << codigo << endl;
 		if(data < 0){
 			cout << "Se cayo la conexion con el cliente " << endl;
 
@@ -337,7 +342,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 		case '3':{
 			//cout << "Entro a /3 que es ventana" << endl;
-			cargarFondos(archivoXml);
+			//cargarFondos(archivoXml);
 			enviarMensaje(newsockfd, &ANCHO_VENTANA, sizeof(int));
 			enviarMensaje(newsockfd, &ALTO_VENTANA, sizeof(int));
 
@@ -345,7 +350,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 		case '4':{
 			//cout << "Entro a /4 que es fondos" << endl;
-			cargarFondos(archivoXml);
+			//cargarFondos(archivoXml);
 			int tamano = listaFondos.size();
 			enviarMensaje(newsockfd, &tamano, sizeof(int));
 			for(list<FondoServer>::iterator i =listaFondos.begin(); i != listaFondos.end();++i){
@@ -354,7 +359,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				int tamFondoId = sizeof((*i).spriteId);
 				char spriteId[tamFondoId];
 				strcpy(spriteId, (*i).spriteId.c_str());
-
+				
 				enviarMensaje(newsockfd, &tamFondoId, sizeof(int));
 				enviarMensaje(newsockfd, &spriteId, sizeof(char)*tamFondoId);
 				enviarMensaje(newsockfd, &ancho, sizeof(int));

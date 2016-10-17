@@ -282,7 +282,6 @@ bool mySocket::iniciarGrafica(){
 	enviarMensaje(&codigo, sizeof(char));
 	int cantidad;
 	recibirMensaje(&cantidad, sizeof(int));
-	
 	for (int i = 0; i<cantidad; i++){
 		int anchoFondo, zIndex, tamId;
 		recibirMensaje(&tamId, sizeof(int));
@@ -290,8 +289,12 @@ bool mySocket::iniciarGrafica(){
 		recibirMensaje(&idFondo, sizeof(char)*tamId);
 		recibirMensaje(&anchoFondo, sizeof(int));
 		recibirMensaje(&zIndex, sizeof(int));
-		
-		grafica.inicializarFondo(idFondo);
+		ifstream infile(&idFondo[0]);
+		if ((infile.good()) == false) {
+			strcpy(idFondo, "notfoundFondo.png");
+		}
+		infile.close();
+		grafica.inicializarFondo(&idFondo[0]);
 	}
 
 	bool quit = false;
