@@ -14,8 +14,6 @@ Grafica::Grafica() {
 	window = NULL;
 	centro = 180;
 	centro2=0;
-
-	mTexture = NULL;
 }
 
 Grafica::~Grafica() {
@@ -35,10 +33,10 @@ bool Grafica::hayColision(SDL_Rect *a , SDL_Rect *b) {
 }
 
 //INICIAR SDL
-bool Grafica::init(int ancho, int alto, int numeroCliente) {
+bool Grafica::init(int ancho, int alto) {
 	bool exito = true;
 
-	exito = inicializarVentana(ancho , alto, numeroCliente);
+	exito = inicializarVentana(ancho , alto);
 	if (!exito){
 		cerr<<"Cerrando todo"<<endl;
 	}
@@ -128,18 +126,18 @@ void Grafica::mostrarDibujables(){
 
 
     for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
-		(*i).render(window, mTexture, anchoVentana/12, altoVentana/10);//si cambian el ancho y alto de 
+		(*i).render(window,(*i).texture, anchoVentana/12, altoVentana/10);//si cambian el ancho y alto de 
 	}																   //la ventana, el tam de los tipos
 																	   //se ajusta con el /10
 	//manera fea de mostrar primero al cliente
 	list<LTexture>::iterator i = listaDibujable.begin();
 	advance(i,numeroCliente - 1);
-	(*i).render(window, mTexture, anchoVentana/12, altoVentana/10);
+	(*i).render(window, (*i).texture, anchoVentana/12, altoVentana/10);
 
 	SDL_RenderPresent( window );
 }
 
-void Grafica::nuevoDibujable(int idObjeto, int posX, int posY, int spx, int spy) {
+void Grafica::nuevoDibujable(char* sprite, int idObjeto, int posX, int posY, int spx, int spy) {
 	//if (strcmp(spriteId,"fondo") == 0){
 	//nuevo.inicializarTexture("Clark.png");
 	//}else
@@ -151,8 +149,15 @@ void Grafica::nuevoDibujable(int idObjeto, int posX, int posY, int spx, int spy)
 	nuevo.setSpX(spx);
 	nuevo.setSpY(spy);
 	
-	nuevo.inicializarTexture(); //pasar nombre como parametro
+	string result;
+	stringstream sstm;
+	sstm << idObjeto <<sprite;
+	result = sstm.str();
+	cout << "Clark Imagen: " << result << endl;
+	
 
+	nuevo.inicializarTexture(window, &result[0]); //pasar nombre como parametro
+	
 	listaDibujable.push_back(nuevo);
 }
 
@@ -183,7 +188,7 @@ void Grafica::borrarDibujable(int id) {
 }
 
 //LO DE AGUS
-bool Grafica::inicializarVentana(int ancho, int alto, int numeroCliente){
+bool Grafica::inicializarVentana(int ancho, int alto){
 	bool exito = true;
 	window = NULL;
 	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
@@ -217,8 +222,8 @@ bool Grafica::inicializarVentana(int ancho, int alto, int numeroCliente){
 		}
 	}
 	
-
-	loadFromFile("Clarkcopia.png");
+	
+	//loadFromFile("Clarkcopia.png");
 
 	return exito;
 

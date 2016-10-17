@@ -43,11 +43,7 @@ private:
 	SDL_Renderer* window;
 	LTexture spriteFondo;
 	SDL_Texture *fondoText;
-	SDL_Texture *mTexture;
 
-	//Image dimensions
-	int mWidth;
-	int mHeight;
 
 	int anchoVentana;
 	int altoVentana;
@@ -61,7 +57,7 @@ public:
 
 	Grafica();
 	virtual ~Grafica();
-	bool init(int ancho, int alto, int numeroCliente);
+	bool init(int ancho, int alto);
 	void close();
 	void mostrar();
 	bool hayColision(SDL_Rect *a , SDL_Rect *b);
@@ -74,7 +70,7 @@ public:
 
 	void mostrarDibujables();
 	LTexture buscarDibujable(int id);
-	void nuevoDibujable(int idObjeto, int posX, int posY, int spx, int spy);
+	void nuevoDibujable(char* sprite, int idObjeto, int posX, int posY, int spx, int spy);
 	void actualizarDibujable(LTexture nuevo);
 	void borrarDibujable(int id);
 	void avanzarCamara (int avance);
@@ -83,44 +79,9 @@ public:
 	void clear();
 
 	//lo de agus
-	bool inicializarVentana(int ancho, int alto, int numeroCliente);
+	bool inicializarVentana(int ancho, int alto);
 	bool inicializarFondo(char *path);
 	bool inicializarPersonaje(char* path, int ancho, int alto);
-
-	void free() {
-		//Free texture if it exists
-		if( mTexture != NULL ) {
-			SDL_DestroyTexture( mTexture );
-			mTexture = NULL;
-			mWidth = 0;
-			mHeight = 0;
-		}
-	}
-
-	bool loadFromFile( std::string path ) {
-		free();
-
-		//SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
-		SDL_Surface* loadedSurface = IMG_Load( "Clarkcopia.png" );
-
-		if( loadedSurface == NULL ) {
-			printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
-		}
-		else {
-			//this->mTexture = SDL_CreateTextureFromSurface( window, loadedSurface );
-			this->mTexture = IMG_LoadTexture(window, "Clarkcopia.png");
-			if( this->mTexture == NULL ) {
-				printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
-			}
-			else {
-				//mWidth = loadedSurface->w;
-				//mHeight = loadedSurface->h;
-			}
-			//SDL_FreeSurface( loadedSurface );
-		}
-
-		return (mTexture != NULL);
-	}
 
 	void setIdCliente(int numCliente){
 		this->numeroCliente = numCliente;

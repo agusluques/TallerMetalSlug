@@ -458,7 +458,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroUsuario-1);
-
+			
 			//idObjeto
 			enviarMensaje(newsockfd,&(*it).id,sizeof(int));
 

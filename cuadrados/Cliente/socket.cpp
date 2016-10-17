@@ -249,7 +249,8 @@ void mySocket::cargarDibujables(){
 		recibirMensaje(&spy, sizeof(int));
 		cout << spy << endl;
 
-		grafica.nuevoDibujable(idObjeto,posX,posY, spx, spy);
+		string aux = "colorpj2.png";//COMENTARIO: ACA LO DEBE RECIBIR DEL PARSE XML
+		grafica.nuevoDibujable(&aux[0], idObjeto,posX,posY, spx, spy);
 	}
 }
 
@@ -274,8 +275,8 @@ bool mySocket::iniciarGrafica(){
 	recibirMensaje(&anchoVentana, sizeof(int));
 	recibirMensaje(&altoVentana, sizeof(int));
 	//recibirMensaje(&, sizeof(int));
-
-	grafica.init(anchoVentana, altoVentana, numeroCliente);
+	grafica.setIdCliente(numeroCliente);
+	grafica.init(anchoVentana, altoVentana);
 
 	//pido informacion de los fondos
 	codigo = '4';
@@ -301,8 +302,7 @@ bool mySocket::iniciarGrafica(){
 	SDL_Event event;
 
 	cargarDibujables();
-
-	grafica.setIdCliente(numeroCliente);
+	
 
 	bool quieto = true;
 

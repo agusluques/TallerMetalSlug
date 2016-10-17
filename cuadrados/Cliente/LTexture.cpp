@@ -7,6 +7,7 @@ LTexture::LTexture() {
 	spX = 0;
 	spY = 0;
 
+	texture = NULL;
 	flipType = SDL_FLIP_NONE;
 }
 
@@ -63,7 +64,8 @@ int LTexture::getId(){
 	return this->id;
 }
 
-void LTexture::inicializarTexture(){
+void LTexture::inicializarTexture(SDL_Renderer* window, char* text){
+	loadFromFile(window, text);
 	/*cuerpo[0][0].x=8; cuerpo[0][0].y=443;
 	cuerpo[0][0].w=35; cuerpo[0][0].h=50;
 

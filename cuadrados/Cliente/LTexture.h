@@ -16,6 +16,7 @@ private:
 	//SDL_Rect cuerpo[6][1];
 	SDL_Rect player[6][2];
 
+	
 	int xcord;
 	int ycord;
 	int spX;
@@ -24,6 +25,7 @@ private:
 	SDL_RendererFlip flipType;
 
 public:
+	SDL_Texture* texture;
 	LTexture();
 	~LTexture();
 	void free();
@@ -40,7 +42,35 @@ public:
 	int posicionX();
 	int posicionY();
 
-	void inicializarTexture();
+	void inicializarTexture(SDL_Renderer* window, char* text);
+
+	bool loadFromFile(SDL_Renderer* window, char* path ) {
+		if( texture != NULL ) {
+			SDL_DestroyTexture( texture );
+			texture = NULL;
+
+		}
+		SDL_Surface* loadedSurface = IMG_Load( path );
+		//SDL_Surface* loadedSurface = IMG_Load( "Clarkcopia.png" );
+
+		if( loadedSurface == NULL ) {
+			printf( "Unable to load image %s! SDL_image Error: %s\n", path, IMG_GetError() );
+		}
+		else {
+			this->texture = SDL_CreateTextureFromSurface( window, loadedSurface );
+			//this->mTexture = IMG_LoadTexture(window, "Clarkcopia.png");
+			if( this->texture == NULL ) {
+				printf( "Unable to create texture from %s! SDL Error: %s\n", path, SDL_GetError() );
+			}
+			else {
+				//mWidth = loadedSurface->w;
+				//mHeight = loadedSurface->h;
+			}
+			//SDL_FreeSurface( loadedSurface );
+		}
+
+		return (texture != NULL);
+	}
 
 };
 
