@@ -230,6 +230,16 @@ void mySocket::cargarDibujables(){
 		char spriteId[tamSpriteId];
 		recibirMensaje(&spriteId, sizeof(char)*tamSpriteId);
 		cout << spriteId << endl;
+		string result;
+		stringstream sstm;
+		sstm << idObjeto <<spriteId;
+		result = sstm.str();
+		ifstream infile(&result[0]);
+		if ((infile.good()) == false) {
+			result = "notfoundpj.png";
+		}
+		infile.close();
+		cout << "Clark Imagen: " << result << endl;
 
 		//posicion x
 		int posX;
@@ -249,8 +259,7 @@ void mySocket::cargarDibujables(){
 		recibirMensaje(&spy, sizeof(int));
 		cout << spy << endl;
 
-		string aux = "colorpj2.png";//COMENTARIO: ACA LO DEBE RECIBIR DEL PARSE XML
-		grafica.nuevoDibujable(&aux[0], idObjeto,posX,posY, spx, spy);
+		grafica.nuevoDibujable(&result[0], idObjeto,posX,posY, spx, spy);
 	}
 }
 

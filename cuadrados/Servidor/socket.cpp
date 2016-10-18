@@ -152,6 +152,19 @@ void cargarFondos(char* xml){
 
 }
 
+char* parseXMLPj(){
+	file<> xmlFile(archivoXml);
+	xml_document<> doc;    // character type defaults to char
+	doc.parse<0>(xmlFile.data()); 
+
+	xml_node<> *sprites = doc.first_node("sprites");
+	xml_node<> *pj = sprites->first_node("personaje");
+	xml_node<> *path = pj->first_node("path");
+
+	return path->value();
+	
+}
+
 void buscarNombreUsuario(char *nombreRetorno, int numeroUsuario){
 	list<usuarioClass>::iterator it = listaDeUsuarios.begin();
 	advance(it, numeroUsuario-1);
@@ -315,7 +328,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				//creo el dibujable del nuevo cliente
 				DibujableServer nuevo;
 				nuevo.setId(listaDeUsuarios.size());
-				nuevo.setSpriteId("player");
+				char* spriteId = parseXMLPj();
+				nuevo.setSpriteId(spriteId);
 				nuevo.setX(1 + rand() % (150));
 				//nuevo.setY(ALTO_VENTANA - 50);
 				nuevo.setY(ALTO_VENTANA - 100);
@@ -645,7 +659,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			for(int i = 1; i <= listaDeUsuarios.size(); i++){
 				DibujableServer nuevo;
 				nuevo.setId(i);
-				nuevo.setSpriteId("player");
+				char* spriteId = parseXMLPj();
+				nuevo.setSpriteId(spriteId);
 				nuevo.setX(1+rand() % (150));
 				//nuevo.setY(ALTO_VENTANA - 50);
 				nuevo.setY(ALTO_VENTANA-100);

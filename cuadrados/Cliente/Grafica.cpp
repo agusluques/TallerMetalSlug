@@ -1,3 +1,4 @@
+
 #include "Grafica.h"
 #include <iostream>
 #include <cstring>
@@ -148,15 +149,7 @@ void Grafica::nuevoDibujable(char* sprite, int idObjeto, int posX, int posY, int
 	nuevo.setY(posY);
 	nuevo.setSpX(spx);
 	nuevo.setSpY(spy);
-	
-	string result;
-	stringstream sstm;
-	sstm << idObjeto <<sprite;
-	result = sstm.str();
-	cout << "Clark Imagen: " << result << endl;
-	
-
-	nuevo.inicializarTexture(window, &result[0]); //pasar nombre como parametro
+	nuevo.inicializarTexture(window, sprite); //pasar nombre como parametro
 	
 	listaDibujable.push_back(nuevo);
 }

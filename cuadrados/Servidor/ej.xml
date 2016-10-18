@@ -7,12 +7,9 @@
 
 <sprites>
 
-	<sprite>
-		<id>personaje</id>
-		<path>colorpj.png</path>
-		<ancho>10</ancho>
-		<alto>100</alto>
-	</sprite>
+	<personaje>
+		<path>colorpj2.png</path>
+	</personaje>
 
 </sprites>
 
