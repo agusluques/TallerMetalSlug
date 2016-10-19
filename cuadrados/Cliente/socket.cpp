@@ -2,6 +2,8 @@
 #include <pthread.h>
 #include "SDL2/SDL.h"
 
+bool avanzar;
+
 mySocket::mySocket(char* puerto, char* IP){
 
 	this->puerto = atoi(puerto);
@@ -121,7 +123,7 @@ bool mySocket::recibirMensaje(){
 				case 1:{
 					//recibo grafica jugadores
 					int x,y, spx, spy, idObjeto;
-					bool avanzar = false;
+					avanzar = false;
 
 					error = recibirMensaje(&idObjeto, sizeof(int));
 					cout << "id objeto: " << idObjeto << endl;
@@ -272,6 +274,8 @@ void mySocket::cargarDibujables(){
 
 bool mySocket::iniciarGrafica(){
 	//chequeo que esten todos los jugadores
+	grafica.close();
+
 	char codigo;
 	codigo = '7';
 	enviarMensaje(&codigo, sizeof(char));
@@ -331,6 +335,9 @@ bool mySocket::iniciarGrafica(){
 
 	cargarDibujables();
 	
+	SDL_Rect camera = { 0, 0, anchoVentana, altoVentana };
+
+	float constCamera = ((3*anchoVentana)/4);
 
 	bool quieto = true;
 
@@ -417,7 +424,20 @@ bool mySocket::iniciarGrafica(){
 			quit = true;
 		} else {
 			//MOSTRAR VENTANA
-			grafica.mostrarDibujables();
+			if(avanzar == true){
+				camera.x += 10;
+				avanzar = false;
+			}
+
+			if( camera.x < 0 )
+			{ 
+				camera.x = 0;
+			}
+			if( camera.x > 1950 /*LEVEL_WIDTH*/ - camera.w )
+			{
+				camera.x = 1950 /*LEVEL_WIDTH*/ - camera.w;
+			}
+			grafica.mostrarDibujables(camera, constCamera);
 		}
 	}
 

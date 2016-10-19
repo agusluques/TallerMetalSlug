@@ -40,8 +40,9 @@ private:
     SDL_Rect renderQuad2;
 
 	SDL_Window* windowARenderizar;
-	SDL_Renderer* window;
+
 	LTexture spriteFondo;
+	LTexture spriteFondo2;
 	SDL_Texture *fondoText;
 
 
@@ -54,6 +55,7 @@ private:
 
 public:
 	int numeroCliente;
+	SDL_Renderer* window;
 
 	Grafica();
 	virtual ~Grafica();
@@ -68,13 +70,12 @@ public:
 
 	void actualizar(int idObjeto,int x,int y, int spx, int spy);
 
-	void mostrarDibujables();
+	void mostrarDibujables(SDL_Rect camera, float constCamera);
 	LTexture buscarDibujable(int id);
 	void nuevoDibujable(char* sprite, int idObjeto, int posX, int posY, int spx, int spy);
 	void actualizarDibujable(LTexture nuevo);
 	void borrarDibujable(int id);
 	void avanzarCamara (int avance);
-
 
 	void clear();
 

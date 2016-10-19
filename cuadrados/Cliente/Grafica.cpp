@@ -94,37 +94,13 @@ void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy){
 	actualizarDibujable(aux);
 }
 
-void Grafica::mostrarDibujables(){
+void Grafica::mostrarDibujables(SDL_Rect camera, float constCamera){
+
 	SDL_RenderClear( window );
 
-	renderQuad.x = 0 ;
-    renderQuad.y = 150 ;
-	renderQuad.w = 2000;
-	renderQuad.h = 400;
+	spriteFondo2.render(window, 0, 0, &camera, 0, NULL, SDL_FLIP_NONE);
 
-	renderQuad2.x = 30;
-	renderQuad2.y = 472;
-    renderQuad2.w = 2000;
-    renderQuad2.h = 700;
-
-    SDL_RenderCopy (window, fondoText, &renderQuad2, &renderQuad );
-
-
-
-    renderQuad.x = centro2 ;
-    renderQuad.y = 150 ;
-    renderQuad.w = 2000;
-    renderQuad.h = 400;
-
-    renderQuad2.x = centro;
-    renderQuad2.y = 230;
-    renderQuad2.w = 2000;
-    renderQuad2.h = 200;
-
-
-
-    SDL_RenderCopy (window, fondoText, &renderQuad2 , &renderQuad);
-
+	spriteFondo.render(window, 0, 0, &camera, 0, NULL, SDL_FLIP_NONE);
 
     for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
 		(*i).render(window,(*i).texture, anchoVentana/12, altoVentana/10);//si cambian el ancho y alto de 
@@ -192,7 +168,7 @@ bool Grafica::inicializarVentana(int ancho, int alto){
 	else
 	{
 		//Create window
-		windowARenderizar = SDL_CreateWindow( "METAL SLUG", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, ancho, alto, SDL_WINDOW_SHOWN|SDL_WINDOW_RESIZABLE );
+		windowARenderizar = SDL_CreateWindow( "METAL SLUG", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, ancho, alto, SDL_WINDOW_SHOWN );
 		if( windowARenderizar == NULL )
 		{
 			exito = false;
@@ -223,20 +199,24 @@ bool Grafica::inicializarVentana(int ancho, int alto){
 }
 
 bool Grafica::inicializarFondo(char *path){
-	bool exito = true;
+	//Loading success flag
+	bool success = true;
 
-    gFondoSurface = IMG_Load(path);
+	//Load background texture
+	if( !spriteFondo.loadFromFile( "fondo1.png", window ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
 
-    if( gFondoSurface == NULL ) {
-    	cout << "No se pudo cargar la imagen " << path << "SDL Error: " << SDL_GetError() << endl;
-    }
+	//Load background texture
+	if( !spriteFondo2.loadFromFile( "fondo2.png", window ) )
+	{
+		printf( "Failed to load background texture!\n" );
+		success = false;
+	}
 
-    fondoText = SDL_CreateTextureFromSurface(window, gFondoSurface);
-    SDL_FreeSurface(gFondoSurface);
-
-
-
-	return exito;
+	return success;
 }
 
 bool Grafica::inicializarPersonaje(char* path, int ancho, int alto){

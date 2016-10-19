@@ -22,7 +22,12 @@ private:
 	int spX;
 	int spY;
 
+	int mWidth;
+	int mHeight;
+
 	SDL_RendererFlip flipType;
+
+	SDL_Texture* mTexture;
 
 public:
 	SDL_Texture* texture;
@@ -32,6 +37,10 @@ public:
 	void render(SDL_Renderer *window, SDL_Texture *mTexture, int ancho, int alto);
 
 	void actualizar(int x, int y, int spx, int spy);
+	
+	bool loadFromFile( string path,  SDL_Renderer* window );
+
+	void render(SDL_Renderer* window, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip );
 
 	void setX(int movimiento);
 	void setY(int movimiento);
@@ -43,7 +52,7 @@ public:
 	int posicionY();
 
 	void inicializarTexture(SDL_Renderer* window, char* text);
-
+	
 	bool loadFromFile(SDL_Renderer* window, char* path ) {
 		if( texture != NULL ) {
 			SDL_DestroyTexture( texture );
