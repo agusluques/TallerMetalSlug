@@ -23,7 +23,7 @@ class mySocketSrv{
 		int numeroCliente;
 
 	public:
-		mySocketSrv(char* puerto, char* xml);
+		mySocketSrv(char* puerto, string xml);
 		void bindear();
 		void escuchar();
 		void enviarMensaje(string mensaje);

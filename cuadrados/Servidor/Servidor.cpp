@@ -16,7 +16,8 @@ void *escuchar_clientes(void *arg){
 
 int main(int argc, char *argv[])
 {
-	char* archivo;
+	//char* archivo;
+	string arch;
 	if (argc < 2) {
     	cout << "Falta proveer datos al programa" << endl;
     	cout << "Modo de uso: "<< argv[0]<< " puerto archivo.xml" << endl;
@@ -30,13 +31,17 @@ int main(int argc, char *argv[])
 			exit(0);
 		}
 		infile.close();
-		archivo = argv[2];
+		arch = argv[2];
+		cout << "ARCH: " << arch << endl;
+		//archivo = argv[2];
 	}
 	else{
-		string aux = "ej.xml";
-		archivo = &aux[0];
+		//string aux = "ej.xml";
+		//archivo = &aux[0];
+		arch = "ej.xml";
 	}
-	mySocketSrv servidor(argv[1],archivo);
+	//mySocketSrv servidor(argv[1],archivo);
+	mySocketSrv servidor(argv[1],arch);
 
 	servidor.bindear();
 	servidor.escuchar();

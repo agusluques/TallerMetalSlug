@@ -19,7 +19,8 @@ list<DibujableServer> listaDibujables;
 list<FondoServer> listaFondos;
 int ANCHO_VENTANA;
 int ALTO_VENTANA;
-char* archivoXml;
+//char* archivoXml;
+string archivoXml;
 
 list<mensajeClass> listaDeMensajes;
 list<usuarioClass> listaDeUsuarios;
@@ -153,7 +154,8 @@ void cargarFondos(char* xml){
 }
 
 char* parseXMLPj(){
-	file<> xmlFile(archivoXml);
+	const char *cstr = archivoXml.c_str();
+	file<> xmlFile(cstr);
 	xml_document<> doc;    // character type defaults to char
 	doc.parse<0>(xmlFile.data()); 
 
@@ -370,9 +372,12 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			for(list<FondoServer>::iterator i =listaFondos.begin(); i != listaFondos.end();++i){
 				int ancho = (*i).ancho;
 				int z = (*i).zindex;
-				int tamFondoId = sizeof((*i).spriteId);
+				int tamFondoId = (*i).spriteId.size();
+				cout << "tamFondoId: " << tamFondoId << endl;
 				char spriteId[tamFondoId];
 				strcpy(spriteId, (*i).spriteId.c_str());
+
+				cout << "spriteId: " << spriteId << endl;
 				
 				enviarMensaje(newsockfd, &tamFondoId, sizeof(int));
 				enviarMensaje(newsockfd, &spriteId, sizeof(char)*tamFondoId);
@@ -682,11 +687,16 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 	pthread_exit(NULL);
 }
 
-mySocketSrv :: mySocketSrv(char* puerto, char* xml){
+mySocketSrv :: mySocketSrv(char* puerto, string xml){
 	//cargo fondos
 	archivoXml = xml;
-	cargarFondos(xml);
-	cantidadDeJugadores(xml);
+	cout << "ARCHIVO XML: " << archivoXml << endl;
+	char* s2;
+	s2 = (char *)alloca(xml.size() + 1);
+    memcpy(s2, xml.c_str(), xml.size() + 1);
+
+	cargarFondos(s2);
+	cantidadDeJugadores(s2);
 
 	this->puerto = atoi(puerto);
 	cout << "PUERTO: " << this->puerto << endl;

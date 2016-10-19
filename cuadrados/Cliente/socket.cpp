@@ -234,12 +234,19 @@ void mySocket::cargarDibujables(){
 		stringstream sstm;
 		sstm << idObjeto <<spriteId;
 		result = sstm.str();
-		ifstream infile(&result[0]);
-		if ((infile.good()) == false) {
-			result = "notfoundpj.png";
+		cout << "Resultado1: " << result << endl;
+		string resultado;
+		resultado = result + ".png";
+		cout << "Resultado2: " << resultado << endl;
+		//ifstream ifs(result);
+		ifstream ifs (resultado.c_str());
+		//ifstream infile(&result[0]);
+		if ((ifs.good()) == false) {
+			resultado = "notfoundpj.png";
 		}
-		infile.close();
-		cout << "Clark Imagen: " << result << endl;
+		ifs.close();
+		//infile.close();
+		cout << "Clark Imagen: " << resultado << endl;
 
 		//posicion x
 		int posX;
@@ -259,7 +266,7 @@ void mySocket::cargarDibujables(){
 		recibirMensaje(&spy, sizeof(int));
 		cout << spy << endl;
 
-		grafica.nuevoDibujable(&result[0], idObjeto,posX,posY, spx, spy);
+		grafica.nuevoDibujable(&resultado[0], idObjeto,posX,posY, spx, spy);
 	}
 }
 
@@ -299,9 +306,19 @@ bool mySocket::iniciarGrafica(){
 		recibirMensaje(&idFondo, sizeof(char)*tamId);
 		recibirMensaje(&anchoFondo, sizeof(int));
 		recibirMensaje(&zIndex, sizeof(int));
-		ifstream infile(&idFondo[0]);
+		//ifstream infile(&idFondo[0]);
+
+		cout << "idFondo: " << idFondo << endl;
+		cout << "tamId: " << tamId << endl;
+
+		string resultado(idFondo, tamId);
+
+		cout << "Resultado Fondo: " << resultado << endl;
+
+		ifstream infile (resultado.c_str());
+		//ifstream infile(&result[0]);
 		if ((infile.good()) == false) {
-			strcpy(idFondo, "notfoundFondo.png");
+			resultado = "notfoundFondo.png";
 		}
 		infile.close();
 		grafica.inicializarFondo(&idFondo[0]);
