@@ -15,6 +15,11 @@
 using namespace rapidxml;
 using namespace std;
 
+int cameraX = 0;
+int cameraY = 0;
+float constCamera;
+
+
 list<DibujableServer> listaDibujables;
 list<FondoServer> listaFondos;
 int ANCHO_VENTANA;
@@ -132,6 +137,8 @@ void cargarFondos(char* xml){
 
 	ANCHO_VENTANA = atoi(ancho->value());
 	ALTO_VENTANA = atoi(alto->value());
+
+	constCamera = ((3*ANCHO_VENTANA)/4);
 
 
 	xml_node<> *capas = doc.first_node("capas");
@@ -562,6 +569,13 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					//hacer metodo mover up y q sume solo en la clase dibujableServer...
 					nuevaCordY = it->y;
 					nuevaCordX = it->x = it->x -2;
+
+					cout << "NUEVA COORD X: " << nuevaCordX << endl;
+					cout << "CAMARA X: " << cameraX << endl;
+
+					if((nuevaCordX < 0) || (nuevaCordX < cameraX)){
+						nuevaCordX = it->x = it->x +2;
+					}
 					nuevoSpX = it->spX = it->spX+1;
 					if (nuevoSpX > 5) nuevoSpX = it->spX = 0;
 					nuevoSpY = it->spY = 0;
@@ -589,6 +603,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					//hacer metodo mover up y q sume solo en la clase dibujableServer...
 					nuevaCordY = it->y;
 					nuevaCordX = it->x = it->x +2;
+					if((nuevaCordX + 40) > (cameraX + ANCHO_VENTANA) || (nuevaCordX < cameraX)){
+						nuevaCordX = it->x = it->x -2;
+					}
 					nuevoSpX = it->spX = it->spX+1;
 					if (nuevoSpX > 5) nuevoSpX = it->spX = 0;
 					nuevoSpY = it->spY = 0;
