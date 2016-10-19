@@ -313,15 +313,17 @@ bool mySocket::iniciarGrafica(){
 
 		string resultado(idFondo, tamId);
 
-		cout << "Resultado Fondo: " << resultado << endl;
+	
 
 		ifstream infile (resultado.c_str());
 		//ifstream infile(&result[0]);
 		if ((infile.good()) == false) {
 			resultado = "notfoundFondo.png";
 		}
+
+		cout << "Resultado Fondo: " << resultado << endl;
 		infile.close();
-		grafica.inicializarFondo(&idFondo[0]);
+		grafica.inicializarFondo(&resultado[0]);
 	}
 
 	bool quit = false;
