@@ -227,26 +227,26 @@ void mySocket::cargarDibujables(){
 		//spriteId
 		int tamSpriteId;
 		recibirMensaje(&tamSpriteId, sizeof(int));
+
+		cout << "tamSpriteId (ESTE): " << tamSpriteId << endl;
+
 		char spriteId[tamSpriteId];
 		recibirMensaje(&spriteId, sizeof(char)*tamSpriteId);
-		cout << spriteId << endl;
+		cout << "spriteID (ESTE): " << spriteId << endl;
 		string result;
 		stringstream sstm;
 		sstm << idObjeto <<spriteId;
 		result = sstm.str();
 		cout << "Resultado1: " << result << endl;
-		string resultado;
-		resultado = result + ".png";
-		cout << "Resultado2: " << resultado << endl;
 		//ifstream ifs(result);
-		ifstream ifs (resultado.c_str());
+		ifstream ifs (result.c_str());
 		//ifstream infile(&result[0]);
 		if ((ifs.good()) == false) {
-			resultado = "notfoundpj.png";
+			result = "notfoundpj.png";
 		}
 		ifs.close();
 		//infile.close();
-		cout << "Clark Imagen: " << resultado << endl;
+		cout << "Clark Imagen: " << result << endl;
 
 		//posicion x
 		int posX;
@@ -266,7 +266,7 @@ void mySocket::cargarDibujables(){
 		recibirMensaje(&spy, sizeof(int));
 		cout << spy << endl;
 
-		grafica.nuevoDibujable(&resultado[0], idObjeto,posX,posY, spx, spy);
+		grafica.nuevoDibujable(&result[0], idObjeto,posX,posY, spx, spy);
 	}
 }
 

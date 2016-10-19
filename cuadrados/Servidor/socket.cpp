@@ -482,10 +482,15 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			enviarMensaje(newsockfd,&(*it).id,sizeof(int));
 
 			//spriteId
-			int tamSpriteId = sizeof((*it).spriteId);
+			int tamSpriteId = (*it).spriteId.size();
+
+			cout << "tamSpriteId: " << tamSpriteId << endl;
 			char spriteId[tamSpriteId];
 			enviarMensaje(newsockfd,&tamSpriteId,sizeof(int));
 			strcpy(spriteId, (*it).spriteId.c_str());
+
+			cout << "spriteId: " << spriteId << endl;
+
 			enviarMensaje(newsockfd,spriteId,tamSpriteId);
 
 			//posicion x
