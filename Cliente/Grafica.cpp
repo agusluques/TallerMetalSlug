@@ -13,10 +13,15 @@ Grafica::Grafica() {
 	windowARenderizar = NULL;
 	window = NULL;
 
-	camera.x = 0;
-	camera.y = 0;
-	camera.w = 800;
-	camera.h = 600;
+	camera.x = 179;
+	camera.y = 204;
+	camera.w = ((800*241)/600);
+	camera.h = 241;
+
+	/*renderQuad.x= 179;
+	renderQuad.y= 204;
+	renderQuad.w= ((800*241)/600); //
+	renderQuad.h= 241; //446 446-204 = 241*/
 
 	cameraSet = 0;
 }
@@ -108,8 +113,7 @@ void Grafica::mostrarDibujables(){
 
 	SDL_RenderCopy (window, spriteFondo2, &camera, &renderQuad2);
 
-	SDL_RenderCopy (window, spriteFondo, &camera, &renderQuad);
-
+	SDL_RenderCopy (window, spriteFondo, &camera, NULL);
 
     for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
 		(*i).render(window,(*i).texture, &camera, altoVentana/12);
@@ -220,10 +224,10 @@ bool Grafica::inicializarFondo(char *path){
 	spriteFondo = SDL_CreateTextureFromSurface(window, gCurrentSurface);
 	SDL_FreeSurface(gCurrentSurface);
 
-	renderQuad.x=-600;
-	renderQuad.y=-550;
-	renderQuad.w= 2000;
-	renderQuad.h= 1700;
+	renderQuad.x= 179;
+	renderQuad.y= 204;
+	renderQuad.w= ((800*241)/600); //
+	renderQuad.h= 241; //446 446-204 = 241
 
 	//Load background texture
 	gFondoSurface = IMG_Load( "fondo2.png");
@@ -259,8 +263,7 @@ void Grafica::avanzarCamara (int posicionX){
 	camera.x = cameraSet - 400;
 
 	if (camera.x < 0)
-	  camera.x=0;
-
+	  camera.x = 0;
 
 }
 

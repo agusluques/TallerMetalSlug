@@ -369,6 +369,7 @@ bool mySocket::iniciarGrafica(){
 				case SDLK_UP:
 					strcpy(&codigo,"U");
 					enviarMensaje(&codigo, sizeof(char));
+					enviarMensaje(&codigo, sizeof(char));
 					quieto = false;
 					break;
 
@@ -379,18 +380,26 @@ bool mySocket::iniciarGrafica(){
 					quieto = false;
 					break;
 
-				case SDLK_LEFT:
+				case SDLK_LEFT:{
 					strcpy(&codigo,"L");
 					enviarMensaje(&codigo, sizeof(char));
+
+					int x = grafica.camera.x;
+					enviarMensaje(&x, sizeof(int));
+
 					quieto = false;
 					break;
-
-				case SDLK_RIGHT:
+				}
+				case SDLK_RIGHT:{
 					strcpy(&codigo,"R");
 					enviarMensaje(&codigo, sizeof(char));
+
+					int x = grafica.camera.x;
+					enviarMensaje(&x, sizeof(int));
+
 					quieto = false;
 					break;
-
+				}
 				case SDLK_r:
 					strcpy(&codigo,"i");
 					enviarMensaje(&codigo, sizeof(char));
@@ -450,7 +459,11 @@ bool mySocket::iniciarGrafica(){
 				camera.x = 1950 - camera.w;
 			}
 			 */
-			grafica.mostrarDibujables();
+			if (!grafica.empiezaDeNuevo()) grafica.mostrarDibujables();
+			else{
+				char codigo = '8';
+				enviarMensaje(&codigo, sizeof(char));
+			}
 		}
 	}
 

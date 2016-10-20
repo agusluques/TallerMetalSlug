@@ -34,7 +34,6 @@ private:
 
 
 	//lo de agus
-	SDL_Rect camera; // = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
     SDL_Rect renderQuad;
     SDL_Rect renderQuad2;
@@ -51,6 +50,8 @@ private:
     int cameraSet;
 
 public:
+	SDL_Rect camera; // = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+
 	int numeroCliente;
 	SDL_Renderer* window;
 
@@ -83,6 +84,14 @@ public:
 
 	void setIdCliente(int numCliente){
 		this->numeroCliente = numCliente;
+	}
+
+	bool empiezaDeNuevo(){
+		if (camera.x > 1500){
+			camera.x = 0;
+			cameraSet = 0;
+			return true;
+		}else return false;
 	}
 
 };

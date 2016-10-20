@@ -466,6 +466,27 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 
+		case '8': {
+			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
+			char flip;
+
+			avanzar = false;
+
+			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
+				//empiezo de nuevo
+				nuevaCordY = it->y = ALTO_VENTANA - 100;
+				nuevaCordX = it->x = (1 + rand() % (150));
+				nuevoSpX = it->spX = 0;
+				nuevoSpY = it->spY = 0;
+				flip = 'D';
+
+				enviarAConectados(numeroCliente,nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, avanzar);
+			}
+
+		break;
+
+		}
+
 		case '7': {
 			//pido si puede empezar el juego
 			bool respuesta = false;
@@ -579,6 +600,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		//			break;
 		//		}
 		case 'L':{
+			int xCamara;
+			recibirMensaje(newsockfd, &xCamara, sizeof(int));
+
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			xMin = 10000;
 			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
@@ -612,7 +636,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
-			if ((it->x) > (xMin)){
+			if ((it->x) > (xCamara)){
 				it->caminarIzquierda();
 			}else it->quieto();
 			//ver si realmente hace falta dejarlo quieto o si saco el else va igual....
@@ -621,6 +645,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 		case 'R':{
+			int xCamara;
+			recibirMensaje(newsockfd, &xCamara, sizeof(int));
+
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, totalDesplazar;
 			xMin = 10000;
 			xMax = 1;
