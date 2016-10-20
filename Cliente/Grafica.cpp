@@ -7,21 +7,16 @@
 Grafica::Grafica() {
 	gWindow = NULL;
 	gScreenSurface = NULL;
-	gCurrentSurface = NULL;
-	gFondoSurface = NULL;
+	fondo1 = NULL;
+	fondo2 = NULL;
+	fondo3 = NULL;
 
 	windowARenderizar = NULL;
 	window = NULL;
 
-	camera.x = 179;
-	camera.y = 204;
-	camera.w = ((800*241)/600);
-	camera.h = 241;
-
-	/*renderQuad.x= 179;
-	renderQuad.y= 204;
-	renderQuad.w= ((800*241)/600); //
-	renderQuad.h= 241; //446 446-204 = 241*/
+	count =0;
+	camera.x = 0;
+	camera.y = 0;
 
 	cameraSet = 0;
 }
@@ -89,11 +84,11 @@ SDL_Window* Grafica::getWindow(){
 }
 
 SDL_Surface* Grafica::getSurface(){
-	return gCurrentSurface;
+	return fondo3;
 }
 
 void Grafica::setSurface(SDL_Surface* surface){
-	gCurrentSurface = surface;
+	fondo3 = surface;
 }
 
 void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanzar, char flip){
@@ -111,9 +106,11 @@ void Grafica::mostrarDibujables(){
 
 	SDL_RenderClear( window );
 
-	SDL_RenderCopy (window, spriteFondo2, &camera, &renderQuad2);
+	SDL_RenderCopy (window, spriteFondo1, &camera1, NULL);
 
-	SDL_RenderCopy (window, spriteFondo, &camera, NULL);
+	SDL_RenderCopy (window, spriteFondo2, &camera2, NULL);
+
+	SDL_RenderCopy (window, spriteFondo3, &camera3, NULL);
 
     for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
 		(*i).render(window,(*i).texture, &camera, altoVentana/12);
@@ -215,34 +212,51 @@ bool Grafica::inicializarFondo(char *path){
 	//Loading success flag
 	bool success = true;
 
-	gCurrentSurface = IMG_Load( "fondo1.png");
+	fondo1 = IMG_Load( "fondo1.png");
 
-	if( gCurrentSurface == NULL ) {
-		    	cout << "No se pudo cargar la imagen " << "fondo1.png" << "SDL Error: " << SDL_GetError() << endl;
-		    }
+	if( fondo1 == NULL ) {
+		 cout << "No se pudo cargar la imagen " << "fondo1.png" << "SDL Error: " << SDL_GetError() << endl;
+    }
 
-	spriteFondo = SDL_CreateTextureFromSurface(window, gCurrentSurface);
-	SDL_FreeSurface(gCurrentSurface);
+	spriteFondo1 = SDL_CreateTextureFromSurface(window, fondo1);
+	SDL_FreeSurface(fondo1);
 
-	renderQuad.x= 179;
-	renderQuad.y= 204;
-	renderQuad.w= ((800*241)/600); //
-	renderQuad.h= 241; //446 446-204 = 241
+	camera1.x = 0;
+	camera1.y = 0;
+	camera1.w = ((anchoVentana*260)/altoVentana);
+	camera1.h = 260;
+
 
 	//Load background texture
-	gFondoSurface = IMG_Load( "fondo2.png");
+	fondo2 = IMG_Load( "fondo2.png");
 
-	if( gFondoSurface == NULL ) {
+	if( fondo2 == NULL ) {
 	    cout << "No se pudo cargar la imagen " << "fondo2.png" << "SDL Error: " << SDL_GetError() << endl;
 	}
 
-	spriteFondo2 = SDL_CreateTextureFromSurface(window, gFondoSurface);
-	SDL_FreeSurface(gFondoSurface);
+	spriteFondo2 = SDL_CreateTextureFromSurface(window, fondo2);
+	SDL_FreeSurface(fondo2);
 
-	renderQuad2.x = 0;
-	renderQuad2.y = 0;
-	renderQuad2.w = 1585;
-	renderQuad2.h = 580;
+	camera2.x = 0;
+	camera2.y = 0;
+	camera2.w = ((anchoVentana*260)/altoVentana);
+	camera2.h = 260;
+
+
+	fondo3 = IMG_Load( "fondo3.png");
+
+	if( fondo3 == NULL ) {
+	    cout << "No se pudo cargar la imagen " << "fondo3.png" << "SDL Error: " << SDL_GetError() << endl;
+	}
+
+	spriteFondo3 = SDL_CreateTextureFromSurface(window, fondo3);
+	SDL_FreeSurface(fondo3);
+
+	camera3.x = 0;
+	camera3.y = 0;
+	camera3.w = ((anchoVentana*270)/altoVentana);
+	camera3.h = 270;
+
 
 	return success;
 }
@@ -260,11 +274,27 @@ void Grafica::avanzarCamara (int posicionX){
 	if (posicionX > cameraSet)
 	   cameraSet = posicionX;
 
-	camera.x = cameraSet - 400;
+	camera.x = cameraSet - anchoVentana/2;
 
 	if (camera.x < 0)
 	  camera.x = 0;
 
+	camera1.x= camera.x/8;
+	if (camera1.x > 1000) //dificil que llegue es el de las nubes
+		camera1.x=0;
+	camera2.x= camera.x/4;
+	camera3.x= (camera.x/2);
+
 }
+
+bool Grafica::empiezaDeNuevo (){
+	if (camera.x > 4000){
+		camera.x = 0;
+		cameraSet = 0;
+		return true;
+	}else
+			return false;
+}
+
 
 

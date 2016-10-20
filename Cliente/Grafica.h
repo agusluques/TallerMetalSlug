@@ -25,10 +25,15 @@ private:
 	SDL_Window* gWindow;
 	//SURFACE DE LA VENTANA
 	SDL_Surface* gScreenSurface;
+
 	//SURFACE ACTUAL
-	SDL_Surface* gCurrentSurface;
-	//SURFACE FONDO
-	SDL_Surface* gFondoSurface;
+	SDL_Surface* fondo1;
+	SDL_Surface* fondo2;
+	SDL_Surface* fondo3;
+
+	SDL_Texture *spriteFondo1;
+	SDL_Texture *spriteFondo2;
+	SDL_Texture *spriteFondo3;
 
 	list<LTexture> listaDibujable;
 
@@ -40,18 +45,16 @@ private:
 
 	SDL_Window* windowARenderizar;
 
-	SDL_Texture *spriteFondo;
-	SDL_Texture *spriteFondo2;
-
-
 	int anchoVentana;
 	int altoVentana;
-
+    int count;
     int cameraSet;
 
 public:
 	SDL_Rect camera; // = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-
+	SDL_Rect camera1;
+    SDL_Rect camera2;
+    SDL_Rect camera3;
 	int numeroCliente;
 	SDL_Renderer* window;
 
@@ -86,13 +89,7 @@ public:
 		this->numeroCliente = numCliente;
 	}
 
-	bool empiezaDeNuevo(){
-		if (camera.x > 1500){
-			camera.x = 0;
-			cameraSet = 0;
-			return true;
-		}else return false;
-	}
+	bool empiezaDeNuevo();
 
 };
 

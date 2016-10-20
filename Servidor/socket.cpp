@@ -339,7 +339,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				char* spriteId = parseXMLPj();
 				nuevo.setSpriteId(spriteId);
 				nuevo.setX(1 + rand() % (150));
-				//nuevo.setY(ALTO_VENTANA - 50);
 				nuevo.setY(ALTO_VENTANA - 100);
 				nuevo.setSpX (0);
 				nuevo.setSpY(1);
@@ -477,7 +476,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				nuevaCordY = it->y = ALTO_VENTANA - 100;
 				nuevaCordX = it->x = (1 + rand() % (150));
 				nuevoSpX = it->spX = 0;
-				nuevoSpY = it->spY = 0;
+				nuevoSpY = it->spY = 1;
 				flip = 'D';
 
 				enviarAConectados(numeroCliente,nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, avanzar);
@@ -560,79 +559,21 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'U':{
-			//PARTE VIEJA CON FOR
-			/*for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
-				if ((*it).id == numeroCliente){
-					it->saltar();
-
-					nuevaCordY = it->y = it->y - 2;
-					nuevaCordX = it->x;
-					nuevoSpX = it->spX = it->spX+1;				//COMENTARIO: DEBO CAMBIAR DE LINEA
-					if (nuevoSpX > 5) nuevoSpX = it->spX = 0;	//DE SPRITE PARA QUE SUBA
-					nuevoSpY = it->spY = 0;
-				}
-			}*/
 
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
-			it->saltar();
+			 it->saltar();
+
 
 			break;
 		}
 
-		//		case 'D':{
-		//			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
-		//			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
-		//				if ((*it).id == numeroCliente){
-		//					//hacer metodo mover up y q sume solo en la clase dibujableServer...
-		//					nuevaCordY = it->y = it->y + 2;
-		//					nuevaCordX = it->x;
-		//					nuevoSpX = it->spX = it->spX+1;				//COMENTARIO: DEBO CAMBIAR DE LINEA
-		//					if (nuevoSpX > 5) nuevoSpX = it->spX = 0;	//DE SPRITE PARA QUE BAJE?
-		//					nuevoSpY = it->spY = 0;
-		//				}
-		//			}
-		//
-		//			//envio a todos los q esten online el mensaje de q se modifico un objeto
-		//			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, false);
-		//
-		//			break;
-		//		}
 		case 'L':{
 			int xCamara;
 			recibirMensaje(newsockfd, &xCamara, sizeof(int));
 
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
-			xMin = 10000;
-			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
-				if((*it).x < xMin){
-					xMin = it->x;
-				}
-			}
-			//PARTE VIEJA CON FOR X SI NO ANDA CON EL ADVANCE...
-			/*for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
-				//nuevaCordX es la del tipito actual..asi q aca avanzo
-				if ((nuevaCordX) > (xMin)){
-				 if ((*it).id == numeroCliente){
-					 //lo muevo a la izq
-					nuevaCordY = it->y;
-					nuevaCordX = it->x = it->x - 2;
-					nuevoSpX = it->spX = it->spX+1;
-					if (nuevoSpX > 5) nuevoSpX = it->spX = 0;
-					nuevoSpY = it->spY = 0;
-				  }
-			    }else{
-					if ((*it).id == numeroCliente){
-						//lo dejo quieto
-						nuevaCordY = it->y;
-						nuevaCordX = it->x;
-						nuevoSpX = it->spX = 0;
-						nuevoSpY = it->spY = 0;
-					}
-				}
-			}*/
-
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
@@ -641,14 +582,13 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			}else it->quieto();
 			//ver si realmente hace falta dejarlo quieto o si saco el else va igual....
 
-			cout <<"XMIN: " << xMin << endl;
 			break;
 		}
 		case 'R':{
+			int totalDesplazar;
+			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			int xCamara;
 			recibirMensaje(newsockfd, &xCamara, sizeof(int));
-
-			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, totalDesplazar;
 			xMin = 10000;
 			xMax = 1;
 			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
@@ -658,23 +598,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				if((*it).x > xMax){
 					xMax = it->x;
 				}
-//				totalDesplazar = xMin + 400; //de aca se regula hasta donde llega el sprite en la pantalla;
-//				if ((nuevaCordX) <  (totalDesplazar)){
-//					if ((*it).id == numeroCliente){
-//						nuevaCordY = it->y;
-//						nuevaCordX = it->x = it->x +2;
-//						nuevoSpX = it->spX = it->spX+1;
-//						if (nuevoSpX > 5) nuevoSpX = it->spX = 0;
-//						nuevoSpY = it->spY = 0;
-//					}
-//				}else{
-//					if ((*it).id == numeroCliente){
-//						nuevaCordY = it->y;
-//						nuevaCordX = it->x;
-//						nuevoSpX = it->spX = 0;
-//						nuevoSpY = it->spY = 0;
-//					}
-//				}
 			}
 
 			totalDesplazar = xMin + 400; //de aca se regula hasta donde llega el sprite en la pantalla;
@@ -687,8 +610,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			}else it->quieto();
 
 			//ACA DEBERIA IMPLEMENTAR ALGUNA CAMARA EN EL SERVIDOR!
-			//XQ SINO NO LE PUEDO PASAR Q MUEVA LA CAMARA...
-			//O HACER EL AVANZAR ESTATICO Y A LA MIERDA..
+			//es AVANZAR ESTATICO
 
 			avanzar = false;
 
@@ -779,7 +701,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				char* spriteId = parseXMLPj();
 				nuevo.setSpriteId(spriteId);
 				nuevo.setX(1+rand() % (150));
-				//nuevo.setY(ALTO_VENTANA - 50);
 				nuevo.setY(ALTO_VENTANA-100);
 				nuevo.setSpX (0);
 				nuevo.setSpY(1);
