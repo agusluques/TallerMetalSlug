@@ -14,7 +14,7 @@ Grafica::Grafica() {
 	windowARenderizar = NULL;
 	window = NULL;
 
-	count =0;
+	count = 0;
 	camera.x = 0;
 	camera.y = 0;
 
@@ -223,8 +223,8 @@ bool Grafica::inicializarFondo(char *path){
 
 	camera1.x = 0;
 	camera1.y = 0;
-	camera1.w = ((anchoVentana*260)/altoVentana);
-	camera1.h = 260;
+	camera1.w = ((anchoVentana*270)/altoVentana);
+	camera1.h = 270;
 
 
 	//Load background texture
@@ -239,8 +239,8 @@ bool Grafica::inicializarFondo(char *path){
 
 	camera2.x = 0;
 	camera2.y = 0;
-	camera2.w = ((anchoVentana*260)/altoVentana);
-	camera2.h = 260;
+	camera2.w = ((anchoVentana*270)/altoVentana);
+	camera2.h = 270;
 
 
 	fondo3 = IMG_Load( "fondo3.png");
@@ -279,21 +279,34 @@ void Grafica::avanzarCamara (int posicionX){
 	if (camera.x < 0)
 	  camera.x = 0;
 
-	camera1.x= camera.x/8;
+/*	camera1.x = camera.x/8;
 	if (camera1.x > 1000) //dificil que llegue es el de las nubes
-		camera1.x=0;
-	camera2.x= camera.x/4;
-	camera3.x= (camera.x/2);
+		camera1.x = 0;
+	camera2.x = camera.x/4;
+	camera3.x = (camera.x/2);
+*/
+	//AVANZAR DE LAS CAMARAS..
+	//USO SOLO EL FONDO 3 QUE ES DND CAMINA.. ENTONCES V3 = VELOCIDAD CAMARA
+	//FORMULA W1/X1 = W2/X2 ---> X2 = (W2*X1)/(W1) | dnd W es el weight y X la pos q avanza
+	//ej camara3 avanza 10, camara2 avanza 5, camara 1 avanza 2.5
+
+	camera3.x = camera.x;
+	camera2.x = ((1640*camera3.x)/(3640));
+	camera1.x = ((640*camera3.x)/(3640));
+
+	cout << "camara1: " << camera1.x << endl;
+	cout << "camara2: " << camera2.x << endl;
+	cout << "camara3: " << camera3.x << endl;
 
 }
 
-bool Grafica::empiezaDeNuevo (){
-	if (camera.x > 4000){
+bool Grafica::empiezaDeNuevo () {
+	if (camera.x >= 3650){
 		camera.x = 0;
 		cameraSet = 0;
 		return true;
 	}else
-			return false;
+		return false;
 }
 
 

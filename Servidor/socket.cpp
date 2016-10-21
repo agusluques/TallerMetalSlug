@@ -589,6 +589,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			int xCamara;
 			recibirMensaje(newsockfd, &xCamara, sizeof(int));
+
 			xMin = 10000;
 			xMax = 1;
 			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
@@ -600,7 +601,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				}
 			}
 
-			totalDesplazar = xMin + 400; //de aca se regula hasta donde llega el sprite en la pantalla;
+			totalDesplazar = xMin + ANCHO_VENTANA/2; //de aca se regula hasta donde llega el sprite en la pantalla;
 
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
@@ -611,7 +612,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			//ACA DEBERIA IMPLEMENTAR ALGUNA CAMARA EN EL SERVIDOR!
 			//es AVANZAR ESTATICO
-
 			avanzar = false;
 
 			int delta;
