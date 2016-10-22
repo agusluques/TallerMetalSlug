@@ -40,7 +40,6 @@ bool mySocket::autenticar(string nombre){
 	recibirMensaje(&respuesta, sizeof(int));
 
 	recibirMensaje(&tam, sizeof(int));
-
 	char mensaje[tam];
 	recibirMensaje(&mensaje, sizeof(char)*tam);
 	cout << "Mensaje del servidor: " << mensaje << endl;
@@ -276,11 +275,20 @@ void mySocket::cargarDibujables(){
 
 		grafica.nuevoDibujable(&result[0], idObjeto,posX,posY, spx, spy, flip);
 	}
+
+	//pido x camara
+	codigo = 'c';
+	enviarMensaje(&codigo, sizeof(char));
+
+	int xCamara, camSet;
+	recibirMensaje(&xCamara, sizeof(int));
+	recibirMensaje(&camSet, sizeof(int));
+	grafica.setXCamara(xCamara,camSet);
+
 }
 
 bool mySocket::iniciarGrafica(){
 	//chequeo que esten todos los jugadores
-	grafica.close();
 
 	char codigo;
 	codigo = '7';
@@ -340,19 +348,31 @@ bool mySocket::iniciarGrafica(){
 
 	cargarDibujables();
 
-	/*SDL_Rect camera = { 0, 0, anchoVentana, altoVentana };
-
-	float constCamera = ((3*anchoVentana)/4); */
-
 	bool quieto = true;
 
 	char codigoMover;
 	strcpy(&codigoMover,"M");
 
 	while( !quit ) {
-
 		//le envio un mover siempre
 		enviarMensaje(&codigoMover, sizeof(char));
+
+		//recibo si hay cambios
+		bool huboError = false;
+
+		huboError = recibirMensaje();
+		if(huboError){
+			cout << "Hubo error" << endl;
+			grafica.close();
+			quit = true;
+		} else {
+			//MOSTRAR VENTANA
+			if (!grafica.empiezaDeNuevo()) grafica.mostrarDibujables();
+			else{
+				char codigo = '8';
+				enviarMensaje(&codigo, sizeof(char));
+			}
+		}
 
 		while( SDL_PollEvent(&event) != 0 ) {
 			if( event.type == SDL_QUIT ) {
@@ -425,46 +445,16 @@ bool mySocket::iniciarGrafica(){
 					quieto = true;
 					event.type = SDL_FIRSTEVENT;
 					break;
-//				case SDLK_UP:
-//					strcpy(&codigo,"S");
-//					enviarMensaje(&codigo, sizeof(char));
-//					quieto = true;
-//					event.type = SDL_FIRSTEVENT;
-//					break;
+					//				case SDLK_UP:
+					//					strcpy(&codigo,"S");
+					//					enviarMensaje(&codigo, sizeof(char));
+					//					quieto = true;
+					//					event.type = SDL_FIRSTEVENT;
+					//					break;
 				}
 			}
 		}
 
-		//recibo si hay cambios
-		bool huboError = false;
-
-		huboError = recibirMensaje();
-		if(huboError){
-			cout << "Hubo error" << endl;
-			grafica.close();
-			quit = true;
-		} else {
-			//MOSTRAR VENTANA
-			/* if(avanzar == true){
-				camera.x += 10;
-				avanzar = false;
-			}
-
-			if( camera.x < 0 )
-			{ 
-				camera.x = 0;
-			}
-			if( camera.x > 1950 - camera.w )
-			{
-				camera.x = 1950 - camera.w;
-			}
-			 */
-			if (!grafica.empiezaDeNuevo()) grafica.mostrarDibujables();
-			else{
-				char codigo = '8';
-				enviarMensaje(&codigo, sizeof(char));
-			}
-		}
 	}
 
 	grafica.close();

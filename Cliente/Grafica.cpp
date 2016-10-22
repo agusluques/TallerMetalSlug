@@ -57,12 +57,30 @@ void Grafica::clear() {
 
 //CERRAR SDL Y LIBERAR SURFACE
 void Grafica::close() {
-	//LIBERO SURFACE
-	SDL_FreeSurface(gScreenSurface);
+	//LIBERO
+	SDL_DestroyWindow(windowARenderizar);
+	windowARenderizar = NULL;
 
-	//LIBERO VENTANA
-	SDL_DestroyWindow( gWindow );
-	gWindow = NULL;
+	SDL_DestroyRenderer(window);
+	window = NULL;
+
+	SDL_DestroyTexture(spriteFondo1);
+	SDL_DestroyTexture(spriteFondo2);
+	SDL_DestroyTexture(spriteFondo3);
+	spriteFondo1 = NULL;
+	spriteFondo2 = NULL;
+	spriteFondo3 = NULL;
+
+	fondo1 = NULL;
+	fondo2 = NULL;
+	fondo3 = NULL;
+
+	listaDibujable.clear();
+
+	anchoVentana = 0;
+	altoVentana = 0;
+	count = 0;
+	cameraSet = 0;
 
 	//CIERRO SDL
 	SDL_Quit();
@@ -104,7 +122,7 @@ void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanza
 
 void Grafica::mostrarDibujables(){
 
-	SDL_RenderClear( window );
+	SDL_RenderClear(window);
 
 	SDL_RenderCopy (window, spriteFondo1, &camera1, NULL);
 
@@ -270,7 +288,6 @@ bool Grafica::inicializarPersonaje(char* path, int ancho, int alto){
 }
 
 void Grafica::avanzarCamara (int posicionX){
-
 	if (posicionX > cameraSet)
 	   cameraSet = posicionX;
 
@@ -279,29 +296,20 @@ void Grafica::avanzarCamara (int posicionX){
 	if (camera.x < 0)
 	  camera.x = 0;
 
-/*	camera1.x = camera.x/8;
-	if (camera1.x > 1000) //dificil que llegue es el de las nubes
-		camera1.x = 0;
-	camera2.x = camera.x/4;
-	camera3.x = (camera.x/2);
-*/
 	//AVANZAR DE LAS CAMARAS..
-	//USO SOLO EL FONDO 3 QUE ES DND CAMINA.. ENTONCES V3 = VELOCIDAD CAMARA
-	//FORMULA W1/X1 = W2/X2 ---> X2 = (W2*X1)/(W1) | dnd W es el weight y X la pos q avanza
-	//ej camara3 avanza 10, camara2 avanza 5, camara 1 avanza 2.5
+	if(camera3.x < (4000-camera3.w))
+		camera3.x = camera.x;
 
-	camera3.x = camera.x;
-	camera2.x = ((1640*camera3.x)/(3640));
-	camera1.x = ((640*camera3.x)/(3640));
+	if(camera2.x < (2000-camera2.w))
+		camera2.x = (((2000-camera3.w)*camera3.x)/(4000-camera3.w));
 
-	cout << "camara1: " << camera1.x << endl;
-	cout << "camara2: " << camera2.x << endl;
-	cout << "camara3: " << camera3.x << endl;
+	if(camera1.x < (1000-camera1.w))
+		camera1.x = (((1000-camera3.w)*camera3.x)/(4000-camera3.w));
 
 }
 
 bool Grafica::empiezaDeNuevo () {
-	if (camera.x >= 3650){
+	if (camera.x >= 3820){ //3910 un cuarto de pantalla final masomenos..
 		camera.x = 0;
 		cameraSet = 0;
 		return true;

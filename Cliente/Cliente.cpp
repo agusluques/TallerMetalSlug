@@ -23,16 +23,16 @@ void* controlarConexion(void *arg){
 	cliente = (mySocket*) arg;
 
 	while(cliente->conexion() == true){
-		sleep(1);
+		/*sleep(1);
 		char codigo;
 		codigo = '0';
 		//cliente->enviarMensaje(&codigo, sizeof(char));
-		if((cliente->enviarMensaje(&codigo, sizeof(char)) == true) &&	 (cliente->conexion() == true)){
+		if((cliente->enviarMensaje(&codigo, sizeof(char)) == true) && (cliente->conexion() == true)){
 			//cout << "entro a antes de desconectar " << endl;
 			cliente->desconectar();
 			cout << "Se perdio la conexion con el servidor" << endl;
 			loggearCliente(" Se perdio la conexion con el servidor");
-		}
+		}*/
 
 		/*struct timeval tv;
 		tv.tv_sec = 10;  // 10 Secs Timeout
@@ -100,9 +100,9 @@ int main(int argc, char *argv[])
 				break;
 
 			case '5': {
-
 				Cliente.iniciarGrafica();
-
+				Cliente.cerrar();
+				Cliente.desconectar();
 				break;
 			}
 		}

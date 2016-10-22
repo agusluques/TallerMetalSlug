@@ -37,9 +37,7 @@ private:
 
 	list<LTexture> listaDibujable;
 
-
 	//lo de agus
-
     SDL_Rect renderQuad;
     SDL_Rect renderQuad2;
 
@@ -90,6 +88,15 @@ public:
 	}
 
 	bool empiezaDeNuevo();
+
+	void setXCamara(int xCamara, int camSet){
+		camera.x = xCamara;
+		camera3.x = camera.x;
+		camera2.x = (((2000-camera3.w)*camera3.x)/(4000-camera3.w));
+		camera1.x = (((1000-camera3.w)*camera3.x)/(4000-camera3.w));
+
+		cameraSet = camSet;
+	}
 
 };
 

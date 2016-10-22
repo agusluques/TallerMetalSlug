@@ -23,6 +23,10 @@ LTexture::~LTexture() {
 void LTexture::render(SDL_Renderer *window, SDL_Texture *mTexture, SDL_Rect *camera, int escala){
 	SDL_Rect drawingRect;
 
+	cout << "XCORD: " << xcord << endl;
+	cout << "CAMERA->X: " << camera->x << endl;
+	cout << "RESTA: " << xcord - camera->x << endl;
+
 	drawingRect.x = xcord - camera->x;
     drawingRect.y = ycord - camera->y;
 

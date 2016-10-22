@@ -59,8 +59,8 @@ public:
 			texture = NULL;
 
 		}
-		SDL_Surface* loadedSurface = IMG_Load( path );
-		//SDL_Surface* loadedSurface = IMG_Load( "Clarkcopia.png" );
+		//SDL_Surface* loadedSurface = IMG_Load( path );
+		SDL_Surface* loadedSurface = IMG_Load( "notfoundpj.png" );
 
 		if( loadedSurface == NULL ) {
 			printf( "Unable to load image %s! SDL_image Error: %s\n", path, IMG_GetError() );

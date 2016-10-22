@@ -34,6 +34,9 @@ int topeSalto = 20;
 
 bool avanzar;
 
+int camaraX = 0;
+int camaraSet = 0;
+
 //list<mensajeClass> listaDeMensajesAlCliente;
 pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutexListaRecibir = PTHREAD_MUTEX_INITIALIZER;
@@ -230,16 +233,15 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 	while (abierto){
 
-		//int tamanio = (sizeof(char));
 		//char codigo;
 		//recibirMensaje(newsockfd, &codigo, tamanio);
 		//cout << "Codigo: " << codigo << endl;
-
+/*
 		struct timeval tv;
 		tv.tv_sec = 10;  // 10 Secs Timeout
 		tv.tv_usec = 0;  // Not init'ing this can cause strange errors
 		setsockopt(newsockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));
-
+*/
 		char codigo;
 		int data = read(newsockfd, &codigo, sizeof(char));
 		//cout << "DATA: " << data << endl;
@@ -260,6 +262,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			list<usuarioClass>::iterator it = listaDeUsuarios.begin();
 			advance(it, numeroCliente-1);
 			it->desconectar();
+			it->loggear(" perdio la conexion con el servidor");
 		}
 		//cliente->recibirMensaje(&cod, sizeof(char));
 
@@ -300,31 +303,33 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				if ((*i).nombreUsuario().compare(nombre) == 0){
 					if(!(*i).estaConectado()){
 						estabaDesconectado = true;
-						(*i).conectar();
-						numeroCliente = (*i).numCliente();
+						i->conectar();
+						numeroCliente = i->numCliente();
 
 						//mandar msj a todos q volvio asi no esta mas gris
 						int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 						char flip;
-						for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
-							if ((*it).id == numeroCliente){
-								//hacer metodo mover up y q sume solo en la clase dibujableServer...
-								nuevaCordY = it->y;
-								nuevaCordX = it->x;
-								//parado
-								nuevoSpX = it->spX = 0;
-								nuevoSpY = it->spY = 1;
-								flip = it->flip;
-							}
-						}
+
+						list<DibujableServer>::iterator it = listaDibujables.begin();
+						advance(it, numeroCliente-1);
+
+						nuevaCordY = it->y;
+						nuevaCordX = it->x;
+						//parado
+						nuevoSpX = it->spX = 0;
+						nuevoSpY = it->spY = 1;
+						flip = it->flip;
 
 						//envio a todos los q esten online el mensaje de q se modifico un objeto
 						enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, false);
 					}
+
 					respuesta = false;
 					strcpy(mensaje,"El nombre ya esta en uso");
 				}
 			}
+
+			cout << "NUMERO DE CLIENTE: " << numeroCliente << endl << endl;
 
 			if (respuesta){
 				strcpy(mensaje,"Bienvenido");
@@ -535,6 +540,14 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			break;
 		}
+		case 'c':{
+			//envio X camara
+			enviarMensaje(newsockfd,&camaraX,sizeof(int));
+			//envio cameraSet
+			enviarMensaje(newsockfd,&camaraSet,sizeof(int));
+
+			break;
+		}
 
 		case 'M':{
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
@@ -572,12 +585,14 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		case 'L':{
 			int xCamara;
 			recibirMensaje(newsockfd, &xCamara, sizeof(int));
+			camaraX = xCamara;
 
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
-			if ((it->x) > (xCamara)){
+			//if ((it->x) > (xCamara)){
+			if ((it->x) > (camaraX)){
 				it->caminarIzquierda();
 			}else it->quieto();
 			//ver si realmente hace falta dejarlo quieto o si saco el else va igual....
@@ -589,6 +604,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			int xCamara;
 			recibirMensaje(newsockfd, &xCamara, sizeof(int));
+			camaraX = xCamara;
 
 			xMin = 10000;
 			xMax = 1;
@@ -616,8 +632,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			int delta;
 			delta = xMax - xMin;
-			if(delta < 400 ){
+			if(delta < (400)){
 				avanzar = true;
+				if (it->x > camaraSet)
+					camaraSet = it->x;
 			}
 
 			cout <<"XMIN: " << xMin << endl;
@@ -632,26 +650,29 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			char flip;
 
-			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
-				if ((*it).id == numeroCliente){
-					//hacer metodo mover up y q sume solo en la clase dibujableServer...
-					nuevaCordX = it->x;
-					nuevaCordY = it->y;
-					//momia
-					nuevoSpX = it->spX = 1;
-					nuevoSpY = it->spY = 1;
-					flip = it->flip;
-				}
-			}
+			list<DibujableServer>::iterator it = listaDibujables.begin();
+			advance(it, numeroCliente-1);
+			//it->quieto();
+
+			//it->estaConectado = false;
+			nuevaCordX = it->x;
+			nuevaCordY = it->y;
+			//momia
+			nuevoSpX = it->spX = 1;
+			nuevoSpY = it->spY = 1;
+			flip = it->flip;
+
+			list<usuarioClass>::iterator it2 = listaDeUsuarios.begin();
+			advance(it2, numeroCliente-1);
+
+			//ver si conviene desconectar al usuario desde aca..
+			it2->desconectar();
 
 			//envio a todos los q esten online el mensaje de q se modifico un objeto
 			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, false);
 
 			//envio un msj a todos los q esten online q se desconecto el usuario
-			list<usuarioClass>::iterator it = listaDeUsuarios.begin();
-			advance(it, numeroCliente-1);
-
-			string mensaje = (*it).nombreUsuario() + " Se ah desconectado";
+			string mensaje = (*it2).nombreUsuario() + " Se ah desconectado";
 			enviarMensajeAConectados(mensaje);
 
 			break;
