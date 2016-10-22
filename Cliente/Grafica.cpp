@@ -115,7 +115,7 @@ void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanza
 	aux.actualizar( x,  y, spx, spy, flip);
 
 	if (avanzar)
-	   this->avanzarCamara(x);
+		this->avanzarCamara(x);
 
 	actualizarDibujable(aux);
 }
@@ -130,12 +130,12 @@ void Grafica::mostrarDibujables(){
 
 	SDL_RenderCopy (window, spriteFondo3, &camera3, NULL);
 
-    for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
-		(*i).render(window,(*i).texture, &camera, altoVentana/12);
+	for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
+		(*i).render(window,(*i).texture, &camera3, altoVentana/12);
 	}
 	list<LTexture>::iterator i = listaDibujable.begin();
 	advance(i,numeroCliente - 1);
-	(*i).render(window, (*i).texture, &camera, altoVentana/12);
+	(*i).render(window, (*i).texture, &camera3, altoVentana/12);
 
 	SDL_RenderPresent( window );
 }
@@ -154,7 +154,7 @@ void Grafica::nuevoDibujable(char* sprite, int idObjeto, int posX, int posY, int
 	nuevo.setFlip(flip);
 
 	nuevo.inicializarTexture(window, sprite); //pasar nombre como parametro
-	
+
 	listaDibujable.push_back(nuevo);
 }
 
@@ -218,8 +218,8 @@ bool Grafica::inicializarVentana(int ancho, int alto){
 			}
 		}
 	}
-	
-	
+
+
 	//loadFromFile("Clarkcopia.png");
 
 	return exito;
@@ -233,8 +233,8 @@ bool Grafica::inicializarFondo(char *path){
 	fondo1 = IMG_Load( "fondo1.png");
 
 	if( fondo1 == NULL ) {
-		 cout << "No se pudo cargar la imagen " << "fondo1.png" << "SDL Error: " << SDL_GetError() << endl;
-    }
+		cout << "No se pudo cargar la imagen " << "fondo1.png" << "SDL Error: " << SDL_GetError() << endl;
+	}
 
 	spriteFondo1 = SDL_CreateTextureFromSurface(window, fondo1);
 	SDL_FreeSurface(fondo1);
@@ -249,7 +249,7 @@ bool Grafica::inicializarFondo(char *path){
 	fondo2 = IMG_Load( "fondo2.png");
 
 	if( fondo2 == NULL ) {
-	    cout << "No se pudo cargar la imagen " << "fondo2.png" << "SDL Error: " << SDL_GetError() << endl;
+		cout << "No se pudo cargar la imagen " << "fondo2.png" << "SDL Error: " << SDL_GetError() << endl;
 	}
 
 	spriteFondo2 = SDL_CreateTextureFromSurface(window, fondo2);
@@ -264,7 +264,7 @@ bool Grafica::inicializarFondo(char *path){
 	fondo3 = IMG_Load( "fondo3.png");
 
 	if( fondo3 == NULL ) {
-	    cout << "No se pudo cargar la imagen " << "fondo3.png" << "SDL Error: " << SDL_GetError() << endl;
+		cout << "No se pudo cargar la imagen " << "fondo3.png" << "SDL Error: " << SDL_GetError() << endl;
 	}
 
 	spriteFondo3 = SDL_CreateTextureFromSurface(window, fondo3);
@@ -289,12 +289,12 @@ bool Grafica::inicializarPersonaje(char* path, int ancho, int alto){
 
 void Grafica::avanzarCamara (int posicionX){
 	if (posicionX > cameraSet)
-	   cameraSet = posicionX;
+		cameraSet = posicionX;
 
 	camera.x = cameraSet - anchoVentana/2;
 
 	if (camera.x < 0)
-	  camera.x = 0;
+		camera.x = 0;
 
 	//AVANZAR DE LAS CAMARAS..
 	if(camera3.x < (4000-camera3.w))
@@ -309,13 +309,10 @@ void Grafica::avanzarCamara (int posicionX){
 }
 
 bool Grafica::empiezaDeNuevo () {
-	if (camera.x >= 3820){ //3910 un cuarto de pantalla final masomenos..
+	if (camera.x > 3720){ //3910 un cuarto de pantalla final masomenos..
 		camera.x = 0;
 		cameraSet = 0;
 		return true;
 	}else
 		return false;
 }
-
-
-

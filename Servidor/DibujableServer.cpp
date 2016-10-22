@@ -9,6 +9,7 @@ DibujableServer::DibujableServer() {
 	caminaIzquierda = false;
 	mVelX = 0;
 	mVelY = 0;
+	conectar();
 
 	flip = 'D';
 }
@@ -155,6 +156,18 @@ bool DibujableServer::mover(){
 	}
 
 	return meMovi;
+}
+
+bool DibujableServer::estaConectado(){
+	return this->estaOnline;
+}
+
+void DibujableServer::conectar(){
+	this->estaOnline = true;
+}
+
+void DibujableServer::desconectar(){
+	this->estaOnline = false;
 }
 
 DibujableServer::~DibujableServer() {

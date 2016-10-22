@@ -350,6 +350,11 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				listaDibujables.push_back(nuevo);
 			}else if(estabaDesconectado){
 				strcpy(mensaje,"Bienvenido nuevamente");
+
+				/*list<DibujableServer>::iterator it2 = listaDibujables.begin();
+				advance(it2, numeroCliente-1);
+				it2->conectar();*/
+
 				respuesta = true;
 			}
 			responderLogin(newsockfd,respuesta,mensaje, numeroCliente);
@@ -556,16 +561,20 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			advance(it, numeroCliente-1);
 
 			bool seMovio = it->mover();
-
 			//enviar si realmente hay cambios..
 			if (seMovio) {
 				if (it->getX() < xMin) xMin = it->getX();
-				cout << "getX: " << it->getX() << endl;
-				cout << "XMIN: " << xMin << endl;
-
-				//COMENTARIO: DEBO CAMBIAR DE LINEA
-				//DE SPRITE PARA QUE SUBA
 				enviarAConectados(numeroCliente, it->x, it->y, it->spX, it->spY, it->flip, avanzar);
+
+				//itero desconectados
+				for (list<DibujableServer>::iterator it2 = listaDibujables.begin(); it2 != listaDibujables.end(); ++it2) {
+					if (!it2->estaConectado()){
+						if (it2->x <= camaraX){
+							it2->x = camaraX;//adelanto a la momia
+							enviarAConectados(it2->id , it2->x, it2->y, it2->spX, it2->spY, it2->flip, false);
+						}
+					}
+				}
 			}
 
 			break;
@@ -601,19 +610,23 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 		case 'R':{
 			int totalDesplazar;
-			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
+
 			int xCamara;
 			recibirMensaje(newsockfd, &xCamara, sizeof(int));
 			camaraX = xCamara;
 
 			xMin = 10000;
 			xMax = 1;
+			bool hayDesconectados = false;
+
 			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
-				if((*it).x < xMin){
-					xMin = it->x;
-				}
-				if((*it).x > xMax){
-					xMax = it->x;
+				if(it->estaConectado()){
+					if((*it).x < xMin){
+						xMin = it->x;
+					}
+					if((*it).x > xMax){
+						xMax = it->x;
+					}
 				}
 			}
 
@@ -621,13 +634,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
-
 			if ((it->x) < (totalDesplazar)){
 				it->caminarDerecha();
 			}else it->quieto();
 
-			//ACA DEBERIA IMPLEMENTAR ALGUNA CAMARA EN EL SERVIDOR!
-			//es AVANZAR ESTATICO
 			avanzar = false;
 
 			int delta;
@@ -641,7 +651,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			cout <<"XMIN: " << xMin << endl;
 			cout <<"XMAX: " << xMax << endl;
 			cout <<"totalDesplazar: " << totalDesplazar << endl;
-			cout <<"nuevaCordX: " << nuevaCordX << endl;
 
 			break;
 		}
@@ -661,6 +670,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			nuevoSpX = it->spX = 1;
 			nuevoSpY = it->spY = 1;
 			flip = it->flip;
+			it->desconectar();
 
 			list<usuarioClass>::iterator it2 = listaDeUsuarios.begin();
 			advance(it2, numeroCliente-1);

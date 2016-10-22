@@ -20,6 +20,7 @@ public:
 	int y;
 	int spX;
 	int spY;
+	bool estaOnline;
 
 	bool estaEnElPiso;
 	bool caminaDerecha;
@@ -47,6 +48,10 @@ public:
 	void caminarIzquierda();
 	void quieto();
 	bool mover();
+
+	bool estaConectado();
+	void conectar();
+	void desconectar();
 
 	virtual ~DibujableServer();
 };
