@@ -1,5 +1,7 @@
 #include "DibujableServer.h"
 
+// prueba de commit
+
 #include <cstring>
 
 DibujableServer::DibujableServer() {
