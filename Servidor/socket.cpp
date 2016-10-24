@@ -228,43 +228,66 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 	//char buffer[TAM_MAX];
 	int newsockfd = (long)arg;
 	bool abierto = true;
+	bool inicioGrafica = false;
 	int numeroCliente;
 	usuarioClass* userPoint= NULL;
 
+
 	while (abierto){
 
-		//char codigo;
-		//recibirMensaje(newsockfd, &codigo, tamanio);
-		//cout << "Codigo: " << codigo << endl;
-/*
-		struct timeval tv;
-		tv.tv_sec = 10;  // 10 Secs Timeout
-		tv.tv_usec = 0;  // Not init'ing this can cause strange errors
-		setsockopt(newsockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));
-*/
 		char codigo;
-		int data = read(newsockfd, &codigo, sizeof(char));
-		//cout << "DATA: " << data << endl;
-		//cout << "CODIGO: " << codigo << endl;
-		if(data < 0){
-			cout << "Se cayo la conexion con el cliente " << endl;
 
-			/*
-			userPoint->desconectar();
-			list<usuarioClass>::iterator it = listaDeUsuarios.begin();
-			advance(it, numeroCliente-1);
-			memcpy(&(*it),userPoint,sizeof(usuarioClass));
+		if(inicioGrafica){
+			struct timeval tv;
+			tv.tv_sec = 10;  // 10 Secs Timeout
+			tv.tv_usec = 0;  // Not init'ing this can cause strange errors
+			setsockopt(newsockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));
 
-			userPoint->loggear(" perdio la conexion con el servidor (se corto internet)");
-			 */
-			abierto = false;
+			int data = read(newsockfd, &codigo, sizeof(char));
+			if(data < 0){
+				cout << "Se cayo la conexion con el cliente " << endl;
 
-			list<usuarioClass>::iterator it = listaDeUsuarios.begin();
-			advance(it, numeroCliente-1);
-			it->desconectar();
-			it->loggear(" perdio la conexion con el servidor");
+				/*
+				abierto = false;
+
+				list<usuarioClass>::iterator it = listaDeUsuarios.begin();
+				advance(it, numeroCliente-1);
+				it->desconectar();*/
+				
+				//caso cerrar ventana grafica
+				int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
+				char flip;
+
+				list<DibujableServer>::iterator it = listaDibujables.begin();
+				advance(it, numeroCliente-1);
+				//it->quieto();
+
+				//it->estaConectado = false;
+				nuevaCordX = it->x;
+				nuevaCordY = it->y;
+				//momia
+				nuevoSpX = it->spX = 1;
+				nuevoSpY = it->spY = 1;
+				flip = it->flip;
+				it->desconectar();
+
+				list<usuarioClass>::iterator it2 = listaDeUsuarios.begin();
+				advance(it2, numeroCliente-1);
+
+				//ver si conviene desconectar al usuario desde aca..
+				it2->desconectar();
+
+				//envio a todos los q esten online el mensaje de q se modifico un objeto
+				enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, false);
+
+				//envio un msj a todos los q esten online q se desconecto el usuario
+				string mensaje = (*it2).nombreUsuario() + " Se ah desconectado";
+				enviarMensajeAConectados(mensaje);
+			}
+		} else {
+
+			int data = read(newsockfd, &codigo, sizeof(char));
 		}
-		//cliente->recibirMensaje(&cod, sizeof(char));
 
 		switch(codigo){
 
@@ -382,6 +405,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		case '4':{
 			//cout << "Entro a /4 que es fondos" << endl;
 			//cargarFondos(archivoXml);
+			inicioGrafica = true;
 			int tamano = listaFondos.size();
 			enviarMensaje(newsockfd, &tamano, sizeof(int));
 			for(list<FondoServer>::iterator i =listaFondos.begin(); i != listaFondos.end();++i){
