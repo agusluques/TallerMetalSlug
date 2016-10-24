@@ -343,6 +343,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						nuevoSpY = it->spY = 1;
 						flip = it->flip;
 
+						it->conectar();
+
 						//envio a todos los q esten online el mensaje de q se modifico un objeto
 						enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, false);
 					}
