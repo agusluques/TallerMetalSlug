@@ -453,6 +453,7 @@ bool mySocket::iniciarGrafica(){
 
 					int x = grafica.camera.x;
 					enviarMensaje(&x, sizeof(int));
+					cout << "DERECHAAAAAAAAAAAAAAAA!" << endl;
 
 					quieto = false;
 					break;
@@ -465,6 +466,8 @@ bool mySocket::iniciarGrafica(){
 
 				default:
 					break;
+
+				event.quit;
 				}
 			}else if( event.type == SDL_KEYUP && event.key.repeat == 0 && !quieto ) {
 				char codigo;

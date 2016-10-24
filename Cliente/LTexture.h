@@ -10,7 +10,7 @@ using namespace std;
 
 class LTexture {
 
-private:
+public:
 	int id;
 
 	//SDL_Rect cuerpo[6][1];
@@ -28,7 +28,7 @@ private:
 
 	SDL_Texture* mTexture;
 
-public:
+//public:
 	SDL_Texture* texture;
 	LTexture();
 	~LTexture();

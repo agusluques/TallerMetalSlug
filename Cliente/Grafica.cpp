@@ -309,10 +309,19 @@ void Grafica::avanzarCamara (int posicionX){
 }
 
 bool Grafica::empiezaDeNuevo () {
-	if (camera.x > 3720){ //3910 un cuarto de pantalla final masomenos..
-		camera.x = 0;
-		cameraSet = 0;
-		return true;
+	if (camera.x > 3695){ //3910 un cuarto de pantalla final masomenos..
+		int xMin = 9999;
+		for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
+			if (i->xcord < xMin) xMin = i->xcord;
+		}
+		if (xMin > 3800) {
+			camera.x = 0;
+			camera1.x = 0;
+			camera2.x = 0;
+			camera3.x = 0;
+			cameraSet = 0;
+			return true;
+		}
 	}else
 		return false;
 }

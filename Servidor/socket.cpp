@@ -499,27 +499,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 
-		case '8': {
-			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
-			char flip;
-
-			avanzar = false;
-
-			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
-				//empiezo de nuevo
-				nuevaCordY = it->y = ALTO_VENTANA - 100;
-				nuevaCordX = it->x = (1 + rand() % (150));
-				nuevoSpX = it->spX = 0;
-				nuevoSpY = it->spY = 1;
-				flip = 'D';
-
-				enviarAConectados(numeroCliente,nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, avanzar);
-			}
-
-		break;
-
-		}
-
 		case '7': {
 			//pido si puede empezar el juego
 			bool respuesta = false;
@@ -529,6 +508,27 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			enviarMensaje(newsockfd,&respuesta,sizeof(bool));
 
 			break;
+		}
+
+		case '8': {
+			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
+			char flip;
+
+			avanzar = false;
+
+			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
+				//empiezo de nuevo
+				nuevaCordY = it->y = ALTO_VENTANA - 100;
+				nuevaCordX = it->x = 100;
+				nuevoSpX = it->spX; //le dejo el mismo sprite.. sino poner if estaConectado
+				nuevoSpY = it->spY;
+				flip = 'D';
+
+				enviarAConectados(it->id,nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, avanzar);
+			}
+
+			break;
+
 		}
 
 		case '9':{
