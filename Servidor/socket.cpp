@@ -421,7 +421,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				enviarMensaje(newsockfd, &tamFondoId, sizeof(int));
 				enviarMensaje(newsockfd, &spriteId, sizeof(char)*tamFondoId);
 				enviarMensaje(newsockfd, &ancho, sizeof(int));
-				enviarMensaje(newsockfd, &z, sizeof(int));
+				//enviarMensaje(newsockfd, &z, sizeof(int));
 			}
 			break;
 		}

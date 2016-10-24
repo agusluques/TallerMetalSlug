@@ -245,7 +245,7 @@ void mySocket::cargarDibujables(){
 		ifstream ifs (result.c_str());
 		//ifstream infile(&result[0]);
 		if ((ifs.good()) == false) {
-			result = "notfoundpj.png";
+			result = "notfoundpj-ORIGINAL.png";
 		}
 		ifs.close();
 		//infile.close();
@@ -318,7 +318,7 @@ bool mySocket::iniciarGrafica(){
 	int cantidad;
 	recibirMensaje(&cantidad, sizeof(int));
 
-	for (int i = 0; i<cantidad; i++){
+	/*for (int i = 0; i<cantidad; i++){
 		int anchoFondo, zIndex, tamId;
 		recibirMensaje(&tamId, sizeof(int));
 		char idFondo[tamId];
@@ -341,7 +341,44 @@ bool mySocket::iniciarGrafica(){
 		cout << "Resultado Fondo: " << resultado << endl;
 		infile.close();
 		grafica.inicializarFondo(&resultado[0]);
-	}
+	}*/
+	int anchoFondo1, tamId1, anchoFondo2,  tamId2, anchoFondo3, tamId3;
+	recibirMensaje(&tamId1, sizeof(int));
+	char idFondo1[tamId1];
+	recibirMensaje(&idFondo1, sizeof(char)*tamId1);
+	recibirMensaje(&anchoFondo1, sizeof(int));
+	//recibirMensaje(&zIndex, sizeof(int));
+	string resultado1(idFondo1, tamId1);
+
+	recibirMensaje(&tamId2, sizeof(int));
+	char idFondo2[tamId2];
+	recibirMensaje(&idFondo2, sizeof(char)*tamId2);
+	recibirMensaje(&anchoFondo2, sizeof(int));
+	//recibirMensaje(&zIndex, sizeof(int));
+	string resultado2(idFondo2, tamId2);
+
+	recibirMensaje(&tamId3, sizeof(int));
+	char idFondo3[tamId3];
+	recibirMensaje(&idFondo3, sizeof(char)*tamId3);
+	recibirMensaje(&anchoFondo3, sizeof(int));
+	//recibirMensaje(&zIndex, sizeof(int));
+	string resultado3(idFondo3, tamId3);
+
+	ifstream infile1(resultado1.c_str());
+	if ((infile1.good()) == false) {
+			resultado1 = "notFoundFondo1.png";
+		}
+	ifstream infile2(resultado2.c_str());
+	if ((infile2.good()) == false) {
+			resultado2 = "notFoundFondo2.png";
+		}
+	ifstream infile3(resultado3.c_str());
+	if ((infile3.good()) == false) {
+			resultado3 = "notFoundFondo3.png";
+		}
+
+	grafica.inicializarFondo(&resultado1[0], &resultado2[0],&resultado3[0] );
+
 
 	bool quit = false;
 	SDL_Event event;

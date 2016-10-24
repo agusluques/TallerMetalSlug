@@ -226,11 +226,11 @@ bool Grafica::inicializarVentana(int ancho, int alto){
 
 }
 
-bool Grafica::inicializarFondo(char *path){
+bool Grafica::inicializarFondo(char *path1, char* path2, char* path3){
 	//Loading success flag
 	bool success = true;
 
-	fondo1 = IMG_Load( "fondo1.png");
+	fondo1 = IMG_Load( path1);
 
 	if( fondo1 == NULL ) {
 		cout << "No se pudo cargar la imagen " << "fondo1.png" << "SDL Error: " << SDL_GetError() << endl;
@@ -246,7 +246,7 @@ bool Grafica::inicializarFondo(char *path){
 
 
 	//Load background texture
-	fondo2 = IMG_Load( "fondo2.png");
+	fondo2 = IMG_Load( path2);
 
 	if( fondo2 == NULL ) {
 		cout << "No se pudo cargar la imagen " << "fondo2.png" << "SDL Error: " << SDL_GetError() << endl;
@@ -261,7 +261,7 @@ bool Grafica::inicializarFondo(char *path){
 	camera2.h = 270;
 
 
-	fondo3 = IMG_Load( "fondo3.png");
+	fondo3 = IMG_Load( path3);
 
 	if( fondo3 == NULL ) {
 		cout << "No se pudo cargar la imagen " << "fondo3.png" << "SDL Error: " << SDL_GetError() << endl;

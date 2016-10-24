@@ -80,7 +80,7 @@ public:
 
 	//lo de agus
 	bool inicializarVentana(int ancho, int alto);
-	bool inicializarFondo(char *path);
+	bool inicializarFondo(char *path1, char* path2, char* path3);
 	bool inicializarPersonaje(char* path, int ancho, int alto);
 
 	void setIdCliente(int numCliente){
