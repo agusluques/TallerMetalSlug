@@ -250,7 +250,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				list<usuarioClass>::iterator it = listaDeUsuarios.begin();
 				advance(it, numeroCliente-1);
 				it->desconectar();*/
-				
+
 				//caso cerrar ventana grafica
 				int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 				char flip;
