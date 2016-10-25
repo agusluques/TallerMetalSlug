@@ -653,7 +653,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				}
 			}
 
-			totalDesplazar = xMin + ANCHO_VENTANA/2; //de aca se regula hasta donde llega el sprite en la pantalla;
+			totalDesplazar = ((xMin) + ANCHO_VENTANA/2); //de aca se regula hasta donde llega el sprite en la pantalla;
 
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
@@ -665,12 +665,13 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			int delta;
 			delta = xMax - xMin;
-			if(delta < (400)){
+			if(delta < ANCHO_VENTANA/2){
 				avanzar = true;
 				if (it->x > camaraSet)
 					camaraSet = it->x;
 			}
 
+			cout <<"camaraSet: " << camaraSet << endl;
 			cout <<"XMIN: " << xMin << endl;
 			cout <<"XMAX: " << xMax << endl;
 			cout <<"totalDesplazar: " << totalDesplazar << endl;

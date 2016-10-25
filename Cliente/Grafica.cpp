@@ -291,13 +291,14 @@ void Grafica::avanzarCamara (int posicionX){
 		cameraSet = posicionX;
 
 	camera.x = cameraSet - anchoVentana/2;
+	cout <<"camara.x: " << camera.x << endl;
 
 	if (camera.x < 0)
 		camera.x = 0;
 
 	//AVANZAR DE LAS CAMARAS..
 	if(camera3.x < (4000-camera3.w))
-		camera3.x = camera.x;
+		camera3.x = camera.x/2;
 
 	if(camera2.x < (2000-camera2.w))
 		camera2.x = (((2000-camera3.w)*camera3.x)/(4000-camera3.w));
@@ -308,12 +309,12 @@ void Grafica::avanzarCamara (int posicionX){
 }
 
 bool Grafica::empiezaDeNuevo () {
-	if (camera.x > 3695){ //3910 un cuarto de pantalla final masomenos..
+	if (camera.x > 7695){ //3910 un cuarto de pantalla final masomenos..
 		int xMin = 9999;
 		for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
 			if (i->xcord < xMin) xMin = i->xcord;
 		}
-		if (xMin > 3800) {
+		if (xMin > 7800) {
 			camera.x = 0;
 			camera1.x = 0;
 			camera2.x = 0;

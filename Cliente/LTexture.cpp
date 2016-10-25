@@ -23,7 +23,8 @@ LTexture::~LTexture() {
 void LTexture::render(SDL_Renderer *window, SDL_Texture *mTexture, SDL_Rect *camera, int escala){
 	SDL_Rect drawingRect;
 
-	drawingRect.x = xcord - camera->x;
+
+	drawingRect.x = (xcord - (camera->x*2));
 	if (drawingRect.x < 0) drawingRect.x = 0;
 //	cout << "POS CAMARA: " << camera->x << endl;
 //	cout << "POS EN VENTANA: " << drawingRect.x << endl;
