@@ -50,11 +50,6 @@ bool Grafica::init(int ancho, int alto) {
 	return exito;
 }
 
-void Grafica::clear() {
-	close();
-	listaDibujable.clear();
-}
-
 //CERRAR SDL Y LIBERAR SURFACE
 void Grafica::close() {
 	//LIBERO
@@ -81,6 +76,10 @@ void Grafica::close() {
 	altoVentana = 0;
 	count = 0;
 	cameraSet = 0;
+	camera.x = 0;
+	camera1.x = 0;
+	camera2.x = 0;
+	camera3.x = 0;
 
 	//CIERRO SDL
 	SDL_Quit();

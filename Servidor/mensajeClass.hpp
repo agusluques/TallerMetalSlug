@@ -23,6 +23,7 @@ public:
 	mensajeClass();
 	mensajeClass(char * autor, char * destino, int id, int x, int y, int spx, int spy, char flip, bool avanzar);
 	mensajeClass(int tipo, char *destino, string mensajeEnviado);
+	mensajeClass(int tipo, char* destino);
 	std::string nombreDestinatario();
 	std::string nombreAutor();
 	int getidObjeto();

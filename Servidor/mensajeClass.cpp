@@ -27,6 +27,11 @@ mensajeClass::mensajeClass(int tipo, char *destino, string mensajeEnviado){
 	tipoMensaje = tipo;
 }
 
+mensajeClass::mensajeClass(int tipo, char* destino){
+	strcpy(this->usrDestino, destino);
+	tipoMensaje = tipo;
+}
+
 string mensajeClass::nombreDestinatario(){
 	return this->usrDestino;
 }

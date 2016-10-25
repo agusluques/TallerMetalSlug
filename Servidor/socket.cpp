@@ -189,9 +189,6 @@ void agregaraLista(int numeroCliente, int usrDest, int x, int y, int spx, int sp
 	mensajeClass mensajeObj(nombreAutor, nombreDestino, numeroCliente, x, y, spx, spy, flip, avanzar);
 
 	int a = pthread_mutex_trylock(&mutexLista);
-	/*if (a != 0) {
-		cout<<"Otro hilo usando la lista"<<endl;
-	}*/
 
 	listaDeMensajes.push_back(mensajeObj);
 	//loggear(mensajeObj.nombreAutor(),mensajeObj.nombreDestinatario(),mensajeObj.getMensaje());
@@ -343,6 +340,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						nuevoSpY = it->spY = 1;
 						flip = it->flip;
 
+						it->conectar();
+
 						//envio a todos los q esten online el mensaje de q se modifico un objeto
 						enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, false);
 					}
@@ -351,8 +350,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					strcpy(mensaje,"El nombre ya esta en uso");
 				}
 			}
-
-			cout << "NUMERO DE CLIENTE: " << numeroCliente << endl << endl;
 
 			if (respuesta){
 				strcpy(mensaje,"Bienvenido");
@@ -479,6 +476,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 						break;
 					}
+					default:
+						break;
+
 					}
 
 					i = listaDeMensajes.erase(i);
@@ -515,6 +515,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			char flip;
 
 			avanzar = false;
+			camaraX = 0;
+			camaraSet = 0;
 
 			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
 				//empiezo de nuevo
@@ -528,7 +530,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			}
 
 			break;
-
 		}
 
 		case '9':{
@@ -605,12 +606,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'U':{
-
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
-			 it->saltar();
-
+			it->saltar();
 
 			break;
 		}
@@ -685,9 +684,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
-			//it->quieto();
-
-			//it->estaConectado = false;
 			nuevaCordX = it->x;
 			nuevaCordY = it->y;
 			//momia
@@ -698,8 +694,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			list<usuarioClass>::iterator it2 = listaDeUsuarios.begin();
 			advance(it2, numeroCliente-1);
-
-			//ver si conviene desconectar al usuario desde aca..
 			it2->desconectar();
 
 			//envio a todos los q esten online el mensaje de q se modifico un objeto
@@ -735,32 +729,50 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'i':{
-			int x, y;
-
-			/*for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+			//envio a conectados q cierren grafica
+			for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 				if((*it).estaConectado()){
-					//mensajes = tipo 3
 					char nombreDestino[50];
 					buscarNombreUsuario(nombreDestino, (*it).numCliente());
 
-					mensajeClass mensajeObj(4,nombreDestino,NULL);
+					mensajeClass mensajeObj(4, nombreDestino);
 					int a = pthread_mutex_trylock(&mutexLista);
 					listaDeMensajes.push_back(mensajeObj);
 					pthread_mutex_unlock (&mutexLista);
 				}
-			}*/
-			listaDibujables.clear();
-			for(int i = 1; i <= listaDeUsuarios.size(); i++){
-				DibujableServer nuevo;
-				nuevo.setId(i);
-				char* spriteId = parseXMLPj();
-				nuevo.setSpriteId(spriteId);
-				nuevo.setX(1+rand() % (150));
-				nuevo.setY(ALTO_VENTANA-100);
-				nuevo.setSpX (0);
-				nuevo.setSpY(1);
-				listaDibujables.push_back(nuevo);
 			}
+
+			avanzar = false;
+			camaraX = 0;
+			camaraSet = 0;
+
+			for(int i = 1; i <= listaDeUsuarios.size(); i++){
+				list<DibujableServer>::iterator it = listaDibujables.begin();
+				advance(it, i-1);
+
+				DibujableServer nuevo;
+				char* spriteId = parseXMLPj();
+				it->setSpriteId(spriteId);
+				it->setX(1+rand() % (150));
+				it->setY(ALTO_VENTANA-100);
+				//me saca a la momia si esta desconectado..
+				//it->setSpX(0);
+				//it->setSpY(1);
+			}
+
+			//envio a conectados q abran grafica
+			for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+				if((*it).estaConectado()){
+					char nombreDestino[50];
+					buscarNombreUsuario(nombreDestino, (*it).numCliente());
+
+					mensajeClass mensajeObj(5, nombreDestino);
+					int a = pthread_mutex_trylock(&mutexLista);
+					listaDeMensajes.push_back(mensajeObj);
+					pthread_mutex_unlock (&mutexLista);
+				}
+			}
+
 			break;
 		}
 

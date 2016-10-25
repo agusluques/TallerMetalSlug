@@ -107,7 +107,7 @@ bool mySocket::recibirMensaje(){
 				this->desconectar();
 				break;
 			}	
-			cout << "Corte: " << corte << endl;
+			//cout << "Corte: " << corte << endl;
 
 			int tipoMensaje;
 			error = recibirMensaje(&tipoMensaje, sizeof(int));
@@ -115,7 +115,7 @@ bool mySocket::recibirMensaje(){
 				cout << "ENTRO A ERROR 2" << endl;
 				corte = 0;
 				break;
-			}	
+			}
 			cout << "Tipo de mensaje: " << tipoMensaje << endl;
 
 			switch(tipoMensaje){
@@ -126,19 +126,19 @@ bool mySocket::recibirMensaje(){
 				avanzar = false;
 
 				error = recibirMensaje(&idObjeto, sizeof(int));
-				cout << "id objeto: " << idObjeto << endl;
+				//cout << "id objeto: " << idObjeto << endl;
 				error = recibirMensaje(&x, sizeof(int));
-				cout << "X: " << x << endl;
+				//cout << "X: " << x << endl;
 				error = recibirMensaje(&y, sizeof(int));
-				cout << "Y: " << y << endl;
+				//cout << "Y: " << y << endl;
 				error = recibirMensaje(&spx, sizeof(int));
-				cout << "SpriteX: " << spx << endl;
+				//cout << "SpriteX: " << spx << endl;
 				error = recibirMensaje(&spy, sizeof(int));
-				cout << "SpriteY: " << spy << endl;
+				//cout << "SpriteY: " << spy << endl;
 				error = recibirMensaje(&flip, sizeof(char));
-				cout << "Flip: " << flip << endl;
+				//cout << "Flip: " << flip << endl;
 				error = recibirMensaje(&avanzar, sizeof(bool));
-				cout << "Puede avanzar: " << avanzar << endl;
+				//cout << "Puede avanzar: " << avanzar << endl;
 
 				grafica.actualizar(idObjeto, x, y, spx, spy, avanzar, flip);
 
@@ -161,12 +161,16 @@ bool mySocket::recibirMensaje(){
 
 				break;
 			}
-			case 4:{
+			case 4:
 				grafica.close();
-				iniciarGrafica();
-
+				cout << "CERRE OK" << endl;
 				break;
-			}
+
+			case 5:
+				iniciarGrafica();
+				cout << "INICIE OK" << endl;
+				break;
+
 			}
 		}
 	}
@@ -289,7 +293,6 @@ void mySocket::cargarDibujables(){
 
 bool mySocket::iniciarGrafica(){
 	//chequeo que esten todos los jugadores
-
 	char codigo;
 	codigo = '7';
 	enviarMensaje(&codigo, sizeof(char));
@@ -366,19 +369,18 @@ bool mySocket::iniciarGrafica(){
 
 	ifstream infile1(resultado1.c_str());
 	if ((infile1.good()) == false) {
-			resultado1 = "notFoundFondo1.png";
-		}
+		resultado1 = "notFoundFondo1.png";
+	}
 	ifstream infile2(resultado2.c_str());
 	if ((infile2.good()) == false) {
-			resultado2 = "notFoundFondo2.png";
-		}
+		resultado2 = "notFoundFondo2.png";
+	}
 	ifstream infile3(resultado3.c_str());
 	if ((infile3.good()) == false) {
-			resultado3 = "notFoundFondo3.png";
-		}
+		resultado3 = "notFoundFondo3.png";
+	}
 
 	grafica.inicializarFondo(&resultado1[0], &resultado2[0],&resultado3[0] );
-
 
 	bool quit = false;
 	SDL_Event event;
@@ -395,9 +397,7 @@ bool mySocket::iniciarGrafica(){
 		enviarMensaje(&codigoMover, sizeof(char));
 
 		//recibo si hay cambios
-		bool huboError = false;
-
-		huboError = recibirMensaje();
+		bool huboError = recibirMensaje();
 		if(huboError){
 			cout << "Hubo error" << endl;
 			grafica.close();
@@ -411,7 +411,58 @@ bool mySocket::iniciarGrafica(){
 			}
 		}
 
-		while( SDL_PollEvent(&event) != 0 ) {
+		SDL_PumpEvents();
+		const Uint8 *keys = SDL_GetKeyboardState(NULL);
+
+		if (SDL_QuitRequested()){
+			strcpy(&codigo,"C");
+			enviarMensaje(&codigo, sizeof(char));
+			quit = true;
+		}
+		else if (keys[SDL_GetScancodeFromKey(SDLK_UP)]){
+			strcpy(&codigo,"U");
+			enviarMensaje(&codigo, sizeof(char));
+			quieto = false;
+		}
+		else if (keys[SDL_GetScancodeFromKey(SDLK_LEFT)]){
+			strcpy(&codigo,"L");
+			enviarMensaje(&codigo, sizeof(char));
+
+			int x = grafica.camera.x;
+			enviarMensaje(&x, sizeof(int));
+			quieto = false;
+		}
+		else if (keys[SDL_GetScancodeFromKey(SDLK_RIGHT)]){
+			strcpy(&codigo,"R");
+			enviarMensaje(&codigo, sizeof(char));
+
+			int x = grafica.camera.x;
+			enviarMensaje(&x, sizeof(int));
+			quieto = false;
+		}
+		else if (keys[SDL_GetScancodeFromKey(SDLK_r)]){
+			strcpy(&codigo,"i");
+			enviarMensaje(&codigo, sizeof(char));
+			quieto = true;
+		}
+		else if(!quieto){
+			strcpy(&codigo,"S");
+			enviarMensaje(&codigo, sizeof(char));
+			quieto = true;
+		}
+
+	}
+
+	grafica.close();
+
+	return true;
+}
+
+mySocket::~mySocket(){}
+
+
+/* PARTE VIEJA DE LEER EVENTOS
+while( SDL_PollEvent(&event) != 0 ) {
 			if( event.type == SDL_QUIT ) {
 				strcpy(&codigo,"C");
 				enviarMensaje(&codigo, sizeof(char));
@@ -425,7 +476,6 @@ bool mySocket::iniciarGrafica(){
 				switch( event.key.keysym.sym ) {
 				case SDLK_UP:
 					strcpy(&codigo,"U");
-					enviarMensaje(&codigo, sizeof(char));
 					enviarMensaje(&codigo, sizeof(char));
 					quieto = false;
 					break;
@@ -467,7 +517,6 @@ bool mySocket::iniciarGrafica(){
 				default:
 					break;
 
-				event.quit;
 				}
 			}else if( event.type == SDL_KEYUP && event.key.repeat == 0 && !quieto ) {
 				char codigo;
@@ -493,13 +542,9 @@ bool mySocket::iniciarGrafica(){
 					//					break;
 				}
 			}
+
+			//event.drop;
+			//event.type = SDL_FIRSTEVENT;
+			cout << "DEJO DE APRETAR" << endl;
 		}
-
-	}
-
-	grafica.close();
-
-	return true;
-}
-
-mySocket::~mySocket(){}
+ */
