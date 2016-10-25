@@ -163,11 +163,15 @@ bool mySocket::recibirMensaje(){
 			}
 			case 4:
 				grafica.close();
-				cout << "CERRE OK" << endl;
+				this->cerrar();
+				this->desconectar();
+                this->conectar();
+				iniciarGrafica();
+				//cout << "CERRE OK" << endl;
 				break;
 
 			case 5:
-				iniciarGrafica();
+
 				cout << "INICIE OK" << endl;
 				break;
 
