@@ -408,7 +408,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			for(list<FondoServer>::iterator i =listaFondos.begin(); i != listaFondos.end();++i){
 				int ancho = (*i).ancho;
 				int z = (*i).zindex;
-				int tamFondoId = (*i).spriteId.size();
+				int tamFondoId = (*i).spriteId.length() + 1;
 				cout << "tamFondoId: " << tamFondoId << endl;
 				char spriteId[tamFondoId];
 				strcpy(spriteId, (*i).spriteId.c_str());
@@ -541,35 +541,27 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			advance(it, numeroUsuario-1);
 
 			//idObjeto
-			enviarMensaje(newsockfd,&(*it).id,sizeof(int));
+			enviarMensaje(newsockfd,&it->id,sizeof(int));
 
 			//spriteId
-			int tamSpriteId = (*it).spriteId.size();
-
+			int tamSpriteId = it->spriteId.length() + 1;
 			cout << "tamSpriteId: " << tamSpriteId << endl;
-			char spriteId[tamSpriteId];
 			enviarMensaje(newsockfd,&tamSpriteId,sizeof(int));
-			strcpy(spriteId, (*it).spriteId.c_str());
 
+			char spriteId[tamSpriteId];
+			strcpy(spriteId, it->spriteId.c_str());
 			cout << "spriteId: " << spriteId << endl;
+			enviarMensaje(newsockfd,spriteId,sizeof(char)*tamSpriteId);
 
-			enviarMensaje(newsockfd,spriteId,tamSpriteId);
-
-			//posicion x
 			enviarMensaje(newsockfd,&(*it).x,sizeof(int));
-
-			//posicion y
 			enviarMensaje(newsockfd,&(*it).y,sizeof(int));
-
 			enviarMensaje(newsockfd,&(*it).spX,sizeof(int));
-
 			enviarMensaje(newsockfd,&(*it).spY,sizeof(int));
-
-			//flip
 			enviarMensaje(newsockfd,&(*it).flip,sizeof(char));
 
 			break;
 		}
+
 		case 'c':{
 			//envio X camara
 			enviarMensaje(newsockfd,&camaraX,sizeof(int));
@@ -761,7 +753,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				//it->setSpY(1);
 			}
 
-			//envio a conectados q abran grafica
+			//envio a conectados q cierren grafica
 			for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 				if((*it).estaConectado()){
 					char nombreDestino[50];
@@ -788,7 +780,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 	pthread_exit(NULL);
 }
 
-mySocketSrv :: mySocketSrv(char* puerto, string xml){
+mySocketSrv::mySocketSrv(char* puerto, string xml){
 	//cargo fondos
 	archivoXml = xml;
 	cout << "ARCHIVO XML: " << archivoXml << endl;

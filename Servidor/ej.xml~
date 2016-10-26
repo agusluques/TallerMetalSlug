@@ -8,7 +8,7 @@
 <sprites>
 
 	<personaje>
-		<path>colorpj2ASDASDASD.png</path>
+		<path>colorpj2.png</path>
 	</personaje>
 
 </sprites>
@@ -37,5 +37,5 @@
 </capas>
 
 <cantidadDeJugadores>
-	1
+	2
 </cantidadDeJugadores>

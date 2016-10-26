@@ -3,6 +3,7 @@
 #include "SDL2/SDL.h"
 
 bool avanzar;
+char nombreCliente[50];
 
 mySocket::mySocket(char* puerto, char* IP){
 
@@ -62,6 +63,8 @@ void mySocket::conectar(){
 	string nombre;
 	cout << "Ingrese su nombre: " << endl;
 	getline(cin, nombre);
+
+	strcpy(nombreCliente,nombre.c_str());
 
 	this->conectado = autenticar(nombre);
 }
@@ -161,13 +164,27 @@ bool mySocket::recibirMensaje(){
 
 				break;
 			}
-			case 4:
+			case 4:{
 				grafica.close();
+				this->desconectar();
+				this->cerrar();
+
+				this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
+				if (sockfd < 0)
+					cout << "Error en la apertura del socket" << endl;
+				if (connect(this->sockfd,(struct sockaddr *) &this->server,sizeof(this->server)) < 0){
+					cout << "Error intentado conectar" << endl;
+					exit(0);
+				}
+
+				this->conectado = autenticar(nombreCliente);
+
+				iniciarGrafica();
 				cout << "CERRE OK" << endl;
 				break;
-
+			}
 			case 5:
-				iniciarGrafica();
+
 				cout << "INICIE OK" << endl;
 				break;
 
@@ -296,7 +313,7 @@ bool mySocket::iniciarGrafica(){
 	char codigo;
 	codigo = '7';
 	enviarMensaje(&codigo, sizeof(char));
-	bool puedoComenzar;
+	bool puedoComenzar = true;
 	recibirMensaje(&puedoComenzar, sizeof(bool));
 	if (!puedoComenzar){
 		cout << "Faltan ingresar jugadores" << endl;
