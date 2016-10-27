@@ -471,7 +471,7 @@ bool mySocket::iniciarGrafica(){
 		if (SDL_QuitRequested()){
 			strcpy(&codigo,"C");
 			enviarMensaje(&codigo, sizeof(char));
-			grafica.close();
+			//grafica.close();
 			quit = true;
 		}
 		else if (keys[SDL_GetScancodeFromKey(SDLK_UP)]){
