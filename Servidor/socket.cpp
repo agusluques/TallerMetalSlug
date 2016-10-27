@@ -39,7 +39,8 @@ int camaraSet = 0;
 
 //list<mensajeClass> listaDeMensajesAlCliente;
 pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t mutexListaRecibir = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutexListaUsuarios = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutexListaDibujables = PTHREAD_MUTEX_INITIALIZER;
 
 
 void loggear(string usr, string destinatario, string mensaje){
@@ -175,9 +176,13 @@ char* parseXMLPj(){
 }
 
 void buscarNombreUsuario(char *nombreRetorno, int numeroUsuario){
+	int a = pthread_mutex_trylock(&mutexListaUsuarios);
+
 	list<usuarioClass>::iterator it = listaDeUsuarios.begin();
 	advance(it, numeroUsuario-1);
 	strcpy(nombreRetorno,(*it).nombreUsuario().c_str());
+
+	pthread_mutex_unlock (&mutexListaUsuarios);
 }
 
 void agregaraLista(int numeroCliente, int usrDest, int x, int y, int spx, int spy, char flip, bool avanzar){
@@ -255,8 +260,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 				char flip;
 
+				int b = pthread_mutex_trylock(&mutexListaDibujables);
 				list<DibujableServer>::iterator it = listaDibujables.begin();
 				advance(it, numeroCliente-1);
+
 				//it->quieto();
 
 				//it->estaConectado = false;
@@ -267,13 +274,16 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				nuevoSpY = it->spY = 1;
 				flip = it->flip;
 				it->desconectar();
-
+				pthread_mutex_unlock (&mutexListaDibujables);
+				int a = pthread_mutex_trylock(&mutexListaUsuarios);
 				list<usuarioClass>::iterator it2 = listaDeUsuarios.begin();
 				advance(it2, numeroCliente-1);
+				
+
 
 				//ver si conviene desconectar al usuario desde aca..
 				it2->desconectar();
-
+				pthread_mutex_unlock (&mutexListaUsuarios);
 				//envio a todos los q esten online el mensaje de q se modifico un objeto
 				enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, false);
 
@@ -329,7 +339,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						//mandar msj a todos q volvio asi no esta mas gris
 						int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 						char flip;
-
+						int b = pthread_mutex_trylock(&mutexListaDibujables);
 						list<DibujableServer>::iterator it = listaDibujables.begin();
 						advance(it, numeroCliente-1);
 
@@ -341,7 +351,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						flip = it->flip;
 
 						it->conectar();
-
+						pthread_mutex_unlock (&mutexListaDibujables);
 						//envio a todos los q esten online el mensaje de q se modifico un objeto
 						enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, false);
 					}
@@ -367,7 +377,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				nuevo.setY(ALTO_VENTANA - 100);
 				nuevo.setSpX (0);
 				nuevo.setSpY(1);
+				int b = pthread_mutex_trylock(&mutexListaDibujables);
 				listaDibujables.push_back(nuevo);
+				pthread_mutex_unlock (&mutexListaDibujables);
 			}else if(estabaDesconectado){
 				strcpy(mensaje,"Bienvenido nuevamente");
 
@@ -384,11 +396,11 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		case '2':{
 			//cout << "Entro a /2 que es desconectar" << endl;
 			abierto = false;
-
+			int a = pthread_mutex_trylock(&mutexListaUsuarios);
 			list<usuarioClass>::iterator it = listaDeUsuarios.begin();
 			advance(it, numeroCliente-1);
 			it->desconectar();
-
+			pthread_mutex_unlock (&mutexListaUsuarios);
 			break;
 		}
 		case '3':{
@@ -536,10 +548,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			//caso envio objetos dibujables
 			int numeroUsuario;
 			recibirMensaje(newsockfd, &numeroUsuario, sizeof(int));
-
+			int b = pthread_mutex_trylock(&mutexListaDibujables);
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroUsuario-1);
-
+			pthread_mutex_unlock (&mutexListaDibujables);
 			//idObjeto
 			enviarMensaje(newsockfd,&it->id,sizeof(int));
 
@@ -573,16 +585,18 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 		case 'M':{
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
-
+			int b = pthread_mutex_trylock(&mutexListaDibujables);
+			
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
 			bool seMovio = it->mover();
+
 			//enviar si realmente hay cambios..
 			if (seMovio) {
 				if (it->getX() < xMin) xMin = it->getX();
 				enviarAConectados(numeroCliente, it->x, it->y, it->spX, it->spY, it->flip, avanzar);
-
+				pthread_mutex_unlock (&mutexListaDibujables); //esto capaz tarde mucho COMENTARIO
 				//itero desconectados
 				for (list<DibujableServer>::iterator it2 = listaDibujables.begin(); it2 != listaDibujables.end(); ++it2) {
 					if (!it2->estaConectado()){
@@ -598,11 +612,12 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'U':{
+			int b = pthread_mutex_trylock(&mutexListaDibujables);
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
 			it->saltar();
-
+			pthread_mutex_unlock (&mutexListaDibujables);
 			break;
 		}
 
@@ -612,6 +627,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			camaraX = xCamara;
 
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
+			int b = pthread_mutex_trylock(&mutexListaDibujables);
+
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
@@ -620,6 +637,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				it->caminarIzquierda();
 			}else it->quieto();
 			//ver si realmente hace falta dejarlo quieto o si saco el else va igual....
+			pthread_mutex_unlock (&mutexListaDibujables);
 
 			break;
 		}
@@ -646,6 +664,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			}
 
 			totalDesplazar = ((xMin) + ANCHO_VENTANA/2); //de aca se regula hasta donde llega el sprite en la pantalla;
+			int b = pthread_mutex_trylock(&mutexListaDibujables);
 
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
@@ -662,6 +681,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				if (it->x > camaraSet)
 					camaraSet = it->x;
 			}
+			pthread_mutex_unlock (&mutexListaDibujables);
 
 			cout <<"camaraSet: " << camaraSet << endl;
 			cout <<"XMIN: " << xMin << endl;
@@ -674,6 +694,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			//caso cerrar ventana grafica
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			char flip;
+			int b = pthread_mutex_trylock(&mutexListaDibujables);
 
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
@@ -684,11 +705,13 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			nuevoSpY = it->spY = 1;
 			flip = it->flip;
 			it->desconectar();
+			pthread_mutex_unlock (&mutexListaDibujables);
 
+			int a = pthread_mutex_trylock(&mutexListaUsuarios);
 			list<usuarioClass>::iterator it2 = listaDeUsuarios.begin();
 			advance(it2, numeroCliente-1);
 			it2->desconectar();
-
+			pthread_mutex_unlock (&mutexListaUsuarios);
 			//envio a todos los q esten online el mensaje de q se modifico un objeto
 			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, false);
 
@@ -702,11 +725,13 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			//caso se queda parado
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			char flip;
+			int b = pthread_mutex_trylock(&mutexListaDibujables);
 
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
 			it->quieto();
+			pthread_mutex_unlock (&mutexListaDibujables);
 
 			//sprite parado
 			nuevaCordX = it->x;
@@ -740,6 +765,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			camaraSet = 0;
 
 			for(int i = 1; i <= listaDeUsuarios.size(); i++){
+				int b = pthread_mutex_trylock(&mutexListaDibujables);
+
 				list<DibujableServer>::iterator it = listaDibujables.begin();
 				advance(it, i-1);
 
@@ -751,6 +778,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				//me saca a la momia si esta desconectado..
 				//it->setSpX(0);
 				//it->setSpY(1);
+				pthread_mutex_unlock (&mutexListaDibujables);
+
 			}
 
 			//envio a conectados q cierren grafica
