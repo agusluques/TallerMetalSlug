@@ -291,7 +291,7 @@ void Grafica::avanzarCamara (int posicionX){
 		cameraSet = posicionX;
 
 	camera.x = cameraSet - anchoVentana/2;
-	cout <<"camara.x: " << camera.x << endl;
+	//cout <<"camara.x: " << camera.x << endl;
 
 	if (camera.x < 0)
 		camera.x = 0;

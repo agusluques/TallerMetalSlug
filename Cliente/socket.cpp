@@ -74,6 +74,7 @@ int mySocket::getFD(){
 }
 
 bool mySocket::enviarMensaje(void* mensaje, int tamanioMensaje){
+	/*
 	int bytesEnviados = 0;
 	bool errorSocket = false;
 	while((bytesEnviados < tamanioMensaje) && (!errorSocket)){
@@ -88,114 +89,20 @@ bool mySocket::enviarMensaje(void* mensaje, int tamanioMensaje){
 		bytesEnviados += n;
 	}
 	return errorSocket;
-}
+	*/
+	bool errorSocket = false;
+	int n = write(sockfd, mensaje, tamanioMensaje);
+	if(n < 0) errorSocket = true;
 
-bool mySocket::recibirMensaje(){
-	bool error = false;
-	char codigo;
-	codigo = '5';
-	error = enviarMensaje(&codigo, sizeof(char));
-	if(error){
-		cout << "ENTRO A ERROR" << endl;
-	}
+	char* tmp = (char*)mensaje;
+	//int* tmp = (int*)mensaje;
+	cout << "ENVIA: " << (*tmp) << endl;
 
-	int corte = 1;
-
-	while(corte != 0){
-		error = recibirMensaje(&corte, sizeof(int));
-		if (corte != 0){
-			if(error){
-				cout << "ENTRO A ERROR 1" << endl;
-				corte = 0;
-				this->desconectar();
-				break;
-			}	
-			//cout << "Corte: " << corte << endl;
-
-			int tipoMensaje;
-			error = recibirMensaje(&tipoMensaje, sizeof(int));
-			if(error){
-				cout << "ENTRO A ERROR 2" << endl;
-				corte = 0;
-				break;
-			}
-			cout << "Tipo de mensaje: " << tipoMensaje << endl;
-
-			switch(tipoMensaje){
-			case 1:{
-				//recibo grafica jugadores
-				int x,y, spx, spy, idObjeto;
-				char flip;
-				avanzar = false;
-
-				error = recibirMensaje(&idObjeto, sizeof(int));
-				//cout << "id objeto: " << idObjeto << endl;
-				error = recibirMensaje(&x, sizeof(int));
-				//cout << "X: " << x << endl;
-				error = recibirMensaje(&y, sizeof(int));
-				//cout << "Y: " << y << endl;
-				error = recibirMensaje(&spx, sizeof(int));
-				//cout << "SpriteX: " << spx << endl;
-				error = recibirMensaje(&spy, sizeof(int));
-				//cout << "SpriteY: " << spy << endl;
-				error = recibirMensaje(&flip, sizeof(char));
-				//cout << "Flip: " << flip << endl;
-				error = recibirMensaje(&avanzar, sizeof(bool));
-				//cout << "Puede avanzar: " << avanzar << endl;
-
-				grafica.actualizar(idObjeto, x, y, spx, spy, avanzar, flip);
-
-				//grafica.avanzarCamara(x); OTRA MANERA
-
-				break;
-			}
-			case 2:
-				//recibo fondo
-
-				break;
-			case 3:{
-				//recibo mensaje
-				int tam;
-
-				error = recibirMensaje(&tam, sizeof(int));
-				char mensaje[tam];
-				error = recibirMensaje(&mensaje, sizeof(char)*tam);
-				cout << "(*)Mensaje: " << mensaje << endl;
-
-				break;
-			}
-			case 4:{
-				grafica.close();
-				this->desconectar();
-				this->cerrar();
-
-				this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
-				if (sockfd < 0)
-					cout << "Error en la apertura del socket" << endl;
-				if (connect(this->sockfd,(struct sockaddr *) &this->server,sizeof(this->server)) < 0){
-					cout << "Error intentado conectar" << endl;
-					exit(0);
-				}
-
-				this->conectado = autenticar(nombreCliente);
-
-				iniciarGrafica();
-				cout << "CERRE OK" << endl;
-				break;
-			}
-			case 5:
-
-				cout << "INICIE OK" << endl;
-				break;
-
-			}
-		}
-	}
-	return error;
+	return errorSocket;
 }
 
 bool mySocket::recibirMensaje(void* buffer, int tamanio){
-	int acumulador = 0, bytesRecibidos = 0;
+	/*int acumulador = 0, bytesRecibidos = 0;
 
 	struct timeval tv;
 	tv.tv_sec = 10;  // 10 Secs Timeout
@@ -212,7 +119,130 @@ bool mySocket::recibirMensaje(void* buffer, int tamanio){
 			acumulador += bytesRecibidos;
 		}
 	}
+	return errorSocket;*/
+
+	bool errorSocket = false;
+	int n = read(this->sockfd, buffer, tamanio);
+	if(n < 0) errorSocket = true;
+
+	//char* tmp = (char*)mensaje;
+	int* tmp = (int*)buffer;
+	cout << "RECIBE: " << (*tmp) << endl;
+
 	return errorSocket;
+}
+
+bool mySocket::recibirMensaje(){
+	bool error = false;
+	char codigo;
+	codigo = '5';
+	error = enviarMensaje(&codigo, sizeof(char));
+	if(error){
+		cout << "ENTRO A ERROR" << endl;
+	}
+
+	int corte = 1;
+	error = recibirMensaje(&corte, sizeof(int));
+	cout << "RECIBO!!!!!!!!!!!!!!!!!" << endl;
+
+	if(error){
+		cout << "ENTRO A ERROR 1" << endl;
+		corte = 0;
+		this->desconectar();
+	}
+
+	while(corte != 0){
+
+		if(error){
+			cout << "ENTRO A ERROR 1" << endl;
+			corte = 0;
+			this->desconectar();
+			break;
+		}
+
+		int tipoMensaje;
+		error = recibirMensaje(&tipoMensaje, sizeof(int));
+		if(error){
+			cout << "ENTRO A ERROR 2" << endl;
+			corte = 0;
+			break;
+		}
+		//cout << "Tipo de mensaje: " << tipoMensaje << endl;
+
+		switch(tipoMensaje){
+		case 1:{
+			//recibo grafica jugadores
+			int x,y, spx, spy, idObjeto;
+			char flip;
+			avanzar = false;
+
+			error = recibirMensaje(&idObjeto, sizeof(int));
+			//cout << "id objeto: " << idObjeto << endl;
+			error = recibirMensaje(&x, sizeof(int));
+			//cout << "X: " << x << endl;
+			error = recibirMensaje(&y, sizeof(int));
+			//cout << "Y: " << y << endl;
+			error = recibirMensaje(&spx, sizeof(int));
+			//cout << "SpriteX: " << spx << endl;
+			error = recibirMensaje(&spy, sizeof(int));
+			//cout << "SpriteY: " << spy << endl;
+			error = recibirMensaje(&flip, sizeof(char));
+			//cout << "Flip: " << flip << endl;
+			error = recibirMensaje(&avanzar, sizeof(bool));
+			//cout << "Puede avanzar: " << avanzar << endl;
+
+			grafica.actualizar(idObjeto, x, y, spx, spy, avanzar, flip);
+
+			//grafica.avanzarCamara(x); OTRA MANERA
+
+			break;
+		}
+		case 2:
+			//recibo fondo
+
+			break;
+		case 3:{
+			//recibo mensaje
+			int tam;
+
+			error = recibirMensaje(&tam, sizeof(int));
+			char mensaje[tam];
+			error = recibirMensaje(&mensaje, sizeof(char)*tam);
+			cout << "(*)Mensaje: " << mensaje << endl;
+
+			break;
+		}
+		case 4:{
+			cerrarGrafica();
+			/*this->desconectar();
+			this->cerrar();
+
+			this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
+			if (sockfd < 0)
+				cout << "Error en la apertura del socket" << endl;
+			if (connect(this->sockfd,(struct sockaddr *) &this->server,sizeof(this->server)) < 0){
+				cout << "Error intentado conectar" << endl;
+				exit(0);
+			}
+
+			this->conectado = autenticar(nombreCliente);
+
+			iniciarGrafica();*/
+			//cout << "CERRE OK" << endl;
+			break;
+		}
+		case 5:
+			error = recibirMensaje(&corte, sizeof(int));
+			//pido msj antes del corte xq sino este me empieza a mandar msjs y se mezclan
+			iniciarGrafica();
+			//cout << "INICIE OK" << endl;
+			break;
+
+		}
+
+		error = recibirMensaje(&corte, sizeof(int));
+	}
+	return error;
 }
 
 void mySocket::desconectar(){
@@ -226,6 +256,10 @@ void mySocket::cerrar(){
 	close(this->sockfd);
 }
 
+void mySocket::cerrarGrafica(){
+	grafica.close();
+}
+
 void mySocket::cargarDibujables(){
 	//pido cantidad de objetos a dibujar
 	char codigo;
@@ -234,7 +268,7 @@ void mySocket::cargarDibujables(){
 	int cantObjetos;
 	recibirMensaje(&cantObjetos, sizeof(int));
 
-	cout << "Cantidad de Objetos dibujables: " << cantObjetos << endl;
+	//cout << "Cantidad de Objetos dibujables: " << cantObjetos << endl;
 
 	//SOLICITO OBJETOS
 	for(int i = 1; i <= cantObjetos; i++){
@@ -248,20 +282,20 @@ void mySocket::cargarDibujables(){
 		//idObjeto
 		int idObjeto;
 		recibirMensaje(&idObjeto, sizeof(int));
-		cout << "idobjeto: " << idObjeto << endl;
+		//cout << "idobjeto: " << idObjeto << endl;
 
 		//spriteId
 		int tamSpriteId;
 		recibirMensaje(&tamSpriteId, sizeof(int));
 		char spriteId[tamSpriteId];
 		recibirMensaje(&spriteId, sizeof(char)*tamSpriteId);
-		cout << "spriteId: "<< spriteId << endl;
+		//cout << "spriteId: "<< spriteId << endl;
 
 		string result;
 		stringstream sstm;
 		sstm << idObjeto << spriteId;
 		result = sstm.str();
-		cout << "Resultado1: " << result << endl;
+		//cout << "Resultado1: " << result << endl;
 		//ifstream ifs(result);
 		ifstream ifs (result.c_str());
 		//ifstream infile(&result[0]);
@@ -270,29 +304,29 @@ void mySocket::cargarDibujables(){
 		}
 		ifs.close();
 		//infile.close();
-		cout << "Clark Imagen: " << result << endl;
+		//cout << "Clark Imagen: " << result << endl;
 
 		//posicion x
 		int posX;
 		recibirMensaje(&posX, sizeof(int));
-		cout << "posX: " << posX << endl;
+		//cout << "posX: " << posX << endl;
 
 		//posicion y
 		int posY;
 		recibirMensaje(&posY, sizeof(int));
-		cout << "posY: " << posY << endl;
+		//cout << "posY: " << posY << endl;
 
 		int spx;
 		recibirMensaje(&spx, sizeof(int));
-		cout << "spx: " << spx << endl;
+		//cout << "spx: " << spx << endl;
 
 		int spy;
 		recibirMensaje(&spy, sizeof(int));
-		cout << "spy: " << spy << endl;
+		//cout << "spy: " << spy << endl;
 
 		char flip;
 		recibirMensaje(&flip, sizeof(char));
-		cout << "flip: " << flip << endl;
+		//cout << "flip: " << flip << endl;
 
 		grafica.nuevoDibujable(&result[0], idObjeto,posX,posY, spx, spy, flip);
 	}
@@ -309,6 +343,7 @@ void mySocket::cargarDibujables(){
 }
 
 bool mySocket::iniciarGrafica(){
+	bool returnIGrafica = true;
 	//chequeo que esten todos los jugadores
 	char codigo;
 	codigo = '7';
@@ -317,6 +352,7 @@ bool mySocket::iniciarGrafica(){
 	recibirMensaje(&puedoComenzar, sizeof(bool));
 	if (!puedoComenzar){
 		cout << "Faltan ingresar jugadores" << endl;
+		returnIGrafica = false;
 		return false;
 	}
 
@@ -406,11 +442,11 @@ bool mySocket::iniciarGrafica(){
 
 	bool quieto = true;
 
-	char codigoMover;
-	strcpy(&codigoMover,"M");
+	char codigoMover = 'M';
 
 	while( !quit ) {
 		//le envio un mover siempre
+		codigoMover = 'M';
 		enviarMensaje(&codigoMover, sizeof(char));
 
 		//recibo si hay cambios
@@ -419,6 +455,7 @@ bool mySocket::iniciarGrafica(){
 			cout << "Hubo error" << endl;
 			grafica.close();
 			quit = true;
+			returnIGrafica = false;
 		} else {
 			//MOSTRAR VENTANA
 			if (!grafica.empiezaDeNuevo()) grafica.mostrarDibujables();
@@ -434,6 +471,7 @@ bool mySocket::iniciarGrafica(){
 		if (SDL_QuitRequested()){
 			strcpy(&codigo,"C");
 			enviarMensaje(&codigo, sizeof(char));
+			grafica.close();
 			quit = true;
 		}
 		else if (keys[SDL_GetScancodeFromKey(SDLK_UP)]){
@@ -458,8 +496,13 @@ bool mySocket::iniciarGrafica(){
 			quieto = false;
 		}
 		else if (keys[SDL_GetScancodeFromKey(SDLK_r)]){
+			strcpy(&codigo,"S");
+			enviarMensaje(&codigo, sizeof(char));
 			strcpy(&codigo,"i");
 			enviarMensaje(&codigo, sizeof(char));
+			recibirMensaje();
+			returnIGrafica = false;
+			quit = true;
 			quieto = true;
 		}
 		else if(!quieto){
@@ -470,7 +513,8 @@ bool mySocket::iniciarGrafica(){
 
 	}
 
-	grafica.close();
+	return returnIGrafica;
+	//grafica.close();
 
 	return true;
 }

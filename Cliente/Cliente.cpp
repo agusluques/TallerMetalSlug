@@ -100,9 +100,12 @@ int main(int argc, char *argv[])
 				break;
 
 			case '5': {
-				Cliente.iniciarGrafica();
-				Cliente.cerrar();
-				Cliente.desconectar();
+				if(Cliente.iniciarGrafica()){
+					Cliente.cerrarGrafica();
+					Cliente.cerrar();
+					Cliente.desconectar();
+				}
+
 				break;
 			}
 		}

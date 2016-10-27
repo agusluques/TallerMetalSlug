@@ -28,7 +28,7 @@ int xMin;
 int xMax;
 
 //esto se lee del xml, en caso que no haya nada es 2 por defecto.
-int cantidadJugadores = 2;
+int cantidadJugadores = 1;
 
 int topeSalto = 20;
 
@@ -78,7 +78,7 @@ void loggearServer(string mensaje){
 }
 
 void recibirMensaje(int sockfd, void* buffer, int tamanio){
-	int acumulador = 0, bytesRecibidos = 0;
+	/*int acumulador = 0, bytesRecibidos = 0;
 	bool errorSocket = false;
 	while ((acumulador < tamanio) && (errorSocket == false)){
 		bytesRecibidos = read(sockfd, buffer, tamanio);
@@ -89,10 +89,16 @@ void recibirMensaje(int sockfd, void* buffer, int tamanio){
 		} else {
 			acumulador += bytesRecibidos;
 		}
-	}
+	}*/
+	int i = read(sockfd, buffer, tamanio);
+
+	//char* tmp = (char*)mensaje;
+	int* tmp = (int*)buffer;
+	cout << "RECIBE: " << (*tmp) << endl;
 }
 
 bool enviarMensaje(int sockfd, void* mensaje, int tamanioMensaje){
+	/*
 	int bytesEnviados = 0;
 	bool errorSocket = false;
 
@@ -104,6 +110,16 @@ bool enviarMensaje(int sockfd, void* mensaje, int tamanioMensaje){
 			bytesEnviados += n;
 		}
 	}
+	return errorSocket;
+	*/
+	bool errorSocket = false;
+	int n = write(sockfd, mensaje, tamanioMensaje);
+	if(n < 0) errorSocket = true;
+
+	//char* tmp = (char*)mensaje;
+	int* tmp = (int*)mensaje;
+	cout << "ENVIA: " << (*tmp) << endl;
+
 	return errorSocket;
 }
 
@@ -157,7 +173,6 @@ void cargarFondos(char* xml){
 
 		capa1 = capa1->next_sibling();
 	}
-
 
 }
 
@@ -239,7 +254,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 		char codigo;
 
-		if(inicioGrafica){
+		/*if(inicioGrafica){
 			struct timeval tv;
 			tv.tv_sec = 10;  // 10 Secs Timeout
 			tv.tv_usec = 0;  // Not init'ing this can cause strange errors
@@ -249,12 +264,11 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			if(data < 0){
 				cout << "Se cayo la conexion con el cliente " << endl;
 
-				/*
-				abierto = false;
+				//abierto = false;
 
-				list<usuarioClass>::iterator it = listaDeUsuarios.begin();
-				advance(it, numeroCliente-1);
-				it->desconectar();*/
+				//list<usuarioClass>::iterator it = listaDeUsuarios.begin();
+				//advance(it, numeroCliente-1);
+				//it->desconectar();
 
 				//caso cerrar ventana grafica
 				int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
@@ -292,9 +306,11 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				enviarMensajeAConectados(mensaje);
 			}
 		} else {
-
 			int data = read(newsockfd, &codigo, sizeof(char));
 		}
+*/
+		int data = read(newsockfd, &codigo, sizeof(char));
+		cout << "RECIBE: " << codigo << endl;
 
 		switch(codigo){
 
@@ -421,11 +437,11 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				int ancho = (*i).ancho;
 				int z = (*i).zindex;
 				int tamFondoId = (*i).spriteId.length() + 1;
-				cout << "tamFondoId: " << tamFondoId << endl;
+				//cout << "tamFondoId: " << tamFondoId << endl;
 				char spriteId[tamFondoId];
 				strcpy(spriteId, (*i).spriteId.c_str());
 
-				cout << "spriteId: " << spriteId << endl;
+				//cout << "spriteId: " << spriteId << endl;
 
 				enviarMensaje(newsockfd, &tamFondoId, sizeof(int));
 				enviarMensaje(newsockfd, &spriteId, sizeof(char)*tamFondoId);
@@ -435,12 +451,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 		case '5': {
-			//cout << "Entro a /5 que es recibir" << endl;
+			char nombre[50];
+			buscarNombreUsuario(nombre, numeroCliente);
 
 			for (list<mensajeClass>::iterator i = listaDeMensajes.begin(); i != listaDeMensajes.end(); ++i) {
-				char nombre[50];
-				//****me puedo ahorrar esta busqueda, guardando el id y no el nombre
-				buscarNombreUsuario(nombre, numeroCliente);
 				if ((*i).nombreDestinatario().compare(nombre) == 0 ){
 					int corte = 1;
 					enviarMensaje(newsockfd, &corte, sizeof(int));
@@ -448,8 +462,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					//envio tipo de mensaje
 					int tipoMensaje = (*i).getTipoMensaje();
 					enviarMensaje(newsockfd, &tipoMensaje, sizeof(int));
-
-					//cout << "TIPO MSJ: " << tipoMensaje << endl;
 
 					switch(tipoMensaje){
 					case 1:{
@@ -557,12 +569,12 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			//spriteId
 			int tamSpriteId = it->spriteId.length() + 1;
-			cout << "tamSpriteId: " << tamSpriteId << endl;
+			//cout << "tamSpriteId: " << tamSpriteId << endl;
 			enviarMensaje(newsockfd,&tamSpriteId,sizeof(int));
 
 			char spriteId[tamSpriteId];
 			strcpy(spriteId, it->spriteId.c_str());
-			cout << "spriteId: " << spriteId << endl;
+			//cout << "spriteId: " << spriteId << endl;
 			enviarMensaje(newsockfd,spriteId,sizeof(char)*tamSpriteId);
 
 			enviarMensaje(newsockfd,&(*it).x,sizeof(int));
@@ -683,10 +695,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			}
 			pthread_mutex_unlock (&mutexListaDibujables);
 
-			cout <<"camaraSet: " << camaraSet << endl;
-			cout <<"XMIN: " << xMin << endl;
-			cout <<"XMAX: " << xMax << endl;
-			cout <<"totalDesplazar: " << totalDesplazar << endl;
+			//cout <<"camaraSet: " << camaraSet << endl;
+			//cout <<"XMIN: " << xMin << endl;
+			//cout <<"XMAX: " << xMax << endl;
+			//cout <<"totalDesplazar: " << totalDesplazar << endl;
 
 			break;
 		}
@@ -782,7 +794,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			}
 
-			//envio a conectados q cierren grafica
+			//envio a conectados q abran grafica
 			for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 				if((*it).estaConectado()){
 					char nombreDestino[50];

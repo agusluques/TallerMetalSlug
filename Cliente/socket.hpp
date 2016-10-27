@@ -45,6 +45,7 @@ class mySocket{
 		int cantidadUsuariosDisponibles();
 		void pedirUsuarios();
 		void cerrar();
+		void cerrarGrafica();
 		void desconectar();
 		bool conexion();
 
