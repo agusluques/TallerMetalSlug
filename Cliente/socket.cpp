@@ -194,6 +194,10 @@ bool mySocket::recibirMensaje(){
 			int xCamara, setCamara;
 			error = recibirMensaje(&xCamara, sizeof(int));
 
+			cout << "---------------------------------------" << endl;
+			cout << "SET CAMARA: " << xCamara << endl;
+			cout << "---------------------------------------" << endl;
+
 			grafica.setXCamara(xCamara);
 			grafica.actualizar(idObjeto, x, y, spx, spy, avanzar, flip);
 

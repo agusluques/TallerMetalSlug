@@ -24,9 +24,9 @@ void LTexture::render(SDL_Renderer *window, SDL_Texture *mTexture, SDL_Rect *cam
 	SDL_Rect drawingRect;
 	drawingRect.x = xcord - camera->x;
 	if (drawingRect.x < 0) drawingRect.x = 0;
-	cout << "POS X CAMARA: " << camera->x << endl;
-	cout << "POS X CORD: " << xcord << endl;
-	cout << "drawingRect.x: " << drawingRect.x << endl;
+	//cout << "POS X CAMARA: " << camera->x << endl;
+	//cout << "POS X CORD: " << xcord << endl;
+	//cout << "drawingRect.x: " << drawingRect.x << endl;
 	drawingRect.y = ycord;// - camera->y;
 
     //pasar escala x xml

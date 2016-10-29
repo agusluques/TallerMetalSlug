@@ -480,6 +480,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						enviarMensaje(newsockfd, &(*i).flip, sizeof(char));
 						enviarMensaje(newsockfd, &puedeAvanzar, sizeof(bool));
 
+						cout << "ENVIO X CAMARA: " << camaraX << endl;
 						enviarMensaje(newsockfd, &camaraX, sizeof(int));
 
 						break;
@@ -679,6 +680,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				it->caminarDerecha();
 			}else it->quieto();
 
+			cout << "CAMARA X ANTES: " << camaraX << endl;
 			if((it->x) >= (4034)){
 				camaraX = 0;
 				camaraSet = 0;
@@ -686,9 +688,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				for (list<DibujableServer>::iterator it2 = listaDibujables.begin(); it2 != listaDibujables.end(); ++it2) {
 					it2->volverAlPrincipio();
 					enviarAConectados(it2->id , it2->x, it2->y, it2->spX, it2->spY, it2->flip, false);
-				}
-				cout << "CAMARA X: " << camaraX << endl; 
+				} 
 			}
+			cout << "CAMARA X DESPUES: " << camaraX << endl;
 
 			pthread_mutex_unlock (&mutexListaDibujables);
 
@@ -774,7 +776,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				list<DibujableServer>::iterator it = listaDibujables.begin();
 				advance(it, i-1);
 
-				DibujableServer nuevo;
+				//DibujableServer nuevo;
 				char* spriteId = parseXMLPj();
 				it->setSpriteId(spriteId);
 				it->setX(1+rand() % (150));

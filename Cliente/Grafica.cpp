@@ -283,6 +283,13 @@ bool Grafica::inicializarPersonaje(char* path, int ancho, int alto){
 }
 
 void Grafica::setXCamara(int xCamara){
+	if(xCamara == 0){
+		camera3.x = 0;
+		camera2.x = 0;
+		camera1.x = 0;
+	}
+
+
 	if (xCamara < 0)
 		xCamara = 0;
 
