@@ -55,6 +55,8 @@ public:
 	int numeroCliente;
 	SDL_Renderer* window;
 
+	int xCamara;
+
 	Grafica();
 	virtual ~Grafica();
 	bool init(int ancho, int alto);

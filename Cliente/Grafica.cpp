@@ -126,11 +126,11 @@ void Grafica::mostrarDibujables(){
 	SDL_RenderCopy (window, spriteFondo3, &camera3, NULL);
 
 	for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
-		(*i).render(window,(*i).texture, &camera3, altoVentana/12);
+		(*i).render(window,(*i).texture, xCamara, altoVentana/12);
 	}
 	list<LTexture>::iterator i = listaDibujable.begin();
 	advance(i,numeroCliente - 1);
-	(*i).render(window, (*i).texture, &camera3, altoVentana/12);
+	(*i).render(window, (*i).texture, xCamara, altoVentana/12);
 
 	SDL_RenderPresent( window );
 }
@@ -293,8 +293,10 @@ void Grafica::setXCamara(int xCamara){
 	if (xCamara < 0)
 		xCamara = 0;
 
+	this->xCamara = xCamara;
+
 	if(camera3.x < (4000-camera3.w))
-		camera3.x = xCamara;
+		camera3.x = xCamara*9/20;//(anchoVentana/camera3.w);
 
 	if(camera2.x < (2000-camera2.w))
 		camera2.x = (((2000-camera3.w)*camera3.x)/(4000-camera3.w));

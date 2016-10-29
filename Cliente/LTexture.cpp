@@ -20,14 +20,16 @@ LTexture::~LTexture() {
 	//free();
 }
 
-void LTexture::render(SDL_Renderer *window, SDL_Texture *mTexture, SDL_Rect *camera, int escala){
+void LTexture::render(SDL_Renderer *window, SDL_Texture *mTexture, int cameraX, int escala){
 	SDL_Rect drawingRect;
-	drawingRect.x = xcord - camera->x;
+	drawingRect.x = xcord - cameraX;
 	if (drawingRect.x < 0) drawingRect.x = 0;
 	//cout << "POS X CAMARA: " << camera->x << endl;
 	//cout << "POS X CORD: " << xcord << endl;
 	//cout << "drawingRect.x: " << drawingRect.x << endl;
 	drawingRect.y = ycord;// - camera->y;
+
+	//((anchoVentana*270)/altoVentana);
 
     //pasar escala x xml
 	drawingRect.w = player[spX][spY].w + escala;

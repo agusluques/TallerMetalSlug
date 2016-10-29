@@ -33,7 +33,7 @@ public:
 	LTexture();
 	~LTexture();
 	void free();
-	void render(SDL_Renderer *window, SDL_Texture *mTexture, SDL_Rect *camera, int escala);
+	void render(SDL_Renderer *window, SDL_Texture *mTexture, int cameraX, int escala);
 
 	void actualizar(int x, int y, int spx, int spy, char flip);
 	
