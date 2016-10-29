@@ -9,6 +9,7 @@ using namespace std;
 
 static int VELOCIDADX_AIRE = 8;
 static int VELOCIDAD_CAMINANDO = 10;
+static int VELOCIDAD_JUGADOR;
 static int HMAX_SALTO = 300;
 static int VELY_SUBIDA = 30;
 

@@ -24,8 +24,6 @@ string archivoXml;
 
 list<mensajeClass> listaDeMensajes;
 list<usuarioClass> listaDeUsuarios;
-int xMin;
-int xMax;
 
 //esto se lee del xml, en caso que no haya nada es 2 por defecto.
 int cantidadJugadores = 1;
@@ -93,8 +91,8 @@ void recibirMensaje(int sockfd, void* buffer, int tamanio){
 	int i = read(sockfd, buffer, tamanio);
 
 	//char* tmp = (char*)mensaje;
-	int* tmp = (int*)buffer;
-	cout << "RECIBE: " << (*tmp) << endl;
+//	int* tmp = (int*)buffer;
+//	cout << "RECIBE: " << (*tmp) << endl;
 }
 
 bool enviarMensaje(int sockfd, void* mensaje, int tamanioMensaje){
@@ -117,8 +115,8 @@ bool enviarMensaje(int sockfd, void* mensaje, int tamanioMensaje){
 	if(n < 0) errorSocket = true;
 
 	//char* tmp = (char*)mensaje;
-	int* tmp = (int*)mensaje;
-	cout << "ENVIA: " << (*tmp) << endl;
+//	int* tmp = (int*)mensaje;
+//	cout << "ENVIA: " << (*tmp) << endl;
 
 	return errorSocket;
 }
@@ -310,7 +308,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 */
 		int data = read(newsockfd, &codigo, sizeof(char));
-		cout << "RECIBE: " << codigo << endl;
+//		cout << "RECIBE: " << codigo << endl;
 
 		switch(codigo){
 
@@ -481,6 +479,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						enviarMensaje(newsockfd, &(*i).flip, sizeof(char));
 						enviarMensaje(newsockfd, &puedeAvanzar, sizeof(bool));
 
+						enviarMensaje(newsockfd, &camaraX, sizeof(int));
+
 						break;
 					}
 					case 2:
@@ -589,16 +589,13 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		case 'c':{
 			//envio X camara
 			enviarMensaje(newsockfd,&camaraX,sizeof(int));
-			//envio cameraSet
-			enviarMensaje(newsockfd,&camaraSet,sizeof(int));
 
 			break;
 		}
 
 		case 'M':{
-			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			int b = pthread_mutex_trylock(&mutexListaDibujables);
-			
+
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
@@ -606,9 +603,32 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			//enviar si realmente hay cambios..
 			if (seMovio) {
-				if (it->getX() < xMin) xMin = it->getX();
 				enviarAConectados(numeroCliente, it->x, it->y, it->spX, it->spY, it->flip, avanzar);
 				pthread_mutex_unlock (&mutexListaDibujables); //esto capaz tarde mucho COMENTARIO
+
+				//busco xMinimo
+				int totalDesplazar, xMin, xMax;
+				xMin = 10000;
+				//xMax = 1;
+
+				bool avanzarCamara = false;
+				for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
+					if(it->estaConectado()){
+						//si alguno supero la mitad de la pantalla avanzo camara
+						if(it->x >= camaraX + (ANCHO_VENTANA/2)-80) avanzarCamara = true;
+						if(it->x < xMin) xMin = it->x;
+						//if((*it).x > xMax){
+						//	xMax = it->x;
+						//}
+					}
+				}
+
+				if(avanzarCamara){
+					if(xMin > camaraX){
+						camaraX += VELOCIDAD_CAMINANDO;
+					}
+				}
+
 				//itero desconectados
 				for (list<DibujableServer>::iterator it2 = listaDibujables.begin(); it2 != listaDibujables.end(); ++it2) {
 					if (!it2->estaConectado()){
@@ -618,7 +638,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						}
 					}
 				}
-			}
+			}else pthread_mutex_unlock (&mutexListaDibujables); //esto capaz tarde mucho COMENTARIO
 
 			break;
 		}
@@ -634,71 +654,31 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'L':{
-			int xCamara;
-			recibirMensaje(newsockfd, &xCamara, sizeof(int));
-			camaraX = xCamara;
-
-			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			int b = pthread_mutex_trylock(&mutexListaDibujables);
 
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
-			//if ((it->x) > (xCamara)){
 			if ((it->x) > (camaraX)){
 				it->caminarIzquierda();
 			}else it->quieto();
-			//ver si realmente hace falta dejarlo quieto o si saco el else va igual....
+
 			pthread_mutex_unlock (&mutexListaDibujables);
 
 			break;
 		}
 		case 'R':{
-			int totalDesplazar;
-
-			int xCamara;
-			recibirMensaje(newsockfd, &xCamara, sizeof(int));
-			camaraX = xCamara;
-
-			xMin = 10000;
-			xMax = 1;
-			bool hayDesconectados = false;
-
-			for (list<DibujableServer>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
-				if(it->estaConectado()){
-					if((*it).x < xMin){
-						xMin = it->x;
-					}
-					if((*it).x > xMax){
-						xMax = it->x;
-					}
-				}
-			}
-
-			totalDesplazar = ((xMin) + ANCHO_VENTANA/2); //de aca se regula hasta donde llega el sprite en la pantalla;
 			int b = pthread_mutex_trylock(&mutexListaDibujables);
 
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
-			if ((it->x) < (totalDesplazar)){
+
+			//camino hasta ANCHO_VENTANA (uso toda la pantalla)
+			if ((it->x) < (camaraX + ANCHO_VENTANA)-80){ // - lo q ocupa el sprite en pantalla..
 				it->caminarDerecha();
 			}else it->quieto();
 
-			avanzar = false;
-
-			int delta;
-			delta = xMax - xMin;
-			if(delta < ANCHO_VENTANA/2){
-				avanzar = true;
-				if (it->x > camaraSet)
-					camaraSet = it->x;
-			}
 			pthread_mutex_unlock (&mutexListaDibujables);
-
-			//cout <<"camaraSet: " << camaraSet << endl;
-			//cout <<"XMIN: " << xMin << endl;
-			//cout <<"XMAX: " << xMax << endl;
-			//cout <<"totalDesplazar: " << totalDesplazar << endl;
 
 			break;
 		}

@@ -15,8 +15,6 @@ Grafica::Grafica() {
 	window = NULL;
 
 	count = 0;
-	camera.x = 0;
-	camera.y = 0;
 
 	cameraSet = 0;
 }
@@ -76,7 +74,7 @@ void Grafica::close() {
 	altoVentana = 0;
 	count = 0;
 	cameraSet = 0;
-	camera.x = 0;
+
 	camera1.x = 0;
 	camera2.x = 0;
 	camera3.x = 0;
@@ -113,8 +111,8 @@ void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanza
 	LTexture aux = buscarDibujable(idObjeto);
 	aux.actualizar( x,  y, spx, spy, flip);
 
-	if (avanzar)
-		this->avanzarCamara(x);
+	//if (avanzar)
+	//	this->avanzarCamara(x);
 
 	actualizarDibujable(aux);
 }
@@ -124,9 +122,7 @@ void Grafica::mostrarDibujables(){
 	SDL_RenderClear(window);
 
 	SDL_RenderCopy (window, spriteFondo1, &camera1, NULL);
-
 	SDL_RenderCopy (window, spriteFondo2, &camera2, NULL);
-
 	SDL_RenderCopy (window, spriteFondo3, &camera3, NULL);
 
 	for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
@@ -286,7 +282,22 @@ bool Grafica::inicializarPersonaje(char* path, int ancho, int alto){
 	return exito;
 }
 
-void Grafica::avanzarCamara (int posicionX){
+void Grafica::setXCamara(int xCamara){
+	if (xCamara < 0)
+		xCamara = 0;
+
+	if(camera3.x < (4000-camera3.w))
+		camera3.x = xCamara;
+
+	if(camera2.x < (2000-camera2.w))
+		camera2.x = (((2000-camera3.w)*camera3.x)/(4000-camera3.w));
+
+	if(camera1.x < (1000-camera1.w))
+		camera1.x = (((1000-camera3.w)*camera3.x)/(4000-camera3.w));
+
+}
+
+/*void Grafica::avanzarCamara (int posicionX){
 	if (posicionX > cameraSet)
 		cameraSet = posicionX;
 
@@ -298,7 +309,7 @@ void Grafica::avanzarCamara (int posicionX){
 
 	//AVANZAR DE LAS CAMARAS..
 	if(camera3.x < (4000-camera3.w))
-		camera3.x = camera.x/2;
+		camera3.x = camera.x;
 
 	if(camera2.x < (2000-camera2.w))
 		camera2.x = (((2000-camera3.w)*camera3.x)/(4000-camera3.w));
@@ -306,16 +317,16 @@ void Grafica::avanzarCamara (int posicionX){
 	if(camera1.x < (1000-camera1.w))
 		camera1.x = (((1000-camera3.w)*camera3.x)/(4000-camera3.w));
 
-}
+}*/
 
 bool Grafica::empiezaDeNuevo () {
-	if (camera.x > 7695){ //3910 un cuarto de pantalla final masomenos..
+	if (camera3.x > 3910){ //3910 un cuarto de pantalla final masomenos..
 		int xMin = 9999;
 		for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
 			if (i->xcord < xMin) xMin = i->xcord;
 		}
 		if (xMin > 7800) {
-			camera.x = 0;
+			//camera.x = 0;
 			camera1.x = 0;
 			camera2.x = 0;
 			camera3.x = 0;

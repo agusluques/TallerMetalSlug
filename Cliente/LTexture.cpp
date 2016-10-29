@@ -22,13 +22,12 @@ LTexture::~LTexture() {
 
 void LTexture::render(SDL_Renderer *window, SDL_Texture *mTexture, SDL_Rect *camera, int escala){
 	SDL_Rect drawingRect;
-
-
-	drawingRect.x = (xcord - (camera->x*2));
+	drawingRect.x = xcord - camera->x;
 	if (drawingRect.x < 0) drawingRect.x = 0;
-//	cout << "POS CAMARA: " << camera->x << endl;
-//	cout << "POS EN VENTANA: " << drawingRect.x << endl;
-    drawingRect.y = ycord;// - camera->y;
+	cout << "POS X CAMARA: " << camera->x << endl;
+	cout << "POS X CORD: " << xcord << endl;
+	cout << "drawingRect.x: " << drawingRect.x << endl;
+	drawingRect.y = ycord;// - camera->y;
 
     //pasar escala x xml
 	drawingRect.w = player[spX][spY].w + escala;
@@ -81,24 +80,6 @@ int LTexture::getId(){
 
 void LTexture::inicializarTexture(SDL_Renderer* window, char* text){
 	loadFromFile(window, text);
-	/*cuerpo[0][0].x=8; cuerpo[0][0].y=443;
-	cuerpo[0][0].w=35; cuerpo[0][0].h=50;
-
-	cuerpo[1][0].x=57; cuerpo[1][0].y=441;
-	cuerpo[1][0].w=35; cuerpo[1][0].h=50;
-
-	cuerpo[2][0].x=98; cuerpo[2][0].y=441;
-	cuerpo[2][0].w=35; cuerpo[2][0].h=50;
-
-	cuerpo[3][0].x=131; cuerpo[3][0].y=441;
-	cuerpo[3][0].w=35; cuerpo[3][0].h=50;
-
-	cuerpo[4][0].x=163; cuerpo[4][0].y=441;
-	cuerpo[4][0].w=35; cuerpo[4][0].h=50;
-
-	cuerpo[5][0].x=200; cuerpo[5][0].y=441;
-	cuerpo[5][0].w=35; cuerpo[5][0].h=50;*/
-
 	//CORRIENDO
 	player[0][0].x=0; player[0][0].y=50;
 	player[0][0].w=30; player[0][0].h=40;
@@ -161,20 +142,3 @@ void LTexture::free()
 		mHeight = 0;
 	}
 }
-
-
-//void LTexture::render(SDL_Renderer* window, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip )
-//{
-//	//Set rendering space and render to screen
-//	SDL_Rect renderQuad = { x, y, mWidth, mHeight };
-//
-//	//Set clip rendering dimensions
-//	if( clip != NULL )
-//	{
-//		renderQuad.w = clip->w;
-//		renderQuad.h = clip->h;
-//	}
-//
-//	//Render to screen
-//	SDL_RenderCopyEx( window, mTexture, clip, &renderQuad, angle, center, flip );
-//}

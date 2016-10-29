@@ -94,9 +94,9 @@ bool mySocket::enviarMensaje(void* mensaje, int tamanioMensaje){
 	int n = write(sockfd, mensaje, tamanioMensaje);
 	if(n < 0) errorSocket = true;
 
-	char* tmp = (char*)mensaje;
-	//int* tmp = (int*)mensaje;
-	cout << "ENVIA: " << (*tmp) << endl;
+//	char* tmp = (char*)mensaje;
+//	//int* tmp = (int*)mensaje;
+//	cout << "ENVIA: " << (*tmp) << endl;
 
 	return errorSocket;
 }
@@ -126,8 +126,8 @@ bool mySocket::recibirMensaje(void* buffer, int tamanio){
 	if(n < 0) errorSocket = true;
 
 	//char* tmp = (char*)mensaje;
-	int* tmp = (int*)buffer;
-	cout << "RECIBE: " << (*tmp) << endl;
+//	int* tmp = (int*)buffer;
+//	cout << "RECIBE: " << (*tmp) << endl;
 
 	return errorSocket;
 }
@@ -143,7 +143,6 @@ bool mySocket::recibirMensaje(){
 
 	int corte = 1;
 	error = recibirMensaje(&corte, sizeof(int));
-	cout << "RECIBO!!!!!!!!!!!!!!!!!" << endl;
 
 	if(error){
 		cout << "ENTRO A ERROR 1" << endl;
@@ -191,6 +190,10 @@ bool mySocket::recibirMensaje(){
 			error = recibirMensaje(&avanzar, sizeof(bool));
 			//cout << "Puede avanzar: " << avanzar << endl;
 
+			int xCamara, setCamara;
+			error = recibirMensaje(&xCamara, sizeof(int));
+
+			grafica.setXCamara(xCamara);
 			grafica.actualizar(idObjeto, x, y, spx, spy, avanzar, flip);
 
 			//grafica.avanzarCamara(x); OTRA MANERA
@@ -335,10 +338,9 @@ void mySocket::cargarDibujables(){
 	codigo = 'c';
 	enviarMensaje(&codigo, sizeof(char));
 
-	int xCamara, camSet;
+	int xCamara;
 	recibirMensaje(&xCamara, sizeof(int));
-	recibirMensaje(&camSet, sizeof(int));
-	grafica.setXCamara(xCamara,camSet);
+	grafica.setXCamara(xCamara);
 
 }
 
@@ -458,11 +460,7 @@ bool mySocket::iniciarGrafica(){
 			returnIGrafica = false;
 		} else {
 			//MOSTRAR VENTANA
-			if (!grafica.empiezaDeNuevo()) grafica.mostrarDibujables();
-			else{
-				char codigo = '8';
-				enviarMensaje(&codigo, sizeof(char));
-			}
+			grafica.mostrarDibujables();
 		}
 
 		SDL_PumpEvents();
@@ -482,17 +480,11 @@ bool mySocket::iniciarGrafica(){
 		else if (keys[SDL_GetScancodeFromKey(SDLK_LEFT)]){
 			strcpy(&codigo,"L");
 			enviarMensaje(&codigo, sizeof(char));
-
-			int x = grafica.camera.x;
-			enviarMensaje(&x, sizeof(int));
 			quieto = false;
 		}
 		else if (keys[SDL_GetScancodeFromKey(SDLK_RIGHT)]){
 			strcpy(&codigo,"R");
 			enviarMensaje(&codigo, sizeof(char));
-
-			int x = grafica.camera.x;
-			enviarMensaje(&x, sizeof(int));
 			quieto = false;
 		}
 		else if (keys[SDL_GetScancodeFromKey(SDLK_r)]){

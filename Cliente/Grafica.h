@@ -49,7 +49,6 @@ private:
     int cameraSet;
 
 public:
-	SDL_Rect camera; // = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_Rect camera1;
     SDL_Rect camera2;
     SDL_Rect camera3;
@@ -89,14 +88,7 @@ public:
 
 	bool empiezaDeNuevo();
 
-	void setXCamara(int xCamara, int camSet){
-		camera.x = xCamara;
-		camera3.x = camera.x;
-		camera2.x = (((2000-camera3.w)*camera3.x)/(4000-camera3.w));
-		camera1.x = (((1000-camera3.w)*camera3.x)/(4000-camera3.w));
-
-		cameraSet = camSet;
-	}
+	void setXCamara(int xCamara);
 
 };
 

@@ -34,6 +34,7 @@ class mySocketSrv{
 		void cerrar();
 		void setNumeroCliente(int usr);
 		int getNumeroCliente();
+
 		~mySocketSrv();
 };
 
