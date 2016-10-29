@@ -296,7 +296,7 @@ void Grafica::setXCamara(int xCamara){
 	this->xCamara = xCamara;
 
 	if(camera3.x < (4000-camera3.w))
-		camera3.x = xCamara*9/20;//(anchoVentana/camera3.w);
+		camera3.x = xCamara*camera3.w/anchoVentana;
 
 	if(camera2.x < (2000-camera2.w))
 		camera2.x = (((2000-camera3.w)*camera3.x)/(4000-camera3.w));
