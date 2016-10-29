@@ -118,7 +118,7 @@ void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanza
 }
 
 void Grafica::mostrarDibujables(){
-
+	//bool finFondo1, finFondo2, finFondo3;
 	SDL_RenderClear(window);
 
 	SDL_RenderCopy (window, spriteFondo1, &camera1, NULL);
@@ -128,6 +128,7 @@ void Grafica::mostrarDibujables(){
 	for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
 		(*i).render(window,(*i).texture, xCamara, altoVentana/12);
 	}
+
 	list<LTexture>::iterator i = listaDibujable.begin();
 	advance(i,numeroCliente - 1);
 	(*i).render(window, (*i).texture, xCamara, altoVentana/12);
@@ -282,7 +283,7 @@ bool Grafica::inicializarPersonaje(char* path, int ancho, int alto){
 	return exito;
 }
 
-void Grafica::setXCamara(int xCamara){
+void Grafica::setXCamara(int camaraX){
 	if(xCamara == 0){
 		camera3.x = 0;
 		camera2.x = 0;
@@ -293,7 +294,7 @@ void Grafica::setXCamara(int xCamara){
 	if (xCamara < 0)
 		xCamara = 0;
 
-	this->xCamara = xCamara;
+	this->xCamara = camaraX;
 
 	if(camera3.x < (4000-camera3.w))
 		camera3.x = xCamara*camera3.w/anchoVentana;

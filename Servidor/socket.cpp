@@ -19,6 +19,7 @@ list<DibujableServer> listaDibujables;
 list<FondoServer> listaFondos;
 int ANCHO_VENTANA;
 int ALTO_VENTANA;
+int VELOCIDAD_JUGADOR;
 //char* archivoXml;
 string archivoXml;
 
@@ -480,7 +481,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						enviarMensaje(newsockfd, &(*i).flip, sizeof(char));
 						enviarMensaje(newsockfd, &puedeAvanzar, sizeof(bool));
 
-						cout << "ENVIO X CAMARA: " << camaraX << endl;
 						enviarMensaje(newsockfd, &camaraX, sizeof(int));
 
 						break;
@@ -628,7 +628,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 				if(avanzarCamara){
 					if(xMin > camaraX){
-						camaraX += VELOCIDAD_CAMINANDO;
+						camaraX += VELOCIDAD_JUGADOR;
 					}
 				}
 
@@ -648,11 +648,15 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 		case 'U':{
 			int b = pthread_mutex_trylock(&mutexListaDibujables);
+
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
-
 			it->saltar();
+
 			pthread_mutex_unlock (&mutexListaDibujables);
+
+			VELOCIDAD_JUGADOR = 13;
+
 			break;
 		}
 
@@ -681,7 +685,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				it->caminarDerecha();
 			}else it->quieto();
 
-			cout << "CAMARA X ANTES: " << camaraX << endl;
 			if((it->x) >= (4034)){
 				camaraX = 0;
 				camaraSet = 0;
@@ -691,7 +694,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					enviarAConectados(it2->id , it2->x, it2->y, it2->spX, it2->spY, it2->flip, false);
 				} 
 			}
-			cout << "CAMARA X DESPUES: " << camaraX << endl;
+			VELOCIDAD_JUGADOR = 15;
 
 			pthread_mutex_unlock (&mutexListaDibujables);
 

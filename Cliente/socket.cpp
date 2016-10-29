@@ -194,14 +194,8 @@ bool mySocket::recibirMensaje(){
 			int xCamara, setCamara;
 			error = recibirMensaje(&xCamara, sizeof(int));
 
-			cout << "---------------------------------------" << endl;
-			cout << "SET CAMARA: " << xCamara << endl;
-			cout << "---------------------------------------" << endl;
-
 			grafica.setXCamara(xCamara);
 			grafica.actualizar(idObjeto, x, y, spx, spy, avanzar, flip);
-
-			//grafica.avanzarCamara(x); OTRA MANERA
 
 			break;
 		}
@@ -222,30 +216,16 @@ bool mySocket::recibirMensaje(){
 		}
 		case 4:{
 			cerrarGrafica();
-			/*this->desconectar();
-			this->cerrar();
-
-			this->sockfd = socket(AF_INET, SOCK_STREAM, 0);
-			if (sockfd < 0)
-				cout << "Error en la apertura del socket" << endl;
-			if (connect(this->sockfd,(struct sockaddr *) &this->server,sizeof(this->server)) < 0){
-				cout << "Error intentado conectar" << endl;
-				exit(0);
-			}
-
-			this->conectado = autenticar(nombreCliente);
-
-			iniciarGrafica();*/
-			//cout << "CERRE OK" << endl;
 			break;
 		}
 		case 5:
 			error = recibirMensaje(&corte, sizeof(int));
-			//pido msj antes del corte xq sino este me empieza a mandar msjs y se mezclan
 			iniciarGrafica();
-			//cout << "INICIE OK" << endl;
-			break;
+			cerrarGrafica();
+			cerrar();
+			desconectar();
 
+			break;
 		}
 
 		error = recibirMensaje(&corte, sizeof(int));
