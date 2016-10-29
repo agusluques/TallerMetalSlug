@@ -49,6 +49,7 @@ public:
 	void caminarIzquierda();
 	void quieto();
 	bool mover();
+	void volverAlPrincipio();
 
 	bool estaConectado();
 	void conectar();

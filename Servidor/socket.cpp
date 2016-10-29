@@ -252,7 +252,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 		char codigo;
 
-		/*if(inicioGrafica){
+		if(inicioGrafica){
 			struct timeval tv;
 			tv.tv_sec = 10;  // 10 Secs Timeout
 			tv.tv_usec = 0;  // Not init'ing this can cause strange errors
@@ -261,6 +261,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			int data = read(newsockfd, &codigo, sizeof(char));
 			if(data < 0){
 				cout << "Se cayo la conexion con el cliente " << endl;
+				abierto = false;
 
 				//abierto = false;
 
@@ -306,8 +307,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		} else {
 			int data = read(newsockfd, &codigo, sizeof(char));
 		}
-*/
-		int data = read(newsockfd, &codigo, sizeof(char));
+
+		//int data = read(newsockfd, &codigo, sizeof(char));
 //		cout << "RECIBE: " << codigo << endl;
 
 		switch(codigo){
@@ -677,6 +678,17 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			if ((it->x) < (camaraX + ANCHO_VENTANA)-80){ // - lo q ocupa el sprite en pantalla..
 				it->caminarDerecha();
 			}else it->quieto();
+
+			if((it->x) >= (4034)){
+				camaraX = 0;
+				camaraSet = 0;
+				avanzar = false;
+				for (list<DibujableServer>::iterator it2 = listaDibujables.begin(); it2 != listaDibujables.end(); ++it2) {
+					it2->volverAlPrincipio();
+					enviarAConectados(it2->id , it2->x, it2->y, it2->spX, it2->spY, it2->flip, false);
+				}
+				cout << "CAMARA X: " << camaraX << endl; 
+			}
 
 			pthread_mutex_unlock (&mutexListaDibujables);
 

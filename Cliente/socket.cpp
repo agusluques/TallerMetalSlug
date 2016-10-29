@@ -102,7 +102,7 @@ bool mySocket::enviarMensaje(void* mensaje, int tamanioMensaje){
 }
 
 bool mySocket::recibirMensaje(void* buffer, int tamanio){
-	/*int acumulador = 0, bytesRecibidos = 0;
+	int acumulador = 0, bytesRecibidos = 0;
 
 	struct timeval tv;
 	tv.tv_sec = 10;  // 10 Secs Timeout
@@ -119,8 +119,9 @@ bool mySocket::recibirMensaje(void* buffer, int tamanio){
 			acumulador += bytesRecibidos;
 		}
 	}
-	return errorSocket;*/
+	return errorSocket;
 
+	/*
 	bool errorSocket = false;
 	int n = read(this->sockfd, buffer, tamanio);
 	if(n < 0) errorSocket = true;
@@ -129,7 +130,7 @@ bool mySocket::recibirMensaje(void* buffer, int tamanio){
 //	int* tmp = (int*)buffer;
 //	cout << "RECIBE: " << (*tmp) << endl;
 
-	return errorSocket;
+	return errorSocket;*/
 }
 
 bool mySocket::recibirMensaje(){

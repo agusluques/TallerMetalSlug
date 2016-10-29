@@ -158,6 +158,13 @@ bool DibujableServer::mover(){
 	return meMovi;
 }
 
+void DibujableServer::volverAlPrincipio(){
+	x = 0; 
+	//mVelX = 0;
+	//mVelY = 0;
+
+}
+
 bool DibujableServer::estaConectado(){
 	return this->estaOnline;
 }
