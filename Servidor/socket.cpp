@@ -27,7 +27,7 @@ list<mensajeClass> listaDeMensajes;
 list<usuarioClass> listaDeUsuarios;
 
 //esto se lee del xml, en caso que no haya nada es 2 por defecto.
-int cantidadJugadores = 1;
+int cantidadJugadores = 2;
 
 int topeSalto = 20;
 
@@ -302,7 +302,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, false);
 
 				//envio un msj a todos los q esten online q se desconecto el usuario
-				string mensaje = (*it2).nombreUsuario() + " Se ah desconectado";
+				string mensaje = (*it2).nombreUsuario() + " Se ha desconectado";
 				enviarMensajeAConectados(mensaje);
 			}
 		} else {
@@ -527,11 +527,18 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 		case '7': {
 			//pido si puede empezar el juego
-			bool respuesta = false;
-			if (listaDeUsuarios.size() == cantidadJugadores){
-				respuesta = true;
+			int respuesta = 1;
+			if (listaDeUsuarios.size() < cantidadJugadores){
+				respuesta = 0;
+			} else if (listaDeUsuarios.size() > cantidadJugadores){
+				respuesta = -1;
+				int a = pthread_mutex_trylock(&mutexListaUsuarios);
+				list<usuarioClass>::iterator it = listaDeUsuarios.begin();
+				advance(it, numeroCliente-1);
+				listaDeUsuarios.erase(it);
+				pthread_mutex_unlock (&mutexListaUsuarios);
 			}
-			enviarMensaje(newsockfd,&respuesta,sizeof(bool));
+			enviarMensaje(newsockfd,&respuesta,sizeof(int));
 
 			break;
 		}
@@ -723,8 +730,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, false);
 
 			//envio un msj a todos los q esten online q se desconecto el usuario
-			string mensaje = (*it2).nombreUsuario() + " Se ah desconectado";
+			string mensaje = (*it2).nombreUsuario() + " Se ha desconectado";
 			enviarMensajeAConectados(mensaje);
+			inicioGrafica = false;
 
 			break;
 		}

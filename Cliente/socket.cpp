@@ -335,10 +335,14 @@ bool mySocket::iniciarGrafica(){
 	char codigo;
 	codigo = '7';
 	enviarMensaje(&codigo, sizeof(char));
-	bool puedoComenzar = true;
-	recibirMensaje(&puedoComenzar, sizeof(bool));
-	if (!puedoComenzar){
+	int puedoComenzar;
+	recibirMensaje(&puedoComenzar, sizeof(int));
+	if (puedoComenzar == 0){
 		cout << "Faltan ingresar jugadores" << endl;
+		returnIGrafica = false;
+		return false;
+	} else if (puedoComenzar == -1){
+		cout << "Ya han ingresado la cantidad maxima de jugadores" <<endl;
 		returnIGrafica = false;
 		return false;
 	}
