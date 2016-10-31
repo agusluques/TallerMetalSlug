@@ -47,8 +47,10 @@ public:
 	void caminarDerecha();
 	void caminarIzquierda();
 	void quieto();
-	bool mover();
+	bool mover(int camaraX);
 	void volverAlPrincipio();
+
+	int velocidadXJugador();
 
 	bool estaConectado();
 	void conectar();

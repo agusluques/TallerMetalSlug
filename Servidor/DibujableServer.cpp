@@ -76,6 +76,10 @@ void DibujableServer::saltar(){
 	}
 }
 
+int DibujableServer::velocidadXJugador(){
+	return mVelX;
+}
+
 void DibujableServer::caminarDerecha(){
 
 	if (estaEnElPiso) {
@@ -127,7 +131,7 @@ void DibujableServer::quieto(){
 
 }
 
-bool DibujableServer::mover(){
+bool DibujableServer::mover(int xCamara){
 	bool meMovi = false;
 
 	if (!estaEnElPiso){// && (y >= HMAX_SALTO)){
@@ -144,6 +148,8 @@ bool DibujableServer::mover(){
 	}
 
 	x += mVelX;
+	//para q no se valla de la pantalla...
+	if ( (x < xCamara) || (x > xCamara+(800-80)) ) x -= mVelX; //lo vuelvo a como estaba antes..
 	y += mVelY;
 
 	//ACA HAY Q PONERLO EN EL PISO SI SE PASA...
@@ -159,7 +165,7 @@ bool DibujableServer::mover(){
 }
 
 void DibujableServer::volverAlPrincipio(){
-	x = 0; 
+	x = x - 8300;
 	//mVelX = 0;
 	//mVelY = 0;
 

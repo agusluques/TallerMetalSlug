@@ -601,10 +601,11 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
-			bool seMovio = it->mover();
+			bool seMovio = it->mover(camaraX);
 
 			//enviar si realmente hay cambios..
 			if (seMovio) {
+				VELOCIDAD_JUGADOR = it->velocidadXJugador();
 				enviarAConectados(numeroCliente, it->x, it->y, it->spX, it->spY, it->flip, avanzar);
 				pthread_mutex_unlock (&mutexListaDibujables); //esto capaz tarde mucho COMENTARIO
 
@@ -655,8 +656,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			pthread_mutex_unlock (&mutexListaDibujables);
 
-			VELOCIDAD_JUGADOR = 13;
-
 			break;
 		}
 
@@ -679,22 +678,20 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
-
 			//camino hasta ANCHO_VENTANA (uso toda la pantalla)
 			if ((it->x) < (camaraX + ANCHO_VENTANA)-80){ // - lo q ocupa el sprite en pantalla..
 				it->caminarDerecha();
 			}else it->quieto();
 
-			if((it->x) >= (4034)){
+			if(camaraX >= 8075){
+				for (list<DibujableServer>::iterator it2 = listaDibujables.begin(); it2 != listaDibujables.end(); ++it2) {
+					it2->x = it2->x - camaraX;
+					enviarAConectados(it2->id , it2->x, it2->y, it2->spX, it2->spY, it2->flip, false);
+				}
 				camaraX = 0;
 				camaraSet = 0;
 				avanzar = false;
-				for (list<DibujableServer>::iterator it2 = listaDibujables.begin(); it2 != listaDibujables.end(); ++it2) {
-					it2->volverAlPrincipio();
-					enviarAConectados(it2->id , it2->x, it2->y, it2->spX, it2->spY, it2->flip, false);
-				} 
 			}
-			VELOCIDAD_JUGADOR = 15;
 
 			pthread_mutex_unlock (&mutexListaDibujables);
 
