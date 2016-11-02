@@ -28,10 +28,9 @@ int main(int argc, char *argv[])
 		ifstream infile(argv[2]);
 		if (infile.good() == false) {
 			cout << "El archivo "<<argv[2]<<" no existe"<<endl;
-			exit(0);
+			arch = "ej.xml";
 		}
 		infile.close();
-		arch = argv[2];
 		cout << "ARCH: " << arch << endl;
 		//archivo = argv[2];
 	}

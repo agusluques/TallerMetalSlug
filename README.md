@@ -23,7 +23,7 @@ Sólo se utilizó la biblioteca *pthread* propia del lenguaje utilizado (C++).
 Se provee un Makefile que compila todo lo necesario.
 
 Para ejecutar el servidor debe correrse de la siguiente manera:
-`./servidor usuarios.csv <puerto>` donde se deberá reemplazar `<puerto>` por el puerto requerido.
+`./servidor <puerto> <xml>` donde se deberá reemplazar `<puerto>` por el puerto requerido y `<xml>` por el archivo xml (ej.xml por default).
 
 Para ejecutar los clientes debe correrse de la siguiente manera:
 `./cliente <IP> <puerto>` donde se deberá reemplazar `<IP>` por la IP correspondiente y `<puerto>` por el mismo puerto que el servidor.
