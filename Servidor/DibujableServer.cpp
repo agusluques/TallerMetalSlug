@@ -57,6 +57,7 @@ int DibujableServer::getId(){
 }
 
 void DibujableServer::saltar(){
+
 	if(estaEnElPiso){
 		mVelY = -VELY_SUBIDA;
 		//si estaba llendo para la derecha
@@ -144,6 +145,7 @@ bool DibujableServer::mover(int xCamara){
 		meMovi = true;
 	}
 
+
 	if(y <= HMAX_SALTO){
 		mVelY = VELY_SUBIDA;
 	}
@@ -153,29 +155,43 @@ bool DibujableServer::mover(int xCamara){
 	if ( (x < xCamara) || (x > xCamara+(800-80)) ) x -= mVelX; //lo vuelvo a como estaba antes..
 	y += mVelY;
 
-	/*cout << "x: " << this->x << endl;
+	/*
+	cout << "x: " << this->x << endl;
+	*/
 	cout << "y: " << this->y << endl;
 
+
+	//verifico que no este en una plataforma
 	if (!estaEnPlataforma){
        if (escenario.verificarPlataforma(this->x,this->y)){
+    	    mVelY = 0;
 			y = 360;
 			spY = 1;
 			spX = 0;
 			estaEnPlataforma = true;
-			estaEnElPiso = true;
        }
-	}else{
+	}
+
+	//una vez arriba de la plataforma, verifico sino me sali
+	if (estaEnPlataforma){
       if (escenario.salirPlataforma(this->x,this->y)){
-		y = 360;
-      }else{
-    	  estaEnPlataforma = false;
-    	  y = 299;
+		estaEnPlataforma = false;
+		estaEnElPiso = false;
+      }else{ // lo pongo de nuevo en la plataforma si se pasa.
+          if(y > 360){
+        	  mVelY = 0;
+        	  y = 360;
+      		  spY = 1;
+      		  spX = 0;
+        	  estaEnElPiso = true;
+          }
+
       }
 	}
-       */
+
 
 	//ACA HAY Q PONERLO EN EL PISO SI SE PASA...
-	if (y > 500) {
+	if ( y > 500) {
 		mVelY = 0;
 		y = 500;
 		spY = 1;
