@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstring>
 #include <string>
+#include "Escenario.h"
 
 using namespace std;
 
@@ -22,6 +23,9 @@ public:
 	int spY;
 	bool estaOnline;
 
+	Escenario escenario;
+
+	bool estaEnPlataforma;
 	bool estaEnElPiso;
 	bool caminaDerecha;
 	bool caminaIzquierda;

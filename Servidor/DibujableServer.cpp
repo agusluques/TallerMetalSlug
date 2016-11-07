@@ -7,6 +7,7 @@ DibujableServer::DibujableServer() {
 	estaEnElPiso = true;
 	caminaDerecha = false;
 	caminaIzquierda = false;
+	estaEnPlataforma = false;
 	mVelX = 0;
 	mVelY = 0;
 	conectar();
@@ -151,6 +152,27 @@ bool DibujableServer::mover(int xCamara){
 	//para q no se valla de la pantalla...
 	if ( (x < xCamara) || (x > xCamara+(800-80)) ) x -= mVelX; //lo vuelvo a como estaba antes..
 	y += mVelY;
+
+	/*cout << "x: " << this->x << endl;
+	cout << "y: " << this->y << endl;
+
+	if (!estaEnPlataforma){
+       if (escenario.verificarPlataforma(this->x,this->y)){
+			y = 360;
+			spY = 1;
+			spX = 0;
+			estaEnPlataforma = true;
+			estaEnElPiso = true;
+       }
+	}else{
+      if (escenario.salirPlataforma(this->x,this->y)){
+		y = 360;
+      }else{
+    	  estaEnPlataforma = false;
+    	  y = 299;
+      }
+	}
+       */
 
 	//ACA HAY Q PONERLO EN EL PISO SI SE PASA...
 	if (y > 500) {
