@@ -565,6 +565,12 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					advance(it, numeroCliente-1);
 					listaDeUsuarios.erase(it);
 					pthread_mutex_unlock (&mutexListaUsuarios);
+					int b = pthread_mutex_trylock(&mutexListaDibujables);
+					list<DibujableServer>::iterator it2 = listaDibujables.begin();
+					advance(it2, numeroCliente-1);
+					listaDibujables.erase(it2);
+					pthread_mutex_unlock (&mutexListaDibujables);
+					
 				}
 				enviarMensaje(newsockfd,&respuesta,sizeof(int));
 
