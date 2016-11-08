@@ -11,6 +11,7 @@ DibujableServer::DibujableServer() {
 	mVelX = 0;
 	mVelY = 0;
 	conectar();
+	basePlataforma = 0;
 
 	flip = 'D';
 }
@@ -164,11 +165,11 @@ bool DibujableServer::mover(int xCamara){
 	//verifico que no este en una plataforma
 	if (!estaEnPlataforma){
        if (escenario.verificarPlataforma(this->x,this->y)){
-    	    mVelY = 0;
-			y = 360;
-			spY = 1;
-			spX = 0;
-			estaEnPlataforma = true;
+    	   mVelY = 0;
+		   y = 360;
+           spY = 1;
+		   spX = 0;
+		   estaEnPlataforma = true;
        }
 	}
 

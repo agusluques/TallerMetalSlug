@@ -14,6 +14,10 @@ Plataforma::Plataforma() {
 
 }
 
+void Plataforma::setId(int id){
+	this->id = id;
+}
+
 void Plataforma::setX(int x){
 
 	this->x= x;
@@ -28,8 +32,13 @@ void Plataforma::setY(int Y){
 
 void Plataforma::setLong(int longitud){
 
-	this->longitud= longitud;
+	this->longitud= x + longitud;
 
+}
+
+int Plataforma::getId(){
+
+	return id;
 }
 
 int Plataforma::getX(){

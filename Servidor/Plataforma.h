@@ -16,15 +16,18 @@ class Plataforma {
 
 public:
 
+	int id;
 	int x;
 	int y;
 	int longitud;
 
 
 	Plataforma();
+	int getId();
 	int getX();
 	int getY();
 	int getLong();
+	void setId(int id);
 	void setX(int x);
 	void setY(int y);
 	void setLong(int longitud);

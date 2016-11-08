@@ -11,8 +11,13 @@
 #include <list>
 #include "Plataforma.h"
 #include <iostream>
+#include <pthread.h>
 
 using namespace std;
+
+static int HPLAT_NIVEL1 = 380;
+static int HPLAT_NIVEL2 = 240;
+
 
 class Escenario {
 
@@ -25,6 +30,7 @@ public:
 	Escenario();
 	void crearPlataformas();
 	bool verificarPlataforma(int spriteX, int spriteY);
+	int plataformaActual(int spriteX, int spriteY);
 	bool salirPlataforma (int spriteX, int spriteY);
 	virtual ~Escenario();
 };

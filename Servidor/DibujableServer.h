@@ -13,8 +13,10 @@ static int VELOCIDAD_CAMINANDO = 15;
 static int HMAX_SALTO = 200;
 static int VELY_SUBIDA = 30;
 
+
 class DibujableServer {
 public:
+	int basePlataforma;
 	int id;
 	string spriteId;
 	int x;
