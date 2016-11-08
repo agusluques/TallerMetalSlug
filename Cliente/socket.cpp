@@ -283,12 +283,13 @@ void mySocket::cargarDibujables(){
 		stringstream sstm;
 		sstm << idObjeto << spriteId;
 		result = sstm.str();
+		result = "img/pjs/" + result;
 		//cout << "Resultado1: " << result << endl;
 		//ifstream ifs(result);
 		ifstream ifs (result.c_str());
 		//ifstream infile(&result[0]);
 		if ((ifs.good()) == false) {
-			result = "notfoundpj-ORIGINAL.png";
+			result = "img/pjs/notfoundpj-ORIGINAL.png";
 		}
 		ifs.close();
 		//infile.close();
@@ -396,6 +397,7 @@ bool mySocket::iniciarGrafica(){
 	recibirMensaje(&anchoFondo1, sizeof(int));
 	//recibirMensaje(&zIndex, sizeof(int));
 	string resultado1(idFondo1, tamId1);
+	resultado1 = "img/fondos/" + resultado1;
 
 	recibirMensaje(&tamId2, sizeof(int));
 	char idFondo2[tamId2];
@@ -403,6 +405,7 @@ bool mySocket::iniciarGrafica(){
 	recibirMensaje(&anchoFondo2, sizeof(int));
 	//recibirMensaje(&zIndex, sizeof(int));
 	string resultado2(idFondo2, tamId2);
+	resultado2 = "img/fondos/" + resultado2;
 
 	recibirMensaje(&tamId3, sizeof(int));
 	char idFondo3[tamId3];
@@ -410,18 +413,19 @@ bool mySocket::iniciarGrafica(){
 	recibirMensaje(&anchoFondo3, sizeof(int));
 	//recibirMensaje(&zIndex, sizeof(int));
 	string resultado3(idFondo3, tamId3);
+	resultado3 = "img/fondos/" + resultado3;
 
 	ifstream infile1(resultado1.c_str());
 	if ((infile1.good()) == false) {
-		resultado1 = "notFoundFondo1.png";
+		resultado1 = "img/fondos/notFoundFondo1.png";
 	}
 	ifstream infile2(resultado2.c_str());
 	if ((infile2.good()) == false) {
-		resultado2 = "notFoundFondo2.png";
+		resultado2 = "img/fondos/notFoundFondo2.png";
 	}
 	ifstream infile3(resultado3.c_str());
 	if ((infile3.good()) == false) {
-		resultado3 = "notFoundFondo3.png";
+		resultado3 = "img/fondos/notFoundFondo3.png";
 	}
 
 	grafica.inicializarFondo(&resultado1[0], &resultado2[0],&resultado3[0] );

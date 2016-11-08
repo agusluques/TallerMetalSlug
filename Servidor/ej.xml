@@ -39,3 +39,14 @@
 <cantidadDeJugadores>
 	2
 </cantidadDeJugadores>
+
+<!--MODO 1: Individual multijugador (cada jugador obtiene puntos que se computan para éste.)
+	MODO 2: Colaborativo multijugador (hasta 4 jugadores que acumulan un único puntaje.)
+	MODO 3: Grupal multijugador (dos grupos de 2 jugadores que acumulan puntaje por grupo.) 
+
+	prueba = 1 => prueba ON
+	prueba = 0 => prueba OFF-->
+<juego>
+	<modo_de_juego>1</modo_de_juego>
+	<prueba>0</prueba>
+</juego>
