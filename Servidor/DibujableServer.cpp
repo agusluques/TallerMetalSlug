@@ -156,17 +156,12 @@ bool DibujableServer::mover(int xCamara){
 	if ( (x < xCamara) || (x > xCamara+(800-80)) ) x -= mVelX; //lo vuelvo a como estaba antes..
 	y += mVelY;
 
-	/*
-	cout << "x: " << this->x << endl;
-	*/
-	cout << "y: " << this->y << endl;
-
 
 	//verifico que no este en una plataforma
 	if (!estaEnPlataforma){
        if (escenario.verificarPlataforma(this->x,this->y)){
     	   mVelY = 0;
-		   y = 360;
+		   y = NIVEL_PLAT;
            spY = 1;
 		   spX = 0;
 		   estaEnPlataforma = true;
@@ -179,9 +174,9 @@ bool DibujableServer::mover(int xCamara){
 		estaEnPlataforma = false;
 		estaEnElPiso = false;
       }else{ // lo pongo de nuevo en la plataforma si se pasa.
-          if(y > 360){
+          if(y > NIVEL_PLAT){
         	  mVelY = 0;
-        	  y = 360;
+        	  y = NIVEL_PLAT;
       		  spY = 1;
       		  spX = 0;
         	  estaEnElPiso = true;
@@ -192,9 +187,9 @@ bool DibujableServer::mover(int xCamara){
 
 
 	//ACA HAY Q PONERLO EN EL PISO SI SE PASA...
-	if ( y > 500) {
+	if ( y > NIVEL_PISO) {
 		mVelY = 0;
-		y = 500;
+		y = NIVEL_PISO;
 		spY = 1;
 		spX = 0;
 		estaEnElPiso = true;

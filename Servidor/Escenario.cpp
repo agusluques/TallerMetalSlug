@@ -23,17 +23,50 @@ void Escenario::crearPlataformas(){
 
 	Plataforma nueva;
 	nueva.setId(idPlataforma);
-	nueva.setX(399);
+	nueva.setX(397);
 	nueva.setY(360);
-	nueva.setLong(450);
-
-	plataforma1 = nueva;
+	nueva.setLong(436);
 
 	plataformas.push_back(nueva);
-
 	idPlataforma++;
 
+	nueva.setId(idPlataforma);
+	nueva.setX(1050);
+	nueva.setLong(219);
 
+	plataformas.push_back(nueva);
+	idPlataforma++;
+
+     // 3 - id2
+    nueva.setId(idPlataforma);
+	nueva.setX(1808);
+	nueva.setLong(142);
+
+	plataformas.push_back(nueva);
+	idPlataforma++;
+
+   //4
+    nueva.setId(idPlataforma);
+	nueva.setX(2758);
+	nueva.setLong(230);
+
+	plataformas.push_back(nueva);
+	idPlataforma++;
+
+	//5
+    nueva.setId(idPlataforma);
+	nueva.setX(3320);
+	nueva.setLong(110);
+
+	plataformas.push_back(nueva);
+	idPlataforma++;
+
+	//6
+    nueva.setId(idPlataforma);
+	nueva.setX(3960);
+	nueva.setLong(255);
+
+	plataformas.push_back(nueva);
 
 
 }
@@ -42,13 +75,9 @@ bool Escenario::verificarPlataforma(int spriteX, int spriteY){
 
 
 	bool estaApoyado = false;
-	//int totalPlataforma = plataforma1.getLong();
 
 	for (list<Plataforma>::iterator it = plataformas.begin(); it != plataformas.end(); ++it) {
-		if (spriteX > it->getX() && spriteX < it->getLong() && (spriteY < HPLAT_NIVEL1 || spriteY < HPLAT_NIVEL2)){
-
-	    //if (spriteX > plataforma1.getX() && spriteX < totalPlataforma && (spriteY < HPLAT_NIVEL1 || spriteY < HPLAT_NIVEL2)){
-		cout << "entro a la plataformaaaaaaa" << endl;
+		if (spriteX > it->getX() && spriteX < it->getLong() && (spriteY < HPLAT_NIVEL1)){
 		estaApoyado = true;
 		}
 	}
@@ -57,34 +86,15 @@ bool Escenario::verificarPlataforma(int spriteX, int spriteY){
 
 }
 
-int Escenario::plataformaActual(int spriteX, int spriteY){
-	int basePlataforma = 0;
-
-	//int a = pthread_mutex_trylock(&mutexListaEscenario);
-	for (list<Plataforma>::iterator it = plataformas.begin(); it != plataformas.end(); ++it)
-		if (spriteX > it->getX() && spriteX < it->getLong() && (spriteY < HPLAT_NIVEL1 || spriteY < HPLAT_NIVEL2)){
-			cout << "estoy en la plataforma: " << it->getId() << endl;
-			cout << " imprime x : " << it->getX() << endl;
-			cout << " imprime y : " << it->getY() << endl;
-			basePlataforma = it->getY();
-			cout << "devuelvo un: " << basePlataforma <<endl;
-			break;
-		}
-	//pthread_mutex_unlock (&mutexListaEscenario);
-
-	return basePlataforma;
-}
 
 bool Escenario::salirPlataforma (int spriteX, int spriteY){
 
-	bool saleDePlataforma = false;
-	//int totalPlataforma = plataforma1.getLong();
+	bool saleDePlataforma = true;
 
 	for (list<Plataforma>::iterator it = plataformas.begin(); it != plataformas.end(); ++it) {
 
-	   if (spriteX < it->getX() || spriteX > it->getLong()){
-		 cout << "salee de la plataforma" << endl;
-		 saleDePlataforma = true;
+	   if (spriteX > it->getX() && spriteX < it->getLong()){
+		 saleDePlataforma = false;
 	   }
 
 	}

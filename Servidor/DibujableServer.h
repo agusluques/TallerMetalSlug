@@ -12,6 +12,8 @@ static int VELOCIDADX_AIRE = 13;
 static int VELOCIDAD_CAMINANDO = 15;
 static int HMAX_SALTO = 200;
 static int VELY_SUBIDA = 30;
+static int NIVEL_PLAT = 360;
+static int NIVEL_PISO = 500;
 
 
 class DibujableServer {
