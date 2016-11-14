@@ -668,6 +668,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					}
 					pthread_mutex_unlock (&mutexListaDibujables); //esto capaz tarde mucho COMENTARIO
 
+					if (camaraX >= 8075)  //quitar para hacer escenario infinito
+						avanzarCamara = false;
+
 					if(avanzarCamara){
 						if(xMin > camaraX){
 							camaraX += VELOCIDAD_JUGADOR;
@@ -725,6 +728,15 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					it->caminarDerecha();
 				}else it->quieto();
 
+				if(camaraX >= 7800){
+
+					avanzar = false;
+
+					// hacer aparecer el BOOS
+				}
+
+
+				/* escenario infinito
 				if(camaraX >= 8075){
 					for (list<DibujableServer>::iterator it2 = listaDibujables.begin(); it2 != listaDibujables.end(); ++it2) {
 						it2->x = it2->x - camaraX;
@@ -734,6 +746,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					camaraSet = 0;
 					avanzar = false;
 				}
+				*/
 
 				pthread_mutex_unlock (&mutexListaDibujables);
 

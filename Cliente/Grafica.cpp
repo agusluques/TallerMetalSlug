@@ -329,6 +329,13 @@ void Grafica::setXCamara(int camaraX){
 
 }*/
 
+
+bool Grafica::empiezaDeNuevo () {
+
+		return false;
+}
+/* caso empezaria de nuevo
+
 bool Grafica::empiezaDeNuevo () {
 	if (camera3.x > 3910){ //3910 un cuarto de pantalla final masomenos..
 		int xMin = 9999;
@@ -346,3 +353,5 @@ bool Grafica::empiezaDeNuevo () {
 	}else
 		return false;
 }
+
+*/
