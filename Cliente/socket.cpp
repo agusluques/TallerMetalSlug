@@ -162,6 +162,7 @@ bool mySocket::recibirMensaje(){
 
 		int tipoMensaje;
 		error = recibirMensaje(&tipoMensaje, sizeof(int));
+		cout << "TIPO MENSAJE: " << tipoMensaje << endl;
 		if(error){
 			cout << "ENTRO A ERROR 2" << endl;
 			corte = 0;
@@ -218,7 +219,7 @@ bool mySocket::recibirMensaje(){
 			cerrarGrafica();
 			break;
 		}
-		case 5:
+		case 5:{
 			error = recibirMensaje(&corte, sizeof(int));
 			iniciarGrafica();
 			cerrarGrafica();
@@ -226,6 +227,24 @@ bool mySocket::recibirMensaje(){
 			desconectar();
 
 			break;
+		}
+
+		case 6: {
+			int x, y, cont, borro;
+			error = recibirMensaje(&borro, sizeof(int));
+			if(borro == 0){
+				error = recibirMensaje(&x, sizeof(int));
+				error = recibirMensaje(&y, sizeof(int));
+				error = recibirMensaje(&cont, sizeof(int));
+
+				grafica.agregarBala(x, y, cont);
+			} else {
+				error = recibirMensaje(&cont, sizeof(int));
+				grafica.borrarBala(cont);
+			}
+			break;
+		}
+
 		}
 
 		error = recibirMensaje(&corte, sizeof(int));
@@ -489,6 +508,10 @@ bool mySocket::iniciarGrafica(){
 			returnIGrafica = false;
 			quit = true;
 			quieto = true;
+		}
+		else if (keys[SDL_GetScancodeFromKey(SDLK_d)]){
+			strcpy(&codigo,"d");
+			enviarMensaje(&codigo, sizeof(char));
 		}
 		else if(!quieto){
 			strcpy(&codigo,"S");

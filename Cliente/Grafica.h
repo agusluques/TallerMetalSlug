@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "LTexture.h"
+#include "TextureBalas.h"
 #include <sstream>
 
 #ifndef GRAFICA_H_
@@ -36,6 +37,7 @@ private:
 	SDL_Texture *spriteFondo3;
 
 	list<LTexture> listaDibujable;
+	list<TextureBalas> listaDibujableBalas;
 
 	//lo de agus
     SDL_Rect renderQuad;
@@ -83,6 +85,9 @@ public:
 	bool inicializarVentana(int ancho, int alto);
 	bool inicializarFondo(char *path1, char* path2, char* path3);
 	bool inicializarPersonaje(char* path, int ancho, int alto);
+	void inicializarBalas(char* sprite);
+	void agregarBala(int x, int y, int cont);
+	void borrarBala(int cont);
 
 	void setIdCliente(int numCliente){
 		this->numeroCliente = numCliente;
@@ -94,4 +99,4 @@ public:
 
 };
 
-#endif /* SERVIDOR_H_ */
+#endif /* GRAFICA_H_ */

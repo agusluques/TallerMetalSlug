@@ -117,6 +117,51 @@ void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanza
 	actualizarDibujable(aux);
 }
 
+void Grafica::agregarBala(int x, int y, int cont){
+	//Busco en la lista con el ID de bala si esta actualizo sino agrego
+	if(listaDibujableBalas.empty()){
+		TextureBalas nuevo;
+		nuevo.setX(x);
+		nuevo.setY(y + 30);
+		nuevo.setTipoArma(0);
+		nuevo.setId(cont);
+		string pathBalas = "img/balas/balas.png";
+		nuevo.inicializarTexture(window, &pathBalas[0]);
+
+		listaDibujableBalas.push_back(nuevo);
+	} else {
+		bool encontrado = false;
+		for(list<TextureBalas>::iterator j = listaDibujableBalas.begin(); j!= listaDibujableBalas.end(); ++j){
+			if((*j).id == cont){
+				encontrado = true;
+				(*j).xcord = x;
+			}
+		}
+		if(!encontrado){
+			TextureBalas nuevo;
+			nuevo.setX(x);
+			nuevo.setY(y + 30);
+			nuevo.setTipoArma(0);
+			nuevo.setId(cont);
+			string pathBalas = "img/balas/balas.png";
+			nuevo.inicializarTexture(window, &pathBalas[0]);
+
+			listaDibujableBalas.push_back(nuevo);
+		} else {
+
+		}
+	}
+}
+
+void Grafica::borrarBala(int cont){
+	for(list<TextureBalas>::iterator j = listaDibujableBalas.begin(); j!= listaDibujableBalas.end(); ++j){
+		if((*j).id == cont){
+			j = listaDibujableBalas.erase(j);
+			j--;
+		}
+	}
+}
+
 void Grafica::mostrarDibujables(){
 	//bool finFondo1, finFondo2, finFondo3;
 	SDL_RenderClear(window);
@@ -124,6 +169,10 @@ void Grafica::mostrarDibujables(){
 	SDL_RenderCopy (window, spriteFondo1, &camera1, NULL);
 	SDL_RenderCopy (window, spriteFondo2, &camera2, NULL);
 	SDL_RenderCopy (window, spriteFondo3, &camera3, NULL);
+
+	for(list<TextureBalas>::iterator j = listaDibujableBalas.begin(); j!= listaDibujableBalas.end(); ++j){
+			(*j).render(window,(*j).texture, xCamara, altoVentana/48);
+	}
 
 	for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
 		(*i).render(window,(*i).texture, xCamara, altoVentana/12);
