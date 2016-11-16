@@ -37,7 +37,7 @@
 </capas>
 
 <cantidadDeJugadores>
-	2
+	1
 </cantidadDeJugadores>
 
 <!--MODO 1: Individual multijugador (cada jugador obtiene puntos que se computan para éste.)
@@ -50,3 +50,7 @@
 	<modo_de_juego>1</modo_de_juego>
 	<prueba>0</prueba>
 </juego>
+
+<bonus>
+	<path>bonus.png</path>
+</bonus>

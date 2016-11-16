@@ -7,6 +7,7 @@
 #include <SDL2/SDL_image.h>
 #include "LTexture.h"
 #include "TextureBalas.h"
+#include "TextureBonus.h"
 #include <sstream>
 
 #ifndef GRAFICA_H_
@@ -38,6 +39,7 @@ private:
 
 	list<LTexture> listaDibujable;
 	list<TextureBalas> listaDibujableBalas;
+	list<TextureBonus> listaDibujableBonus;
 
 	//lo de agus
     SDL_Rect renderQuad;
@@ -88,6 +90,7 @@ public:
 	void inicializarBalas(char* sprite);
 	void agregarBala(int x, int y, int cont, bool dirBala);
 	void borrarBala(int cont);
+	void agregarBonus(int id,int x, int y, string sprite);
 
 	void setIdCliente(int numCliente){
 		this->numeroCliente = numCliente;

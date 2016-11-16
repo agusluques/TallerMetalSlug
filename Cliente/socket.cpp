@@ -394,30 +394,6 @@ bool mySocket::iniciarGrafica(){
 	int cantidad;
 	recibirMensaje(&cantidad, sizeof(int));
 
-	/*for (int i = 0; i<cantidad; i++){
-		int anchoFondo, zIndex, tamId;
-		recibirMensaje(&tamId, sizeof(int));
-		char idFondo[tamId];
-		recibirMensaje(&idFondo, sizeof(char)*tamId);
-		recibirMensaje(&anchoFondo, sizeof(int));
-		recibirMensaje(&zIndex, sizeof(int));
-		//ifstream infile(&idFondo[0]);
-
-		cout << "idFondo: " << idFondo << endl;
-		cout << "tamId: " << tamId << endl;
-
-		string resultado(idFondo, tamId);
-
-		ifstream infile (resultado.c_str());
-		//ifstream infile(&result[0]);
-		if ((infile.good()) == false) {
-			resultado = "notfoundFondo.png";
-		}
-
-		cout << "Resultado Fondo: " << resultado << endl;
-		infile.close();
-		grafica.inicializarFondo(&resultado[0]);
-	}*/
 	int anchoFondo1, tamId1, anchoFondo2,  tamId2, anchoFondo3, tamId3;
 	recibirMensaje(&tamId1, sizeof(int));
 	char idFondo1[tamId1];
@@ -457,6 +433,32 @@ bool mySocket::iniciarGrafica(){
 	}
 
 	grafica.inicializarFondo(&resultado1[0], &resultado2[0],&resultado3[0] );
+
+	//pido informacion de los bonus
+	codigo = 'b';
+	enviarMensaje(&codigo, sizeof(char));
+	int cant;
+	recibirMensaje(&cant, sizeof(int));
+	for (int i = 0; i < cant; i++){
+		int id,x,y;
+		recibirMensaje(&id, sizeof(int));
+		recibirMensaje(&x, sizeof(int));
+		recibirMensaje(&y, sizeof(int));
+
+		int tamSpriteId;
+		recibirMensaje(&tamSpriteId, sizeof(int));
+		char spriteId[tamSpriteId];
+		recibirMensaje(&spriteId, sizeof(char)*tamSpriteId);
+		string result(spriteId);
+
+		grafica.agregarBonus(id,x,y, result);
+	}
+
+
+
+
+
+
 
 	bool quit = false;
 	SDL_Event event;

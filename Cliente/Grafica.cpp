@@ -117,6 +117,15 @@ void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanza
 	actualizarDibujable(aux);
 }
 
+void Grafica::agregarBonus(int id, int x, int y, string sprite){
+	TextureBonus nuevo;
+	nuevo.setX(x);
+	nuevo.setY(y);
+	nuevo.setTipo(id);
+	nuevo.inicializarTexture(window, &sprite[0]);
+	listaDibujableBonus.push_back(nuevo);
+}
+
 void Grafica::agregarBala(int x, int y, int cont, bool dirBala){
 	//Busco en la lista con el ID de bala si esta actualizo sino agrego
 	if(listaDibujableBalas.empty()){
@@ -179,9 +188,14 @@ void Grafica::mostrarDibujables(){
 			(*j).render(window,(*j).texture, xCamara, altoVentana/48);
 	}
 
+	for (list<TextureBonus>::iterator it = listaDibujableBonus.begin(); it != listaDibujableBonus.end(); ++it)
+	{
+		(*it).render(window, (*it).texture, xCamara, altoVentana/15);
+	}
 	for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
 		(*i).render(window,(*i).texture, xCamara, altoVentana/12);
 	}
+
 
 	list<LTexture>::iterator i = listaDibujable.begin();
 	advance(i,numeroCliente - 1);

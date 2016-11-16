@@ -10,6 +10,7 @@
 #include "rapidxml_print.hpp"
 #include "rapidxml_utils.hpp"
 #include "bala.h"
+#include "Bonus.h"
 
 #define DEBUG 2
 
@@ -19,6 +20,7 @@ using namespace std;
 int contadorBalas = 0;
 
 list<int> listaFDClientes;
+list<Bonus> listaDeBonus;
 list<bala> listaBalas;
 list<DibujableServer> listaDibujables;
 list<FondoServer> listaFondos;
@@ -200,6 +202,34 @@ void cargarFondos(char* xml){
 		capa1 = capa1->next_sibling();
 	}
 
+}
+
+void cargarBonus(char* xml){
+	file<> xmlFile(xml);
+	xml_document<> doc;    // character type defaults to char
+	doc.parse<0>(xmlFile.data());    // 0 means default parse flags
+
+	xml_node<> *bonus = doc.first_node("bonus");
+	xml_node<> *path = bonus->first_node("path");
+
+	for (int i = 0; i < 20; ++i)
+	{
+		//7 tipos de bonus:
+		//0- recargar arma 1
+		//1- pasar a arma 2
+		//2- recargar arma 2
+		//3- pasar a arma 3
+		//4- recargar arma 3
+		//5- bonus de vida
+		//6- bonus de killall
+		int id = 0;//rand() % 6;
+		int x = rand() % 4000;
+		int y = ALTO_VENTANA-50;
+		string s(path->value());
+		Bonus b(x,y,id, s);
+		
+		listaDeBonus.push_back(b);
+	}
 }
 
 char* parseXMLPj(){
@@ -677,6 +707,29 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				break;
 			}
 
+			case 'b':{
+				int cant = listaDeBonus.size();
+				enviarMensaje(newsockfd, &cant, sizeof(int));
+				int b = pthread_mutex_trylock(&mutexListaDibujables);
+				for (list<Bonus>::iterator it = listaDeBonus.begin(); it != listaDeBonus.end(); ++it)
+				{
+					int id = (*it).getId();
+					int x = (*it).getPosX();
+					int y = (*it).getPosY();
+					enviarMensaje(newsockfd, &id, sizeof(int));
+					enviarMensaje(newsockfd, &x, sizeof(int));
+					enviarMensaje(newsockfd, &y, sizeof(int));
+					int tamSpriteId = (*it).sprite.length() + 1;
+					enviarMensaje(newsockfd,&tamSpriteId,sizeof(int));
+					char spriteId[tamSpriteId];
+					strcpy(spriteId, it->sprite.c_str());
+					enviarMensaje(newsockfd,spriteId,sizeof(char)*tamSpriteId);
+
+				}
+				pthread_mutex_unlock (&mutexListaDibujables);
+				break;
+			}
+
 			case 'c':{
 				//envio X camara
 				enviarMensaje(newsockfd,&camaraX,sizeof(int));
@@ -970,6 +1023,7 @@ mySocketSrv::mySocketSrv(char* puerto, string xml){
 	memcpy(s2, xml.c_str(), xml.size() + 1);
 
 	cargarFondos(s2);
+	cargarBonus(s2);
 	modoDeJuego(s2);
 	if (modoJuego != 3){
 		cantidadDeJugadores(s2);
