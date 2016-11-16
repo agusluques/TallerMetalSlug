@@ -86,7 +86,7 @@ public:
 	bool inicializarFondo(char *path1, char* path2, char* path3);
 	bool inicializarPersonaje(char* path, int ancho, int alto);
 	void inicializarBalas(char* sprite);
-	void agregarBala(int x, int y, int cont);
+	void agregarBala(int x, int y, int cont, bool dirBala);
 	void borrarBala(int cont);
 
 	void setIdCliente(int numCliente){

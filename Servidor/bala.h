@@ -11,15 +11,18 @@ private:
 	float yVel;
 	int usr;
 	bool direccion; //TRUE = derecha y FALSE = izquierda
+	int destinatario;
 
 public:
-	bala(int xPos, int yPos, int usr, bool dir, int id);
+	bala(int xPos, int yPos, int usr, bool dir, int id, int destinatario);
 	int getPosX();
 	int getPosY();
 	float getVelX();
 	float getVelY();
 	int getUsr();
 	int getId();
+	int getDestinatario();
+	void setDestinatario(int usrDestino);
 	void setPosX(int x);
 	void setPosY(int y);
 	void setVelX(int vel);

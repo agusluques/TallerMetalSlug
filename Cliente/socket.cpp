@@ -231,13 +231,15 @@ bool mySocket::recibirMensaje(){
 
 		case 6: {
 			int x, y, cont, borro;
+			bool dirBala;
 			error = recibirMensaje(&borro, sizeof(int));
 			if(borro == 0){
 				error = recibirMensaje(&x, sizeof(int));
 				error = recibirMensaje(&y, sizeof(int));
 				error = recibirMensaje(&cont, sizeof(int));
+				error = recibirMensaje(&dirBala, sizeof(bool));
 
-				grafica.agregarBala(x, y, cont);
+				grafica.agregarBala(x, y, cont, dirBala);
 			} else {
 				error = recibirMensaje(&cont, sizeof(int));
 				grafica.borrarBala(cont);

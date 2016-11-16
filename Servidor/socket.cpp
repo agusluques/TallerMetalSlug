@@ -225,20 +225,6 @@ void buscarNombreUsuario(char *nombreRetorno, int numeroUsuario){
 	pthread_mutex_unlock (&mutexListaUsuarios);
 }
 
-void agregaraListaBalas(int numeroCliente, int usrDest, bala nuevaBala){
-	char nombreAutor[50];
-	char nombreDestino[50];
-	buscarNombreUsuario(nombreAutor, numeroCliente);
-	buscarNombreUsuario(nombreDestino, usrDest);
-
-	int a = pthread_mutex_trylock(&mutexListaBalas);
-
-	//mensajeBala msjBala(nombreAutor, nombreDestino, bala nuevaBala);
-	//listaMsjBalas.push_back(msjBala);
-	//loggear(mensajeObj.nombreAutor(),mensajeObj.nombreDestinatario(),mensajeObj.getMensaje());
-	pthread_mutex_unlock (&mutexListaBalas);
-}
-
 void agregaraLista(int numeroCliente, int usrDest, int x, int y, int spx, int spy, char flip, bool avanzar){
 	char nombreAutor[50];
 	char nombreDestino[50];
@@ -268,16 +254,6 @@ void enviarMensajeAConectados(string mensaje){
 			listaDeMensajes.push_back(mensajeObj);
 			pthread_mutex_unlock (&mutexLista);
 		}
-	}
-}
-
-void enviarBalaAconectados(int numeroCliente, bala nuevaBala){
-	for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
-		int a = pthread_mutex_trylock(&mutexListaUsuarios);
-		if((*it).estaConectado()){
-			//agregaraListaBalas(numeroCliente, (*it).numCliente(), bala);
-		}
-		pthread_mutex_unlock (&mutexListaUsuarios);
 	}
 }
 
@@ -512,40 +488,44 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				buscarNombreUsuario(nombre, numeroCliente);
 
 				for(list<bala>::iterator j = listaBalas.begin(); j != listaBalas.end(); ++j){
-					int xBala = (*j).getPosX();
-					int xVelBala = (*j).getVelX();
-					bool dirBala = (*j).getDireccion();
-					if(dirBala == true){
-						xBala += xVelBala;
-					} else {
-						xBala -= xVelBala;
-					}
-					(*j).setPosX(xBala);
+					int numClienteBala = (*j).getDestinatario();
+					if(numClienteBala == numeroCliente){
+						int xBala = (*j).getPosX();
+						int xVelBala = (*j).getVelX();
+						bool dirBala = (*j).getDireccion();
+						if(dirBala == true){
+							xBala += xVelBala;
+						} else {
+							xBala -= xVelBala;
+						}
+						(*j).setPosX(xBala);
 
-					int yBala = (*j).getPosY();
+						int yBala = (*j).getPosY();
 
-					int borro;
-					int cont = (*j).getId();
-					if((xBala < camaraX) || (xBala > camaraX + ANCHO_VENTANA)){ //Agregar || (colisiona)
-						j = listaBalas.erase(j);
-						j--;
-						borro = 1;
-						int corte1 = 1;
-						enviarMensaje(newsockfd, &corte1, sizeof(int));
-						int tipoMensaje1 = 6;
-						enviarMensaje(newsockfd, &tipoMensaje1, sizeof(int));
-						enviarMensaje(newsockfd, &borro, sizeof(int));
-						enviarMensaje(newsockfd, &cont, sizeof(int));
-					} else {
-						borro = 0;
-						int corte2 = 1;
-						enviarMensaje(newsockfd, &corte2, sizeof(int));
-						int tipoMensaje2 = 6;
-						enviarMensaje(newsockfd, &tipoMensaje2, sizeof(int));
-						enviarMensaje(newsockfd, &borro, sizeof(int));
-						enviarMensaje(newsockfd, &xBala, sizeof(int));
-						enviarMensaje(newsockfd, &yBala, sizeof(int));
-						enviarMensaje(newsockfd, &cont, sizeof(int));
+						int borro;
+						int cont = (*j).getId();
+						if((xBala < camaraX) || (xBala > camaraX + ANCHO_VENTANA)){ //Agregar || (colisiona)
+							j = listaBalas.erase(j);
+							j--;
+							borro = 1;
+							int corte1 = 1;
+							enviarMensaje(newsockfd, &corte1, sizeof(int));
+							int tipoMensaje1 = 6;
+							enviarMensaje(newsockfd, &tipoMensaje1, sizeof(int));
+							enviarMensaje(newsockfd, &borro, sizeof(int));
+							enviarMensaje(newsockfd, &cont, sizeof(int));
+						} else {
+							borro = 0;
+							int corte2 = 1;
+							enviarMensaje(newsockfd, &corte2, sizeof(int));
+							int tipoMensaje2 = 6;
+							enviarMensaje(newsockfd, &tipoMensaje2, sizeof(int));
+							enviarMensaje(newsockfd, &borro, sizeof(int));
+							enviarMensaje(newsockfd, &xBala, sizeof(int));
+							enviarMensaje(newsockfd, &yBala, sizeof(int));
+							enviarMensaje(newsockfd, &cont, sizeof(int));
+							enviarMensaje(newsockfd, &dirBala, sizeof(bool));
+						}
 					}
 				}
 
@@ -955,14 +935,17 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					dir = false;
 				}
 
-				bala nuevaBala(x, y, usr, dir, contadorBalas);
+				for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+					int a = pthread_mutex_trylock(&mutexListaUsuarios);
+					if((*it).estaConectado()){
+						int b = pthread_mutex_trylock(&mutexListaBalas);
+						bala nuevaBala(x, y, usr, dir, contadorBalas, (*it).numCliente());
+						listaBalas.push_back(nuevaBala);
+						pthread_mutex_unlock (&mutexListaBalas);
+					}
+					pthread_mutex_unlock (&mutexListaUsuarios);
+				}
 				contadorBalas++;
-
-				int b = pthread_mutex_trylock(&mutexListaBalas);	
-
-				listaBalas.push_back(nuevaBala);
-
-				pthread_mutex_unlock (&mutexListaBalas);
 			}
 
 			default:

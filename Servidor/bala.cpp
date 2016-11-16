@@ -1,6 +1,6 @@
 #include "bala.h"
 
-bala::bala(int xPos, int yPos, int usr, bool dir, int id){
+bala::bala(int xPos, int yPos, int usr, bool dir, int id, int destinatario){
 	this->id = id;
 	this->xPos = xPos;
 	this->yPos = yPos;
@@ -8,6 +8,7 @@ bala::bala(int xPos, int yPos, int usr, bool dir, int id){
 	this->yVel = 0;
 	this->usr = usr;
 	this->direccion = dir;
+	this->destinatario = destinatario;
 }
 
 int bala::getPosX(){
@@ -32,6 +33,14 @@ int bala::getUsr(){
 
 int bala::getId(){
 	return this->id;
+}
+
+int bala::getDestinatario(){
+	return this->destinatario;
+}
+
+void bala::setDestinatario(int usrDestino){
+	this->destinatario = usrDestino;
 }
 
 void bala::setPosX(int x){

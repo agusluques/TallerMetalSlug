@@ -33,10 +33,10 @@ void TextureBalas::render(SDL_Renderer *window, SDL_Texture *mTexture, int camer
 	//((anchoVentana*270)/altoVentana);
 
     //pasar escala x xml
-	drawingRect.w = arma[spX].w + escala;
-	drawingRect.h = arma[spX].h + escala;
+	drawingRect.w = arma[tipoArma].w + escala;
+	drawingRect.h = arma[tipoArma].h + escala;
 
-	SDL_RenderCopyEx( window, mTexture, &arma[spX], &drawingRect, 0, NULL, flipType );
+	SDL_RenderCopyEx( window, mTexture, &arma[tipoArma], &drawingRect, 0, NULL, flipType );
 }
 
 void TextureBalas::actualizar(int x, int y, int spx, int spy, char flip){

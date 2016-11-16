@@ -117,14 +117,19 @@ void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanza
 	actualizarDibujable(aux);
 }
 
-void Grafica::agregarBala(int x, int y, int cont){
+void Grafica::agregarBala(int x, int y, int cont, bool dirBala){
 	//Busco en la lista con el ID de bala si esta actualizo sino agrego
 	if(listaDibujableBalas.empty()){
 		TextureBalas nuevo;
 		nuevo.setX(x);
 		nuevo.setY(y + 30);
-		nuevo.setTipoArma(0);
+		nuevo.setTipoArma(2);
 		nuevo.setId(cont);
+		if(dirBala == true){
+			nuevo.setFlip('D');
+		} else {
+			nuevo.setFlip('I'); 
+		}
 		string pathBalas = "img/balas/balas.png";
 		nuevo.inicializarTexture(window, &pathBalas[0]);
 
@@ -141,7 +146,7 @@ void Grafica::agregarBala(int x, int y, int cont){
 			TextureBalas nuevo;
 			nuevo.setX(x);
 			nuevo.setY(y + 30);
-			nuevo.setTipoArma(0);
+			nuevo.setTipoArma(2);
 			nuevo.setId(cont);
 			string pathBalas = "img/balas/balas.png";
 			nuevo.inicializarTexture(window, &pathBalas[0]);
