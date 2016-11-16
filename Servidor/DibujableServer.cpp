@@ -79,6 +79,11 @@ void DibujableServer::saltar(){
 	}
 }
 
+void DibujableServer::disparar(){
+	spX = 6;
+	spY = 0;
+}
+
 int DibujableServer::velocidadXJugador(){
 	return mVelX;
 }

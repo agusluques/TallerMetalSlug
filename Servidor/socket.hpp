@@ -27,6 +27,7 @@ class mySocketSrv{
 		void bindear();
 		void escuchar();
 		void enviarMensaje(string mensaje);
+		bool enviarMensaje(int sockfd, void* mensaje, int tamanioMensaje);
 		void loggearInterno(string mensaje);
 		void loggearServer (string mensaje);
 		void recibirMensaje(void* buffer, int tamanio );

@@ -57,6 +57,7 @@ public:
 	void quieto();
 	bool mover(int camaraX);
 	void volverAlPrincipio();
+	void disparar();
 
 	int velocidadXJugador();
 

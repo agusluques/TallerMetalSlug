@@ -14,7 +14,7 @@ public:
 	int id;
 
 	//SDL_Rect cuerpo[6][1];
-	SDL_Rect player[6][3];
+	SDL_Rect player[7][3];
 	
 	int xcord;
 	int ycord;

@@ -131,6 +131,10 @@ void LTexture::inicializarTexture(SDL_Renderer* window, char* text){
 
 	player[5][2].x=200; player[5][2].y=150;
 	player[5][2].w=30; player[5][2].h=50;
+
+	//Disparando
+	player[6][0].x=0; player[6][0].y=60;
+	player[6][0].w=40; player[6][0].h=40;
 }
 
 void LTexture::free()

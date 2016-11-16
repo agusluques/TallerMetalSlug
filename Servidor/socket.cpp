@@ -18,6 +18,7 @@ using namespace std;
 
 int contadorBalas = 0;
 
+list<int> listaFDClientes;
 list<bala> listaBalas;
 list<DibujableServer> listaDibujables;
 list<FondoServer> listaFondos;
@@ -923,6 +924,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				int y = it->getY();
 				int usr = it->getId();
 				char flip = it->flip;
+				it->disparar();
+				enviarAConectados(numeroCliente, x, y, 6, 0, flip, false);
 
 				pthread_mutex_unlock (&mutexListaDibujables);
 
@@ -1017,6 +1020,7 @@ void mySocketSrv::aceptarClientes(){
 			loggearInterno( " ERROR ON ACCEPT");
 		}else {
 			pthread_create(&thread, NULL, atender_cliente, (void*)(long)newsockfd);
+			listaFDClientes.push_back(newsockfd);
 			/*printf("Conectado!\n");
 			printf("Leyendo mensaje...\n");*/
 		}
@@ -1039,7 +1043,24 @@ void mySocketSrv::loggearInterno(string mensaje){
 	archLog.close();
 }
 
+bool mySocketSrv::enviarMensaje(int sockfd, void* mensaje, int tamanioMensaje){
+
+	bool errorSocket = false;
+	int n = write(sockfd, mensaje, tamanioMensaje);
+	if(n < 0) errorSocket = true;
+
+	return errorSocket;
+}
+
 void mySocketSrv::cerrar(){
+	
+	int corte = 1;
+	int tipoMsj = 7;
+	for (list<int>::iterator it = listaFDClientes.begin(); it != listaFDClientes.end(); ++it){
+		enviarMensaje((*it), &corte, sizeof(int));
+		enviarMensaje((*it), &tipoMsj, sizeof(int));
+	}
+
 	close(this->sockfd);
 	loggearInterno( " SE CERRO EL SOCKET");
 }

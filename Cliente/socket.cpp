@@ -247,6 +247,13 @@ bool mySocket::recibirMensaje(){
 			break;
 		}
 
+		case 7:{
+			cout << "Se cerro el servidor" << endl;
+			return true;
+			break;
+		}
+
+
 		}
 
 		error = recibirMensaje(&corte, sizeof(int));
@@ -468,10 +475,10 @@ bool mySocket::iniciarGrafica(){
 		//recibo si hay cambios
 		bool huboError = recibirMensaje();
 		if(huboError){
-			cout << "Hubo error" << endl;
-			grafica.close();
+			//cout << "Hubo error" << endl;
+			//grafica.close();
 			quit = true;
-			returnIGrafica = false;
+			returnIGrafica = true;
 		} else {
 			//MOSTRAR VENTANA
 			grafica.mostrarDibujables();
@@ -524,9 +531,6 @@ bool mySocket::iniciarGrafica(){
 	}
 
 	return returnIGrafica;
-	//grafica.close();
-
-	return true;
 }
 
 mySocket::~mySocket(){}
