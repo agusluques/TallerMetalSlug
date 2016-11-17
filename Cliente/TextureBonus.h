@@ -13,7 +13,7 @@ class TextureBonus
 public:
 	int tipo;
 
-	SDL_Rect arma[6];
+	SDL_Rect bonus[6];
 	
 	int xcord;
 	int ycord;
@@ -39,7 +39,6 @@ public:
 	int getTipo();
 	int posicionX();
 	int posicionY();
-
 	void inicializarTexture(SDL_Renderer* window, char* text);
 	
 	bool loadFromFile(SDL_Renderer* window, char* path ) {

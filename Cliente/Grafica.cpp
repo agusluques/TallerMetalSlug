@@ -144,6 +144,7 @@ void Grafica::quitarEnemigo(int idObjeto){
 void Grafica::agregarBonus(int id, int x, int y, string sprite){
 	TextureBonus nuevo;
 	nuevo.setX(x);
+	cout<<"SETEO X"<<x<<endl;
 	nuevo.setY(y);
 	nuevo.setTipo(id);
 	nuevo.inicializarTexture(window, &sprite[0]);
@@ -225,9 +226,9 @@ void Grafica::mostrarDibujables(){
 		(*j).render(window,(*j).texture, xCamara, altoVentana/48);
 	}
 
-	for (list<TextureBonus>::iterator it = listaDibujableBonus.begin(); it != listaDibujableBonus.end(); ++it)
+	for (list<TextureBonus>::iterator it2 = listaDibujableBonus.begin(); it2 != listaDibujableBonus.end(); ++it2)
 	{
-		(*it).render(window, (*it).texture, xCamara, altoVentana/15);
+		(*it2).render(window, (*it2).texture, xCamara, altoVentana/15);
 	}
 	for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
 		(*i).render(window,(*i).texture, xCamara, altoVentana/12);

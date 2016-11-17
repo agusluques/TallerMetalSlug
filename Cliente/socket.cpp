@@ -457,6 +457,7 @@ bool mySocket::iniciarGrafica(){
 		char spriteId[tamSpriteId];
 		recibirMensaje(&spriteId, sizeof(char)*tamSpriteId);
 		string result(spriteId);
+		result = "img/bonus/" + result;
 
 		grafica.agregarBonus(id,x,y, result);
 	}

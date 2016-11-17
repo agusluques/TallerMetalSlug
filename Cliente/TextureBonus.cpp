@@ -19,8 +19,8 @@ TextureBonus::~TextureBonus() {
 
 void TextureBonus::render(SDL_Renderer *window, SDL_Texture *mTexture, int cameraX, int escala){
 	SDL_Rect drawingRect;
-	drawingRect.x = xcord - cameraX;
-	if (drawingRect.x < 0) drawingRect.x = 0;
+	drawingRect.x = xcord;
+	if (drawingRect.x < cameraX) return;
 	//cout << "POS X CAMARA: " << camera->x << endl;
 	//cout << "POS X CORD: " << xcord << endl;
 	//cout << "drawingRect.x: " << drawingRect.x << endl;
@@ -29,10 +29,10 @@ void TextureBonus::render(SDL_Renderer *window, SDL_Texture *mTexture, int camer
 	//((anchoVentana*270)/altoVentana);
 
     //pasar escala x xml
-	drawingRect.w = arma[tipo].w + escala;
-	drawingRect.h = arma[tipo].h + escala;
-
-	SDL_RenderCopyEx( window, texture, &arma[tipo], &drawingRect, 0, NULL,flipType);
+	drawingRect.w = bonus[tipo].w + escala;
+	drawingRect.h = bonus[tipo].h + escala;
+	
+	SDL_RenderCopyEx( window, mTexture, &bonus[tipo], &drawingRect, 0, NULL,flipType);
 }
 
 
@@ -56,10 +56,27 @@ int TextureBonus::getTipo(){
 
 void TextureBonus::inicializarTexture(SDL_Renderer* window, char* text){
 	loadFromFile(window, text);
-	//CORRIENDO
-	arma[0].x=0; arma[0].y=0;
-	arma[0].w=22; arma[0].h=22;
+	
+	bonus[0].x=0; bonus[0].y=0;
+	bonus[0].w=33; bonus[0].h=29;
 
+	/*bonus[1].x=36; bonus[1].y=8;
+	bonus[1].w=23; bonus[1].h=20;
+
+	bonus[2].x=64; bonus[2].y=0;
+	bonus[2].w=33; bonus[2].h=29;
+
+	bonus[3].x=98; bonus[3].y=8;
+	bonus[3].w=23; bonus[3].h=20;
+
+	bonus[4].x=127; bonus[4].y=0;
+	bonus[4].w=33; bonus[4].h=29;
+
+	bonus[5].x=0; bonus[5].y=34;
+	bonus[5].w=26; bonus[5].h=20;
+
+	bonus[6].x=35; bonus[6].y=33;
+	bonus[6].w=25; bonus[6].h=25;*/
 	
 }
 

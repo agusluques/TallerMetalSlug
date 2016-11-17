@@ -215,7 +215,7 @@ void cargarBonus(char* xml){
 
 	xml_node<> *bonus = doc.first_node("bonus");
 	xml_node<> *path = bonus->first_node("path");
-
+	int sum = 0;
 	for (int i = 0; i < 20; ++i)
 	{
 		//7 tipos de bonus:
@@ -227,8 +227,9 @@ void cargarBonus(char* xml){
 		//5- bonus de vida
 		//6- bonus de killall
 		int id = 0;//rand() % 6;
-		int x = rand() % 4000;
-		int y = ALTO_VENTANA-50;
+		int x = sum + 400;
+		sum = x;
+		int y = ALTO_VENTANA - 60;
 		string s(path->value());
 		Bonus b(x,y,id, s);
 
