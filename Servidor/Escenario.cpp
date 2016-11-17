@@ -90,9 +90,10 @@ bool Escenario::verificarPlataforma(int spriteX, int spriteY){
 	bool estaApoyado = false;
 
 	for (list<Plataforma>::iterator it = plataformas.begin(); it != plataformas.end(); ++it) {
-		if (spriteX > it->getX() && spriteX < it->getLong() && (spriteY < HPLAT_NIVEL1)){
+		if (((spriteX >= it->getX()) && (spriteX <= it->getX()+22) && (spriteY < HPLAT_NIVEL1)) || (spriteX <= it->getLong() && spriteX > (it->getLong()-22) && (spriteY < HPLAT_NIVEL1))){
 		estaApoyado = true;
 		}
+
 	}
 
 	return estaApoyado;
