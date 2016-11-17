@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
 
 			case '5': {
 				//repetir si sale mal ?..
-				if(Cliente.iniciarGrafica()){
+				if(!Cliente.iniciarGrafica()){
 					Cliente.cerrarGrafica();
 					Cliente.cerrar();
 					Cliente.desconectar();
