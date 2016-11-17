@@ -6,8 +6,7 @@ using namespace std;
 
 mensajeClass::mensajeClass(){}
 
-
-mensajeClass::mensajeClass(char * autor, char * destino, int id, int x, int y, int spx, int spy, char flip, bool avanzar){
+mensajeClass::mensajeClass(char * autor, char * destino, int id, int x, int y, int spx, int spy, char flip, bool avanzar, int tipoDibujable){
 	strcpy(this->usrAutor, autor);
 	strcpy(this->usrDestino, destino);
 	this->idObjeto = id;
@@ -18,7 +17,21 @@ mensajeClass::mensajeClass(char * autor, char * destino, int id, int x, int y, i
 	this->flip = flip;
 	this->avanzar = avanzar;
 
-	tipoMensaje = 1;
+	this->tipoDibujable = tipoDibujable;
+	this->tipoMensaje = 1;
+}
+
+mensajeClass::mensajeClass(char * autor, char * destino, int id, int x, int y, int spx, int spy, char flip, int tipo){
+	strcpy(this->usrAutor, autor);
+	strcpy(this->usrDestino, destino);
+	this->idObjeto = id;
+	this->x = x;
+	this->y = y;
+	this->spX = spx;
+	this->spY = spy;
+	this->flip = flip;
+
+	tipoMensaje = tipo;
 }
 
 mensajeClass::mensajeClass(int tipo, char *destino, string mensajeEnviado){

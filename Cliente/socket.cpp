@@ -94,9 +94,9 @@ bool mySocket::enviarMensaje(void* mensaje, int tamanioMensaje){
 	int n = write(sockfd, mensaje, tamanioMensaje);
 	if(n < 0) errorSocket = true;
 
-//	char* tmp = (char*)mensaje;
-//	//int* tmp = (int*)mensaje;
-//	cout << "ENVIA: " << (*tmp) << endl;
+	char* tmp = (char*)mensaje;
+	//int* tmp = (int*)mensaje;
+	cout << "ENVIA: " << (*tmp) << endl;
 
 	return errorSocket;
 }
@@ -162,18 +162,18 @@ bool mySocket::recibirMensaje(){
 
 		int tipoMensaje;
 		error = recibirMensaje(&tipoMensaje, sizeof(int));
-		cout << "TIPO MENSAJE: " << tipoMensaje << endl;
 		if(error){
 			cout << "ENTRO A ERROR 2" << endl;
 			corte = 0;
 			break;
 		}
-		//cout << "Tipo de mensaje: " << tipoMensaje << endl;
+		cout << "Tipo de mensaje: " << tipoMensaje << endl;
 
 		switch(tipoMensaje){
 		case 1:{
 			//recibo grafica jugadores
 			int x,y, spx, spy, idObjeto;
+			int tipo;
 			char flip;
 			avanzar = false;
 
@@ -191,17 +191,22 @@ bool mySocket::recibirMensaje(){
 			//cout << "Flip: " << flip << endl;
 			error = recibirMensaje(&avanzar, sizeof(bool));
 			//cout << "Puede avanzar: " << avanzar << endl;
+			error = recibirMensaje(&tipo, sizeof(int));
 
 			int xCamara, setCamara;
 			error = recibirMensaje(&xCamara, sizeof(int));
 
 			grafica.setXCamara(xCamara);
-			grafica.actualizar(idObjeto, x, y, spx, spy, avanzar, flip);
+			grafica.actualizar(idObjeto, x, y, spx, spy, avanzar, flip, tipo);
 
 			break;
 		}
 		case 2:
-			//recibo fondo
+			//MATAR ENEMIGO O JUGADOR!
+			int idObjeto;
+			error = recibirMensaje(&idObjeto, sizeof(int));
+
+			grafica.quitarEnemigo(idObjeto);
 
 			break;
 		case 3:{
@@ -454,12 +459,6 @@ bool mySocket::iniciarGrafica(){
 		grafica.agregarBonus(id,x,y, result);
 	}
 
-
-
-
-
-
-
 	bool quit = false;
 	SDL_Event event;
 
@@ -477,10 +476,10 @@ bool mySocket::iniciarGrafica(){
 		//recibo si hay cambios
 		bool huboError = recibirMensaje();
 		if(huboError){
-			//cout << "Hubo error" << endl;
-			//grafica.close();
+			cout << "Hubo error" << endl;
+			grafica.close();
 			quit = true;
-			returnIGrafica = true;
+			returnIGrafica = false;
 		} else {
 			//MOSTRAR VENTANA
 			grafica.mostrarDibujables();

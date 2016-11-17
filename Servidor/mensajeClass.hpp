@@ -18,10 +18,12 @@ private:
 	int tipoMensaje;
 	string mensaje;
 public:
+	int tipoDibujable;
 	char flip;
 
 	mensajeClass();
-	mensajeClass(char * autor, char * destino, int id, int x, int y, int spx, int spy, char flip, bool avanzar);
+	mensajeClass(char * autor, char * destino, int id, int x, int y, int spx, int spy, char flip, bool avanzar, int tipoDibujable);
+	mensajeClass(char * autor, char * destino, int id, int x, int y, int spx, int spy, char flip, int tipo);
 	mensajeClass(int tipo, char *destino, string mensajeEnviado);
 	mensajeClass(int tipo, char* destino);
 	std::string nombreDestinatario();

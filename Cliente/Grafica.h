@@ -8,6 +8,7 @@
 #include "LTexture.h"
 #include "TextureBalas.h"
 #include "TextureBonus.h"
+#include "LTextureEnemigo.h"
 #include <sstream>
 
 #ifndef GRAFICA_H_
@@ -37,9 +38,12 @@ private:
 	SDL_Texture *spriteFondo2;
 	SDL_Texture *spriteFondo3;
 
+	SDL_Texture *soldadosTexture;
+
 	list<LTexture> listaDibujable;
 	list<TextureBalas> listaDibujableBalas;
 	list<TextureBonus> listaDibujableBonus;
+	list<LTextureEnemigo> listaDibujableEnemigos;
 
 	//lo de agus
     SDL_Rect renderQuad;
@@ -72,12 +76,15 @@ public:
 	SDL_Surface* getSurface();
 	void setSurface(SDL_Surface* surface);
 
-	void actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanzar, char flip);
+	void actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanzar, char flip, int tipo);
+	void quitarEnemigo(int idObjeto);
 
 	void mostrarDibujables();
 	LTexture buscarDibujable(int id);
 	void nuevoDibujable(char* sprite, int idObjeto, int posX, int posY, int spx, int spy, char flip);
 	void actualizarDibujable(LTexture nuevo);
+	bool actualizarDibujable(int idObjeto,int x,int y, int spx, int spy, char flip);
+	bool actualizarDibujableEnemigos(int idObjeto,int x,int y, int spx, int spy, char flip);
 	void borrarDibujable(int id);
 	void avanzarCamara (int posicionX);
 

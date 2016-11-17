@@ -15,6 +15,9 @@ OTRAS9 = bala.cpp
 OTRAS10 = TextureBalas.cpp
 OTRAS11 = TextureBonus.cpp
 OTRAS12 = Bonus.cpp
+OTRAS13 = ContenedorEnemigos.cpp
+OTRAS14 = DibujableServerEnemigo.cpp
+OTRAS15 = LTextureEnemigo.cpp
 
 CLIENTE = Cliente
 SERVIDOR = Servidor
@@ -24,11 +27,11 @@ SERVIDOR = Servidor
 all: clean cliente servidor
 
 cliente:
-	$(CXX) $(CLIENTE)/$(CLIENTE).cpp $(CLIENTE)/$(LIBRERIAS) $(CLIENTE)/$(OTRAS5) $(CLIENTE)/$(OTRAS3) $(CLIENTE)/$(OTRAS10) $(CLIENTE)/$(OTRAS11) $(CXXFLAGS) -o $(CLIENTE)/cliente
+	$(CXX) $(CLIENTE)/$(CLIENTE).cpp $(CLIENTE)/$(LIBRERIAS) $(CLIENTE)/$(OTRAS5) $(CLIENTE)/$(OTRAS3) $(CLIENTE)/$(OTRAS10) $(CLIENTE)/$(OTRAS11) $(CLIENTE)/$(OTRAS15) $(CXXFLAGS) -o $(CLIENTE)/cliente
 
 servidor:
 	$(CXX) $(SERVIDOR)/$(SERVIDOR).cpp $(SERVIDOR)/$(LIBRERIAS) $(SERVIDOR)/$(OTRAS) \
-	$(SERVIDOR)/$(OTRAS1) $(SERVIDOR)/$(OTRAS4) $(SERVIDOR)/$(OTRAS6) $(SERVIDOR)/$(OTRAS7) $(SERVIDOR)/$(OTRAS8) $(SERVIDOR)/$(OTRAS9) $(SERVIDOR)/$(OTRAS12) $(CXXFLAGS) -o $(SERVIDOR)/servidor
+	$(SERVIDOR)/$(OTRAS1) $(SERVIDOR)/$(OTRAS4) $(SERVIDOR)/$(OTRAS6) $(SERVIDOR)/$(OTRAS7) $(SERVIDOR)/$(OTRAS8) $(SERVIDOR)/$(OTRAS9) $(SERVIDOR)/$(OTRAS12) $(SERVIDOR)/$(OTRAS13) $(SERVIDOR)/$(OTRAS14) $(CXXFLAGS) -o $(SERVIDOR)/servidor
 
 clean:
 	rm -f $(CLIENTE)/cliente $(SERVIDOR)/servidor

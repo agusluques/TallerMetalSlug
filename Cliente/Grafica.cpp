@@ -11,6 +11,8 @@ Grafica::Grafica() {
 	fondo2 = NULL;
 	fondo3 = NULL;
 
+	soldadosTexture = NULL;
+
 	windowARenderizar = NULL;
 	window = NULL;
 
@@ -60,15 +62,18 @@ void Grafica::close() {
 	SDL_DestroyTexture(spriteFondo1);
 	SDL_DestroyTexture(spriteFondo2);
 	SDL_DestroyTexture(spriteFondo3);
+	SDL_DestroyTexture(soldadosTexture);
 	spriteFondo1 = NULL;
 	spriteFondo2 = NULL;
 	spriteFondo3 = NULL;
+	soldadosTexture = NULL;
 
 	fondo1 = NULL;
 	fondo2 = NULL;
 	fondo3 = NULL;
 
 	listaDibujable.clear();
+	listaDibujableEnemigos.clear();
 
 	anchoVentana = 0;
 	altoVentana = 0;
@@ -106,15 +111,34 @@ void Grafica::setSurface(SDL_Surface* surface){
 	fondo3 = surface;
 }
 
-void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanzar, char flip){
-	/* usar avance de la lista */
-	LTexture aux = buscarDibujable(idObjeto);
-	aux.actualizar( x,  y, spx, spy, flip);
+void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanzar, char flip, int tipo){
+	//busco si esta en jugadores
+	if(!actualizarDibujable(idObjeto,x,y,spx,spy,flip)){
+		//no esta en jugadores lo busco en enemigos
+		if(!actualizarDibujableEnemigos(idObjeto,x,y,spx,spy,flip)){
+			//no lo encontro en enemigos entonces lo creo xq es un nuevo enemigo..
+			LTextureEnemigo nuevo;
+			nuevo.setId(idObjeto);
+			nuevo.setX(x);
+			nuevo.setY(y);
+			nuevo.setSpX(spx);
+			nuevo.setSpY(spy);
+			nuevo.setFlip(flip);
+			nuevo.tipo = tipo;
+			nuevo.inicializarTexture(window, "soldado.png"); //pasar nombre como parametro
 
-	//if (avanzar)
-	//	this->avanzarCamara(x);
+			listaDibujableEnemigos.push_back(nuevo);
+		}
+	}
+}
 
-	actualizarDibujable(aux);
+void Grafica::quitarEnemigo(int idObjeto){
+	for (list<LTextureEnemigo>::iterator it = listaDibujableEnemigos.begin(); it != listaDibujableEnemigos.end(); ++it) {
+		if(it->id == idObjeto){
+			it = listaDibujableEnemigos.erase(it);
+			it--;
+		}
+	}
 }
 
 void Grafica::agregarBonus(int id, int x, int y, string sprite){
@@ -184,8 +208,12 @@ void Grafica::mostrarDibujables(){
 	SDL_RenderCopy (window, spriteFondo2, &camera2, NULL);
 	SDL_RenderCopy (window, spriteFondo3, &camera3, NULL);
 
+	for (list<LTextureEnemigo>::iterator it = listaDibujableEnemigos.begin(); it != listaDibujableEnemigos.end(); ++it) {
+		it->render(window, soldadosTexture, xCamara, altoVentana/10);
+	}
+
 	for(list<TextureBalas>::iterator j = listaDibujableBalas.begin(); j!= listaDibujableBalas.end(); ++j){
-			(*j).render(window,(*j).texture, xCamara, altoVentana/48);
+		(*j).render(window,(*j).texture, xCamara, altoVentana/48);
 	}
 
 	for (list<TextureBonus>::iterator it = listaDibujableBonus.begin(); it != listaDibujableBonus.end(); ++it)
@@ -195,7 +223,6 @@ void Grafica::mostrarDibujables(){
 	for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
 		(*i).render(window,(*i).texture, xCamara, altoVentana/12);
 	}
-
 
 	list<LTexture>::iterator i = listaDibujable.begin();
 	advance(i,numeroCliente - 1);
@@ -237,6 +264,32 @@ void Grafica::actualizarDibujable(LTexture nuevo) {
 			memcpy(&(*it),&nuevo,sizeof(LTexture));
 		}
 	}
+}
+
+bool Grafica::actualizarDibujable(int idObjeto,int x,int y, int spx, int spy, char flip){
+	bool actualizo = false;
+
+	for (list<LTexture>::iterator it = listaDibujable.begin(); it != listaDibujable.end(); ++it) {
+		if ( it->getId() == idObjeto ){
+			it->actualizar( x, y, spx, spy, flip);
+			actualizo = true;
+		}
+	}
+
+	return actualizo;
+}
+
+bool Grafica::actualizarDibujableEnemigos(int idObjeto,int x,int y, int spx, int spy, char flip){
+	bool actualizo = false;
+
+	for (list<LTextureEnemigo>::iterator it = listaDibujableEnemigos.begin(); it != listaDibujableEnemigos.end(); ++it) {
+		if ( it->getId() == idObjeto ){
+			it->actualizar( x, y, spx, spy, flip);
+			actualizo = true;
+		}
+	}
+
+	return actualizo;
 }
 
 void Grafica::borrarDibujable(int id) {
@@ -339,6 +392,9 @@ bool Grafica::inicializarFondo(char *path1, char* path2, char* path3){
 	camera3.w = ((anchoVentana*270)/altoVentana);
 	camera3.h = 270;
 
+	SDL_Surface* loadedSurface = IMG_Load("soldado.png");
+	soldadosTexture = SDL_CreateTextureFromSurface( window, loadedSurface );
+	SDL_FreeSurface(loadedSurface);
 
 	return success;
 }
