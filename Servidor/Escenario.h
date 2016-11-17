@@ -30,6 +30,7 @@ public:
 	void crearPlataformas();
 	bool verificarPlataforma(int spriteX, int spriteY);
 	bool salirPlataforma (int spriteX, int spriteY);
+	bool colisionPlataforma (int cordX, int cordY);
 	virtual ~Escenario();
 };
 

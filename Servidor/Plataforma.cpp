@@ -36,6 +36,16 @@ void Plataforma::setLong(int longitud){
 
 }
 
+void Plataforma::setSuelo( int cordY){
+
+	this->suelo = cordY;
+}
+
+int Plataforma::getSuelo (){
+
+	return suelo;
+}
+
 int Plataforma::getId(){
 
 	return id;

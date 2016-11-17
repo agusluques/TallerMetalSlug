@@ -20,6 +20,7 @@ public:
 	int x;
 	int y;
 	int longitud;
+	int suelo;
 
 
 	Plataforma();
@@ -27,6 +28,8 @@ public:
 	int getX();
 	int getY();
 	int getLong();
+	int getSuelo();
+	void setSuelo(int cordY);
 	void setId(int id);
 	void setX(int x);
 	void setY(int y);

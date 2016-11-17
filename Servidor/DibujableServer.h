@@ -58,6 +58,7 @@ public:
 	bool mover(int camaraX);
 	void volverAlPrincipio();
 	void disparar();
+	void choca();
 
 	int velocidadXJugador();
 

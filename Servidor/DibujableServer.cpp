@@ -76,6 +76,9 @@ void DibujableServer::saltar(){
 		spX = 0;
 
 		estaEnElPiso = false;
+ 	    if (escenario.colisionPlataforma(this->x,this->y) && !estaEnPlataforma){
+            this->choca();
+ 	   }
 	}
 }
 
@@ -139,6 +142,11 @@ void DibujableServer::quieto(){
 
 }
 
+void DibujableServer::choca(){
+
+	mVelY = -18;
+}
+
 bool DibujableServer::mover(int xCamara){
 	bool meMovi = false;
 
@@ -171,6 +179,7 @@ bool DibujableServer::mover(int xCamara){
 		   spX = 0;
 		   estaEnPlataforma = true;
        }
+
 	}
 
 	//una vez arriba de la plataforma, verifico sino me sali
