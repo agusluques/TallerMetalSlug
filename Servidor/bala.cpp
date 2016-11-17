@@ -1,14 +1,24 @@
 #include "bala.h"
 
-bala::bala(int xPos, int yPos, int usr, bool dir, int id, int destinatario){
+bala::bala(int xPos, int yPos, int usr, bool dir, int id, int destinatario, int tipoDisparo){
 	this->id = id;
 	this->xPos = xPos;
 	this->yPos = yPos;
-	this->xVel = 30;
-	this->yVel = 0;
+	this->tipoDisparo = tipoDisparo;
+	if(tipoDisparo == 0){
+		this->xVel = 30;
+		this->yVel = 0;
+	} else if(tipoDisparo == 1){
+		this->xVel = 30;
+		this->yVel = 30;
+	} else if(tipoDisparo == 2){
+		this->xVel = 0;
+		this->yVel = 30;
+	}
 	this->usr = usr;
 	this->direccion = dir;
 	this->destinatario = destinatario;
+
 }
 
 int bala::getPosX(){
@@ -69,6 +79,14 @@ bool bala::getDireccion(){
 
 void bala::setDireccion(bool dir){
 	this->direccion = dir;
+}
+
+int bala::getTipoDisparo(){
+	return this->tipoDisparo;
+}
+
+void bala::setTipoDisparo(int tipo){
+	this->tipoDisparo = tipo;
 }
 
 bala::~bala(){}

@@ -24,6 +24,8 @@ TextureBalas::~TextureBalas() {
 void TextureBalas::render(SDL_Renderer *window, SDL_Texture *mTexture, int cameraX, int escala){
 	SDL_Rect drawingRect;
 	drawingRect.x = xcord - cameraX;
+	//cout << "ycord: " << ycord << endl;
+	drawingRect.y = ycord;
 	if (drawingRect.x < 0) drawingRect.x = 0;
 	//cout << "POS X CAMARA: " << camera->x << endl;
 	//cout << "POS X CORD: " << xcord << endl;

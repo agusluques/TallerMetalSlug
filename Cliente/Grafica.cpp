@@ -155,7 +155,8 @@ void Grafica::agregarBala(int x, int y, int cont, bool dirBala){
 	if(listaDibujableBalas.empty()){
 		TextureBalas nuevo;
 		nuevo.setX(x);
-		nuevo.setY(y + 30);
+		cout << "YYYY: " << y << endl;
+		nuevo.setY(y);
 		nuevo.setTipoArma(2);
 		nuevo.setId(cont);
 		if(dirBala == true){
@@ -173,14 +174,21 @@ void Grafica::agregarBala(int x, int y, int cont, bool dirBala){
 			if((*j).id == cont){
 				encontrado = true;
 				(*j).xcord = x;
+				(*j).ycord = y;
 			}
 		}
 		if(!encontrado){
 			TextureBalas nuevo;
 			nuevo.setX(x);
-			nuevo.setY(y + 30);
+			nuevo.setY(y);
+			//cout << "YYYY: " << y << endl;
 			nuevo.setTipoArma(2);
 			nuevo.setId(cont);
+			if(dirBala == true){
+				nuevo.setFlip('D');
+			} else {
+				nuevo.setFlip('I'); 
+			}
 			string pathBalas = "img/balas/balas.png";
 			nuevo.inicializarTexture(window, &pathBalas[0]);
 

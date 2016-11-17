@@ -12,9 +12,10 @@ private:
 	int usr;
 	bool direccion; //TRUE = derecha y FALSE = izquierda
 	int destinatario;
+	int tipoDisparo;
 
 public:
-	bala(int xPos, int yPos, int usr, bool dir, int id, int destinatario);
+	bala(int xPos, int yPos, int usr, bool dir, int id, int destinatario, int tipoDisparo);
 	int getPosX();
 	int getPosY();
 	float getVelX();
@@ -22,6 +23,8 @@ public:
 	int getUsr();
 	int getId();
 	int getDestinatario();
+	int getTipoDisparo();
+	void setTipoDisparo(int tipo);
 	void setDestinatario(int usrDestino);
 	void setPosX(int x);
 	void setPosY(int y);

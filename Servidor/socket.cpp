@@ -555,20 +555,28 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				int numClienteBala = (*j).getDestinatario();
 				if(numClienteBala == numeroCliente){
 					int xBala = (*j).getPosX();
+					int yBala = (*j).getPosY();
 					int xVelBala = (*j).getVelX();
+					int yVelBala = (*j).getVelY();
 					bool dirBala = (*j).getDireccion();
 					if(dirBala == true){
 						xBala += xVelBala;
 					} else {
 						xBala -= xVelBala;
 					}
-					(*j).setPosX(xBala);
+					yBala -= yVelBala;
 
-					int yBala = (*j).getPosY();
+					//cout << "X BALA: " << xBala << endl;
+					//cout << "Y BALA: " << yBala << endl;
+					//cout << "Vel X BALA: " << xVelBala << endl;
+					//cout << "Vel Y BALA: " << yVelBala << endl;
+
+					(*j).setPosX(xBala);
+					(*j).setPosY(yBala);
 
 					int borro;
 					int cont = (*j).getId();
-					if((xBala < camaraX) || (xBala > camaraX + ANCHO_VENTANA)){ //Agregar || (colisiona)
+					if((xBala < camaraX) || (xBala > camaraX + ANCHO_VENTANA) || (yBala < 0)){ //Agregar || (colisiona)
 						j = listaBalas.erase(j);
 						j--;
 						borro = 1;
@@ -1018,15 +1026,19 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 		case 'd':
 		{
+			int tipoDisparo;
+			recibirMensaje(newsockfd, &tipoDisparo, sizeof(int));
+			//cout << "Tipo Disparo" << tipoDisparo << endl;
 			int a = pthread_mutex_trylock(&mutexListaDibujables);
 
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
+			it->disparar();
 			int x = it->getX();
 			int y = it->getY();
 			int usr = it->getId();
 			char flip = it->flip;
-			it->disparar();
+
 			enviarAConectados(numeroCliente, x, y, 6, 0, flip, false,0);
 
 			pthread_mutex_unlock (&mutexListaDibujables);
@@ -1044,7 +1056,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				int a = pthread_mutex_trylock(&mutexListaUsuarios);
 				if((*it).estaConectado()){
 					int b = pthread_mutex_trylock(&mutexListaBalas);
-					bala nuevaBala(x, y, usr, dir, contadorBalas, (*it).numCliente());
+					bala nuevaBala(x, y, usr, dir, contadorBalas, (*it).numCliente(), tipoDisparo);
 					listaBalas.push_back(nuevaBala);
 					pthread_mutex_unlock (&mutexListaBalas);
 				}

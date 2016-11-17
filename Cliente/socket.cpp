@@ -94,9 +94,9 @@ bool mySocket::enviarMensaje(void* mensaje, int tamanioMensaje){
 	int n = write(sockfd, mensaje, tamanioMensaje);
 	if(n < 0) errorSocket = true;
 
-	char* tmp = (char*)mensaje;
+	//char* tmp = (char*)mensaje;
 	//int* tmp = (int*)mensaje;
-	cout << "ENVIA: " << (*tmp) << endl;
+	//cout << "ENVIA: " << (*tmp) << endl;
 
 	return errorSocket;
 }
@@ -167,7 +167,7 @@ bool mySocket::recibirMensaje(){
 			corte = 0;
 			break;
 		}
-		cout << "Tipo de mensaje: " << tipoMensaje << endl;
+		//cout << "Tipo de mensaje: " << tipoMensaje << endl;
 
 		switch(tipoMensaje){
 		case 1:{
@@ -243,6 +243,7 @@ bool mySocket::recibirMensaje(){
 				error = recibirMensaje(&y, sizeof(int));
 				error = recibirMensaje(&cont, sizeof(int));
 				error = recibirMensaje(&dirBala, sizeof(bool));
+				//cout << "Y BALA CLIENTE: " << y << endl;
 
 				grafica.agregarBala(x, y, cont, dirBala);
 			} else {
@@ -494,7 +495,21 @@ bool mySocket::iniciarGrafica(){
 			//grafica.close();
 			quit = true;
 		}
-		else if (keys[SDL_GetScancodeFromKey(SDLK_UP)]){
+		else if ((keys[SDL_GetScancodeFromKey(SDLK_UP)]) && ((keys[SDL_GetScancodeFromKey(SDLK_RIGHT)]) || (keys[SDL_GetScancodeFromKey(SDLK_LEFT)])) &&  (keys[SDL_GetScancodeFromKey(SDLK_d)])){
+			//cout << "ARRIBA, DERECHA y DISPARO o IZQUIERDA ..." << endl;
+			strcpy(&codigo,"d");
+			enviarMensaje(&codigo, sizeof(char));
+			int tipoDisparo = 1;
+			enviarMensaje(&tipoDisparo, sizeof(int));
+		}
+		else if((keys[SDL_GetScancodeFromKey(SDLK_UP)]) && (keys[SDL_GetScancodeFromKey(SDLK_d)])){
+			//cout << "ARRIBA y DISPARO" << endl;
+			strcpy(&codigo,"d");
+			enviarMensaje(&codigo, sizeof(char));
+			int tipoDisparo = 2;
+			enviarMensaje(&tipoDisparo, sizeof(int));
+		}
+		else if (keys[SDL_GetScancodeFromKey(SDLK_SPACE)]){
 			strcpy(&codigo,"U");
 			enviarMensaje(&codigo, sizeof(char));
 			quieto = false;
@@ -522,6 +537,8 @@ bool mySocket::iniciarGrafica(){
 		else if (keys[SDL_GetScancodeFromKey(SDLK_d)]){
 			strcpy(&codigo,"d");
 			enviarMensaje(&codigo, sizeof(char));
+			int tipoDisparo = 0;
+			enviarMensaje(&tipoDisparo, sizeof(int));
 		}
 		else if(!quieto){
 			strcpy(&codigo,"S");
