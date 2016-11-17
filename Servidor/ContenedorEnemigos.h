@@ -6,12 +6,14 @@
 
 class ContenedorEnemigos {
 	private:
-		list<DibujableServerEnemigo> listaEnemigos;
+		//list<DibujableServerEnemigo> listaEnemigos;
 		int ultimoId;
 	public:
+		list<DibujableServerEnemigo> listaEnemigos;
 		ContenedorEnemigos();
 		void nuevoEnemigo(int posX, int posY, int tipoEnemigo);
 		void buscarActivos(int camaraX, list<DibujableServerEnemigo> *listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja);
+		bool detectarColision(int camaraX, list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, int xBala, int yBala);
 		virtual ~ContenedorEnemigos();
 };
 

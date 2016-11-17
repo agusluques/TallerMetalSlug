@@ -551,11 +551,15 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			char nombre[50];
 			buscarNombreUsuario(nombre, numeroCliente);
 
+			int xBala, yBala, cont, borro;
+
+			int b = pthread_mutex_trylock(&mutexListaBalas);
+
 			for(list<bala>::iterator j = listaBalas.begin(); j != listaBalas.end(); ++j){
 				int numClienteBala = (*j).getDestinatario();
 				if(numClienteBala == numeroCliente){
-					int xBala = (*j).getPosX();
-					int yBala = (*j).getPosY();
+					xBala = (*j).getPosX();
+					yBala = (*j).getPosY();
 					int xVelBala = (*j).getVelX();
 					int yVelBala = (*j).getVelY();
 					bool dirBala = (*j).getDireccion();
@@ -575,8 +579,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					(*j).setPosX(xBala);
 					(*j).setPosY(yBala);
 
-					int borro;
-					int cont = (*j).getId();
+					cont = (*j).getId();
 					if((xBala < camaraX) || (xBala > camaraX + ANCHO_VENTANA) || (yBala < 0)){ //Agregar || (colisiona)
 						j = listaBalas.erase(j);
 						j--;
@@ -602,6 +605,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					}
 				}
 			}
+			pthread_mutex_unlock (&mutexListaBalas);
 
 			for (list<mensajeClass>::iterator i = listaDeMensajes.begin(); i != listaDeMensajes.end(); ++i) {
 				if ((*i).nombreDestinatario().compare(nombre) == 0 ){
@@ -678,10 +682,17 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosActivos.begin(); itEnemigos != listaEnemigosActivos.end(); ++itEnemigos) {
 				enviarAConectados(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, true, itEnemigos->tipoEnemigo);
 			}
+
+			if(contenedorEnemigos.detectarColision(camaraX,&listaEnemigosActivos, &listaEnemigosDeBaja, xBala, yBala)){
+					// FALTARIA ELIMINAR LAS BALAS ACA!
+			}
+
 			for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosDeBaja.begin(); itEnemigos != listaEnemigosDeBaja.end(); ++itEnemigos) {
 				quitarEnemigo(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, false);
 			}
 			//se puede hacer lo mismo con los tiros
+
+
 
 			break;
 		}

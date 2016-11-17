@@ -53,5 +53,26 @@ void ContenedorEnemigos::buscarActivos(int camaraX, list<DibujableServerEnemigo>
 	}
 }
 
+bool ContenedorEnemigos::detectarColision(int camaraX, list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, int xBala, int yBala){
+	bool huboColision = false;
+	for(list<DibujableServerEnemigo>::iterator it = listaEnemigos.begin(); it != listaEnemigos.end(); ++it){
+		if(it->estaVisible(camaraX)){
+			cout << "X Enemigo: " << it->getX() << endl;
+			cout << "Y Enemigo: " << it->getY() << endl;
+			cout << "X Bala: " << xBala << endl;
+			cout << "Y Bala: " << yBala << endl;
+			if(((it->getX() - xBala) <= 10) && (it->getY() == yBala)){
+				cout << "COLISIOOOOOOOOOOOOOOOOOOOOOON!" << endl;
+				listaEnemigosDeBaja->push_back((*it));
+				it = listaEnemigosActivos->erase(it);
+				it--;
+				huboColision = true;
+			}
+		}
+	}
+	return huboColision;
+}
+		
+
 ContenedorEnemigos::~ContenedorEnemigos() {
 }
