@@ -235,7 +235,7 @@ bool mySocket::recibirMensaje(){
 		}
 
 		case 6: {
-			int x, y, cont, borro;
+			int x, y, cont, borro, tipoDisp;
 			bool dirBala;
 			error = recibirMensaje(&borro, sizeof(int));
 			if(borro == 0){
@@ -243,9 +243,10 @@ bool mySocket::recibirMensaje(){
 				error = recibirMensaje(&y, sizeof(int));
 				error = recibirMensaje(&cont, sizeof(int));
 				error = recibirMensaje(&dirBala, sizeof(bool));
+				error = recibirMensaje(&tipoDisp, sizeof(int));
 				//cout << "Y BALA CLIENTE: " << y << endl;
 
-				grafica.agregarBala(x, y, cont, dirBala);
+				grafica.agregarBala(x, y, cont, dirBala, tipoDisp);
 			} else {
 				error = recibirMensaje(&cont, sizeof(int));
 				grafica.borrarBala(cont);
@@ -509,6 +510,12 @@ bool mySocket::iniciarGrafica(){
 			int tipoDisparo = 2;
 			enviarMensaje(&tipoDisparo, sizeof(int));
 		}
+		else if (keys[SDL_GetScancodeFromKey(SDLK_d)]){
+			strcpy(&codigo,"d");
+			enviarMensaje(&codigo, sizeof(char));
+			int tipoDisparo = 0;
+			enviarMensaje(&tipoDisparo, sizeof(int));
+		}
 		else if (keys[SDL_GetScancodeFromKey(SDLK_SPACE)]){
 			strcpy(&codigo,"U");
 			enviarMensaje(&codigo, sizeof(char));
@@ -533,12 +540,6 @@ bool mySocket::iniciarGrafica(){
 			returnIGrafica = false;
 			quit = true;
 			quieto = true;
-		}
-		else if (keys[SDL_GetScancodeFromKey(SDLK_d)]){
-			strcpy(&codigo,"d");
-			enviarMensaje(&codigo, sizeof(char));
-			int tipoDisparo = 0;
-			enviarMensaje(&tipoDisparo, sizeof(int));
 		}
 		else if(!quieto){
 			strcpy(&codigo,"S");

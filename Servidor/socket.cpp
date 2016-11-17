@@ -559,6 +559,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					int xVelBala = (*j).getVelX();
 					int yVelBala = (*j).getVelY();
 					bool dirBala = (*j).getDireccion();
+					int tipoDisp = (*j).getTipoDisparo();
 					if(dirBala == true){
 						xBala += xVelBala;
 					} else {
@@ -597,6 +598,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						enviarMensaje(newsockfd, &yBala, sizeof(int));
 						enviarMensaje(newsockfd, &cont, sizeof(int));
 						enviarMensaje(newsockfd, &dirBala, sizeof(bool));
+						enviarMensaje(newsockfd, &tipoDisp, sizeof(int));
 					}
 				}
 			}

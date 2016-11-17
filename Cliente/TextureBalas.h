@@ -13,6 +13,7 @@ class TextureBalas
 public:
 	int tipoArma;
 	int id;
+	int tipoDisp;
 
 	SDL_Rect arma[3];
 	
@@ -50,6 +51,8 @@ public:
 	int getTipoArma();
 	int posicionX();
 	int posicionY();
+	int getTipoDisparo();
+	void setTipoDisparo(int tipo);
 
 	void inicializarTexture(SDL_Renderer* window, char* text);
 	

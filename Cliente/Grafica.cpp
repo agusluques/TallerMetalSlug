@@ -150,15 +150,15 @@ void Grafica::agregarBonus(int id, int x, int y, string sprite){
 	listaDibujableBonus.push_back(nuevo);
 }
 
-void Grafica::agregarBala(int x, int y, int cont, bool dirBala){
+void Grafica::agregarBala(int x, int y, int cont, bool dirBala, int tipoDisp){
 	//Busco en la lista con el ID de bala si esta actualizo sino agrego
 	if(listaDibujableBalas.empty()){
 		TextureBalas nuevo;
 		nuevo.setX(x);
-		cout << "YYYY: " << y << endl;
 		nuevo.setY(y);
 		nuevo.setTipoArma(2);
 		nuevo.setId(cont);
+		nuevo.setTipoDisparo(tipoDisp);
 		if(dirBala == true){
 			nuevo.setFlip('D');
 		} else {
@@ -184,6 +184,7 @@ void Grafica::agregarBala(int x, int y, int cont, bool dirBala){
 			//cout << "YYYY: " << y << endl;
 			nuevo.setTipoArma(2);
 			nuevo.setId(cont);
+			nuevo.setTipoDisparo(tipoDisp);
 			if(dirBala == true){
 				nuevo.setFlip('D');
 			} else {

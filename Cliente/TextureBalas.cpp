@@ -7,6 +7,7 @@ TextureBalas::TextureBalas() {
 	ycord = 0;
 	spX = 0;
 	spY = 0;
+	tipoDisp = 0;
 
 	mTexture = NULL;
 	mWidth = 0;
@@ -38,7 +39,18 @@ void TextureBalas::render(SDL_Renderer *window, SDL_Texture *mTexture, int camer
 	drawingRect.w = arma[tipoArma].w + escala;
 	drawingRect.h = arma[tipoArma].h + escala;
 
-	SDL_RenderCopyEx( window, mTexture, &arma[tipoArma], &drawingRect, 0, NULL, flipType );
+	int angle;
+	if(tipoDisp == 0){
+		angle = 0;
+	} else if(tipoDisp == 2){
+		angle = 90;
+	} else if((tipoDisp == 1) && (flipType == 1)){
+		angle = 45;
+	} else {
+		angle = (360-45);
+	}
+
+	SDL_RenderCopyEx( window, mTexture, &arma[tipoArma], &drawingRect, angle, NULL, flipType );
 }
 
 void TextureBalas::actualizar(int x, int y, int spx, int spy, char flip){
@@ -112,4 +124,12 @@ void TextureBalas::free()
 		mWidth = 0;
 		mHeight = 0;
 	}
+}
+
+int TextureBalas::getTipoDisparo(){
+	return this->tipoDisp;
+}
+
+void TextureBalas::setTipoDisparo(int tipo){
+	this->tipoDisp = tipo;
 }
