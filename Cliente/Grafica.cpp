@@ -12,6 +12,7 @@ Grafica::Grafica() {
 	fondo3 = NULL;
 
 	soldadosTexture = NULL;
+	energiaTexture = NULL;
 
 	windowARenderizar = NULL;
 	window = NULL;
@@ -63,10 +64,12 @@ void Grafica::close() {
 	SDL_DestroyTexture(spriteFondo2);
 	SDL_DestroyTexture(spriteFondo3);
 	SDL_DestroyTexture(soldadosTexture);
+	SDL_DestroyTexture(energiaTexture);
 	spriteFondo1 = NULL;
 	spriteFondo2 = NULL;
 	spriteFondo3 = NULL;
 	soldadosTexture = NULL;
+	energiaTexture = NULL;
 
 	fondo1 = NULL;
 	fondo2 = NULL;
@@ -139,6 +142,20 @@ void Grafica::quitarEnemigo(int idObjeto){
 			it--;
 		}
 	}
+}
+
+void Grafica::agregarEnergia(int id, int x, int y, int spX, int spY, string imagen){
+	LTexture nuevo;
+	nuevo.setId(id);
+	nuevo.setX(x);
+	nuevo.setY(y);
+
+	char nombre[10];
+	strcpy(nombre, imagen.c_str());
+	nuevo.inicializarTexture(window, nombre);
+
+	listaDibujableEnergia.push_back(nuevo);
+
 }
 
 void Grafica::agregarBonus(int id, int x, int y, string sprite){
@@ -217,6 +234,10 @@ void Grafica::mostrarDibujables(){
 	SDL_RenderCopy (window, spriteFondo1, &camera1, NULL);
 	SDL_RenderCopy (window, spriteFondo2, &camera2, NULL);
 	SDL_RenderCopy (window, spriteFondo3, &camera3, NULL);
+
+	for (list<LTexture>::iterator it = listaDibujableEnergia.begin(); it != listaDibujableEnergia.end(); ++it) {
+		it->renderEnergia(window, energiaTexture, xCamara, altoVentana/20);
+	}
 
 	for (list<LTextureEnemigo>::iterator it = listaDibujableEnemigos.begin(); it != listaDibujableEnemigos.end(); ++it) {
 		it->render(window, soldadosTexture, xCamara, altoVentana/10);
@@ -401,6 +422,10 @@ bool Grafica::inicializarFondo(char *path1, char* path2, char* path3){
 	camera3.y = 0;
 	camera3.w = ((anchoVentana*270)/altoVentana);
 	camera3.h = 270;
+
+	SDL_Surface* loadedSurf = IMG_Load("1barra.png");
+	energiaTexture = SDL_CreateTextureFromSurface( window, loadedSurf );
+	SDL_FreeSurface(loadedSurf);
 
 	SDL_Surface* loadedSurface = IMG_Load("soldado.png");
 	soldadosTexture = SDL_CreateTextureFromSurface( window, loadedSurface );

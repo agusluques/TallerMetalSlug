@@ -39,8 +39,10 @@ private:
 	SDL_Texture *spriteFondo3;
 
 	SDL_Texture *soldadosTexture;
+	SDL_Texture *energiaTexture;
 
 	list<LTexture> listaDibujable;
+	list<LTexture> listaDibujableEnergia;
 	list<TextureBalas> listaDibujableBalas;
 	list<TextureBonus> listaDibujableBonus;
 	list<LTextureEnemigo> listaDibujableEnemigos;
@@ -78,6 +80,7 @@ public:
 
 	void actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanzar, char flip, int tipo);
 	void quitarEnemigo(int idObjeto);
+	void agregarEnergia (int id, int x, int y, int spX, int spY, string imagen);
 
 	void mostrarDibujables();
 	LTexture buscarDibujable(int id);

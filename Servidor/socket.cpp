@@ -25,6 +25,7 @@ list<int> listaFDClientes;
 list<Bonus> listaDeBonus;
 list<bala> listaBalas;
 list<DibujableServer> listaDibujables;
+list<DibujableServer> listaEnergias;
 list<FondoServer> listaFondos;
 int ANCHO_VENTANA;
 int ALTO_VENTANA;
@@ -236,6 +237,7 @@ void cargarBonus(char* xml){
 		listaDeBonus.push_back(b);
 	}
 }
+
 
 char* parseXMLPj(){
 	const char *cstr = archivoXml.c_str();
@@ -477,8 +479,20 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				nuevo.setY(ALTO_VENTANA - 100);
 				nuevo.setSpX (0);
 				nuevo.setSpY(1);
+
+				//creo dibujable energia
+				DibujableServer nuevo2;
+				nuevo2.setId(listaDeUsuarios.size());
+				//string energiaId = "1barra.png";
+				//nuevo2.setSpriteId(energiaId);
+				nuevo2.setX(40);
+				nuevo2.setY(80);
+				nuevo2.setSpX (0);
+				nuevo2.setSpY(0);
+
 				int b = pthread_mutex_trylock(&mutexListaDibujables);
 				listaDibujables.push_back(nuevo);
+				listaEnergias.push_back(nuevo2);
 				pthread_mutex_unlock (&mutexListaDibujables);
 
 				//AGREGO UN ENEMIGO PARA PROBAR AL PPIO
@@ -779,6 +793,28 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			enviarMensaje(newsockfd,&(*it).spY,sizeof(int));
 			enviarMensaje(newsockfd,&(*it).flip,sizeof(char));
 			pthread_mutex_unlock (&mutexListaDibujables);
+			break;
+		}
+
+		//informacion de barra de energia (sin mutex)
+		case 'a':{
+			int cant = listaEnergias.size();
+			enviarMensaje(newsockfd, &cant, sizeof(int));
+			for (list<DibujableServer>::iterator it = listaEnergias.begin(); it != listaEnergias.end(); ++it)
+			{
+				int id = (*it).getId();
+				int x = (*it).getX();
+				int y = (*it).getY();
+				int spX = (*it).getSpX();
+				int spY = (*it).getSpY();
+				//int tamaño spriteID
+				enviarMensaje(newsockfd, &id, sizeof(int));
+				enviarMensaje(newsockfd, &x, sizeof(int));
+				enviarMensaje(newsockfd, &y, sizeof(int));
+				enviarMensaje(newsockfd, &spX, sizeof(int));
+				enviarMensaje(newsockfd, &spY, sizeof(int));
+
+			}
 			break;
 		}
 

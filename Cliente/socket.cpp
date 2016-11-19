@@ -441,6 +441,24 @@ bool mySocket::iniciarGrafica(){
 
 	grafica.inicializarFondo(&resultado1[0], &resultado2[0],&resultado3[0] );
 
+	//pido informacion de las barras de energia
+	codigo = 'a';
+    enviarMensaje(&codigo,sizeof(char));
+    int cantida;
+    recibirMensaje(&cantida,sizeof(int));
+    for (int i = 0; i < cantida; i++){
+    	int id,x,y,spX,spY;
+		recibirMensaje(&id, sizeof(int));
+		recibirMensaje(&x, sizeof(int));
+		recibirMensaje(&y, sizeof(int));
+		recibirMensaje(&spX, sizeof(int));
+		recibirMensaje(&spY, sizeof(int));
+		string imagen = "img/1barra.png"; //modificar
+
+		grafica.agregarEnergia(id,x,y,spX,spY,imagen);
+
+    }
+
 	//pido informacion de los bonus
 	codigo = 'b';
 	enviarMensaje(&codigo, sizeof(char));

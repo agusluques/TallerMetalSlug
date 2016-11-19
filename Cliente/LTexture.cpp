@@ -38,6 +38,24 @@ void LTexture::render(SDL_Renderer *window, SDL_Texture *mTexture, int cameraX, 
 	SDL_RenderCopyEx( window, mTexture, &player[spX][spY], &drawingRect, 0, NULL, flipType );
 }
 
+void LTexture::renderEnergia(SDL_Renderer* window, SDL_Texture *mTexture, int x, int escala){
+
+	SDL_Rect rect1;
+	SDL_Rect rect2;
+
+	rect1.h = 220;
+	rect1.w = 800;
+	rect1.x = 0;
+	rect1.y = 0;
+
+	rect2.h = 50;
+	rect2.w = 140;
+	rect2.x = 0;
+	rect2.y = 0;
+
+	SDL_RenderCopy( window, mTexture, &rect1, &rect2 );
+}
+
 void LTexture::actualizar(int x, int y, int spx, int spy, char flip){
 	this->xcord = x;
 	this->ycord = y;
