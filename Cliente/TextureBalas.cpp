@@ -44,6 +44,7 @@ void TextureBalas::render(SDL_Renderer *window, SDL_Texture *mTexture, int camer
 		angle = 0;
 	} else if(tipoDisp == 2){
 		angle = 90;
+		flipType = SDL_FLIP_HORIZONTAL;
 	} else if((tipoDisp == 1) && (flipType == 1)){
 		angle = 45;
 	} else {
