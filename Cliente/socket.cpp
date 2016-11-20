@@ -447,15 +447,35 @@ bool mySocket::iniciarGrafica(){
     int cantida;
     recibirMensaje(&cantida,sizeof(int));
     for (int i = 0; i < cantida; i++){
-    	int id,x,y,spX,spY;
+    	int id,spY;
 		recibirMensaje(&id, sizeof(int));
-		recibirMensaje(&x, sizeof(int));
-		recibirMensaje(&y, sizeof(int));
-		recibirMensaje(&spX, sizeof(int));
 		recibirMensaje(&spY, sizeof(int));
+
+ /*
+		string prueb;
+		stringstream sstm;
+	    sstm << id ;
+		prueb = sstm.str();
+		string imagen;
+		imagen = "img/" + prueb + "barra.png";
+
+*/ //manera 1
+
+		/*
+		string numero ="";
+		string imagen;
+
+		numero = static_cast<ostringstream*>(&(ostringstream() << id))->str();
+
+
+		imagen = "img/" + numero + "barra.png";
+
+        cout << imagen << endl;
+        */
+
 		string imagen = "img/1barra.png"; //modificar
 
-		grafica.agregarEnergia(id,x,y,spX,spY,imagen);
+		grafica.agregarEnergia(id,spY,imagen);
 
     }
 

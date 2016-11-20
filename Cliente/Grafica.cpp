@@ -1,4 +1,5 @@
 #include "Grafica.h"
+#include "TextureEnergia.h"
 #include <iostream>
 #include <cstring>
 #include <SDL2/SDL.h>
@@ -18,6 +19,7 @@ Grafica::Grafica() {
 	window = NULL;
 
 	count = 0;
+	posicionEnergia = -150;
 
 	cameraSet = 0;
 }
@@ -144,14 +146,15 @@ void Grafica::quitarEnemigo(int idObjeto){
 	}
 }
 
-void Grafica::agregarEnergia(int id, int x, int y, int spX, int spY, string imagen){
-	LTexture nuevo;
+void Grafica::agregarEnergia(int id, int spY, string imagen){
+	TextureEnergia nuevo;
+    posicionEnergia +=150;
 	nuevo.setId(id);
-	nuevo.setX(x);
-	nuevo.setY(y);
+	nuevo.setPos(posicionEnergia);
 
-	char nombre[10];
+	char nombre[14];
 	strcpy(nombre, imagen.c_str());
+
 	nuevo.inicializarTexture(window, nombre);
 
 	listaDibujableEnergia.push_back(nuevo);
@@ -235,8 +238,8 @@ void Grafica::mostrarDibujables(){
 	SDL_RenderCopy (window, spriteFondo2, &camera2, NULL);
 	SDL_RenderCopy (window, spriteFondo3, &camera3, NULL);
 
-	for (list<LTexture>::iterator it = listaDibujableEnergia.begin(); it != listaDibujableEnergia.end(); ++it) {
-		it->renderEnergia(window, energiaTexture, xCamara, altoVentana/20);
+	for (list<TextureEnergia>::iterator it = listaDibujableEnergia.begin(); it != listaDibujableEnergia.end(); ++it) {
+		it->renderEnergia(window, energiaTexture, altoVentana/20);
 	}
 
 	for (list<LTextureEnemigo>::iterator it = listaDibujableEnemigos.begin(); it != listaDibujableEnemigos.end(); ++it) {
@@ -422,10 +425,6 @@ bool Grafica::inicializarFondo(char *path1, char* path2, char* path3){
 	camera3.y = 0;
 	camera3.w = ((anchoVentana*270)/altoVentana);
 	camera3.h = 270;
-
-	SDL_Surface* loadedSurf = IMG_Load("1barra.png");
-	energiaTexture = SDL_CreateTextureFromSurface( window, loadedSurf );
-	SDL_FreeSurface(loadedSurf);
 
 	SDL_Surface* loadedSurface = IMG_Load("soldado.png");
 	soldadosTexture = SDL_CreateTextureFromSurface( window, loadedSurface );

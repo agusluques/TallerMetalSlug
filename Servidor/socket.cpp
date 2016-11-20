@@ -485,9 +485,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				nuevo2.setId(listaDeUsuarios.size());
 				//string energiaId = "1barra.png";
 				//nuevo2.setSpriteId(energiaId);
-				nuevo2.setX(40);
-				nuevo2.setY(80);
-				nuevo2.setSpX (0);
 				nuevo2.setSpY(0);
 
 				int b = pthread_mutex_trylock(&mutexListaDibujables);
@@ -803,15 +800,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			for (list<DibujableServer>::iterator it = listaEnergias.begin(); it != listaEnergias.end(); ++it)
 			{
 				int id = (*it).getId();
-				int x = (*it).getX();
-				int y = (*it).getY();
-				int spX = (*it).getSpX();
 				int spY = (*it).getSpY();
 				//int tamaño spriteID
 				enviarMensaje(newsockfd, &id, sizeof(int));
-				enviarMensaje(newsockfd, &x, sizeof(int));
-				enviarMensaje(newsockfd, &y, sizeof(int));
-				enviarMensaje(newsockfd, &spX, sizeof(int));
 				enviarMensaje(newsockfd, &spY, sizeof(int));
 
 			}

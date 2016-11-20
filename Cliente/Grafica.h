@@ -8,6 +8,7 @@
 #include "LTexture.h"
 #include "TextureBalas.h"
 #include "TextureBonus.h"
+#include "TextureEnergia.h"
 #include "LTextureEnemigo.h"
 #include <sstream>
 
@@ -42,7 +43,7 @@ private:
 	SDL_Texture *energiaTexture;
 
 	list<LTexture> listaDibujable;
-	list<LTexture> listaDibujableEnergia;
+	list<TextureEnergia> listaDibujableEnergia;
 	list<TextureBalas> listaDibujableBalas;
 	list<TextureBonus> listaDibujableBonus;
 	list<LTextureEnemigo> listaDibujableEnemigos;
@@ -57,6 +58,7 @@ private:
 	int altoVentana;
     int count;
     int cameraSet;
+    int posicionEnergia;
 
 public:
 	SDL_Rect camera1;
@@ -80,7 +82,7 @@ public:
 
 	void actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanzar, char flip, int tipo);
 	void quitarEnemigo(int idObjeto);
-	void agregarEnergia (int id, int x, int y, int spX, int spY, string imagen);
+	void agregarEnergia (int id, int spY, string imagen);
 
 	void mostrarDibujables();
 	LTexture buscarDibujable(int id);
