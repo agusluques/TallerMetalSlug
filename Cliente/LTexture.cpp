@@ -33,6 +33,12 @@ void LTexture::render(SDL_Renderer *window, SDL_Texture *mTexture, int cameraX, 
 
     //pasar escala x xml
 	drawingRect.w = player[spX][spY].w + escala;
+	if(player[spX][spY].w == 50){
+		drawingRect.w += 30;
+		if(flipType != SDL_FLIP_NONE){
+			drawingRect.x -= 50;
+		}
+	}
 	drawingRect.h = player[spX][spY].h + escala;
 
 	SDL_RenderCopyEx( window, mTexture, &player[spX][spY], &drawingRect, 0, NULL, flipType );
@@ -133,26 +139,24 @@ void LTexture::inicializarTexture(SDL_Renderer* window, char* text){
 	player[5][2].w=30; player[5][2].h=50;
 
 	//Disparando
-	player[6][0].x=0; player[6][0].y=208;
-	player[6][0].w=40; player[6][0].h=40;
-
-	/*
-	//Disparando
 	player[0][3].x=0; player[0][3].y=210;
 	player[0][3].w=50; player[0][3].h=40;
 
-	player[0][3].x=50; player[0][3].y=210;
-	player[0][3].w=50; player[0][3].h=40;
+	player[1][3].x=50; player[1][3].y=210;
+	player[1][3].w=50; player[1][3].h=40;
 
-	player[0][3].x=100; player[0][3].y=210;
-	player[0][3].w=50; player[0][3].h=40;
+	player[2][3].x=100; player[2][3].y=210;
+	player[2][3].w=50; player[2][3].h=40;
 
-	player[0][3].x=150; player[0][3].y=210;
-	player[0][3].w=50; player[0][3].h=40;
+	player[3][3].x=150; player[3][3].y=210;
+	player[3][3].w=50; player[3][3].h=40;
 
-	player[0][3].x=200; player[0][3].y=210;
-	player[0][3].w=50; player[0][3].h=40;
-	*/
+	player[4][3].x=200; player[4][3].y=210;
+	player[4][3].w=50; player[4][3].h=40;
+
+	player[5][3].x=250; player[5][3].y=210;
+	player[5][3].w=50; player[5][3].h=40;
+
 }
 
 void LTexture::free()

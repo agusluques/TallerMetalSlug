@@ -14,6 +14,8 @@ DibujableServer::DibujableServer() {
 	conectar();
 	basePlataforma = 0;
 
+	tipoDeArma = 0;
+
 	flip = 'D';
 }
 
@@ -84,12 +86,29 @@ void DibujableServer::saltar(){
 }
 
 bool DibujableServer::disparar(){
-	spX = 0;
-	spY = 3;
-
-	//estaDisparando = true;
 	//jugar con el tipo de arma...
-	return true;
+	bool rta = false;
+
+	switch(tipoDeArma){
+
+	case 0:
+		if(!estaDisparando){
+			spX = 0;
+			spY = 3;
+
+			spXaux = 0;
+			spYaux = 3;
+
+			estaDisparando = true;
+			rta = true;
+		}
+		break;
+
+	default:
+		break;
+	}
+
+	return rta;
 }
 
 int DibujableServer::velocidadXJugador(){
@@ -160,17 +179,24 @@ bool DibujableServer::mover(int xCamara){
 		mVelY += 3;
 	}
 
-	if(estaDisparando){
-		spX += 1;
-		if(spX > 6) {
-			spY = 0;
-			spX = 0;
-			estaDisparando = false;
-		}
-	}
-
 	if(mVelX != 0 || mVelY != 0 || estaDisparando){
 		meMovi = true;
+	}
+
+	if(estaDisparando) {
+		spXaux += 1;
+
+		if(mVelX == 0 && mVelY == 0){
+			spX = spXaux;
+			spY = spYaux;
+		}
+
+		if(spXaux > 5) {
+			estaDisparando = false;
+			cout << "DEJE DE DISPARAR" << endl;
+			spY = 1;
+			spX = 0;
+		}
 	}
 
 	if(y <= HMAX_SALTO){

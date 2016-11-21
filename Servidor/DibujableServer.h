@@ -25,8 +25,12 @@ public:
 	int y;
 	int spX;
 	int spY;
+	int spXaux;
+	int spYaux;
 	bool estaOnline;
 	bool estaDisparando;
+
+	int tipoDeArma;
 
 	Escenario escenario;
 
