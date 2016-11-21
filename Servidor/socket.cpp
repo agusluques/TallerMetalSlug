@@ -12,6 +12,7 @@
 #include "bala.h"
 #include "Bonus.h"
 #include "ContenedorEnemigos.h"
+#include "ContenedorBalas.h"
 #include "DibujableServerEnemigo.h"
 
 #define DEBUG 2
@@ -19,11 +20,8 @@
 using namespace rapidxml;
 using namespace std;
 
-int contadorBalas = 0;
-
 list<int> listaFDClientes;
 list<Bonus> listaDeBonus;
-list<bala> listaBalas;
 list<DibujableServer> listaDibujables;
 list<DibujableServer> listaEnergias;
 list<FondoServer> listaFondos;
@@ -42,20 +40,20 @@ int modoJuego = 1; //default individual multijugador
 int modoPrueba = 0; //default modo de prueba OFF
 
 int topeSalto = 20;
-
 bool avanzar;
 
 int camaraX = 0;
 int camaraSet = 0;
+bool jefePresente = false;
 
 ContenedorEnemigos contenedorEnemigos;
+ContenedorBalas contenedorBalas;
 
 //list<mensajeClass> listaDeMensajesAlCliente;
 pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutexListaUsuarios = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutexListaDibujables = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutexListaBalas = PTHREAD_MUTEX_INITIALIZER;
-
 
 void loggear(string usr, string destinatario, string mensaje){
 	ofstream archLog; //esta va en .hpp
@@ -238,7 +236,6 @@ void cargarBonus(char* xml){
 	}
 }
 
-
 char* parseXMLPj(){
 	const char *cstr = archivoXml.c_str();
 	file<> xmlFile(cstr);
@@ -323,6 +320,40 @@ void quitarEnemigo(int numeroCliente, int usrDest, int x, int y, int spx, int sp
 	}
 }
 
+void enviarBalasAConectados(int idBala, int x, int y, int direccion, int tipoBala){
+	for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+		if((*it).estaConectado()){
+			char nombreAutor[50];
+			char nombreDestino[50];
+			buscarNombreUsuario(nombreAutor, idBala);
+			buscarNombreUsuario(nombreDestino, (*it).numCliente());
+
+			mensajeClass mensajeObj(nombreAutor, nombreDestino, idBala, x, y, direccion, tipoBala, 'D', 6);
+
+			int a = pthread_mutex_trylock(&mutexLista);
+			listaDeMensajes.push_back(mensajeObj);
+			pthread_mutex_unlock (&mutexLista);
+		}
+	}
+}
+
+void quitarBalas(int idBala){
+	for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+		if((*it).estaConectado()){
+			char nombreAutor[50];
+			char nombreDestino[50];
+			buscarNombreUsuario(nombreAutor, idBala);
+			buscarNombreUsuario(nombreDestino, (*it).numCliente());
+
+			mensajeClass mensajeObj(nombreAutor, nombreDestino, idBala, 0, 0, 0, 0, 'D', 8);
+
+			int a = pthread_mutex_trylock(&mutexLista);
+			listaDeMensajes.push_back(mensajeObj);
+			pthread_mutex_unlock (&mutexLista);
+		}
+	}
+}
+
 void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 {
 	//char buffer[TAM_MAX];
@@ -376,8 +407,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				int a = pthread_mutex_trylock(&mutexListaUsuarios);
 				list<usuarioClass>::iterator it2 = listaDeUsuarios.begin();
 				advance(it2, numeroCliente-1);
-
-
 
 				//ver si conviene desconectar al usuario desde aca..
 				it2->desconectar();
@@ -493,16 +522,60 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				pthread_mutex_unlock (&mutexListaDibujables);
 
 				//AGREGO UN ENEMIGO PARA PROBAR AL PPIO
-				//camina solo
+				//NO VAN ACA SINO X CADA UNO Q INICIA SE CARGAN!!!!!!!!
+				//camina solo 3
+				//tira tiros 2
+				//ataque salto 1
+				//cagon 4
+
+				//HACER METODO contenedorEnemigos.cargarEnemigosNivel1();
+
+				contenedorEnemigos.nuevoEnemigo(750, ALTO_VENTANA - 100, 2);
 				contenedorEnemigos.nuevoEnemigo(800, ALTO_VENTANA - 100, 3);
-				//tira tiros
-				contenedorEnemigos.nuevoEnemigo(800, ALTO_VENTANA - 100, 2);
-				contenedorEnemigos.nuevoEnemigo(900, ALTO_VENTANA - 100, 2);
 				contenedorEnemigos.nuevoEnemigo(1000, ALTO_VENTANA - 100, 2);
-				//ataque salto
-				contenedorEnemigos.nuevoEnemigo(1200, ALTO_VENTANA - 100, 1);
-				//cagon
-				contenedorEnemigos.nuevoEnemigo(1500, ALTO_VENTANA - 100, 4);
+				contenedorEnemigos.nuevoEnemigo(1200, ALTO_VENTANA - 100, 3);
+				contenedorEnemigos.nuevoEnemigo(1400, ALTO_VENTANA - 100, 3);
+				contenedorEnemigos.nuevoEnemigo(1650, ALTO_VENTANA - 100, 2);
+				contenedorEnemigos.nuevoEnemigo(1800, ALTO_VENTANA - 100, 3);
+				contenedorEnemigos.nuevoEnemigo(1850, ALTO_VENTANA - 100, 3);
+				contenedorEnemigos.nuevoEnemigo(2000, ALTO_VENTANA - 100, 1);
+				contenedorEnemigos.nuevoEnemigo(2250, ALTO_VENTANA - 100, 4);
+				contenedorEnemigos.nuevoEnemigo(2500, ALTO_VENTANA - 100, 2);
+				contenedorEnemigos.nuevoEnemigo(2700, ALTO_VENTANA - 100, 1);
+				contenedorEnemigos.nuevoEnemigo(3000, ALTO_VENTANA - 100, 4);
+				contenedorEnemigos.nuevoEnemigo(3300, ALTO_VENTANA - 100, 1);
+				contenedorEnemigos.nuevoEnemigo(3700, ALTO_VENTANA - 100, 4);
+				contenedorEnemigos.nuevoEnemigo(4000, ALTO_VENTANA - 100, 2);
+				contenedorEnemigos.nuevoEnemigo(4050, ALTO_VENTANA - 100, 3);
+				contenedorEnemigos.nuevoEnemigo(4200, ALTO_VENTANA - 100, 2);
+				contenedorEnemigos.nuevoEnemigo(4400, ALTO_VENTANA - 100, 3);
+				contenedorEnemigos.nuevoEnemigo(4600, ALTO_VENTANA - 100, 3);
+				contenedorEnemigos.nuevoEnemigo(4650, ALTO_VENTANA - 100, 2);
+				contenedorEnemigos.nuevoEnemigo(4800, ALTO_VENTANA - 100, 3);
+				contenedorEnemigos.nuevoEnemigo(4950, ALTO_VENTANA - 100, 3);
+				contenedorEnemigos.nuevoEnemigo(5000, ALTO_VENTANA - 100, 1);
+				contenedorEnemigos.nuevoEnemigo(5250, ALTO_VENTANA - 100, 4);
+				contenedorEnemigos.nuevoEnemigo(5300, ALTO_VENTANA - 100, 2);
+				contenedorEnemigos.nuevoEnemigo(5400, ALTO_VENTANA - 100, 1);
+				contenedorEnemigos.nuevoEnemigo(5600, ALTO_VENTANA - 100, 4);
+				contenedorEnemigos.nuevoEnemigo(5800, ALTO_VENTANA - 100, 1);
+				contenedorEnemigos.nuevoEnemigo(6000, ALTO_VENTANA - 100, 4);
+				contenedorEnemigos.nuevoEnemigo(6200, ALTO_VENTANA - 100, 2);
+				contenedorEnemigos.nuevoEnemigo(6250, ALTO_VENTANA - 100, 3);
+				contenedorEnemigos.nuevoEnemigo(6400, ALTO_VENTANA - 100, 2);
+				contenedorEnemigos.nuevoEnemigo(6500, ALTO_VENTANA - 100, 3);
+				contenedorEnemigos.nuevoEnemigo(6700, ALTO_VENTANA - 100, 3);
+				contenedorEnemigos.nuevoEnemigo(6850, ALTO_VENTANA - 100, 2);
+				contenedorEnemigos.nuevoEnemigo(7000, ALTO_VENTANA - 100, 3);
+				contenedorEnemigos.nuevoEnemigo(7150, ALTO_VENTANA - 100, 3);
+				contenedorEnemigos.nuevoEnemigo(7200, ALTO_VENTANA - 100, 1);
+				contenedorEnemigos.nuevoEnemigo(7350, ALTO_VENTANA - 100, 4);
+				contenedorEnemigos.nuevoEnemigo(7400, ALTO_VENTANA - 100, 2);
+				contenedorEnemigos.nuevoEnemigo(7500, ALTO_VENTANA - 100, 1);
+				contenedorEnemigos.nuevoEnemigo(7600, ALTO_VENTANA - 100, 4);
+				contenedorEnemigos.nuevoEnemigo(7800, ALTO_VENTANA - 100, 1);
+				contenedorEnemigos.nuevoEnemigo(7900, ALTO_VENTANA - 100, 4);
+				contenedorEnemigos.nuevoEnemigo(8000, ALTO_VENTANA - 100, 2);
 
 			}else if(estabaDesconectado){
 				strcpy(mensaje,"Bienvenido nuevamente");
@@ -563,62 +636,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			char nombre[50];
 			buscarNombreUsuario(nombre, numeroCliente);
 
-			int xBala, yBala, cont, borro;
-
-			int b = pthread_mutex_trylock(&mutexListaBalas);
-
-			for(list<bala>::iterator j = listaBalas.begin(); j != listaBalas.end(); ++j){
-				int numClienteBala = (*j).getDestinatario();
-				if(numClienteBala == numeroCliente){
-					xBala = (*j).getPosX();
-					yBala = (*j).getPosY();
-					int xVelBala = (*j).getVelX();
-					int yVelBala = (*j).getVelY();
-					bool dirBala = (*j).getDireccion();
-					int tipoDisp = (*j).getTipoDisparo();
-					if(dirBala == true){
-						xBala += xVelBala;
-					} else {
-						xBala -= xVelBala;
-					}
-					yBala -= yVelBala;
-
-					//cout << "X BALA: " << xBala << endl;
-					//cout << "Y BALA: " << yBala << endl;
-					//cout << "Vel X BALA: " << xVelBala << endl;
-					//cout << "Vel Y BALA: " << yVelBala << endl;
-
-					(*j).setPosX(xBala);
-					(*j).setPosY(yBala);
-
-					cont = (*j).getId();
-					if((xBala < camaraX) || (xBala > camaraX + ANCHO_VENTANA) || (yBala < 0)){ //Agregar || (colisiona)
-						j = listaBalas.erase(j);
-						j--;
-						borro = 1;
-						int corte1 = 1;
-						enviarMensaje(newsockfd, &corte1, sizeof(int));
-						int tipoMensaje1 = 6;
-						enviarMensaje(newsockfd, &tipoMensaje1, sizeof(int));
-						enviarMensaje(newsockfd, &borro, sizeof(int));
-						enviarMensaje(newsockfd, &cont, sizeof(int));
-					} else {
-						borro = 0;
-						int corte2 = 1;
-						enviarMensaje(newsockfd, &corte2, sizeof(int));
-						int tipoMensaje2 = 6;
-						enviarMensaje(newsockfd, &tipoMensaje2, sizeof(int));
-						enviarMensaje(newsockfd, &borro, sizeof(int));
-						enviarMensaje(newsockfd, &xBala, sizeof(int));
-						enviarMensaje(newsockfd, &yBala, sizeof(int));
-						enviarMensaje(newsockfd, &cont, sizeof(int));
-						enviarMensaje(newsockfd, &dirBala, sizeof(bool));
-						enviarMensaje(newsockfd, &tipoDisp, sizeof(int));
-					}
-				}
-			}
-			pthread_mutex_unlock (&mutexListaBalas);
-
 			for (list<mensajeClass>::iterator i = listaDeMensajes.begin(); i != listaDeMensajes.end(); ++i) {
 				if ((*i).nombreDestinatario().compare(nombre) == 0 ){
 					int corte = 1;
@@ -652,7 +669,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						break;
 					}
 					case 2:{
-						//envio de bajas
+						//envio de bajas de enemigos
 						int idObjeto = (*i).getidObjeto();
 						enviarMensaje(newsockfd, &idObjeto, sizeof(int));
 
@@ -670,6 +687,30 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 						break;
 					}
+					case 6:{
+						//envio de balas
+						int xCord = (*i).getX();
+						int yCord = (*i).getY();
+						int direccion = (*i).getSpX();
+						int tipo = (*i).getSpY();
+						int idObjeto = (*i).getidObjeto();
+
+						enviarMensaje(newsockfd, &idObjeto, sizeof(int));
+						enviarMensaje(newsockfd, &xCord, sizeof(int));
+						enviarMensaje(newsockfd, &yCord, sizeof(int));
+						enviarMensaje(newsockfd, &direccion, sizeof(int));
+						enviarMensaje(newsockfd, &tipo, sizeof(int));
+
+						break;
+					}
+					case 8:{
+						//envio bajas de balas
+						int idObjeto = (*i).getidObjeto();
+						enviarMensaje(newsockfd, &idObjeto, sizeof(int));
+
+						break;
+					}
+
 					default:
 						break;
 
@@ -682,29 +723,38 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			int tamanioMensaje = 0;
 			enviarMensaje(newsockfd, &tamanioMensaje, sizeof(int));
 
-			/*
-			 * CONTENEDOR DE ENEMIGOS..
-			 * SI ESTA SIENDO VISTO X LA CAMARA SE DIBUJAN Y ACTUAN
-			 * DEVUELVE UNA LISTA DE DIBUJABLES
-			 */
+			//BUSCO ENEMIGOS
 			list<DibujableServerEnemigo> listaEnemigosActivos;
 			list<DibujableServerEnemigo> listaEnemigosDeBaja;
-			contenedorEnemigos.buscarActivos(camaraX,&listaEnemigosActivos, &listaEnemigosDeBaja);
+			contenedorEnemigos.buscarActivos(camaraX,&listaEnemigosActivos, &listaEnemigosDeBaja, &contenedorBalas);
+
+			//BUSCO BALAS
+			list<bala> listaBalasActivas;
+			list<bala> listaBalasDeBaja;
+			contenedorBalas.buscarActivas(camaraX, &listaBalasActivas, &listaBalasDeBaja);
+
+			list<DibujableServerEnemigo> listaEnemigosDisparados;
+			contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados);
+			contenedorEnemigos.matarEnemigos(camaraX, listaEnemigosDisparados);
+
+			//detectarColisiones(&listaDeUsuarios, &listaEnemigosActivos, &listaEnemigosDeBaja);
+
+			for (list<bala>::iterator itBalas = listaBalasActivas.begin(); itBalas != listaBalasActivas.end(); ++itBalas) {
+				enviarBalasAConectados(itBalas->id,itBalas->x,itBalas->y,itBalas->direccionDisparo, itBalas->tipoBala);
+			}
+
+			for (list<bala>::iterator itBalas = listaBalasDeBaja.begin(); itBalas != listaBalasDeBaja.end(); ++itBalas) {
+				quitarBalas(itBalas->id);
+			}
 
 			for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosActivos.begin(); itEnemigos != listaEnemigosActivos.end(); ++itEnemigos) {
 				enviarAConectados(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, true, itEnemigos->tipoEnemigo);
-			}
-
-			if(contenedorEnemigos.detectarColision(camaraX,&listaEnemigosActivos, &listaEnemigosDeBaja, xBala, yBala)){
-					// FALTARIA ELIMINAR LAS BALAS ACA!
 			}
 
 			for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosDeBaja.begin(); itEnemigos != listaEnemigosDeBaja.end(); ++itEnemigos) {
 				quitarEnemigo(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, false);
 			}
 			//se puede hacer lo mismo con los tiros
-
-
 
 			break;
 		}
@@ -852,40 +902,46 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				VELOCIDAD_JUGADOR = it->velocidadXJugador();
 				enviarAConectados(numeroCliente, it->x, it->y, it->spX, it->spY, it->flip, avanzar,0);
 
-				int totalDesplazar, xMin, xMax;
-				xMin = 10000;
-
 				//CALCULO DE LA CAMARA
-				bool avanzarCamara = false;
-				for (list<DibujableServer>::iterator i = listaDibujables.begin(); i != listaDibujables.end(); ++i) {
-					if(i->estaConectado()){
-						//si alguno supero la mitad de la pantalla avanzo camara
-						if(i->x >= camaraX + (ANCHO_VENTANA/2)-80) avanzarCamara = true;
-						if(i->x < xMin) xMin = i->x;
-					}
-				}
+				if(!jefePresente){
+					int xMin, xMax;
+					xMin = 10000;
 
-				pthread_mutex_unlock (&mutexListaDibujables); //esto capaz tarde mucho COMENTARIO
-
-				if (camaraX >= 8075)  //quitar para hacer escenario infinito
-					avanzarCamara = false;
-
-				if(avanzarCamara){
-					if(xMin > camaraX){
-						camaraX += VELOCIDAD_JUGADOR;
-					}
-				}
-				int a = pthread_mutex_trylock(&mutexListaDibujables);
-				//itero desconectados
-				for (list<DibujableServer>::iterator it2 = listaDibujables.begin(); it2 != listaDibujables.end(); ++it2) {
-					if (!it2->estaConectado()){
-						if (it2->x <= camaraX){
-							it2->x = camaraX;//adelanto a la momia
-							enviarAConectados(it2->id , it2->x, it2->y, it2->spX, it2->spY, it2->flip, false,0);
+					bool avanzarCamara = false;
+					for (list<DibujableServer>::iterator i = listaDibujables.begin(); i != listaDibujables.end(); ++i) {
+						if(i->estaConectado()){
+							//si alguno supero la mitad de la pantalla avanzo camara
+							if(i->x >= camaraX + (ANCHO_VENTANA/2)-80) avanzarCamara = true;
+							if(i->x < xMin) xMin = i->x;
 						}
 					}
+
+					pthread_mutex_unlock (&mutexListaDibujables); //esto capaz tarde mucho COMENTARIO
+
+					if (camaraX >= 8075){  //quitar para hacer escenario infinito
+						avanzarCamara = false;
+						jefePresente = true;
+						contenedorEnemigos.iniciarJefe(camaraX);
+					}
+
+					if(avanzarCamara){
+						if(xMin > camaraX){
+							camaraX += VELOCIDAD_JUGADOR;
+						}
+					}
+
+					int a = pthread_mutex_trylock(&mutexListaDibujables);
+					//itero desconectados
+					for (list<DibujableServer>::iterator it2 = listaDibujables.begin(); it2 != listaDibujables.end(); ++it2) {
+						if (!it2->estaConectado()){
+							if (it2->x <= camaraX){
+								it2->x = camaraX;//adelanto a la momia
+								enviarAConectados(it2->id , it2->x, it2->y, it2->spX, it2->spY, it2->flip, false,0);
+							}
+						}
+					}
+					pthread_mutex_unlock (&mutexListaDibujables);
 				}
-				pthread_mutex_unlock (&mutexListaDibujables);
 			}else pthread_mutex_unlock (&mutexListaDibujables); //esto capaz tarde mucho COMENTARIO
 
 			break;
@@ -1065,46 +1121,29 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 
-		case 'd':
-		{
-			int tipoDisparo;
-			recibirMensaje(newsockfd, &tipoDisparo, sizeof(int));
-			//cout << "Tipo Disparo" << tipoDisparo << endl;
-			int a = pthread_mutex_trylock(&mutexListaDibujables);
+		case 'd': {
+			int direccionDisparo;
+			recibirMensaje(newsockfd, &direccionDisparo, sizeof(int));
 
+			//busco quien la disparo..
+			int a = pthread_mutex_trylock(&mutexListaDibujables);
 			list<DibujableServer>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
-			it->disparar();
-			int x = it->getX();
-			int y = it->getY();
-			int usr = it->getId();
-			char flip = it->flip;
+			if( it->disparar() ){
+				int x = it->getX();
+				int y = it->getY();
+				int usr = it->getId();
+				char flip = it->flip;
+				//int tipoDisparo = it->tipoDisparo();
+				pthread_mutex_unlock (&mutexListaDibujables);
 
-			enviarAConectados(numeroCliente, x, y, 6, 0, flip, false,0);
-
-			pthread_mutex_unlock (&mutexListaDibujables);
-
-			//cout << "USR: " << usr << "(" << x << ";" << y <<")" << " FLIP: " << flip << endl;
-
-			bool dir;
-			if(flip == 'D'){
-				dir = true;
-			} else {
-				dir = false;
-			}
-
-			for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
-				int a = pthread_mutex_trylock(&mutexListaUsuarios);
-				if((*it).estaConectado()){
-					int b = pthread_mutex_trylock(&mutexListaBalas);
-					bala nuevaBala(x, y, usr, dir, contadorBalas, (*it).numCliente(), tipoDisparo);
-					listaBalas.push_back(nuevaBala);
-					pthread_mutex_unlock (&mutexListaBalas);
+				if(direccionDisparo == -1){
+					if(flip == 'D') direccionDisparo = 0;
+					else direccionDisparo = 4;
 				}
-				pthread_mutex_unlock (&mutexListaUsuarios);
-			}
-			contadorBalas++;
 
+				contenedorBalas.nuevaBala(x+5, y+20, usr, direccionDisparo, 0); //pasar tipo de disparo..
+			}
 			break;
 		}
 

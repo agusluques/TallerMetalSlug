@@ -25,45 +25,21 @@ TextureBalas::~TextureBalas() {
 void TextureBalas::render(SDL_Renderer *window, SDL_Texture *mTexture, int cameraX, int escala){
 	SDL_Rect drawingRect;
 	drawingRect.x = xcord - cameraX;
-	//cout << "ycord: " << ycord << endl;
 	drawingRect.y = ycord;
+
 	if (drawingRect.x < 0) drawingRect.x = 0;
-	//cout << "POS X CAMARA: " << camera->x << endl;
-	//cout << "POS X CORD: " << xcord << endl;
-	//cout << "drawingRect.x: " << drawingRect.x << endl;
-	drawingRect.y = ycord;// - camera->y;
 
-	//((anchoVentana*270)/altoVentana);
+	drawingRect.w = bala[spX][spY].w + escala;
+	drawingRect.h = bala[spX][spY].h + escala;
 
-    //pasar escala x xml
-	drawingRect.w = arma[tipoArma].w + escala;
-	drawingRect.h = arma[tipoArma].h + escala;
-
-	int angle;
-	if(tipoDisp == 0){
-		angle = 0;
-	} else if(tipoDisp == 2){
-		angle = 90;
-		flipType = SDL_FLIP_HORIZONTAL;
-	} else if((tipoDisp == 1) && (flipType == 1)){
-		angle = 45;
-	} else {
-		angle = (360-45);
-	}
-
-	SDL_RenderCopyEx( window, mTexture, &arma[tipoArma], &drawingRect, angle, NULL, flipType );
+	SDL_RenderCopy(window, mTexture, &bala[spX][spY], &drawingRect);
 }
 
-void TextureBalas::actualizar(int x, int y, int spx, int spy, char flip){
+void TextureBalas::actualizar(int x, int y, int spx, int spy){
 	this->xcord = x;
 	this->ycord = y;
 	this-> spX = spx;
 	this-> spY = spy;
-
-	if (flip == 'D'){
-		flipType = SDL_FLIP_NONE;
-	}else flipType = SDL_FLIP_HORIZONTAL;
-
 }
 
 void TextureBalas::setX(int movimiento){
@@ -102,17 +78,33 @@ int TextureBalas::getTipoArma(){
 
 void TextureBalas::inicializarTexture(SDL_Renderer* window, char* text){
 	loadFromFile(window, text);
-	//CORRIENDO
-	arma[0].x=94; arma[0].y=72;
-	arma[0].w=46; arma[0].h=6;
+	//BALAS 0 PISTOLITA
+	bala[0][0].x = 0; bala[0][0].y = 0;
+	bala[0][0].w = 6; bala[0][0].h = 6;
 
-	arma[1].x=69; arma[1].y=67;
-	arma[1].w=16; arma[1].h=16;
+	bala[1][0].x = 0; bala[1][0].y = 0;
+	bala[1][0].w = 6; bala[1][0].h = 6;
 
-	arma[2].x=313; arma[2].y=271;
-	arma[2].w=21; arma[2].h=13;
+	bala[2][0].x = 0; bala[2][0].y = 0;
+	bala[2][0].w = 6; bala[2][0].h = 6;
 
+	bala[3][0].x = 0; bala[3][0].y = 0;
+	bala[3][0].w = 6; bala[3][0].h = 6;
+
+	bala[4][0].x = 0; bala[4][0].y = 0;
+	bala[4][0].w = 6; bala[4][0].h = 6;
+
+	bala[5][0].x = 0; bala[5][0].y = 0;
+	bala[5][0].w = 6; bala[5][0].h = 6;
+
+	bala[6][0].x = 0; bala[6][0].y = 0;
+	bala[6][0].w = 6; bala[6][0].h = 6;
 	
+	bala[7][0].x = 0; bala[7][0].y = 0;
+	bala[7][0].w = 6; bala[7][0].h = 6;
+
+	//BALAS 1 MACHINE GUN
+	//BALAS 2..
 }
 
 void TextureBalas::free()

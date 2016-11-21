@@ -13,6 +13,8 @@ DibujableServerEnemigo::DibujableServerEnemigo() {
 	actuo = false;
 	salto = false;
 
+	estaVivo = true;
+
 	flip = 'D';
 }
 
@@ -154,15 +156,19 @@ void DibujableServerEnemigo::ataqueSalto(){
 	}
 }
 
-void DibujableServerEnemigo::dispararRifle(){
-	spX += 1;
-	if (spX > 9){
-		//if (cantidadTiros == cantidadTirosActual)
-		//	actuo = true; //para dejar de disparar
-		//	spX = 9;
-		//else cantidadTirosActual += 1;
-		spX = 0; //para volver a disparar..
+bool DibujableServerEnemigo::dispararRifle(){
+	if(spX == 0){
+		spX += 1;
+		return true;
 	}
+
+	spX += 1;
+	if(spX > 9) {
+		spX = 0;
+		actuo = true;
+		tiempoFinDisparo = time(NULL);
+	}
+	return false;
 }
 
 void DibujableServerEnemigo::huirDerecha(){
@@ -187,20 +193,59 @@ void DibujableServerEnemigo::huirDerecha(){
 }
 
 void DibujableServerEnemigo::caerHelicoptero(){
-	if(y > 400){
-		spX += 1;
-		if(spX == 4) spX = 3;
-	}
-	mVelY -= 1;
+	spX += 1;
+	if(spX > 3) spX = 3;
 }
 
-void DibujableServerEnemigo::dispararBazooka(){
+bool DibujableServerEnemigo::dispararBazooka(){
+	if(spX == 0){
+		spX += 1;
+		return true;
+	}
+
 	spX += 1;
 	if(spX == 2) {
 		spX = 0;
 		actuo = true;
 		tiempoFinDisparo = time(NULL);
 	}
+	return false;
+}
+
+void DibujableServerEnemigo::moverseEnPantalla(int camaraX){
+	spY = 6;
+	spX += 1;
+	if (spX == 2) spX = 0;
+
+	if(x <= camaraX + 200){
+		mVelX = 8;
+		strcpy(&flip,"D");
+	}
+	else
+	if(x >= camaraX + 400){
+		mVelX = -8;
+		strcpy(&flip,"I");
+	}
+}
+
+void DibujableServerEnemigo::largarNuevoEnemigo(list<DibujableServerEnemigo> *listaEnemigos){
+	DibujableServerEnemigo nuevo;
+	nuevo.setId(ultimoId += 1); //ver q id le seteo...
+	//char* spriteId = parseXMLPj();
+	nuevo.setTipoEnemigo(5);
+	nuevo.setX(x + 50);
+	nuevo.setY(y);
+	nuevo.setSpX(-1);
+	nuevo.setSpY(5);
+	nuevo.setFlip('D');
+	nuevo.estaEnElPiso = false;
+
+	listaEnemigos->push_back(nuevo);
+
+	cout << "LARGO ENEMIGO POS: " << x + 50 << " " << y << endl;
+
+	actuo = true;
+	tiempoUltimoEnemigo = time(NULL);
 }
 
 void DibujableServerEnemigo::quieto(){
@@ -215,15 +260,23 @@ void DibujableServerEnemigo::quieto(){
 
 }
 
-bool DibujableServerEnemigo::mover(int camaraX){
+bool DibujableServerEnemigo::mover(int camaraX, list<DibujableServerEnemigo> *listaEnemigos){
 	//me muevo dependiendo de la camara y del tipo del tipo de enemigo
 	/* 1)camina izquierda buscando pegarte
 	 * 2)dispara y se agacha
 	 * 3)parado boludiando.. ve a player y le tira tiros
 	 * 4)parado boludiando.. ve a player y camina a la derecha rajando (cagon)
 	 * 5)soldados jefe1
+	 * 6)jefe1
 	 */
+
+	bool dispare = false;
+
 	switch(this->tipoEnemigo){
+	case 0:
+		morir();
+		break;
+
 	case 1:
 		if(x <= camaraX + (800-80)){ // ancho pantalla - tam sprite
 			if(!actuo) ataqueSalto();
@@ -232,7 +285,10 @@ bool DibujableServerEnemigo::mover(int camaraX){
 
 	case 2:
 		if(x <= camaraX + (800-80)){ // ancho pantalla - tam sprite
-			if(!actuo) dispararRifle(); //pasarle cantidad de tiros...
+			if (!actuo) dispare = dispararRifle();
+			else if(tiempoFinDisparo+2 <= time(NULL)) {
+				actuo = false;
+			}
 		}else{
 			strcpy(&flip,"D");
 			spX = 0;
@@ -253,47 +309,43 @@ bool DibujableServerEnemigo::mover(int camaraX){
 		break;
 
 	case 5:
-		if(x <= camaraX + (800-80)){ // ancho pantalla - tam sprite
+		//if(x <= camaraX + (800-80)){ // ancho pantalla - tam sprite
 			if (!estaEnElPiso){
 				spY = 4;
 				caerHelicoptero();
 			} else {
 				spY = 5;
-				if (!actuo) dispararBazooka();
+				if (!actuo) dispare = dispararBazooka();
 				else if(tiempoFinDisparo+1 <= time(NULL)) {
 					actuo = false;
-					estaEnElPiso = false;
-					y = 100;
 				}
 			}
-		}
+		//}
 		break;
 
 	case 6:
 		//jefe1
-		if(x <= camaraX + (800-80)){ // ancho pantalla - tam sprite
-			spY = 6;
-			spX += 1;
-			if (spX == 2) spX = 0;
+		moverseEnPantalla(camaraX);
+
+		if (!actuo && x<=camaraX+(800-200)) {
+			largarNuevoEnemigo(listaEnemigos);
 		}
+		else if(tiempoUltimoEnemigo+3 <= time(NULL)) {
+			actuo = false;
+		}
+
 		break;
 
 	default:
 		break;
 	}
 
-	bool meMovi = false;
-
 	if (!estaEnElPiso){// && (y >= HMAX_SALTO)){
 		//no esta en el piso entonces voy haciendolo caer (como una gravedad)
 		mVelY += 3;
 	}
 
-	if(mVelX != 0 || mVelY != 0){
-		meMovi = true;
-	}else return false;
-
-	if(y <= HMAX_SALTOENEMIGO){
+	if(!estaEnElPiso && y <= HMAX_SALTOENEMIGO){
 		mVelY = VELY_SUBIDAENEMIGO;
 	}
 
@@ -301,15 +353,35 @@ bool DibujableServerEnemigo::mover(int camaraX){
 	y += mVelY;
 
 	//ACA HAY Q PONERLO EN EL PISO SI SE PASA...
-	if (y > 500) {
+	if (!estaEnElPiso && y > 500) {
 		mVelY = 0;
 		y = 500; //ancho - 100
 		//spY = 1;
-		//spX = -1;
+		if(this->tipoEnemigo == 5) spX = -1; //buscar manera mas copada
 		estaEnElPiso = true;
 	}
 
-	return meMovi;
+	return dispare;
+}
+
+void  DibujableServerEnemigo::morir(){
+	spX += 1;
+	if (spX > 6){
+		spX = 0;
+		x = 0;
+	}
+}
+
+void  DibujableServerEnemigo::matar(){
+	mVelX = 0;
+	mVelY = 0;
+
+	spY = 8;
+	spX = -1;
+
+	estaVivo = false;
+
+	tipoEnemigo = 0; //muriendo
 }
 
 bool DibujableServerEnemigo::estaVisible(int camaraX){

@@ -19,6 +19,7 @@ OTRAS13 = ContenedorEnemigos.cpp
 OTRAS14 = DibujableServerEnemigo.cpp
 OTRAS15 = LTextureEnemigo.cpp
 OTRAS16 = TextureEnergia.cpp
+OTRAS17 = ContenedorBalas.cpp
 
 CLIENTE = Cliente
 SERVIDOR = Servidor
@@ -32,7 +33,7 @@ cliente:
 
 servidor:
 	$(CXX) $(SERVIDOR)/$(SERVIDOR).cpp $(SERVIDOR)/$(LIBRERIAS) $(SERVIDOR)/$(OTRAS) \
-	$(SERVIDOR)/$(OTRAS1) $(SERVIDOR)/$(OTRAS4) $(SERVIDOR)/$(OTRAS6) $(SERVIDOR)/$(OTRAS7) $(SERVIDOR)/$(OTRAS8) $(SERVIDOR)/$(OTRAS9) $(SERVIDOR)/$(OTRAS12) $(SERVIDOR)/$(OTRAS13) $(SERVIDOR)/$(OTRAS14) $(CXXFLAGS) -o $(SERVIDOR)/servidor
+	$(SERVIDOR)/$(OTRAS1) $(SERVIDOR)/$(OTRAS4) $(SERVIDOR)/$(OTRAS6) $(SERVIDOR)/$(OTRAS7) $(SERVIDOR)/$(OTRAS8) $(SERVIDOR)/$(OTRAS9) $(SERVIDOR)/$(OTRAS12) $(SERVIDOR)/$(OTRAS13) $(SERVIDOR)/$(OTRAS14) $(SERVIDOR)/$(OTRAS17)  $(CXXFLAGS) -o $(SERVIDOR)/servidor
 
 clean:
 	rm -f $(CLIENTE)/cliente $(SERVIDOR)/servidor

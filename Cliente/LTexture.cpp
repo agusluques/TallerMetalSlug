@@ -38,7 +38,6 @@ void LTexture::render(SDL_Renderer *window, SDL_Texture *mTexture, int cameraX, 
 	SDL_RenderCopyEx( window, mTexture, &player[spX][spY], &drawingRect, 0, NULL, flipType );
 }
 
-
 void LTexture::actualizar(int x, int y, int spx, int spy, char flip){
 	this->xcord = x;
 	this->ycord = y;
@@ -136,6 +135,24 @@ void LTexture::inicializarTexture(SDL_Renderer* window, char* text){
 	//Disparando
 	player[6][0].x=0; player[6][0].y=208;
 	player[6][0].w=40; player[6][0].h=40;
+
+	/*
+	//Disparando
+	player[0][3].x=0; player[0][3].y=210;
+	player[0][3].w=50; player[0][3].h=40;
+
+	player[0][3].x=50; player[0][3].y=210;
+	player[0][3].w=50; player[0][3].h=40;
+
+	player[0][3].x=100; player[0][3].y=210;
+	player[0][3].w=50; player[0][3].h=40;
+
+	player[0][3].x=150; player[0][3].y=210;
+	player[0][3].w=50; player[0][3].h=40;
+
+	player[0][3].x=200; player[0][3].y=210;
+	player[0][3].w=50; player[0][3].h=40;
+	*/
 }
 
 void LTexture::free()

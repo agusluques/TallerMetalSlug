@@ -8,6 +8,7 @@ DibujableServer::DibujableServer() {
 	caminaDerecha = false;
 	caminaIzquierda = false;
 	estaEnPlataforma = false;
+	estaDisparando = false;
 	mVelX = 0;
 	mVelY = 0;
 	conectar();
@@ -82,9 +83,13 @@ void DibujableServer::saltar(){
 	}
 }
 
-void DibujableServer::disparar(){
-	spX = 6;
-	spY = 0;
+bool DibujableServer::disparar(){
+	spX = 0;
+	spY = 3;
+
+	//estaDisparando = true;
+	//jugar con el tipo de arma...
+	return true;
 }
 
 int DibujableServer::velocidadXJugador(){
@@ -155,10 +160,18 @@ bool DibujableServer::mover(int xCamara){
 		mVelY += 3;
 	}
 
-	if(mVelX != 0 || mVelY != 0){
-		meMovi = true;
+	if(estaDisparando){
+		spX += 1;
+		if(spX > 6) {
+			spY = 0;
+			spX = 0;
+			estaDisparando = false;
+		}
 	}
 
+	if(mVelX != 0 || mVelY != 0 || estaDisparando){
+		meMovi = true;
+	}
 
 	if(y <= HMAX_SALTO){
 		mVelY = VELY_SUBIDA;
@@ -168,7 +181,6 @@ bool DibujableServer::mover(int xCamara){
 	//para q no se valla de la pantalla...
 	if ( (x < xCamara) || (x > xCamara+(800-80)) ) x -= mVelX; //lo vuelvo a como estaba antes..
 	y += mVelY;
-
 
 	//verifico que no este en una plataforma
 	if (!estaEnPlataforma){
@@ -198,7 +210,6 @@ bool DibujableServer::mover(int xCamara){
 
       }
 	}
-
 
 	//ACA HAY Q PONERLO EN EL PISO SI SE PASA...
 	if ( y > NIVEL_PISO) {

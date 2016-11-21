@@ -18,6 +18,8 @@ OTRAS12 = Bonus.cpp
 OTRAS13 = ContenedorEnemigos.cpp
 OTRAS14 = DibujableServerEnemigo.cpp
 OTRAS15 = LTextureEnemigo.cpp
+OTRAS16 = TextureEnergia.cpp
+OTRAS17 = ContenedorBalas.cpp
 
 CLIENTE = Cliente
 SERVIDOR = Servidor
@@ -27,7 +29,7 @@ SERVIDOR = Servidor
 all: clean cliente servidor
 
 cliente:
-	$(CXX) $(CLIENTE)/$(CLIENTE).cpp $(CLIENTE)/$(LIBRERIAS) $(CLIENTE)/$(OTRAS5) $(CLIENTE)/$(OTRAS3) $(CLIENTE)/$(OTRAS10) $(CLIENTE)/$(OTRAS11) $(CLIENTE)/$(OTRAS15) $(CXXFLAGS) -o $(CLIENTE)/cliente
+	$(CXX) $(CLIENTE)/$(CLIENTE).cpp $(CLIENTE)/$(LIBRERIAS) $(CLIENTE)/$(OTRAS5) $(CLIENTE)/$(OTRAS3) $(CLIENTE)/$(OTRAS10) $(CLIENTE)/$(OTRAS11) $(CLIENTE)/$(OTRAS15) $(CLIENTE)/$(OTRAS16) $(CXXFLAGS) -o $(CLIENTE)/cliente
 
 servidor:
 	$(CXX) $(SERVIDOR)/$(SERVIDOR).cpp $(SERVIDOR)/$(LIBRERIAS) $(SERVIDOR)/$(OTRAS) \

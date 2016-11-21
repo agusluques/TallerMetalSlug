@@ -16,7 +16,7 @@
 #include <arpa/inet.h>
 #include <vector>
 #include <pthread.h>
-#include <sstream>
+
 #include "Grafica.h"
 
 using namespace std;

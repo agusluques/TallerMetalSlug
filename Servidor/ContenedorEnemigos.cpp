@@ -1,4 +1,5 @@
 #include "ContenedorEnemigos.h"
+#include "ContenedorBalas.h"
 
 ContenedorEnemigos::ContenedorEnemigos() {
 	ultimoId = 4;
@@ -10,6 +11,7 @@ ContenedorEnemigos::ContenedorEnemigos() {
  * 3)parado boludiando.. (camina x ahi.. salta a las plataformas) (tira bombas juego original)
  * 4)parado boludiando.. ve a player y camina a la derecha rajando (cagon)
  * 5)soldados jefe1
+ * 6)jefe1
  */
 
 void ContenedorEnemigos::nuevoEnemigo(int posX, int posY, int tipoEnemigo) {
@@ -32,47 +34,57 @@ void ContenedorEnemigos::nuevoEnemigo(int posX, int posY, int tipoEnemigo) {
 		nuevo.setFlip('D');
 	}
 
-
 	listaEnemigos.push_back(nuevo);
 }
 
-void ContenedorEnemigos::buscarActivos(int camaraX, list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja) {
+void ContenedorEnemigos::buscarActivos(int camaraX, list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, ContenedorBalas *contenedorBalas) {
 	for (list<DibujableServerEnemigo>::iterator it = listaEnemigos.begin(); it != listaEnemigos.end(); ++it) {
+		if(it->x > camaraX + 800) break; //usar anchoventana.. esta ordenada por posicion la lista..
 		if(it->estaVisible(camaraX)){
-			//it->saltar();
-			it->mover(camaraX);
+			if(it->mover(camaraX, &listaEnemigos)){
+				contenedorBalas->nuevaBala(it->x-5, it->y, 5, 4, 0); //5 = maquina
+			}
 			listaEnemigosActivos->push_back((*it));
 			//cout << "HAY ENEMIGOS ACTIVOS!" << endl;
 		}else if(it->x < camaraX - 80){ //80 -> tam sprite
 			//cout << "BORRO!" << endl;
 			//se paso no lo veo mas.. lo elimino de la lista..
 			listaEnemigosDeBaja->push_back((*it));
-			it = listaEnemigosActivos->erase(it);
+			it = listaEnemigos.erase(it);
 			it--;
 		}
 	}
 }
 
-bool ContenedorEnemigos::detectarColision(int camaraX, list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, int xBala, int yBala){
-	bool huboColision = false;
-	for(list<DibujableServerEnemigo>::iterator it = listaEnemigos.begin(); it != listaEnemigos.end(); ++it){
-		if(it->estaVisible(camaraX)){
-			cout << "X Enemigo: " << it->getX() << endl;
-			cout << "Y Enemigo: " << it->getY() << endl;
-			cout << "X Bala: " << xBala << endl;
-			cout << "Y Bala: " << yBala << endl;
-			if(((it->getX() - xBala) <= 10) && (it->getY() == yBala)){
-				cout << "COLISIOOOOOOOOOOOOOOOOOOOOOON!" << endl;
-				listaEnemigosDeBaja->push_back((*it));
-				it = listaEnemigosActivos->erase(it);
-				it--;
-				huboColision = true;
+void ContenedorEnemigos::matarEnemigos(int camaraX, list<DibujableServerEnemigo> listaEnemigosDisparados){
+	for (list<DibujableServerEnemigo>::iterator it = listaEnemigos.begin(); it != listaEnemigos.end(); ++it) {
+		for (list<DibujableServerEnemigo>::iterator it2 = listaEnemigosDisparados.begin(); it2 != listaEnemigosDisparados.end(); ++it2) {
+			if(it2->id == it->id){
+				it->matar();
 			}
 		}
+		if(it->x > camaraX + 850) break;
 	}
-	return huboColision;
 }
-		
+
+void ContenedorEnemigos::iniciarJefe(int camaraX){
+	posicionJefe = camaraX + 800;
+
+	DibujableServerEnemigo nuevo;
+	nuevo.setId(ultimoId += 1); //ver q id le seteo...
+	//char* spriteId = parseXMLPj();
+	nuevo.setTipoEnemigo(6);
+	nuevo.setX(posicionJefe); //+ ANCHO VENTANA/2
+	nuevo.setY(100);
+	nuevo.setSpX(-1);
+	nuevo.setSpY(5);
+
+	nuevo.ultimoId = ultimoId;
+
+	nuevo.setFlip('D');
+
+	listaEnemigos.push_back(nuevo);
+}
 
 ContenedorEnemigos::~ContenedorEnemigos() {
 }

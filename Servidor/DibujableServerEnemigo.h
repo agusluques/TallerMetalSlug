@@ -5,6 +5,7 @@
 #include <cstring>
 #include <string>
 #include <ctime>
+#include <list>
 
 using namespace std;
 
@@ -24,7 +25,12 @@ public:
 	bool actuo;
 	bool salto;
 
+	bool estaVivo;
+
+	int ultimoId;
+
 	time_t tiempoFinDisparo;
+	time_t tiempoUltimoEnemigo;
 
 	bool estaEnElPiso;
 	bool caminaDerecha;
@@ -53,12 +59,16 @@ public:
 	void caminarDerecha();
 	void caminarIzquierda();
 	void ataqueSalto();
-	void dispararRifle();
+	bool dispararRifle();
 	void huirDerecha();
 	void caerHelicoptero();
-	void dispararBazooka();
+	bool dispararBazooka();
+	void moverseEnPantalla(int camaraX);
+	void largarNuevoEnemigo(list<DibujableServerEnemigo> *listaEnemigos);
 	void quieto();
-	bool mover(int camaraX);
+	bool mover(int camaraX, list<DibujableServerEnemigo> *listaEnemigos);
+	void matar();
+	void morir();
 	void volverAlPrincipio();
 
 	int velocidadXJugador();

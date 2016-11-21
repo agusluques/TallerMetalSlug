@@ -26,6 +26,7 @@ public:
 	int spX;
 	int spY;
 	bool estaOnline;
+	bool estaDisparando;
 
 	Escenario escenario;
 
@@ -57,7 +58,7 @@ public:
 	void quieto();
 	bool mover(int camaraX);
 	void volverAlPrincipio();
-	void disparar();
+	bool disparar();
 	void choca();
 
 	int velocidadXJugador();

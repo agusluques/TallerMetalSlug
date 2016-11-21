@@ -95,13 +95,18 @@ public:
 
 	void clear();
 
-	//lo de agus
 	bool inicializarVentana(int ancho, int alto);
 	bool inicializarFondo(char *path1, char* path2, char* path3);
 	bool inicializarPersonaje(char* path, int ancho, int alto);
+
 	void inicializarBalas(char* sprite);
 	void agregarBala(int x, int y, int cont, bool dirBala, int tipoDisp);
 	void borrarBala(int cont);
+
+	void actualizarBalas(int id, int x, int y, int dirBala, int tipoDisp);
+	bool modificarBalas(int id, int x, int y, int dirBala, int tipoDisp);
+	void quitarBalas(int id);
+
 	void agregarBonus(int id,int x, int y, string sprite);
 
 	void setIdCliente(int numCliente){

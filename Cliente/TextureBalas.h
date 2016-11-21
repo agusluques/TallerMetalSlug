@@ -15,7 +15,7 @@ public:
 	int id;
 	int tipoDisp;
 
-	SDL_Rect arma[3];
+	SDL_Rect bala[8][3]; //[direcciones][tipoDeBala]
 	
 	int xcord;
 	int ycord;
@@ -35,7 +35,7 @@ public:
 	void free();
 	void render(SDL_Renderer *window, SDL_Texture *mTexture, int cameraX, int escala);
 
-	void actualizar(int x, int y, int spx, int spy, char flip);
+	void actualizar(int x, int y, int spx, int spy);
 	
 	bool loadFromFile( string path,  SDL_Renderer* window );
 

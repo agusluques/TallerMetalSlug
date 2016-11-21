@@ -89,7 +89,7 @@ bool mySocket::enviarMensaje(void* mensaje, int tamanioMensaje){
 		bytesEnviados += n;
 	}
 	return errorSocket;
-	*/
+	 */
 	bool errorSocket = false;
 	int n = write(sockfd, mensaje, tamanioMensaje);
 	if(n < 0) errorSocket = true;
@@ -178,19 +178,12 @@ bool mySocket::recibirMensaje(){
 			avanzar = false;
 
 			error = recibirMensaje(&idObjeto, sizeof(int));
-			//cout << "id objeto: " << idObjeto << endl;
 			error = recibirMensaje(&x, sizeof(int));
-			//cout << "X: " << x << endl;
 			error = recibirMensaje(&y, sizeof(int));
-			//cout << "Y: " << y << endl;
 			error = recibirMensaje(&spx, sizeof(int));
-			//cout << "SpriteX: " << spx << endl;
 			error = recibirMensaje(&spy, sizeof(int));
-			//cout << "SpriteY: " << spy << endl;
 			error = recibirMensaje(&flip, sizeof(char));
-			//cout << "Flip: " << flip << endl;
 			error = recibirMensaje(&avanzar, sizeof(bool));
-			//cout << "Puede avanzar: " << avanzar << endl;
 			error = recibirMensaje(&tipo, sizeof(int));
 
 			int xCamara, setCamara;
@@ -235,22 +228,27 @@ bool mySocket::recibirMensaje(){
 		}
 
 		case 6: {
-			int x, y, cont, borro, tipoDisp;
-			bool dirBala;
-			error = recibirMensaje(&borro, sizeof(int));
-			if(borro == 0){
-				error = recibirMensaje(&x, sizeof(int));
-				error = recibirMensaje(&y, sizeof(int));
-				error = recibirMensaje(&cont, sizeof(int));
-				error = recibirMensaje(&dirBala, sizeof(bool));
-				error = recibirMensaje(&tipoDisp, sizeof(int));
-				//cout << "Y BALA CLIENTE: " << y << endl;
+			//recibo balas
+			int id, x, y, tipoDisp, dirBala;
 
-				grafica.agregarBala(x, y, cont, dirBala, tipoDisp);
-			} else {
-				error = recibirMensaje(&cont, sizeof(int));
-				grafica.borrarBala(cont);
-			}
+			error = recibirMensaje(&id, sizeof(int));
+			error = recibirMensaje(&x, sizeof(int));
+			error = recibirMensaje(&y, sizeof(int));
+			error = recibirMensaje(&dirBala, sizeof(int));
+			error = recibirMensaje(&tipoDisp, sizeof(int));
+
+			grafica.actualizarBalas(id, x, y, dirBala, tipoDisp);
+
+			break;
+		}
+
+		case 8:{
+			//recibo bajas de balas
+			int id;
+			error = recibirMensaje(&id, sizeof(int));
+
+			grafica.quitarBalas(id);
+
 			break;
 		}
 
@@ -259,7 +257,6 @@ bool mySocket::recibirMensaje(){
 			return true;
 			break;
 		}
-
 
 		}
 
@@ -443,15 +440,15 @@ bool mySocket::iniciarGrafica(){
 
 	//pido informacion de las barras de energia
 	codigo = 'a';
-    enviarMensaje(&codigo,sizeof(char));
-    int cantida;
-    recibirMensaje(&cantida,sizeof(int));
-    for (int i = 0; i < cantida; i++){
-    	int id,spY;
+	enviarMensaje(&codigo,sizeof(char));
+	int cantida;
+	recibirMensaje(&cantida,sizeof(int));
+	for (int i = 0; i < cantida; i++){
+		int id,spY;
 		recibirMensaje(&id, sizeof(int));
 		recibirMensaje(&spY, sizeof(int));
 
- /*
+		/*
 		string prueb;
 		stringstream sstm;
 	    sstm << id ;
@@ -459,9 +456,9 @@ bool mySocket::iniciarGrafica(){
 		string imagen;
 		imagen = "img/" + prueb + "barra.png";
 
-*/ //manera 1
+		 */ //manera 1
 
-/*
+		/*
 		string numero ="";
 		string imagen;
 
@@ -469,12 +466,12 @@ bool mySocket::iniciarGrafica(){
 
 
 		imagen = "img/" + numero + "barra.png";
-*/
+		 */
 		string imagen = "img/1barra.png"; //modificar
 
 		grafica.agregarEnergia(id,spY,imagen);
 
-    }
+	}
 
 	//pido informacion de los bonus
 	codigo = 'b';
@@ -532,25 +529,30 @@ bool mySocket::iniciarGrafica(){
 			//grafica.close();
 			quit = true;
 		}
-		else if ((keys[SDL_GetScancodeFromKey(SDLK_UP)]) && ((keys[SDL_GetScancodeFromKey(SDLK_RIGHT)]) || (keys[SDL_GetScancodeFromKey(SDLK_LEFT)])) &&  (keys[SDL_GetScancodeFromKey(SDLK_d)])){
-			//cout << "ARRIBA, DERECHA y DISPARO o IZQUIERDA ..." << endl;
+		/*else if( (keys[SDL_GetScancodeFromKey(SDLK_UP)]) && (keys[SDL_GetScancodeFromKey(SDLK_RIGHT)]) && (keys[SDL_GetScancodeFromKey(SDLK_d)]) ){
+					strcpy(&codigo,"d");
+					enviarMensaje(&codigo, sizeof(char));
+					int direccionDisparo = 1;
+					enviarMensaje(&direccionDisparo, sizeof(int));
+				}*/
+		else if( (keys[SDL_GetScancodeFromKey(SDLK_UP)]) && (keys[SDL_GetScancodeFromKey(SDLK_d)]) ){
 			strcpy(&codigo,"d");
 			enviarMensaje(&codigo, sizeof(char));
-			int tipoDisparo = 1;
-			enviarMensaje(&tipoDisparo, sizeof(int));
+			int direccionDisparo = 2;
+			enviarMensaje(&direccionDisparo, sizeof(int));
 		}
-		else if((keys[SDL_GetScancodeFromKey(SDLK_UP)]) && (keys[SDL_GetScancodeFromKey(SDLK_d)])){
-			//cout << "ARRIBA y DISPARO" << endl;
-			strcpy(&codigo,"d");
-			enviarMensaje(&codigo, sizeof(char));
-			int tipoDisparo = 2;
-			enviarMensaje(&tipoDisparo, sizeof(int));
-		}
+		/*else if( (keys[SDL_GetScancodeFromKey(SDLK_LEFT)]) && (keys[SDL_GetScancodeFromKey(SDLK_UP)]) && (keys[SDL_GetScancodeFromKey(SDLK_d)]) ){
+					strcpy(&codigo,"d");
+					enviarMensaje(&codigo, sizeof(char));
+					int direccionDisparo = 3;
+					enviarMensaje(&direccionDisparo, sizeof(int));
+				}*/
+		//AGREGAR DISPAROS PARA ABAJO Y EN DIAGONAL ABAJO
 		else if (keys[SDL_GetScancodeFromKey(SDLK_d)]){
 			strcpy(&codigo,"d");
 			enviarMensaje(&codigo, sizeof(char));
-			int tipoDisparo = 0;
-			enviarMensaje(&tipoDisparo, sizeof(int));
+			int direccionDisparo = -1;
+			enviarMensaje(&direccionDisparo, sizeof(int));
 		}
 		else if (keys[SDL_GetScancodeFromKey(SDLK_SPACE)]){
 			strcpy(&codigo,"U");

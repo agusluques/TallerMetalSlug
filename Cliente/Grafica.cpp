@@ -146,6 +146,45 @@ void Grafica::quitarEnemigo(int idObjeto){
 	}
 }
 
+void Grafica::actualizarBalas(int id, int x, int y, int dirBala, int tipoDisp){
+	if(!modificarBalas(id, x, y, dirBala, tipoDisp)){
+		TextureBalas nueva;
+		nueva.setId(id);
+		nueva.setX(x);
+		nueva.setY(y);
+		nueva.setSpX(dirBala);
+		nueva.setSpY(tipoDisp);
+
+		char pathBalas[] = "img/balas/balas.png";
+		nueva.inicializarTexture(window, pathBalas);
+
+		listaDibujableBalas.push_back(nueva);
+	}
+
+}
+
+bool Grafica::modificarBalas(int id, int x, int y, int dirBala, int tipoDisp){
+	bool actualizo = false;
+
+	for (list<TextureBalas>::iterator it = listaDibujableBalas.begin(); it != listaDibujableBalas.end(); ++it) {
+		if ( it->id == id ){
+			it->actualizar( x, y, dirBala, tipoDisp);
+			actualizo = true;
+		}
+	}
+
+	return actualizo;
+}
+
+void Grafica::quitarBalas(int id){
+	for (list<TextureBalas>::iterator it = listaDibujableBalas.begin(); it != listaDibujableBalas.end(); ++it) {
+		if(it->id == id){
+			it = listaDibujableBalas.erase(it);
+			it--;
+		}
+	}
+}
+
 void Grafica::agregarEnergia(int id, int spY, string imagen){
 	TextureEnergia nuevo;
     posicionEnergia +=150;

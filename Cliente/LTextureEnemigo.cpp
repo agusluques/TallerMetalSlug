@@ -220,31 +220,32 @@ void LTextureEnemigo::inicializarTexture(SDL_Renderer* window, char* text){
 	//usar otra clase x ser otra texture? o unificar todo en solados.png
 	//SOLDADOS JEFE 1
 	//cae
-	player[0][4].x=0; player[0][4].y=220;
+	player[0][4].x=0; player[0][4].y=541;
 	player[0][4].w=40; player[0][4].h=54;
 
-	player[1][4].x=40; player[1][4].y=220;
+	player[1][4].x=40; player[1][4].y=541;
 	player[1][4].w=40; player[1][4].h=54;
 
-	player[2][4].x=80; player[2][4].y=220;
+	player[2][4].x=80; player[2][4].y=541;
 	player[2][4].w=40; player[2][4].h=54;
 
-	player[3][4].x=120; player[3][4].y=220;
+	player[3][4].x=120; player[3][4].y=541;
 	player[3][4].w=40; player[3][4].h=54;
 
 	//dispara
-	player[0][5].x=0; player[0][5].y=274;
+	player[0][5].x=0; player[0][5].y=595;
 	player[0][5].w=40; player[0][5].h=54;
 
-	player[1][5].x=40; player[1][5].y=274;
+	player[1][5].x=40; player[1][5].y=595;
 	player[1][5].w=40; player[1][5].h=54;
 
 	//helicoptero
-	player[0][6].x=0; player[0][6].y=0;
-	player[0][6].w=180; player[0][6].h=110;
+	player[0][6].x=0; player[0][6].y=319;
+	player[0][6].w=180; player[0][6].h=111;
 
-	player[1][6].x=180; player[1][6].y=0;
-	player[1][6].w=180; player[1][6].h=110;
+	player[1][6].x=180; player[1][6].y=319;
+	player[1][6].w=180; player[1][6].h=111;
+	/* FIN SOLDADOS JEFE 1*/
 
 	//caminando
 	player[0][7].x=0; player[0][7].y=270;
@@ -282,6 +283,28 @@ void LTextureEnemigo::inicializarTexture(SDL_Renderer* window, char* text){
 
 	player[11][7].x=330; player[11][7].y=270;
 	player[11][7].w=30; player[11][7].h=40;
+
+	//muriendo
+	player[0][8].x=0; player[0][8].y=660;
+	player[0][8].w=40; player[0][8].h=40;
+
+	player[1][8].x=40; player[1][8].y=660;
+	player[1][8].w=40; player[1][8].h=40;
+
+	player[2][8].x=80; player[2][8].y=660;
+	player[2][8].w=40; player[2][8].h=40;
+
+	player[3][8].x=120; player[3][8].y=660;
+	player[3][8].w=40; player[3][8].h=40;
+
+	player[4][8].x=160; player[4][8].y=660;
+	player[4][8].w=40; player[4][8].h=40;
+
+	player[5][8].x=200; player[5][8].y=660;
+	player[5][8].w=40; player[5][8].h=40;
+
+	player[6][8].x=240; player[6][8].y=660;
+	player[6][8].w=40; player[6][8].h=40;
 
 }
 
