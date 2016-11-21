@@ -53,8 +53,6 @@ public:
 
 	void inicializarTexture(SDL_Renderer* window, char* text);
 	
-	void renderEnergia (SDL_Renderer* window, SDL_Texture *mTexture, int x, int escala);
-
 	bool loadFromFile(SDL_Renderer* window, char* path ) {
 		if( texture != NULL ) {
 			SDL_DestroyTexture( texture );
