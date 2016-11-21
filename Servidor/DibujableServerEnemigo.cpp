@@ -368,7 +368,7 @@ void  DibujableServerEnemigo::morir(){
 	spX += 1;
 	if (spX > 6){
 		spX = 0;
-		x = 0;
+		x = -100;
 	}
 }
 
