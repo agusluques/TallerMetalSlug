@@ -523,48 +523,55 @@ bool mySocket::iniciarGrafica(){
 		SDL_PumpEvents();
 		const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
+		if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_a)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
+			strcpy(&codigo,"d");
+			enviarMensaje(&codigo, sizeof(char));
+			int direccionDisparo = 3;
+			enviarMensaje(&direccionDisparo, sizeof(int));
+		}
+
 		if (SDL_QuitRequested()){
 			strcpy(&codigo,"C");
 			enviarMensaje(&codigo, sizeof(char));
 			//grafica.close();
 			quit = true;
 		}
-		/*else if( (keys[SDL_GetScancodeFromKey(SDLK_UP)]) && (keys[SDL_GetScancodeFromKey(SDLK_RIGHT)]) && (keys[SDL_GetScancodeFromKey(SDLK_d)]) ){
-					strcpy(&codigo,"d");
-					enviarMensaje(&codigo, sizeof(char));
-					int direccionDisparo = 1;
-					enviarMensaje(&direccionDisparo, sizeof(int));
-				}*/
-		else if( (keys[SDL_GetScancodeFromKey(SDLK_UP)]) && (keys[SDL_GetScancodeFromKey(SDLK_d)]) ){
+		else if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_d)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
+			strcpy(&codigo,"d");
+			enviarMensaje(&codigo, sizeof(char));
+			int direccionDisparo = 1;
+			enviarMensaje(&direccionDisparo, sizeof(int));
+		}
+		else if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
 			strcpy(&codigo,"d");
 			enviarMensaje(&codigo, sizeof(char));
 			int direccionDisparo = 2;
 			enviarMensaje(&direccionDisparo, sizeof(int));
 		}
-		/*else if( (keys[SDL_GetScancodeFromKey(SDLK_LEFT)]) && (keys[SDL_GetScancodeFromKey(SDLK_UP)]) && (keys[SDL_GetScancodeFromKey(SDLK_d)]) ){
-					strcpy(&codigo,"d");
-					enviarMensaje(&codigo, sizeof(char));
-					int direccionDisparo = 3;
-					enviarMensaje(&direccionDisparo, sizeof(int));
-				}*/
+		/*else if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_a)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
+			strcpy(&codigo,"d");
+			enviarMensaje(&codigo, sizeof(char));
+			int direccionDisparo = 3;
+			enviarMensaje(&direccionDisparo, sizeof(int));
+		}*/
 		//AGREGAR DISPAROS PARA ABAJO Y EN DIAGONAL ABAJO
-		else if (keys[SDL_GetScancodeFromKey(SDLK_d)]){
+		else if (keys[SDL_GetScancodeFromKey(SDLK_h)]){
 			strcpy(&codigo,"d");
 			enviarMensaje(&codigo, sizeof(char));
 			int direccionDisparo = -1;
 			enviarMensaje(&direccionDisparo, sizeof(int));
 		}
-		else if (keys[SDL_GetScancodeFromKey(SDLK_SPACE)]){
+		else if (keys[SDL_GetScancodeFromKey(SDLK_j)]){
 			strcpy(&codigo,"U");
 			enviarMensaje(&codigo, sizeof(char));
 			quieto = false;
 		}
-		else if (keys[SDL_GetScancodeFromKey(SDLK_LEFT)]){
+		else if (keys[SDL_GetScancodeFromKey(SDLK_a)]){
 			strcpy(&codigo,"L");
 			enviarMensaje(&codigo, sizeof(char));
 			quieto = false;
 		}
-		else if (keys[SDL_GetScancodeFromKey(SDLK_RIGHT)]){
+		else if (keys[SDL_GetScancodeFromKey(SDLK_d)]){
 			strcpy(&codigo,"R");
 			enviarMensaje(&codigo, sizeof(char));
 			quieto = false;
