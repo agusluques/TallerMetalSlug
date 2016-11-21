@@ -364,7 +364,7 @@ bool Grafica::inicializarVentana(int ancho, int alto){
 				if( !( IMG_Init( imgFlags ) & imgFlags ) )
 				{
 					cout<< "NO SE PUDO INICIALIZAR SOPORTE PNG: "<< IMG_GetError() <<endl;
-					exito = false;
+					exito = false; //
 				}
 			}
 		}
