@@ -193,7 +193,6 @@ bool DibujableServer::mover(int xCamara){
 
 		if(spXaux > 5) {
 			estaDisparando = false;
-			cout << "DEJE DE DISPARAR" << endl;
 			spY = 1;
 			spX = 0;
 		}

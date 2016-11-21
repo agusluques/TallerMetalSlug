@@ -1142,7 +1142,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					else direccionDisparo = 4;
 				}
 
-				contenedorBalas.nuevaBala(x+5, y+20, usr, direccionDisparo, 0); //pasar tipo de disparo..
+				contenedorBalas.nuevaBala(x+30, y+20, usr, direccionDisparo, 0); //pasar tipo de disparo..
 			}
 			break;
 		}
