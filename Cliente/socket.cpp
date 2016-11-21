@@ -461,7 +461,7 @@ bool mySocket::iniciarGrafica(){
 
 */ //manera 1
 
-		/*
+/*
 		string numero ="";
 		string imagen;
 
@@ -469,10 +469,7 @@ bool mySocket::iniciarGrafica(){
 
 
 		imagen = "img/" + numero + "barra.png";
-
-        cout << imagen << endl;
-        */
-
+*/
 		string imagen = "img/1barra.png"; //modificar
 
 		grafica.agregarEnergia(id,spY,imagen);

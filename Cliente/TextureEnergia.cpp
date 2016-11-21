@@ -33,14 +33,15 @@ void TextureEnergia::renderEnergia(SDL_Renderer* window, SDL_Texture *mTexture, 
 	rect2.x = getPos();
 	rect2.y = 0;
 
-	spY = 0;
-
 	SDL_RenderCopy( window, texture, &energia[spY], &rect2 );
 }
 
 void TextureEnergia::actualizar(int x, int y, int spy){
 
-	this-> spY = spy;
+	this-> spY += spy;
+	if (spY > 10)
+	  spy = 10;
+	  //muerto eliminar
 
 }
 
@@ -71,6 +72,11 @@ int TextureEnergia::getPos(){
 
 int TextureEnergia::getId(){
 	return this->id;
+}
+
+int TextureEnergia::getSpY(){
+
+	return spY;
 }
 
 void TextureEnergia::inicializarTexture(SDL_Renderer* window, char* text){

@@ -39,6 +39,7 @@ public:
 	void setPos (int pos);
 	int getPos();
 	int getId();
+	int getSpY ();
 
 	void inicializarTexture(SDL_Renderer* window, char* text);
 
