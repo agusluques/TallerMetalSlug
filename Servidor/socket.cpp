@@ -843,10 +843,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 
-		//informacion de barra de energia (sin mutex)
 		case 'a':{
 			int cant = listaEnergias.size();
 			enviarMensaje(newsockfd, &cant, sizeof(int));
+			int b = pthread_mutex_trylock(&mutexListaDibujables);
 			for (list<DibujableServer>::iterator it = listaEnergias.begin(); it != listaEnergias.end(); ++it)
 			{
 				int id = (*it).getId();
@@ -856,6 +856,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				enviarMensaje(newsockfd, &spY, sizeof(int));
 
 			}
+			pthread_mutex_unlock (&mutexListaDibujables);
 			break;
 		}
 
