@@ -4,6 +4,7 @@
 #include <list>
 #include <iostream>
 #include "Bonus.h"
+#include "DibujableServer.h"
 
 class ContenedorBonus{
 	private:
@@ -13,7 +14,7 @@ class ContenedorBonus{
 		ContenedorBonus();
 		void nuevoBonus(int posX, int posY, int tipoBonus);
 		void buscarActivos(int camaraX, list<Bonus>* listaBonusActivos, list<Bonus>* listaBonusDeBaja);
-		bool detectarColision(int camaraX, list<Bonus>* listaBonusActivos, list<Bonus>* listaBonusDeBaja, int xPersonaje, int yPersonaje);
+		bool detectarColision(list<Bonus>* listaBonusDeBaja, list<Bonus>* listaBonusActivos, list<DibujableServer>* listaPersonajes);
 		void aumentarId();
 		virtual ~ContenedorBonus();
 };

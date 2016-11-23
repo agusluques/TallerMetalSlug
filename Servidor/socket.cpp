@@ -56,6 +56,10 @@ pthread_mutex_t mutexListaUsuarios = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutexListaDibujables = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutexListaBalas = PTHREAD_MUTEX_INITIALIZER;
 
+pthread_mutex_t mutexContenedorEnemigos = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutexContenedorBalas = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutexContenedorBonus = PTHREAD_MUTEX_INITIALIZER;
+
 void loggear(string usr, string destinatario, string mensaje){
 	ofstream archLog; //esta va en .hpp
 	archLog.open("log.txt", std::fstream::app);
@@ -775,8 +779,11 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					i--;
 				}
 			}
+
 			int tamanioMensaje = 0;
 			enviarMensaje(newsockfd, &tamanioMensaje, sizeof(int));
+
+			if(numeroCliente == 1){
 
 			//BUSCO ENEMIGOS
 			list<DibujableServerEnemigo> listaEnemigosActivos;
@@ -798,7 +805,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			contenedorBonus.buscarActivos(camaraX, &listaBonusActivos, &listaBonusDeBaja);
 
 			//list<Bonus> listaBonusAgarrados;
-			//contenedorBonus.detectarColisiones(&listaBonusDeBaja, &listaBonusActivos, &listaBonusAgarrados);
+			//contenedorBonus.detectarColision(&listaBonusDeBaja, &listaBonusActivos, &listaDibujables);
 
 			for (list<bala>::iterator itBalas = listaBalasActivas.begin(); itBalas != listaBalasActivas.end(); ++itBalas) {
 				enviarBalasAConectados(itBalas->id,itBalas->x,itBalas->y,itBalas->direccionDisparo, itBalas->tipoBala);
@@ -823,6 +830,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			for (list<Bonus>::iterator itBonus = listaBonusDeBaja.begin(); itBonus != listaBonusDeBaja.end(); ++itBonus) {
 				quitarBonus(itBonus->getId());
+			}
+
 			}
 
 			break;

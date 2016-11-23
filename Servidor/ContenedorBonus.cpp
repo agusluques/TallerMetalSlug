@@ -32,16 +32,26 @@ void ContenedorBonus::buscarActivos(int camaraX, list<Bonus>* listaBonusActivos,
 	}
 }
 
-bool ContenedorBonus::detectarColision(int camaraX, list<Bonus>* listaBonusActivos, list<Bonus>* listaBonusDeBaja, int xPersonaje, int yPersonaje){
+bool ContenedorBonus::detectarColision(list<Bonus>* listaBonusDeBaja, list<Bonus>* listaBonusActivos, list<DibujableServer>* listaPersonajes){
 	bool huboColision = false;
-	for(list<Bonus>::iterator it = listaBonus.begin(); it != listaBonus.end(); ++it){
-		if(it->estaVisible(camaraX)){
-			if(((it->getPosX() - xPersonaje) <= 10) && (it->getPosY() == yPersonaje)){
-				cout << "COLISIOOOOOOOOOOOOOOOOOOOOOON!" << endl;
-				listaBonusDeBaja->push_back((*it));
-				it = listaBonusActivos->erase(it);
-				it--;
-				huboColision = true;
+	if(!listaBonusActivos->empty()){
+		list<Bonus>::iterator it = listaBonusActivos->begin();
+		while((it != listaBonusActivos->end()) && (!huboColision)){
+
+			list<DibujableServer>::iterator itPjs = listaPersonajes->begin();
+			while((itPjs != listaPersonajes->end()) && (!huboColision)){
+
+				//cout << "X Bonus: " << it->getPosX() << endl;
+				//cout << "X Pj   : " << itPjs->x << endl;
+
+				if((it->getPosX() - itPjs->x) <= 40){
+				//if(((it->getPosX() - itPjs->x) <= 10) || ((itPjs->x - it->getPosX()) <= 10) && (it->getPosY() == itPjs->y)){
+					cout << "ENTRO????" << endl;
+					//listaBonusDeBaja->push_back((*it));
+					//it = listaBonusActivos->erase(it);
+					//it--;
+					huboColision = true;
+				}
 			}
 		}
 	}
