@@ -793,11 +793,13 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados);
 			contenedorEnemigos.matarEnemigos(camaraX, listaEnemigosDisparados);
 
-			//detectarColisiones(&listaDeUsuarios, &listaEnemigosActivos, &listaEnemigosDeBaja);
 
 			list<Bonus> listaBonusActivos;
 			list<Bonus> listaBonusDeBaja;
 			contenedorBonus.buscarActivos(camaraX, &listaBonusActivos, &listaBonusDeBaja);
+
+			//list<Bonus> listaBonusAgarrados;
+			//contenedorBonus.detectarColisiones(&listaBonusDeBaja, &listaBonusActivos, &listaBonusAgarrados);
 
 			for (list<bala>::iterator itBalas = listaBalasActivas.begin(); itBalas != listaBalasActivas.end(); ++itBalas) {
 				enviarBalasAConectados(itBalas->id,itBalas->x,itBalas->y,itBalas->direccionDisparo, itBalas->tipoBala);
