@@ -235,7 +235,9 @@ void cargarBonus(char* xml){
 		sum = x;
 		int y = ALTO_VENTANA - 60;
 
+		int a = pthread_mutex_trylock(&mutexContenedorBonus);
 		contenedorBonus.nuevoBonus(x,y,tipoBonus);
+		pthread_mutex_unlock (&mutexContenedorBonus);
 	}
 }
 
@@ -565,6 +567,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				//cagon 4
 
 				//HACER METODO contenedorEnemigos.cargarEnemigosNivel1();
+				int aa = pthread_mutex_trylock(&mutexContenedorEnemigos);
 
 				contenedorEnemigos.nuevoEnemigo(750, ALTO_VENTANA - 100, 2);
 				contenedorEnemigos.nuevoEnemigo(800, ALTO_VENTANA - 100, 3);
@@ -612,6 +615,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				contenedorEnemigos.nuevoEnemigo(7800, ALTO_VENTANA - 100, 1);
 				contenedorEnemigos.nuevoEnemigo(7900, ALTO_VENTANA - 100, 4);
 				contenedorEnemigos.nuevoEnemigo(8000, ALTO_VENTANA - 100, 2);
+
+				pthread_mutex_unlock (&mutexContenedorEnemigos);
 
 			}else if(estabaDesconectado){
 				strcpy(mensaje,"Bienvenido nuevamente");
@@ -788,21 +793,38 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			//BUSCO ENEMIGOS
 			list<DibujableServerEnemigo> listaEnemigosActivos;
 			list<DibujableServerEnemigo> listaEnemigosDeBaja;
+
+			int aa = pthread_mutex_trylock(&mutexContenedorEnemigos);
+			int bb = pthread_mutex_trylock(&mutexContenedorBalas);
+
 			contenedorEnemigos.buscarActivos(camaraX,&listaEnemigosActivos, &listaEnemigosDeBaja, &contenedorBalas);
+
+			pthread_mutex_unlock (&mutexContenedorBalas);
+			pthread_mutex_unlock (&mutexContenedorEnemigos);
 
 			//BUSCO BALAS
 			list<bala> listaBalasActivas;
 			list<bala> listaBalasDeBaja;
+
+			int bbb = pthread_mutex_trylock(&mutexContenedorBalas);
 			contenedorBalas.buscarActivas(camaraX, &listaBalasActivas, &listaBalasDeBaja);
 
 			list<DibujableServerEnemigo> listaEnemigosDisparados;
 			contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados);
-			contenedorEnemigos.matarEnemigos(camaraX, listaEnemigosDisparados);
+			pthread_mutex_unlock (&mutexContenedorBalas);
 
+			int aaa = pthread_mutex_trylock(&mutexContenedorEnemigos);
+			contenedorEnemigos.matarEnemigos(camaraX, listaEnemigosDisparados);
+			pthread_mutex_unlock (&mutexContenedorEnemigos);
 
 			list<Bonus> listaBonusActivos;
 			list<Bonus> listaBonusDeBaja;
+			
+			int a = pthread_mutex_trylock(&mutexContenedorBonus);
 			contenedorBonus.buscarActivos(camaraX, &listaBonusActivos, &listaBonusDeBaja);
+			pthread_mutex_unlock (&mutexContenedorBonus);
+
+
 
 			//list<Bonus> listaBonusAgarrados;
 			//contenedorBonus.detectarColision(&listaBonusDeBaja, &listaBonusActivos, &listaDibujables);
@@ -977,7 +999,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					if (camaraX >= 8075){  //quitar para hacer escenario infinito
 						avanzarCamara = false;
 						jefePresente = true;
+						int aaa = pthread_mutex_trylock(&mutexContenedorEnemigos);
 						contenedorEnemigos.iniciarJefe(camaraX);
+						pthread_mutex_unlock (&mutexContenedorEnemigos);
 					}
 
 					if(avanzarCamara){
@@ -1198,7 +1222,12 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					else direccionDisparo = 4;
 				}
 
+				int bb = pthread_mutex_trylock(&mutexContenedorBalas);
+
 				contenedorBalas.nuevaBala(x+30, y+20, usr, direccionDisparo, 0); //pasar tipo de disparo..
+
+				pthread_mutex_unlock (&mutexContenedorBalas);
+
 			}
 			break;
 		}
