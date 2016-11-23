@@ -226,7 +226,8 @@ void cargarBonus(char* xml){
 		//4- recargar arma 3
 		//5- bonus de vida
 		//6- bonus de killall
-		int tipoBonus = 0;//rand() % 6;
+		int tipoBonus = rand() % 6;
+		cout << "TIPO BONUS: " << tipoBonus << endl;
 		int x = sum + 400;
 		sum = x;
 		int y = ALTO_VENTANA - 60;
@@ -343,7 +344,6 @@ void enviarBonusAConectados(int idBonus, int x, int y, int tipoBonus){
 			char nombreDestino[50];
 			buscarNombreUsuario(nombreAutor, idBonus);
 			buscarNombreUsuario(nombreDestino, (*it).numCliente());
-			cout << "ENVIO MENSAJE DE BONUS" << endl;
 			mensajeClass mensajeObj(nombreAutor, nombreDestino, idBonus, x, y, 0, tipoBonus, 'D', 9);
 
 			int a = pthread_mutex_trylock(&mutexLista);

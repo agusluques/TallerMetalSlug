@@ -253,6 +253,7 @@ void Grafica::actualizarBonus(int id, int x, int y, int tipoBonus){
 		nueva.setId(id);
 		nueva.setX(x);
 		nueva.setY(y);
+		nueva.setTipo(tipoBonus);
 
 		char pathBonus[] = "img/bonus/bonus.png";
 		nueva.inicializarTexture(window, pathBonus);
@@ -366,7 +367,6 @@ void Grafica::mostrarDibujables(){
 
 	for (list<TextureBonus>::iterator it2 = listaDibujableBonus.begin(); it2 != listaDibujableBonus.end(); ++it2)
 	{
-		cout << "RENDERIZAANDOOOOOO" << endl;
 		(*it2).render(window, (*it2).texture, xCamara, altoVentana/15);
 	}
 	for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {

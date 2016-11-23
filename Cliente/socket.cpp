@@ -546,7 +546,6 @@ bool mySocket::iniciarGrafica(){
 			//grafica.close();
 			quit = true;
 			returnIGrafica = false;
-			cout << "ENTRA A 1" << endl;
 		}
 		else if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_d)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
 			strcpy(&codigo,"d");
@@ -605,7 +604,6 @@ bool mySocket::iniciarGrafica(){
 		}
 
 	}
-	cout << "ENTRA A DOS" << endl;
 	return returnIGrafica;
 }
 

@@ -102,12 +102,10 @@ int main(int argc, char *argv[])
 			case '5': {
 				//repetir si sale mal ?..
 				if(!Cliente.iniciarGrafica()){
-					cout << "ENTRA A 3" << endl;
 					Cliente.cerrarGrafica();
 					Cliente.cerrar();
 					Cliente.desconectar();
 				}
-				cout << "ENTRA A 4" << endl;
 				break;
 			}
 		}

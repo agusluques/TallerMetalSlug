@@ -28,8 +28,6 @@ void TextureBonus::setId(int id){
 }
 
 void TextureBonus::render(SDL_Renderer *window, SDL_Texture *mTexture, int cameraX, int escala){
-	tipo = 0; //SACAR DESPUES! HARDCODEO
-
 	SDL_Rect drawingRect;
 	drawingRect.x = xcord - cameraX;
 	drawingRect.y = ycord;
@@ -67,7 +65,7 @@ void TextureBonus::inicializarTexture(SDL_Renderer* window, char* text){
 	bonus[0].x=0; bonus[0].y=0;
 	bonus[0].w=33; bonus[0].h=29;
 
-	/*bonus[1].x=36; bonus[1].y=8;
+	bonus[1].x=36; bonus[1].y=8;
 	bonus[1].w=23; bonus[1].h=20;
 
 	bonus[2].x=64; bonus[2].y=0;
@@ -83,7 +81,7 @@ void TextureBonus::inicializarTexture(SDL_Renderer* window, char* text){
 	bonus[5].w=26; bonus[5].h=20;
 
 	bonus[6].x=35; bonus[6].y=33;
-	bonus[6].w=25; bonus[6].h=25;*/
+	bonus[6].w=25; bonus[6].h=25;
 	
 }
 
