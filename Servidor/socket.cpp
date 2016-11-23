@@ -833,9 +833,16 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			pthread_mutex_unlock (&mutexContenedorBalas);
 
 			int aaa = pthread_mutex_trylock(&mutexContenedorEnemigos);
-			contenedorEnemigos.matarEnemigos(camaraX, listaEnemigosDisparados);
+			int pasarDeNivel = contenedorEnemigos.matarEnemigos(camaraX, listaEnemigosDisparados);
 			pthread_mutex_unlock (&mutexContenedorEnemigos);
 
+			//hay que enviar a conectados un msjedel tipo pasaste de nivel y cuando
+			//los conectados lo reciban, le envian al servidor un mensaje con un codigo
+			//para que muestre una pantalla con los scores
+			if (pasarDeNivel) cout << "PASASTE DE NIVEL PAPA"<<endl;
+
+
+			
 			list<Bonus> listaBonusActivos;
 			list<Bonus> listaBonusDeBaja;
 			

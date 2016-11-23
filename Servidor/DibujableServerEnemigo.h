@@ -67,8 +67,9 @@ public:
 	void largarNuevoEnemigo(list<DibujableServerEnemigo> *listaEnemigos);
 	void quieto();
 	bool mover(int camaraX, list<DibujableServerEnemigo> *listaEnemigos);
-	void matar();
+	bool matar();
 	void morir();
+	void morirBoss();
 	void volverAlPrincipio();
 
 	int velocidadXJugador();

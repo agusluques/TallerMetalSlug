@@ -16,7 +16,7 @@ class ContenedorEnemigos {
 		void nuevoEnemigo(int posX, int posY, int tipoEnemigo);
 		void buscarActivos(int camaraX, list<DibujableServerEnemigo> *listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, ContenedorBalas *contenedorBalas);
 		bool detectarColision(int camaraX, list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, int xBala, int yBala);
-		void matarEnemigos(int camaraX, list<DibujableServerEnemigo> listaEnemigosDisparados);
+		bool matarEnemigos(int camaraX, list<DibujableServerEnemigo> listaEnemigosDisparados);
 
 		void iniciarJefe(int camaraX);
 

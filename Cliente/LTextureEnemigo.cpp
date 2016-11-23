@@ -248,6 +248,19 @@ void LTextureEnemigo::inicializarTexture(SDL_Renderer* window, char* text){
 
 	player[1][6].x=180; player[1][6].y=319;
 	player[1][6].w=180; player[1][6].h=111;
+
+	//helicoptero muriendo
+	player[2][6].x=0; player[2][6].y=431;
+	player[2][6].w=180; player[2][6].h=111;
+
+	player[3][6].x=180; player[3][6].y=431;
+	player[3][6].w=180; player[3][6].h=111;
+
+	player[4][6].x=374; player[4][6].y=431;
+	player[4][6].w=180; player[4][6].h=111;
+
+	player[5][6].x=550; player[5][6].y=431;
+	player[5][6].w=180; player[5][6].h=111;
 	/* FIN SOLDADOS JEFE 1*/
 
 	//caminando
