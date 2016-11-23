@@ -78,4 +78,5 @@ bool ContenedorBonus::detectarColision(list<Bonus>* listaBonusDeBaja, list<Bonus
 		
 
 ContenedorBonus::~ContenedorBonus() {
+	listaBonus.clear();
 }

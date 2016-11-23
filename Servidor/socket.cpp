@@ -179,8 +179,6 @@ void modoDeJuego(char* xml){
 		}
 	}
 
-
-
 }
 
 void cargarFondos(char* xml){
@@ -576,65 +574,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				listaEnergias.push_back(nuevo2);
 				pthread_mutex_unlock (&mutexListaDibujables);
 
-				//AGREGO UN ENEMIGO PARA PROBAR AL PPIO
-				//NO VAN ACA SINO X CADA UNO Q INICIA SE CARGAN!!!!!!!!
-				//camina solo 3
-				//tira tiros 2
-				//ataque salto 1
-				//cagon 4
-
-				//HACER METODO contenedorEnemigos.cargarEnemigosNivel1();
-				int aa = pthread_mutex_trylock(&mutexContenedorEnemigos);
-
-				contenedorEnemigos.nuevoEnemigo(750, ALTO_VENTANA - 100, 2);
-				contenedorEnemigos.nuevoEnemigo(800, ALTO_VENTANA - 100, 3);
-				contenedorEnemigos.nuevoEnemigo(1000, ALTO_VENTANA - 100, 2);
-				contenedorEnemigos.nuevoEnemigo(1200, ALTO_VENTANA - 100, 3);
-				contenedorEnemigos.nuevoEnemigo(1400, ALTO_VENTANA - 100, 3);
-				contenedorEnemigos.nuevoEnemigo(1650, ALTO_VENTANA - 100, 2);
-				contenedorEnemigos.nuevoEnemigo(1800, ALTO_VENTANA - 100, 3);
-				contenedorEnemigos.nuevoEnemigo(1850, ALTO_VENTANA - 100, 3);
-				contenedorEnemigos.nuevoEnemigo(2000, ALTO_VENTANA - 100, 1);
-				contenedorEnemigos.nuevoEnemigo(2250, ALTO_VENTANA - 100, 4);
-				contenedorEnemigos.nuevoEnemigo(2500, ALTO_VENTANA - 100, 2);
-				contenedorEnemigos.nuevoEnemigo(2700, ALTO_VENTANA - 100, 1);
-				contenedorEnemigos.nuevoEnemigo(3000, ALTO_VENTANA - 100, 4);
-				contenedorEnemigos.nuevoEnemigo(3300, ALTO_VENTANA - 100, 1);
-				contenedorEnemigos.nuevoEnemigo(3700, ALTO_VENTANA - 100, 4);
-				contenedorEnemigos.nuevoEnemigo(4000, ALTO_VENTANA - 100, 2);
-				contenedorEnemigos.nuevoEnemigo(4050, ALTO_VENTANA - 100, 3);
-				contenedorEnemigos.nuevoEnemigo(4200, ALTO_VENTANA - 100, 2);
-				contenedorEnemigos.nuevoEnemigo(4400, ALTO_VENTANA - 100, 3);
-				contenedorEnemigos.nuevoEnemigo(4600, ALTO_VENTANA - 100, 3);
-				contenedorEnemigos.nuevoEnemigo(4650, ALTO_VENTANA - 100, 2);
-				contenedorEnemigos.nuevoEnemigo(4800, ALTO_VENTANA - 100, 3);
-				contenedorEnemigos.nuevoEnemigo(4950, ALTO_VENTANA - 100, 3);
-				contenedorEnemigos.nuevoEnemigo(5000, ALTO_VENTANA - 100, 1);
-				contenedorEnemigos.nuevoEnemigo(5250, ALTO_VENTANA - 100, 4);
-				contenedorEnemigos.nuevoEnemigo(5300, ALTO_VENTANA - 100, 2);
-				contenedorEnemigos.nuevoEnemigo(5400, ALTO_VENTANA - 100, 1);
-				contenedorEnemigos.nuevoEnemigo(5600, ALTO_VENTANA - 100, 4);
-				contenedorEnemigos.nuevoEnemigo(5800, ALTO_VENTANA - 100, 1);
-				contenedorEnemigos.nuevoEnemigo(6000, ALTO_VENTANA - 100, 4);
-				contenedorEnemigos.nuevoEnemigo(6200, ALTO_VENTANA - 100, 2);
-				contenedorEnemigos.nuevoEnemigo(6250, ALTO_VENTANA - 100, 3);
-				contenedorEnemigos.nuevoEnemigo(6400, ALTO_VENTANA - 100, 2);
-				contenedorEnemigos.nuevoEnemigo(6500, ALTO_VENTANA - 100, 3);
-				contenedorEnemigos.nuevoEnemigo(6700, ALTO_VENTANA - 100, 3);
-				contenedorEnemigos.nuevoEnemigo(6850, ALTO_VENTANA - 100, 2);
-				contenedorEnemigos.nuevoEnemigo(7000, ALTO_VENTANA - 100, 3);
-				contenedorEnemigos.nuevoEnemigo(7150, ALTO_VENTANA - 100, 3);
-				contenedorEnemigos.nuevoEnemigo(7200, ALTO_VENTANA - 100, 1);
-				contenedorEnemigos.nuevoEnemigo(7350, ALTO_VENTANA - 100, 4);
-				contenedorEnemigos.nuevoEnemigo(7400, ALTO_VENTANA - 100, 2);
-				contenedorEnemigos.nuevoEnemigo(7500, ALTO_VENTANA - 100, 1);
-				contenedorEnemigos.nuevoEnemigo(7600, ALTO_VENTANA - 100, 4);
-				contenedorEnemigos.nuevoEnemigo(7800, ALTO_VENTANA - 100, 1);
-				contenedorEnemigos.nuevoEnemigo(7900, ALTO_VENTANA - 100, 4);
-				contenedorEnemigos.nuevoEnemigo(8000, ALTO_VENTANA - 100, 2);
-
-				pthread_mutex_unlock (&mutexContenedorEnemigos);
-
 			}else if(estabaDesconectado){
 				strcpy(mensaje,"Bienvenido nuevamente");
 
@@ -808,79 +747,74 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			enviarMensaje(newsockfd, &tamanioMensaje, sizeof(int));
 
 			if(numeroCliente == 1){
+				//BUSCO ENEMIGOS
+				list<DibujableServerEnemigo> listaEnemigosActivos;
+				list<DibujableServerEnemigo> listaEnemigosDeBaja;
 
-			//BUSCO ENEMIGOS
-			list<DibujableServerEnemigo> listaEnemigosActivos;
-			list<DibujableServerEnemigo> listaEnemigosDeBaja;
+				int aa = pthread_mutex_trylock(&mutexContenedorEnemigos);
+				int bb = pthread_mutex_trylock(&mutexContenedorBalas);
 
-			int aa = pthread_mutex_trylock(&mutexContenedorEnemigos);
-			int bb = pthread_mutex_trylock(&mutexContenedorBalas);
+				contenedorEnemigos.buscarActivos(camaraX,&listaEnemigosActivos, &listaEnemigosDeBaja, &contenedorBalas);
 
-			contenedorEnemigos.buscarActivos(camaraX,&listaEnemigosActivos, &listaEnemigosDeBaja, &contenedorBalas);
+				pthread_mutex_unlock (&mutexContenedorBalas);
+				pthread_mutex_unlock (&mutexContenedorEnemigos);
 
-			pthread_mutex_unlock (&mutexContenedorBalas);
-			pthread_mutex_unlock (&mutexContenedorEnemigos);
+				//BUSCO BALAS
+				list<bala> listaBalasActivas;
+				list<bala> listaBalasDeBaja;
 
-			//BUSCO BALAS
-			list<bala> listaBalasActivas;
-			list<bala> listaBalasDeBaja;
+				int bbb = pthread_mutex_trylock(&mutexContenedorBalas);
+				contenedorBalas.buscarActivas(camaraX, &listaBalasActivas, &listaBalasDeBaja);
 
-			int bbb = pthread_mutex_trylock(&mutexContenedorBalas);
-			contenedorBalas.buscarActivas(camaraX, &listaBalasActivas, &listaBalasDeBaja);
+				list<DibujableServerEnemigo> listaEnemigosDisparados;
+				contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados);
+				pthread_mutex_unlock (&mutexContenedorBalas);
 
-			list<DibujableServerEnemigo> listaEnemigosDisparados;
-			contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados);
-			pthread_mutex_unlock (&mutexContenedorBalas);
+				int aaa = pthread_mutex_trylock(&mutexContenedorEnemigos);
+				int pasarDeNivel = contenedorEnemigos.matarEnemigos(camaraX, listaEnemigosDisparados);
+				pthread_mutex_unlock (&mutexContenedorEnemigos);
 
-			int aaa = pthread_mutex_trylock(&mutexContenedorEnemigos);
-			int pasarDeNivel = contenedorEnemigos.matarEnemigos(camaraX, listaEnemigosDisparados);
-			pthread_mutex_unlock (&mutexContenedorEnemigos);
+				//hay que enviar a conectados un msjedel tipo pasaste de nivel y cuando
+				//los conectados lo reciban, le envian al servidor un mensaje con un codigo
+				//para que muestre una pantalla con los scores
+				if (pasarDeNivel) cout << "PASASTE DE NIVEL PAPA"<<endl;
 
-			//hay que enviar a conectados un msjedel tipo pasaste de nivel y cuando
-			//los conectados lo reciban, le envian al servidor un mensaje con un codigo
-			//para que muestre una pantalla con los scores
-			if (pasarDeNivel) cout << "PASASTE DE NIVEL PAPA"<<endl;
+				list<Bonus> listaBonusActivos;
+				list<Bonus> listaBonusDeBaja;
 
+				int aaaa = pthread_mutex_trylock(&mutexContenedorBonus);
+				contenedorBonus.buscarActivos(camaraX, &listaBonusActivos, &listaBonusDeBaja);
+				pthread_mutex_unlock (&mutexContenedorBonus);
 
-			
-			list<Bonus> listaBonusActivos;
-			list<Bonus> listaBonusDeBaja;
-			
-			int a = pthread_mutex_trylock(&mutexContenedorBonus);
-			contenedorBonus.buscarActivos(camaraX, &listaBonusActivos, &listaBonusDeBaja);
-			pthread_mutex_unlock (&mutexContenedorBonus);
+				//list<Bonus> listaBonusAgarrados;
+				int zzz = pthread_mutex_trylock(&mutexListaDibujables);
+				contenedorBonus.detectarColision(&listaBonusDeBaja, &listaBonusActivos, &listaDibujables);
+				pthread_mutex_unlock (&mutexListaDibujables);
 
+				for (list<bala>::iterator itBalas = listaBalasActivas.begin(); itBalas != listaBalasActivas.end(); ++itBalas) {
+					enviarBalasAConectados(itBalas->id,itBalas->x,itBalas->y,itBalas->direccionDisparo, itBalas->tipoBala);
+				}
 
+				for (list<bala>::iterator itBalas = listaBalasDeBaja.begin(); itBalas != listaBalasDeBaja.end(); ++itBalas) {
+					quitarBalas(itBalas->id);
+				}
 
-			//list<Bonus> listaBonusAgarrados;
-			int zzz = pthread_mutex_trylock(&mutexListaDibujables);
-			contenedorBonus.detectarColision(&listaBonusDeBaja, &listaBonusActivos, &listaDibujables);
-			pthread_mutex_unlock (&mutexListaDibujables);
+				for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosActivos.begin(); itEnemigos != listaEnemigosActivos.end(); ++itEnemigos) {
+					enviarAConectados(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, true, itEnemigos->tipoEnemigo);
+				}
 
-			for (list<bala>::iterator itBalas = listaBalasActivas.begin(); itBalas != listaBalasActivas.end(); ++itBalas) {
-				enviarBalasAConectados(itBalas->id,itBalas->x,itBalas->y,itBalas->direccionDisparo, itBalas->tipoBala);
-			}
+				for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosDeBaja.begin(); itEnemigos != listaEnemigosDeBaja.end(); ++itEnemigos) {
+					quitarEnemigo(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, false);
+				}
+				//se puede hacer lo mismo con los tiros
 
-			for (list<bala>::iterator itBalas = listaBalasDeBaja.begin(); itBalas != listaBalasDeBaja.end(); ++itBalas) {
-				quitarBalas(itBalas->id);
-			}
+				for (list<Bonus>::iterator itBonus = listaBonusActivos.begin(); itBonus != listaBonusActivos.end(); ++itBonus) {
+					enviarBonusAConectados(itBonus->getId(), itBonus->getPosX(), itBonus->getPosY(), itBonus->getTipoBonus());
+				}
 
-			for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosActivos.begin(); itEnemigos != listaEnemigosActivos.end(); ++itEnemigos) {
-				enviarAConectados(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, true, itEnemigos->tipoEnemigo);
-			}
-
-			for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosDeBaja.begin(); itEnemigos != listaEnemigosDeBaja.end(); ++itEnemigos) {
-				quitarEnemigo(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, false);
-			}
-			//se puede hacer lo mismo con los tiros
-
-			for (list<Bonus>::iterator itBonus = listaBonusActivos.begin(); itBonus != listaBonusActivos.end(); ++itBonus) {
-				enviarBonusAConectados(itBonus->getId(), itBonus->getPosX(), itBonus->getPosY(), itBonus->getTipoBonus());
-			}
-
-			for (list<Bonus>::iterator itBonus = listaBonusDeBaja.begin(); itBonus != listaBonusDeBaja.end(); ++itBonus) {
-				quitarBonus(itBonus->getId());
-			}
+				for (list<Bonus>::iterator itBonus = listaBonusDeBaja.begin(); itBonus != listaBonusDeBaja.end(); ++itBonus) {
+					quitarBonus(itBonus->getId());
+				}
 
 			}
 
@@ -1302,6 +1236,8 @@ mySocketSrv::mySocketSrv(char* puerto, string xml){
 	serv_addr.sin_addr.s_addr = INADDR_ANY;
 	serv_addr.sin_port = htons(this->puerto);
 
+	//cargo enemigos nivel 1
+	contenedorEnemigos.cargarEnemigosDelNivel(1, ALTO_VENTANA);
 
 }
 

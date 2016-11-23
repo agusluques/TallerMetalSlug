@@ -131,6 +131,6 @@ void ContenedorBalas::detectarColisiones(list<bala> *listaBalasDeBaja, list<Dibu
 }
 
 ContenedorBalas::~ContenedorBalas() {
-	// TODO Auto-generated destructor stub
+	listaDeBalas.clear();
 }
 
