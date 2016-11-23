@@ -14,7 +14,7 @@ public:
 	int tipo;
 	int id;
 
-	SDL_Rect bonus[6];
+	SDL_Rect bonus[7];
 	
 	int xcord;
 	int ycord;

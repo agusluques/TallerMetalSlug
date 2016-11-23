@@ -255,6 +255,10 @@ void DibujableServer::volverAlPrincipio(){
 
 }
 
+void DibujableServer::actualizarBonus(int tipoBonus){
+	//VER QUE HACER CON CADA TIPO DE BONUS
+}
+
 bool DibujableServer::estaConectado(){
 	return this->estaOnline;
 }

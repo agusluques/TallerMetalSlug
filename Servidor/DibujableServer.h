@@ -64,6 +64,7 @@ public:
 	void volverAlPrincipio();
 	bool disparar();
 	void choca();
+	void actualizarBonus(int tipoBonus);
 
 	int velocidadXJugador();
 

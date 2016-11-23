@@ -58,10 +58,12 @@ bool ContenedorBonus::detectarColision(list<Bonus>* listaBonusDeBaja, list<Bonus
 			int yBonus = it->getPosY();
 			int xPersonaje = itPjs->x;
 			int yPersonaje = itPjs->y;
+			int tipoBonus = it->getTipoBonus();
 
 			if((xPersonaje > xBonus - 40) && (xPersonaje < xBonus + 40) && ((yBonus - yPersonaje) <= 40)){
 
 				huboColision = true;
+				itPjs->actualizarBonus(tipoBonus);
 
 				borrarBonus(it->getId(), listaBonusDeBaja, listaBonusActivos);
 
