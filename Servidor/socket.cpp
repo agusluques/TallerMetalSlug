@@ -846,7 +846,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 
 			//list<Bonus> listaBonusAgarrados;
-			//contenedorBonus.detectarColision(&listaBonusDeBaja, &listaBonusActivos, &listaDibujables);
+			int zzz = pthread_mutex_trylock(&mutexListaDibujables);
+			contenedorBonus.detectarColision(&listaBonusDeBaja, &listaBonusActivos, &listaDibujables);
+			pthread_mutex_unlock (&mutexListaDibujables);
 
 			for (list<bala>::iterator itBalas = listaBalasActivas.begin(); itBalas != listaBalasActivas.end(); ++itBalas) {
 				enviarBalasAConectados(itBalas->id,itBalas->x,itBalas->y,itBalas->direccionDisparo, itBalas->tipoBala);
