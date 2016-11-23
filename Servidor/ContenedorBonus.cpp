@@ -50,9 +50,17 @@ bool ContenedorBonus::detectarColision(list<Bonus>* listaBonusDeBaja, list<Bonus
 
 	for(list<Bonus>::iterator it = listaBonusActivos->begin(); it != listaBonusActivos->end(); ++it){
 		for(list<DibujableServer>::iterator itPjs = listaPersonajes->begin(); itPjs != listaPersonajes->end(); ++itPjs){
-			if((it->getPosX() - itPjs->x) <= 40){
+			
+			//cout << "Y Bonus: " << (it->getPosY()) << endl;
+			//cout << "Y Personaje: " << itPjs->y << endl;
 
-				//cout << "Colision con Bonus" << endl;
+			int xBonus = it->getPosX();
+			int yBonus = it->getPosY();
+			int xPersonaje = itPjs->x;
+			int yPersonaje = itPjs->y;
+
+			if((xPersonaje > xBonus - 40) && (xPersonaje < xBonus + 40) && ((yBonus - yPersonaje) <= 40)){
+
 				huboColision = true;
 
 				borrarBonus(it->getId(), listaBonusDeBaja, listaBonusActivos);
