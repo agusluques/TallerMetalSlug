@@ -60,6 +60,7 @@ void ContenedorEnemigos::cargarEnemigosDelNivel(int nivel, int ALTO_VENTANA){
 		nuevoEnemigo(7400, ALTO_VENTANA - 100, 2);
 		nuevoEnemigo(7500, ALTO_VENTANA - 100, 1);
 		nuevoEnemigo(7600, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(7700, ALTO_VENTANA - 100, 1);
 		nuevoEnemigo(7800, ALTO_VENTANA - 100, 1);
 		nuevoEnemigo(7900, ALTO_VENTANA - 100, 4);
 		nuevoEnemigo(8000, ALTO_VENTANA - 100, 2);
