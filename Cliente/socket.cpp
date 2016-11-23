@@ -479,17 +479,6 @@ bool mySocket::iniciarGrafica(){
 		recibirMensaje(&id, sizeof(int));
 		recibirMensaje(&spY, sizeof(int));
 
-		/*
-		string prueb;
-		stringstream sstm;
-	    sstm << id ;
-		prueb = sstm.str();
-		string imagen;
-		imagen = "img/" + prueb + "barra.png";
-
-		 */ //manera 1
-
-		/*
 		string numero ="";
 		string imagen;
 
@@ -497,8 +486,8 @@ bool mySocket::iniciarGrafica(){
 
 
 		imagen = "img/" + numero + "barra.png";
-		 */
-		string imagen = "img/1barra.png"; //modificar
+
+		//string imagen = "img/1barra.png"; //modificar
 
 		grafica.agregarEnergia(id,spY,imagen);
 
