@@ -107,7 +107,13 @@ public:
 	bool modificarBalas(int id, int x, int y, int dirBala, int tipoDisp);
 	void quitarBalas(int id);
 
-	void agregarBonus(int id,int x, int y, string sprite);
+	void inicializarBonus(char* sprite);
+	void agregarBonus(int x, int y, int cont, int tipoBonus);
+	void borrarBonus(int cont);
+
+	void actualizarBonus(int id, int x, int y, int tipoBonus);
+	bool modificarBonus(int id, int x, int y, int tipoBonus);
+	void quitarBonus(int id);
 
 	void setIdCliente(int numCliente){
 		this->numeroCliente = numCliente;

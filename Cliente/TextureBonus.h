@@ -12,6 +12,7 @@ class TextureBonus
 {
 public:
 	int tipo;
+	int id;
 
 	SDL_Rect bonus[6];
 	
@@ -36,10 +37,12 @@ public:
 	void setX(int movimiento);
 	void setY(int movimiento);
 	void setTipo(int tipo);
+	void setId(int id);
 	int getTipo();
 	int posicionX();
 	int posicionY();
 	void inicializarTexture(SDL_Renderer* window, char* text);
+	void actualizar(int x, int y);
 	
 	bool loadFromFile(SDL_Renderer* window, char* path ) {
 		if( texture != NULL ) {

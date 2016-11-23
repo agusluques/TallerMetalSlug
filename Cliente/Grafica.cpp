@@ -79,6 +79,8 @@ void Grafica::close() {
 
 	listaDibujable.clear();
 	listaDibujableEnemigos.clear();
+	listaDibujableBalas.clear();
+	listaDibujableBonus.clear();
 
 	anchoVentana = 0;
 	altoVentana = 0;
@@ -200,14 +202,87 @@ void Grafica::agregarEnergia(int id, int spY, string imagen){
 
 }
 
-void Grafica::agregarBonus(int id, int x, int y, string sprite){
-	TextureBonus nuevo;
-	nuevo.setX(x);
-	cout<<"SETEO X"<<x<<endl;
-	nuevo.setY(y);
-	nuevo.setTipo(id);
-	nuevo.inicializarTexture(window, &sprite[0]);
-	listaDibujableBonus.push_back(nuevo);
+void Grafica::agregarBonus(int x, int y, int cont, int tipoBonus){
+	//Busco en la lista con el ID de bonus si esta actualizo sino agrego
+	if(listaDibujableBonus.empty()){
+		TextureBonus nuevo;
+		nuevo.setX(x);
+		nuevo.setY(y);
+		nuevo.setId(cont);
+		nuevo.setTipo(tipoBonus);
+		string pathBonus = "img/bonus/bonus.png";
+		nuevo.inicializarTexture(window, &pathBonus[0]);
+
+		listaDibujableBonus.push_back(nuevo);
+	} else {
+		bool encontrado = false;
+		for(list<TextureBonus>::iterator j = listaDibujableBonus.begin(); j!= listaDibujableBonus.end(); ++j){
+			if((*j).id == cont){
+				encontrado = true;
+				(*j).xcord = x;
+				(*j).ycord = y;
+			}
+		}
+		if(!encontrado){
+			TextureBonus nuevo;
+			nuevo.setX(x);
+			nuevo.setY(y);
+			nuevo.setId(cont);
+			nuevo.setTipo(tipoBonus);
+			string pathBonus = "img/bonus/bonus.png";
+			nuevo.inicializarTexture(window, &pathBonus[0]);
+
+			listaDibujableBonus.push_back(nuevo);
+		}
+	}
+}
+
+void Grafica::borrarBonus(int cont){
+	for(list<TextureBonus>::iterator j = listaDibujableBonus.begin(); j!= listaDibujableBonus.end(); ++j){
+		if((*j).id == cont){
+			j = listaDibujableBonus.erase(j);
+			j--;
+		}
+	}
+}
+
+void Grafica::actualizarBonus(int id, int x, int y, int tipoBonus){
+	if(!modificarBonus(id, x, y, tipoBonus)){
+		//cout << "Creando nuevo bonus" << endl;
+		TextureBonus nueva;
+		nueva.setId(id);
+		nueva.setX(x);
+		nueva.setY(y);
+
+		char pathBonus[] = "img/bonus/bonus.png";
+		nueva.inicializarTexture(window, pathBonus);
+
+		listaDibujableBonus.push_back(nueva);
+	}
+
+}
+
+bool Grafica::modificarBonus(int id, int x, int y, int tipoBonus){
+	bool actualizo = false;
+
+	for (list<TextureBonus>::iterator it = listaDibujableBonus.begin(); it != listaDibujableBonus.end(); ++it) {
+		//cout << "IT->ID: " << it->id << endl;
+		//cout << "ID: " << id << endl;
+		if ( it->id == id ){
+			it->actualizar( x, y);
+			actualizo = true;
+		}
+	}
+	return actualizo;
+}
+
+void Grafica::quitarBonus(int id){
+	for (list<TextureBonus>::iterator it = listaDibujableBonus.begin(); it != listaDibujableBonus.end(); ++it) {
+		if(it->id == id){
+			it = listaDibujableBonus.erase(it);
+			it--;
+		}
+	}
 }
 
 void Grafica::agregarBala(int x, int y, int cont, bool dirBala, int tipoDisp){
@@ -291,6 +366,7 @@ void Grafica::mostrarDibujables(){
 
 	for (list<TextureBonus>::iterator it2 = listaDibujableBonus.begin(); it2 != listaDibujableBonus.end(); ++it2)
 	{
+		cout << "RENDERIZAANDOOOOOO" << endl;
 		(*it2).render(window, (*it2).texture, xCamara, altoVentana/15);
 	}
 	for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {

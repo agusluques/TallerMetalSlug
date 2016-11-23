@@ -4,6 +4,7 @@ TextureBonus::TextureBonus() {
 	tipo = 1;
 	xcord = 0;
 	ycord = 0;
+	id = 0;
 
 	mTexture = NULL;
 	mWidth = 0;
@@ -17,22 +18,28 @@ TextureBonus::~TextureBonus() {
 	//free();
 }
 
+void TextureBonus::actualizar(int x, int y){
+	this->xcord = x;
+	this->ycord = y;
+}
+
+void TextureBonus::setId(int id){
+	this->id = id;
+}
+
 void TextureBonus::render(SDL_Renderer *window, SDL_Texture *mTexture, int cameraX, int escala){
+	tipo = 0; //SACAR DESPUES! HARDCODEO
+
 	SDL_Rect drawingRect;
-	drawingRect.x = xcord;
-	if (drawingRect.x < cameraX) return;
-	//cout << "POS X CAMARA: " << camera->x << endl;
-	//cout << "POS X CORD: " << xcord << endl;
-	//cout << "drawingRect.x: " << drawingRect.x << endl;
-	drawingRect.y = ycord;// - camera->y;
+	drawingRect.x = xcord - cameraX;
+	drawingRect.y = ycord;
 
-	//((anchoVentana*270)/altoVentana);
+	if (drawingRect.x < 0) drawingRect.x = 0;
 
-    //pasar escala x xml
 	drawingRect.w = bonus[tipo].w + escala;
 	drawingRect.h = bonus[tipo].h + escala;
-	
-	SDL_RenderCopyEx( window, mTexture, &bonus[tipo], &drawingRect, 0, NULL,flipType);
+
+	SDL_RenderCopy(window, mTexture, &bonus[tipo], &drawingRect);
 }
 
 

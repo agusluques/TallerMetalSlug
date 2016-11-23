@@ -242,6 +242,27 @@ bool mySocket::recibirMensaje(){
 			break;
 		}
 
+		case 9: {
+			//recibo Bonus
+			//cout << "ENTRO A RECIBIR BONUS" << endl;
+			int id, x, y, tipoBonus;
+
+			error = recibirMensaje(&id, sizeof(int));
+			error = recibirMensaje(&x, sizeof(int));
+			error = recibirMensaje(&y, sizeof(int));
+			error = recibirMensaje(&tipoBonus, sizeof(int));
+			//cout << "ID: " << id << endl;
+			//cout << "X Bonus: " << x << endl;
+			//cout << "Y Bonus: " << y << endl;
+			//cout << "Tipo Bonus: " << tipoBonus << endl;
+			
+			//grafica.agregarBonus(x, y, id, tipoBonus);
+			grafica.actualizarBonus(id, x, y, tipoBonus);
+
+			break;
+
+		}
+
 		case 8:{
 			//recibo bajas de balas
 			int id;
@@ -252,11 +273,21 @@ bool mySocket::recibirMensaje(){
 			break;
 		}
 
+		case 10:{
+			int id;
+			error = recibirMensaje(&id, sizeof(int));
+
+			grafica.quitarBonus(id);
+
+			break;
+		}
+
 		case 7:{
 			cout << "Se cerro el servidor" << endl;
 			return true;
 			break;
 		}
+		default: break;
 
 		}
 
@@ -471,27 +502,6 @@ bool mySocket::iniciarGrafica(){
 
 		grafica.agregarEnergia(id,spY,imagen);
 
-	}
-
-	//pido informacion de los bonus
-	codigo = 'b';
-	enviarMensaje(&codigo, sizeof(char));
-	int cant;
-	recibirMensaje(&cant, sizeof(int));
-	for (int i = 0; i < cant; i++){
-		int id,x,y;
-		recibirMensaje(&id, sizeof(int));
-		recibirMensaje(&x, sizeof(int));
-		recibirMensaje(&y, sizeof(int));
-
-		int tamSpriteId;
-		recibirMensaje(&tamSpriteId, sizeof(int));
-		char spriteId[tamSpriteId];
-		recibirMensaje(&spriteId, sizeof(char)*tamSpriteId);
-		string result(spriteId);
-		result = "img/bonus/" + result;
-
-		grafica.agregarBonus(id,x,y, result);
 	}
 
 	bool quit = false;

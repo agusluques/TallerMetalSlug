@@ -13,6 +13,7 @@
 #include "Bonus.h"
 #include "ContenedorEnemigos.h"
 #include "ContenedorBalas.h"
+#include "ContenedorBonus.h"
 #include "DibujableServerEnemigo.h"
 
 #define DEBUG 2
@@ -21,7 +22,6 @@ using namespace rapidxml;
 using namespace std;
 
 list<int> listaFDClientes;
-list<Bonus> listaDeBonus;
 list<DibujableServer> listaDibujables;
 list<DibujableServer> listaEnergias;
 list<FondoServer> listaFondos;
@@ -48,6 +48,7 @@ bool jefePresente = false;
 
 ContenedorEnemigos contenedorEnemigos;
 ContenedorBalas contenedorBalas;
+ContenedorBonus contenedorBonus;
 
 //list<mensajeClass> listaDeMensajesAlCliente;
 pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
@@ -225,14 +226,12 @@ void cargarBonus(char* xml){
 		//4- recargar arma 3
 		//5- bonus de vida
 		//6- bonus de killall
-		int id = 0;//rand() % 6;
+		int tipoBonus = 0;//rand() % 6;
 		int x = sum + 400;
 		sum = x;
 		int y = ALTO_VENTANA - 60;
-		string s(path->value());
-		Bonus b(x,y,id, s);
 
-		listaDeBonus.push_back(b);
+		contenedorBonus.nuevoBonus(x,y,tipoBonus);
 	}
 }
 
@@ -337,6 +336,23 @@ void enviarBalasAConectados(int idBala, int x, int y, int direccion, int tipoBal
 	}
 }
 
+void enviarBonusAConectados(int idBonus, int x, int y, int tipoBonus){
+	for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+		if((*it).estaConectado()){
+			char nombreAutor[50];
+			char nombreDestino[50];
+			buscarNombreUsuario(nombreAutor, idBonus);
+			buscarNombreUsuario(nombreDestino, (*it).numCliente());
+			cout << "ENVIO MENSAJE DE BONUS" << endl;
+			mensajeClass mensajeObj(nombreAutor, nombreDestino, idBonus, x, y, 0, tipoBonus, 'D', 9);
+
+			int a = pthread_mutex_trylock(&mutexLista);
+			listaDeMensajes.push_back(mensajeObj);
+			pthread_mutex_unlock (&mutexLista);
+		}
+	}
+}
+
 void quitarBalas(int idBala){
 	for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 		if((*it).estaConectado()){
@@ -346,6 +362,23 @@ void quitarBalas(int idBala){
 			buscarNombreUsuario(nombreDestino, (*it).numCliente());
 
 			mensajeClass mensajeObj(nombreAutor, nombreDestino, idBala, 0, 0, 0, 0, 'D', 8);
+
+			int a = pthread_mutex_trylock(&mutexLista);
+			listaDeMensajes.push_back(mensajeObj);
+			pthread_mutex_unlock (&mutexLista);
+		}
+	}
+}
+
+void quitarBonus(int idBonus){
+	for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+		if((*it).estaConectado()){
+			char nombreAutor[50];
+			char nombreDestino[50];
+			buscarNombreUsuario(nombreAutor, idBonus);
+			buscarNombreUsuario(nombreDestino, (*it).numCliente());
+
+			mensajeClass mensajeObj(nombreAutor, nombreDestino, idBonus, 0, 0, 0, 0, 'D', 10);
 
 			int a = pthread_mutex_trylock(&mutexLista);
 			listaDeMensajes.push_back(mensajeObj);
@@ -703,6 +736,29 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 						break;
 					}
+
+					case 9:{
+						int xCord = (*i).getX();
+						int yCord = (*i).getY();
+						int idObjeto = (*i).getidObjeto();
+						int tipo = (*i).getSpY();
+
+						enviarMensaje(newsockfd, &idObjeto, sizeof(int));
+						enviarMensaje(newsockfd, &xCord, sizeof(int));
+						enviarMensaje(newsockfd, &yCord, sizeof(int));
+						enviarMensaje(newsockfd, &tipo, sizeof(int));
+
+						break;
+					}
+
+					case 10:{
+						//envio baja de bonus
+						int idObjeto = (*i).getidObjeto();
+						enviarMensaje(newsockfd, &idObjeto, sizeof(int));
+
+						break;
+					}
+
 					case 8:{
 						//envio bajas de balas
 						int idObjeto = (*i).getidObjeto();
@@ -739,6 +795,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			//detectarColisiones(&listaDeUsuarios, &listaEnemigosActivos, &listaEnemigosDeBaja);
 
+			list<Bonus> listaBonusActivos;
+			list<Bonus> listaBonusDeBaja;
+			contenedorBonus.buscarActivos(camaraX, &listaBonusActivos, &listaBonusDeBaja);
+
 			for (list<bala>::iterator itBalas = listaBalasActivas.begin(); itBalas != listaBalasActivas.end(); ++itBalas) {
 				enviarBalasAConectados(itBalas->id,itBalas->x,itBalas->y,itBalas->direccionDisparo, itBalas->tipoBala);
 			}
@@ -755,6 +815,14 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				quitarEnemigo(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, false);
 			}
 			//se puede hacer lo mismo con los tiros
+
+			for (list<Bonus>::iterator itBonus = listaBonusActivos.begin(); itBonus != listaBonusActivos.end(); ++itBonus) {
+				enviarBonusAConectados(itBonus->getId(), itBonus->getPosX(), itBonus->getPosY(), itBonus->getTipoBonus());
+			}
+
+			for (list<Bonus>::iterator itBonus = listaBonusDeBaja.begin(); itBonus != listaBonusDeBaja.end(); ++itBonus) {
+				quitarBonus(itBonus->getId());
+			}
 
 			break;
 		}
@@ -854,29 +922,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				//int tamaño spriteID
 				enviarMensaje(newsockfd, &id, sizeof(int));
 				enviarMensaje(newsockfd, &spY, sizeof(int));
-
-			}
-			pthread_mutex_unlock (&mutexListaDibujables);
-			break;
-		}
-
-		case 'b':{
-			int cant = listaDeBonus.size();
-			enviarMensaje(newsockfd, &cant, sizeof(int));
-			int b = pthread_mutex_trylock(&mutexListaDibujables);
-			for (list<Bonus>::iterator it = listaDeBonus.begin(); it != listaDeBonus.end(); ++it)
-			{
-				int id = (*it).getId();
-				int x = (*it).getPosX();
-				int y = (*it).getPosY();
-				enviarMensaje(newsockfd, &id, sizeof(int));
-				enviarMensaje(newsockfd, &x, sizeof(int));
-				enviarMensaje(newsockfd, &y, sizeof(int));
-				int tamSpriteId = (*it).sprite.length() + 1;
-				enviarMensaje(newsockfd,&tamSpriteId,sizeof(int));
-				char spriteId[tamSpriteId];
-				strcpy(spriteId, it->sprite.c_str());
-				enviarMensaje(newsockfd,spriteId,sizeof(char)*tamSpriteId);
 
 			}
 			pthread_mutex_unlock (&mutexListaDibujables);
