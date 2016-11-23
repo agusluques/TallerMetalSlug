@@ -26,9 +26,7 @@ void ContenedorBalas::buscarActivas(int camaraX, list<bala> *listaBalasActivas, 
 	}
 }
 
-bool hayColision(int xTipo, int yTipo, int xBala, int yBala, int direccion){
-
-
+bool hayColision(int xTipo, int yTipo, int xBala, int yBala, int tipoEnemigo){
 	/*
 	bool colisiono = false;
 
@@ -54,8 +52,53 @@ bool hayColision(int xTipo, int yTipo, int xBala, int yBala, int direccion){
 	*/
 
 	//estaria bueno q cada uno tenga su ancho y alto.. y si hay una escala, se aumenta..
+	int w2 = 5; int h2 = 5;
 	int w1 = 30; int h1 = 40;
-	int w2 = 30; int h2 = 40;
+
+	int escala = 60; //altoVentana/10
+
+	switch(tipoEnemigo){
+	/* 1)camina izquierda buscando pegarte
+	 * 2)dispara
+	 * 3)parado boludiando.. (camina x ahi.. salta a las plataformas) (tira bombas juego original)
+	 * 4)parado boludiando.. ve a player y camina a la derecha rajando (cagon)
+	 * 5)soldados jefe1
+	 * 6)jefe1
+	 */
+	case 1:
+		w1 = 10 + escala;
+		h1 = 30 + escala;
+
+		break;
+	case 2:
+		w1 = 10 + escala;
+		h1 = 40 + escala;
+		xTipo += 40;
+
+		break;
+	case 3:
+		w1 = 15 + escala;
+		h1 = 40 + escala;
+
+		break;
+	case 4:
+		w1 = 20 + escala;
+		h1 = 40 + escala;
+
+		break;
+	case 5:
+		w1 = 10 + escala;
+		h1 = 40 + escala;
+		xTipo += 20 + escala;
+
+		break;
+	case 6:
+		w1 = 170 + escala + 120;
+		h1 = 90 + escala + 100;
+
+		break;
+
+	}
 
 	if(xBala + w2 < xTipo) return false;
 	if(xBala > xTipo + w1) return false;
@@ -72,7 +115,7 @@ void ContenedorBalas::detectarColisiones(list<bala> *listaBalasDeBaja, list<Dibu
 		if(itEnemigos->estaVivo){
 			for (list<bala>::iterator itBalas = listaDeBalas.begin(); itBalas != listaDeBalas.end(); ++itBalas) {
 				if(itBalas->usr != 5){ //no comparo enemigo contra enemigo
-					if(hayColision(itEnemigos->x, itEnemigos->y, itBalas->x, itBalas->y, itBalas->direccionDisparo)){
+					if(hayColision(itEnemigos->x, itEnemigos->y, itBalas->x, itBalas->y, itEnemigos->tipoEnemigo)){
 						listaEnemigosDeBaja->push_back((*itEnemigos));
 						itEnemigos = listaEnemigosActivos->erase(itEnemigos);
 						itEnemigos--;

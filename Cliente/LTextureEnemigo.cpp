@@ -34,6 +34,9 @@ void LTextureEnemigo::render(SDL_Renderer *window, SDL_Texture *texture, int cam
 	if(tipo == 6) { //jefe1
 		drawingRect.w += 120;
 		drawingRect.h += 100;
+	}else if(tipo == 5) { //rifle
+		drawingRect.w += 10;
+		drawingRect.h += 20;
 	}else if(tipo == 2) { //rifle
 		drawingRect.w += 20;
 		drawingRect.h += 20;
