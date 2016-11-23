@@ -36,6 +36,7 @@ list<usuarioClass> listaDeUsuarios;
 
 //esto se lee del xml, en caso que no haya nada es 2 por defecto.
 int cantidadJugadores = 2;
+int cantidadJugadoresConectados = 0;
 int modoJuego = 1; //default individual multijugador
 int modoPrueba = 0; //default modo de prueba OFF
 
@@ -1312,7 +1313,7 @@ void mySocketSrv::escuchar(){
 void mySocketSrv::aceptarClientes(){
 	bool activo = true;
 	socklen_t clilen;
-	while (activo) {
+	while (activo && (cantidadJugadoresConectados<cantidadJugadores)) {
 		int newsockfd;
 		sockaddr cli_addr;
 		clilen = sizeof(cli_addr);
@@ -1325,6 +1326,9 @@ void mySocketSrv::aceptarClientes(){
 		}else {
 			pthread_create(&thread, NULL, atender_cliente, (void*)(long)newsockfd);
 			listaFDClientes.push_back(newsockfd);
+			cantidadJugadoresConectados++;
+			cout << "TOTAL: " << cantidadJugadores << endl;
+			cout << "CONECTADOS: " << cantidadJugadoresConectados << endl;
 			/*printf("Conectado!\n");
 			printf("Leyendo mensaje...\n");*/
 		}
