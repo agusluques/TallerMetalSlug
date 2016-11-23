@@ -37,7 +37,6 @@ void TextureBonus::render(SDL_Renderer *window, SDL_Texture *mTexture, int camer
 	drawingRect.w = bonus[tipo].w + escala;
 	drawingRect.h = bonus[tipo].h + escala;
 
-	cout << "TIPO: " << tipo << endl;
 	SDL_RenderCopy(window, mTexture, &bonus[tipo], &drawingRect);
 }
 

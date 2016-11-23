@@ -118,6 +118,8 @@ public:
 	bool modificarBonus(int id, int x, int y, int tipoBonus);
 	void quitarBonus(int id);
 
+	void mostrarScores(int score);
+
 	void setIdCliente(int numCliente){
 		this->numeroCliente = numCliente;
 	}

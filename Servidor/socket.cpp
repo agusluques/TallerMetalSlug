@@ -300,6 +300,7 @@ void enviarMensajeAConectados(string mensaje){
 
 void enviarAConectados(int numeroCliente, int nuevaCordX, int nuevaCordY, int nuevoSpX, int nuevoSpY, char flip, bool avanzar, int tipo){
 	//envio a todos los q esten online el mensaje de q se modifico un objeto
+	
 	int a = pthread_mutex_trylock(&mutexListaUsuarios);
 	for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 		
@@ -703,7 +704,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					//envio tipo de mensaje
 					int tipoMensaje = (*i).getTipoMensaje();
 					enviarMensaje(newsockfd, &tipoMensaje, sizeof(int));
-
 					switch(tipoMensaje){
 					case 1:{
 						//envio de grafica
@@ -793,6 +793,13 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						break;
 					}
 
+					case 11:{
+						int score = 10;
+						enviarMensaje(newsockfd, &score, sizeof(int) );
+
+						break;
+					}
+
 					default:
 						break;
 
@@ -839,7 +846,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			//hay que enviar a conectados un msjedel tipo pasaste de nivel y cuando
 			//los conectados lo reciban, le envian al servidor un mensaje con un codigo
 			//para que muestre una pantalla con los scores
-			if (pasarDeNivel) cout << "PASASTE DE NIVEL PAPA"<<endl;
+			if (pasarDeNivel){
+				enviarAConectados(NULL, NULL, NULL, NULL, NULL, NULL, NULL, 11);
+			}
 
 
 			

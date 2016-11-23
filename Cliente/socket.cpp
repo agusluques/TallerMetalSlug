@@ -276,8 +276,19 @@ bool mySocket::recibirMensaje(){
 		case 10:{
 			int id;
 			error = recibirMensaje(&id, sizeof(int));
-
+			cout<<"ENTRO A MESNJAE 10"<<endl;
 			grafica.quitarBonus(id);
+			
+			break;
+		}
+
+		case 11:{
+			int score;
+			cout<<"ENTRO A MESNJAE 11"<<endl;
+			error = recibirMensaje(&score, sizeof(int));
+			
+			cout<<score<<endl;
+			grafica.mostrarScores(score);
 
 			break;
 		}
@@ -287,6 +298,7 @@ bool mySocket::recibirMensaje(){
 			return true;
 			break;
 		}
+
 		default: break;
 
 		}

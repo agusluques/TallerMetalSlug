@@ -214,6 +214,20 @@ void Grafica::agregarEnergia(int id, int spY, string imagen){
 
 }
 
+void Grafica::mostrarScores(int score){
+	SDL_RenderClear( window );
+
+	TTF_Font *font = TTF_OpenFont("OpenSans-ExtraBold.ttf",50);
+	SDL_Color color = {249, 249, 16, 1};
+	SDL_Surface* superficie = TTF_RenderText_Solid(font, "Scores",color);
+	puntaje = SDL_CreateTextureFromSurface( window, superficie);
+	puntajeRect.x = puntajeRect.y = 250;
+	SDL_QueryTexture(puntaje, NULL, NULL, &puntajeRect.w, &puntajeRect.h);
+	SDL_FreeSurface(superficie);
+
+}
+
+
 void Grafica::agregarBonus(int x, int y, int cont, int tipoBonus){
 	//Busco en la lista con el ID de bonus si esta actualizo sino agrego
 	if(listaDibujableBonus.empty()){
