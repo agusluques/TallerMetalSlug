@@ -42,6 +42,9 @@ private:
 	SDL_Texture *soldadosTexture;
 	SDL_Texture *energiaTexture;
 
+	SDL_Texture *puntaje;
+	SDL_Rect puntajeRect;
+
 	list<LTexture> listaDibujable;
 	list<TextureEnergia> listaDibujableEnergia;
 	list<TextureBalas> listaDibujableBalas;

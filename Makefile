@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -lpthread -pthread -lSDL2 -lSDL2_image -g
+CXXFLAGS = -lpthread -pthread -lSDL2 -lSDL2_image -lSDL2_ttf -g
 
 LIBRERIAS = socket.cpp
 OTRAS = usuarioClass.cpp

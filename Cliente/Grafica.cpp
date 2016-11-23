@@ -4,6 +4,7 @@
 #include <cstring>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 Grafica::Grafica() {
 	gWindow = NULL;
@@ -14,6 +15,7 @@ Grafica::Grafica() {
 
 	soldadosTexture = NULL;
 	energiaTexture = NULL;
+	puntaje = NULL;
 
 	windowARenderizar = NULL;
 	window = NULL;
@@ -67,11 +69,13 @@ void Grafica::close() {
 	SDL_DestroyTexture(spriteFondo3);
 	SDL_DestroyTexture(soldadosTexture);
 	SDL_DestroyTexture(energiaTexture);
+	SDL_DestroyTexture(puntaje);
 	spriteFondo1 = NULL;
 	spriteFondo2 = NULL;
 	spriteFondo3 = NULL;
 	soldadosTexture = NULL;
 	energiaTexture = NULL;
+	puntaje = NULL;
 
 	fondo1 = NULL;
 	fondo2 = NULL;
@@ -199,6 +203,14 @@ void Grafica::agregarEnergia(int id, int spY, string imagen){
 	nuevo.inicializarTexture(window, nombre);
 
 	listaDibujableEnergia.push_back(nuevo);
+
+	TTF_Font *font = TTF_OpenFont("OpenSans-ExtraBold.ttf",50);
+	SDL_Color color = {144,77,255,255};
+	SDL_Surface* superficie = TTF_RenderText_Solid(font, "hola a todos",color);
+	puntaje = SDL_CreateTextureFromSurface( window, superficie);
+	puntajeRect.x = puntajeRect.y = 0;
+	SDL_QueryTexture(puntaje, NULL, NULL, &puntajeRect.w, &puntajeRect.h);
+	SDL_FreeSurface(superficie);
 
 }
 
@@ -353,6 +365,7 @@ void Grafica::mostrarDibujables(){
 	SDL_RenderCopy (window, spriteFondo2, &camera2, NULL);
 	SDL_RenderCopy (window, spriteFondo3, &camera3, NULL);
 
+
 	for (list<TextureEnergia>::iterator it = listaDibujableEnergia.begin(); it != listaDibujableEnergia.end(); ++it) {
 		it->renderEnergia(window, energiaTexture, altoVentana/20);
 	}
@@ -376,6 +389,8 @@ void Grafica::mostrarDibujables(){
 	list<LTexture>::iterator i = listaDibujable.begin();
 	advance(i,numeroCliente - 1);
 	(*i).render(window, (*i).texture, xCamara, altoVentana/12);
+
+	SDL_RenderCopy(window, puntaje, NULL, &puntajeRect);
 
 	SDL_RenderPresent( window );
 }
@@ -461,6 +476,7 @@ bool Grafica::inicializarVentana(int ancho, int alto){
 	}
 	else
 	{
+		TTF_Init();
 		//Create window
 		windowARenderizar = SDL_CreateWindow( "METAL SLUG", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, ancho, alto, SDL_WINDOW_SHOWN );
 		if( windowARenderizar == NULL )
@@ -540,6 +556,7 @@ bool Grafica::inicializarFondo(char *path1, char* path2, char* path3){
 	camera3.y = 0;
 	camera3.w = ((anchoVentana*270)/altoVentana);
 	camera3.h = 270;
+
 
 	SDL_Surface* loadedSurface = IMG_Load("soldado.png");
 	soldadosTexture = SDL_CreateTextureFromSurface( window, loadedSurface );
