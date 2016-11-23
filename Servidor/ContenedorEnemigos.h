@@ -13,6 +13,7 @@ class ContenedorEnemigos {
 	public:
 		list<DibujableServerEnemigo> listaEnemigos;
 		ContenedorEnemigos();
+		void cargarEnemigosDelNivel(int nivel, int ALTO_VENTANA);
 		void nuevoEnemigo(int posX, int posY, int tipoEnemigo);
 		void buscarActivos(int camaraX, list<DibujableServerEnemigo> *listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, ContenedorBalas *contenedorBalas);
 		bool detectarColision(int camaraX, list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, int xBala, int yBala);
