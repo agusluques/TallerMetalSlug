@@ -56,15 +56,17 @@ void ContenedorEnemigos::buscarActivos(int camaraX, list<DibujableServerEnemigo>
 	}
 }
 
-void ContenedorEnemigos::matarEnemigos(int camaraX, list<DibujableServerEnemigo> listaEnemigosDisparados){
+bool ContenedorEnemigos::matarEnemigos(int camaraX, list<DibujableServerEnemigo> listaEnemigosDisparados){
+	bool esJefe = false;
 	for (list<DibujableServerEnemigo>::iterator it = listaEnemigos.begin(); it != listaEnemigos.end(); ++it) {
 		for (list<DibujableServerEnemigo>::iterator it2 = listaEnemigosDisparados.begin(); it2 != listaEnemigosDisparados.end(); ++it2) {
 			if(it2->id == it->id){
-				it->matar();
+				esJefe = it->matar();
 			}
 		}
 		if(it->x > camaraX + 850) break;
 	}
+	return esJefe;
 }
 
 void ContenedorEnemigos::iniciarJefe(int camaraX){

@@ -277,6 +277,10 @@ bool DibujableServerEnemigo::mover(int camaraX, list<DibujableServerEnemigo> *li
 		morir();
 		break;
 
+	case 10:
+		morirBoss();
+		break;
+
 	case 1:
 		if(x <= camaraX + (800-80)){ // ancho pantalla - tam sprite
 			if(!actuo) ataqueSalto();
@@ -372,16 +376,36 @@ void  DibujableServerEnemigo::morir(){
 	}
 }
 
-void  DibujableServerEnemigo::matar(){
+void  DibujableServerEnemigo::morirBoss(){
+	spX += 1;
+	if (spX > 5){
+		spX = 2;
+		x = -100;
+	}
+}
+
+bool  DibujableServerEnemigo::matar(){
 	mVelX = 0;
 	mVelY = 0;
 
-	spY = 8;
-	spX = -1;
-
 	estaVivo = false;
+	if (tipoEnemigo == 6){
+		spY = 6;
+		spX = 1;
 
-	tipoEnemigo = 0; //muriendo
+		tipoEnemigo = 10; //muriendo boss
+
+		return true;
+		
+	} else {
+		spY = 8;
+		spX = -1;
+
+		tipoEnemigo = 0; //muriendo
+
+		return false;
+	}
+	
 }
 
 bool DibujableServerEnemigo::estaVisible(int camaraX){
