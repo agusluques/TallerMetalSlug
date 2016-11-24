@@ -220,23 +220,24 @@ void Grafica::agregarScores (int id){
 	//SDL_QueryTexture(puntaje, NULL, NULL, &puntajeRect.w, &puntajeRect.h);
 	//SDL_FreeSurface(superficie);
 
-    SDL_Color color;
+
 
     if (id==1){
-       color = {85,170,230,255}; //celeste
+       SDL_Color color1 = {85,170,230,255}; //celeste
+       nuevo.setColor(color1);
     }
-
     if( id==2){
-      color = {0,0,255,255}; //azul
+        SDL_Color color2 = {0,0,255,255}; //azul
+        nuevo.setColor(color2);
     }
     if (id ==3){
-    	color = {255,255,255,255}; //blanco
+        SDL_Color color3 = {255,255,255,255}; //blanco
+        nuevo.setColor(color3);
     }
     if (id == 4){
-    	color = {0,0,0,255}; //negro
+        SDL_Color color4 = {0,0,0,255}; //negro
+        nuevo.setColor(color4);
     }
-
-    nuevo.setColor(color);
 
 	nuevo.inicializarTexture(window);
 
