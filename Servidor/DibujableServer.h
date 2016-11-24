@@ -29,7 +29,9 @@ public:
 	int spYaux;
 	bool estaOnline;
 	bool estaDisparando;
-
+	
+	int score;
+	int vida;
 	int tipoDeArma;
 
 	Escenario escenario;
@@ -55,6 +57,7 @@ public:
 	int getSpX();
 	int getSpY();
 	int getId();
+	int getScore();
 
 	void saltar();
 	void caminarDerecha();

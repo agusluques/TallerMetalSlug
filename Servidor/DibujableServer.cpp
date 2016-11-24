@@ -13,6 +13,8 @@ DibujableServer::DibujableServer() {
 	mVelY = 0;
 	conectar();
 	basePlataforma = 0;
+	score = 0;
+	vida = 10;
 
 	tipoDeArma = 0;
 
@@ -58,6 +60,9 @@ int DibujableServer::getSpY(){
 }
 int DibujableServer::getId(){
 	return this->id;
+}
+int DibujableServer::getScore(){
+	return this->score;
 }
 
 void DibujableServer::saltar(){

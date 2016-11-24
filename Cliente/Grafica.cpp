@@ -245,6 +245,10 @@ void Grafica::agregarScores (int id){
 
 }
 
+void Grafica::actualizarScore(int id, int score){
+	//recorrer la listaDibjableScore y cuando encuentra el id cambiar score
+}
+
 void Grafica::mostrarScores(int score){
 	SDL_RenderClear( window );
 

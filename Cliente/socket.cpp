@@ -293,6 +293,17 @@ bool mySocket::recibirMensaje(){
 			break;
 		}
 
+		case 12:{
+			int id,score;
+
+			error = recibirMensaje(&id, sizeof(int));
+			error = recibirMensaje(&score, sizeof(int));
+
+			grafica.actualizarScore(id, score);
+
+			break;
+		}
+
 		case 7:{
 			cout << "Se cerro el servidor" << endl;
 			return true;

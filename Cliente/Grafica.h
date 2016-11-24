@@ -122,6 +122,7 @@ public:
 
 	void agregarScores(int id); //inicializa de cero los scores;
 	void mostrarScores(int score);
+	void actualizarScore(int id, int score);
 
 	void setIdCliente(int numCliente){
 		this->numeroCliente = numCliente;

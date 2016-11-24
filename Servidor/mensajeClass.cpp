@@ -40,6 +40,13 @@ mensajeClass::mensajeClass(int tipo, char *destino, string mensajeEnviado){
 	tipoMensaje = tipo;
 }
 
+mensajeClass::mensajeClass(int tipo, char *destino, int autor, int score){
+	this->idusrAutor = autor;
+	strcpy(this->usrDestino, destino);
+	this->tipoMensaje = tipo;
+	this->score = score;
+}
+
 mensajeClass::mensajeClass(int tipo, char* destino){
 	strcpy(this->usrDestino, destino);
 	tipoMensaje = tipo;
@@ -51,6 +58,10 @@ string mensajeClass::nombreDestinatario(){
 
 string mensajeClass::nombreAutor(){
 	return this->usrAutor;
+}
+
+int mensajeClass::numAutor(){
+	return this->idusrAutor;
 }
 
 int mensajeClass::getX(){
@@ -67,6 +78,10 @@ int mensajeClass::getSpX(){
 
 int mensajeClass::getSpY(){
 	return this->spY;
+}
+
+int mensajeClass::getScore(){
+	return this->score;
 }
 
 int mensajeClass::getidObjeto(){
