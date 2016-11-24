@@ -786,86 +786,86 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			int tamanioMensaje = 0;
 			enviarMensaje(newsockfd, &tamanioMensaje, sizeof(int));
 
-			
-			//BUSCO ENEMIGOS
-			list<DibujableServerEnemigo> listaEnemigosActivos;
-			list<DibujableServerEnemigo> listaEnemigosDeBaja;
+			if(numeroCliente == 1){
+				//BUSCO ENEMIGOS
+				list<DibujableServerEnemigo> listaEnemigosActivos;
+				list<DibujableServerEnemigo> listaEnemigosDeBaja;
 
-			int aa = pthread_mutex_trylock(&mutexContenedorEnemigos);
-			int bb = pthread_mutex_trylock(&mutexContenedorBalas);
+				int aa = pthread_mutex_trylock(&mutexContenedorEnemigos);
+				int bb = pthread_mutex_trylock(&mutexContenedorBalas);
 
-			contenedorEnemigos.buscarActivos(camaraX,&listaEnemigosActivos, &listaEnemigosDeBaja, &contenedorBalas);
+				contenedorEnemigos.buscarActivos(camaraX,&listaEnemigosActivos, &listaEnemigosDeBaja, &contenedorBalas);
 
-			pthread_mutex_unlock (&mutexContenedorBalas);
-			pthread_mutex_unlock (&mutexContenedorEnemigos);
+				pthread_mutex_unlock (&mutexContenedorBalas);
+				pthread_mutex_unlock (&mutexContenedorEnemigos);
 
-			//BUSCO BALAS
-			list<bala> listaBalasActivas;
-			list<bala> listaBalasDeBaja;
+				//BUSCO BALAS
+				list<bala> listaBalasActivas;
+				list<bala> listaBalasDeBaja;
 
-			int bbb = pthread_mutex_trylock(&mutexContenedorBalas);
-			contenedorBalas.buscarActivas(camaraX, &listaBalasActivas, &listaBalasDeBaja);
-
-
-			list<DibujableServerEnemigo> listaEnemigosDisparados;
-			contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados, &listaScores);
-			//¿¿¿¿ aca deberia ir lo de enviarAconectados los puntos de las muertes???
-            for (list<DibujableServerAdicional>::iterator itScore = listaScores.begin(); itScore != listaScores.end(); ++itScore) {
-			   enviarScoreAConectados(itScore->id,itScore->aumentable);
-		    }
-			pthread_mutex_unlock (&mutexContenedorBalas);
+				int bbb = pthread_mutex_trylock(&mutexContenedorBalas);
+				contenedorBalas.buscarActivas(camaraX, &listaBalasActivas, &listaBalasDeBaja);
 
 
-			int aaa = pthread_mutex_trylock(&mutexContenedorEnemigos);
-			int pasarDeNivel = contenedorEnemigos.matarEnemigos(camaraX, listaEnemigosDisparados);
-			pthread_mutex_unlock (&mutexContenedorEnemigos);
+				list<DibujableServerEnemigo> listaEnemigosDisparados;
+				contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados, &listaScores);
+				//¿¿¿¿ aca deberia ir lo de enviarAconectados los puntos de las muertes???
+                for (list<DibujableServerAdicional>::iterator itScore = listaScores.begin(); itScore != listaScores.end(); ++itScore) {
+				   enviarScoreAConectados(itScore->id,itScore->aumentable);
+			    }
+				pthread_mutex_unlock (&mutexContenedorBalas);
 
-			//hay que enviar a conectados un msjedel tipo pasaste de nivel y cuando
-			//los conectados lo reciban, le envian al servidor un mensaje con un codigo
-			//para que muestre una pantalla con los scores
-			if (pasarDeNivel){
-				//agusss : ya esta la lista de "DibujableServerAdicional" esta el metodo getAumentable que seria el SCORE actual para pasarles, Pablo.
-				enviarAConectados(0, 0, 0, 0, 0, '0', NULL, 11);//TENGO QUE MEJORARLO
+
+				int aaa = pthread_mutex_trylock(&mutexContenedorEnemigos);
+				int pasarDeNivel = contenedorEnemigos.matarEnemigos(camaraX, listaEnemigosDisparados);
+				pthread_mutex_unlock (&mutexContenedorEnemigos);
+
+				//hay que enviar a conectados un msjedel tipo pasaste de nivel y cuando
+				//los conectados lo reciban, le envian al servidor un mensaje con un codigo
+				//para que muestre una pantalla con los scores
+				if (pasarDeNivel){
+					//agusss : ya esta la lista de "DibujableServerAdicional" esta el metodo getAumentable que seria el SCORE actual para pasarles, Pablo.
+					enviarAConectados(0, 0, 0, 0, 0, '0', NULL, 11);//TENGO QUE MEJORARLO
+				}
+
+				list<Bonus> listaBonusActivos;
+				list<Bonus> listaBonusDeBaja;
+
+				int aaaa = pthread_mutex_trylock(&mutexContenedorBonus);
+				contenedorBonus.buscarActivos(camaraX, &listaBonusActivos, &listaBonusDeBaja);
+				pthread_mutex_unlock (&mutexContenedorBonus);
+
+				//list<Bonus> listaBonusAgarrados;
+				int zzz = pthread_mutex_trylock(&mutexListaDibujables);
+				contenedorBonus.detectarColision(&listaBonusDeBaja, &listaBonusActivos, &listaDibujables);
+				pthread_mutex_unlock (&mutexListaDibujables);
+
+				for (list<bala>::iterator itBalas = listaBalasActivas.begin(); itBalas != listaBalasActivas.end(); ++itBalas) {
+					enviarBalasAConectados(itBalas->id,itBalas->x,itBalas->y,itBalas->direccionDisparo, itBalas->tipoBala);
+				}
+
+				for (list<bala>::iterator itBalas = listaBalasDeBaja.begin(); itBalas != listaBalasDeBaja.end(); ++itBalas) {
+					quitarBalas(itBalas->id);
+				}
+
+				for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosActivos.begin(); itEnemigos != listaEnemigosActivos.end(); ++itEnemigos) {
+					enviarAConectados(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, true, itEnemigos->tipoEnemigo);
+				}
+
+				for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosDeBaja.begin(); itEnemigos != listaEnemigosDeBaja.end(); ++itEnemigos) {
+					quitarEnemigo(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, false);
+				}
+				//se puede hacer lo mismo con los tiros
+
+				for (list<Bonus>::iterator itBonus = listaBonusActivos.begin(); itBonus != listaBonusActivos.end(); ++itBonus) {
+					enviarBonusAConectados(itBonus->getId(), itBonus->getPosX(), itBonus->getPosY(), itBonus->getTipoBonus());
+				}
+
+				for (list<Bonus>::iterator itBonus = listaBonusDeBaja.begin(); itBonus != listaBonusDeBaja.end(); ++itBonus) {
+					quitarBonus(itBonus->getId());
+				}
+
 			}
-
-			list<Bonus> listaBonusActivos;
-			list<Bonus> listaBonusDeBaja;
-
-			int aaaa = pthread_mutex_trylock(&mutexContenedorBonus);
-			contenedorBonus.buscarActivos(camaraX, &listaBonusActivos, &listaBonusDeBaja);
-			pthread_mutex_unlock (&mutexContenedorBonus);
-
-			//list<Bonus> listaBonusAgarrados;
-			int zzz = pthread_mutex_trylock(&mutexListaDibujables);
-			contenedorBonus.detectarColision(&listaBonusDeBaja, &listaBonusActivos, &listaDibujables);
-			pthread_mutex_unlock (&mutexListaDibujables);
-
-			for (list<bala>::iterator itBalas = listaBalasActivas.begin(); itBalas != listaBalasActivas.end(); ++itBalas) {
-				enviarBalasAConectados(itBalas->id,itBalas->x,itBalas->y,itBalas->direccionDisparo, itBalas->tipoBala);
-			}
-
-			for (list<bala>::iterator itBalas = listaBalasDeBaja.begin(); itBalas != listaBalasDeBaja.end(); ++itBalas) {
-				quitarBalas(itBalas->id);
-			}
-
-			for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosActivos.begin(); itEnemigos != listaEnemigosActivos.end(); ++itEnemigos) {
-				enviarAConectados(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, true, itEnemigos->tipoEnemigo);
-			}
-
-			for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosDeBaja.begin(); itEnemigos != listaEnemigosDeBaja.end(); ++itEnemigos) {
-				quitarEnemigo(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, false);
-			}
-			//se puede hacer lo mismo con los tiros
-
-			for (list<Bonus>::iterator itBonus = listaBonusActivos.begin(); itBonus != listaBonusActivos.end(); ++itBonus) {
-				enviarBonusAConectados(itBonus->getId(), itBonus->getPosX(), itBonus->getPosY(), itBonus->getTipoBonus());
-			}
-
-			for (list<Bonus>::iterator itBonus = listaBonusDeBaja.begin(); itBonus != listaBonusDeBaja.end(); ++itBonus) {
-				quitarBonus(itBonus->getId());
-			}
-
-		
 
 			break;
 		}
