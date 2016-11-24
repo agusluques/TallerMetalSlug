@@ -5,10 +5,10 @@ ContenedorBalas::ContenedorBalas() {
 	ultimoId = 0;
 }
 
-void ContenedorBalas::nuevaBala(int posX, int posY, int idUsuario, int direccionDisparo, int tipoDeDisparo){ //5 maquina
+void ContenedorBalas::nuevaBala(int posX, int posY, int idUsuario, int direccionDisparo, int tipoDeArma){ //5 maquina
 	if(ultimoId > 500) ultimoId = 0; //para no usar numeros muy grandes...
 
-	bala nuevaBala(posX,posY,idUsuario, ultimoId += 1,direccionDisparo, tipoDeDisparo);
+	bala nuevaBala(posX,posY,idUsuario, ultimoId += 1,direccionDisparo, tipoDeArma);
 
 	listaDeBalas.push_back(nuevaBala);
 }
@@ -26,36 +26,35 @@ void ContenedorBalas::buscarActivas(int camaraX, list<bala> *listaBalasActivas, 
 	}
 }
 
-bool hayColision(int xTipo, int yTipo, int xBala, int yBala, int tipoEnemigo){
-	/*
-	bool colisiono = false;
-
-	int ancho1 = 35; int alto1 = 40;
-	int ancho2 = 5; int alto2 = 40;
-
-	cout << "yBala : " << yBala << endl;
-	if( yTipo != 500)
-	   cout << yTipo << endl;
-
-	if (direccion <= 3){ //x bala positiva
-	  if((xBala <= xTipo + ancho1)&&(xBala >= xTipo - ancho2)&&(yBala <= yTipo + alto1)&&(yBala >= yTipo - alto2)){
-		  colisiono = true;
-		  return colisiono;
-	  }
-    }else{
-    	return false;
-
-    }
-
-	return colisiono;
-
-	*/
-
-	//estaria bueno q cada uno tenga su ancho y alto.. y si hay una escala, se aumenta..
-	int w2 = 5; int h2 = 5;
+bool hayColision(int xTipo, int yTipo, int xBala, int yBala, int tipoEnemigo, int tipoBala){
 	int w1 = 30; int h1 = 40;
-
+	int w2 = 5; int h2 = 5;
 	int escala = 60; //altoVentana/10
+
+	switch(tipoBala){
+	case 0:
+		w2 = 6 + escala;
+		h2 = 6 + escala;
+		break;
+
+	case 1: //H
+		w2 = 25 + escala;
+		h2 = 5 + escala;
+		break;
+
+	case 2: //R
+		w2 = 50 + escala;
+		h2 = 8 + escala;
+
+		break;
+
+	case 3: //S
+		w2 = 100 + escala;
+		h2 = 64 + escala;
+
+		break;
+
+	}
 
 	switch(tipoEnemigo){
 	/* 1)camina izquierda buscando pegarte
@@ -123,7 +122,7 @@ void ContenedorBalas::detectarColisiones(list<bala> *listaBalasDeBaja, list<Dibu
 		if(itEnemigos->estaVivo){
 			for (list<bala>::iterator itBalas = listaDeBalas.begin(); itBalas != listaDeBalas.end(); ++itBalas) {
 				if(itBalas->usr != 5){ //no comparo enemigo contra enemigo
-					if(hayColision(itEnemigos->x, itEnemigos->y, itBalas->x, itBalas->y, itEnemigos->tipoEnemigo)){
+					if(hayColision(itEnemigos->x, itEnemigos->y, itBalas->x, itBalas->y, itEnemigos->tipoEnemigo, itBalas->tipoBala)){
 						listaEnemigosDeBaja->push_back((*itEnemigos));
                         acumuloPuntajes(itBalas->tipoBala, itBalas->id, listaScores);
 						itEnemigos = listaEnemigosActivos->erase(itEnemigos);

@@ -12,6 +12,8 @@ class bala{
 		int direccionDisparo;
 		int tipoBala;
 
+		int spY;
+
 		bala(int xPos, int yPos, int usr, int id, int direccionDeDisparo, int tipoDeBala);
 		int getPosX();
 		int getPosY();

@@ -229,15 +229,16 @@ bool mySocket::recibirMensaje(){
 
 		case 6: {
 			//recibo balas
-			int id, x, y, tipoDisp, dirBala;
+			int id, x, y, tipoDisp, dirBala, spY;
 
 			error = recibirMensaje(&id, sizeof(int));
 			error = recibirMensaje(&x, sizeof(int));
 			error = recibirMensaje(&y, sizeof(int));
 			error = recibirMensaje(&dirBala, sizeof(int));
 			error = recibirMensaje(&tipoDisp, sizeof(int));
+			error = recibirMensaje(&spY, sizeof(int));
 
-			grafica.actualizarBalas(id, x, y, dirBala, tipoDisp);
+			grafica.actualizarBalas(id, x, y, dirBala, tipoDisp, spY);
 
 			break;
 		}
@@ -255,7 +256,7 @@ bool mySocket::recibirMensaje(){
 			//cout << "X Bonus: " << x << endl;
 			//cout << "Y Bonus: " << y << endl;
 			//cout << "Tipo Bonus: " << tipoBonus << endl;
-			
+
 			//grafica.agregarBonus(x, y, id, tipoBonus);
 			grafica.actualizarBonus(id, x, y, tipoBonus);
 
@@ -278,7 +279,7 @@ bool mySocket::recibirMensaje(){
 			error = recibirMensaje(&id, sizeof(int));
 			cout<<"ENTRO A MESNJAE 10"<<endl;
 			grafica.quitarBonus(id);
-			
+
 			break;
 		}
 
@@ -286,7 +287,7 @@ bool mySocket::recibirMensaje(){
 			int score;
 			cout<<"ENTRO A MESNJAE 11"<<endl;
 			error = recibirMensaje(&score, sizeof(int));
-			
+
 			cout<<score<<endl;
 			grafica.mostrarScores(score);
 

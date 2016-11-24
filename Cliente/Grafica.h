@@ -108,8 +108,8 @@ public:
 	void agregarBala(int x, int y, int cont, bool dirBala, int tipoDisp);
 	void borrarBala(int cont);
 
-	void actualizarBalas(int id, int x, int y, int dirBala, int tipoDisp);
-	bool modificarBalas(int id, int x, int y, int dirBala, int tipoDisp);
+	void actualizarBalas(int id, int x, int y, int dirBala, int tipoDisp, int spY);
+	bool modificarBalas(int id, int x, int y, int dirBala, int tipoDisp, int spY);
 	void quitarBalas(int id);
 
 	void inicializarBonus(char* sprite);

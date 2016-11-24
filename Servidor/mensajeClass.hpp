@@ -14,13 +14,13 @@ private:
 	int y;
 	int spX;
 	int spY;
-	bool avanzar;
 	int score;
 
 	int tipoMensaje;
 	string mensaje;
 public:
 	int tipoDibujable;
+	int avanzar;
 	char flip;
 
 	mensajeClass();
@@ -29,6 +29,8 @@ public:
 	mensajeClass(int tipo, char *destino, string mensajeEnviado);
 	mensajeClass(int tipo, char* destino);
 	mensajeClass(int tipo, char *destino, int autor, int score);
+	mensajeClass(int aux, char * destino, int id, int x, int y, int spx, int spy, char flip, int tipo);
+
 	std::string nombreDestinatario();
 	std::string nombreAutor();
 	int numAutor();

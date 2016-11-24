@@ -19,7 +19,7 @@ public:
 	int ultimoId;
 
 	ContenedorBalas();
-	void nuevaBala(int posX, int posY, int idUsuario, int direccionDisparo, int tipoDeDisparo);
+	void nuevaBala(int posX, int posY, int idUsuario, int direccionDisparo, int tipoDeArma);
 	void buscarActivas(int camaraX, list<bala> *listaEnemigosActivos, list<bala>* listaEnemigosDeBaja);
 	void detectarColisiones(list<bala> *listaBalasDeBaja, list<DibujableServerEnemigo> *listaEnemigosActivos, list<DibujableServerEnemigo> *listaEnemigosDeBaja, list<DibujableServerAdicional> *listaScores);
     void acumuloPuntajes(int tipoDeBala, int idJugador, list<DibujableServerAdicional> *listaScores);

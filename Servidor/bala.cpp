@@ -6,6 +6,29 @@ bala::bala(int xPos, int yPos, int usr, int id, int direccionDeDisparo, int tipo
 	this->y = yPos;
 	this->direccionDisparo = direccionDeDisparo;
 	this->tipoBala = tipoDeBala;
+	this->spY = 0;
+
+	switch(tipoBala){
+	case 0:
+		x += 30;
+		y += 20;
+		break;
+
+	case 1:
+		x += 30;
+		y += 20;
+		break;
+
+	case 2:
+		x += 30;
+		y += 20;
+		break;
+
+	case 3:
+		x += 60;
+		y -= 30;
+		break;
+	}
 
 	switch(direccionDisparo){
 	//DIRECCIONES DE DISPAROS: der diagder arriba diagizq izq abajoizq abajo abajoder
@@ -95,8 +118,24 @@ bool bala::estaVisible(int camaraX){
 }
 
 void bala::mover(){
-	x += xVel;
-	y += yVel;
+	/*
+	 * 0 pistolita
+	 * 1 H
+	 * 2 R
+	 * 3 S
+	 */
+//aumentar velocidad de R..
+	if (tipoBala != 3){
+		x += xVel;
+		y += yVel;
+	}else{
+		spY += 1;
+		if (spY > 5) {
+			spY = 6;
+			x = -100;
+		}
+	}
+
 }
 
 bala::~bala(){}

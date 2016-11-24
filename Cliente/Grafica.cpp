@@ -152,14 +152,15 @@ void Grafica::quitarEnemigo(int idObjeto){
 	}
 }
 
-void Grafica::actualizarBalas(int id, int x, int y, int dirBala, int tipoDisp){
-	if(!modificarBalas(id, x, y, dirBala, tipoDisp)){
+void Grafica::actualizarBalas(int id, int x, int y, int dirBala, int tipoDisp, int spY){
+	if(!modificarBalas(id, x, y, dirBala, tipoDisp, spY)){
 		TextureBalas nueva;
 		nueva.setId(id);
 		nueva.setX(x);
 		nueva.setY(y);
 		nueva.setSpX(dirBala);
-		nueva.setSpY(tipoDisp);
+		nueva.setTipoDisparo(tipoDisp);
+		nueva.setSpY(spY);
 
 		char pathBalas[] = "img/balas/balas.png";
 		nueva.inicializarTexture(window, pathBalas);
@@ -169,12 +170,12 @@ void Grafica::actualizarBalas(int id, int x, int y, int dirBala, int tipoDisp){
 
 }
 
-bool Grafica::modificarBalas(int id, int x, int y, int dirBala, int tipoDisp){
+bool Grafica::modificarBalas(int id, int x, int y, int dirBala, int tipoDisp, int spY){
 	bool actualizo = false;
 
 	for (list<TextureBalas>::iterator it = listaDibujableBalas.begin(); it != listaDibujableBalas.end(); ++it) {
 		if ( it->id == id ){
-			it->actualizar( x, y, dirBala, tipoDisp);
+			it->actualizar( x, y, dirBala, tipoDisp, spY);
 			actualizo = true;
 		}
 	}

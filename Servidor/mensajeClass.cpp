@@ -52,6 +52,19 @@ mensajeClass::mensajeClass(int tipo, char* destino){
 	tipoMensaje = tipo;
 }
 
+mensajeClass::mensajeClass(int aux, char * destino, int id, int x, int y, int spx, int spy, char flip, int tipo){
+	strcpy(this->usrDestino, destino);
+	this->idObjeto = id;
+	this->x = x;
+	this->y = y;
+	this->spX = spx;
+	this->spY = spy;
+	this->flip = flip;
+	this->avanzar = aux;
+
+	tipoMensaje = tipo;
+}
+
 string mensajeClass::nombreDestinatario(){
 	return this->usrDestino;
 }

@@ -13,10 +13,11 @@ DibujableServer::DibujableServer() {
 	mVelY = 0;
 	conectar();
 	basePlataforma = 0;
+
 	score = 0;
 	vida = 10;
 
-	tipoDeArma = 0;
+	tipoDeArma = 1;
 
 	flip = 'D';
 }
@@ -84,19 +85,57 @@ void DibujableServer::saltar(){
 		spX = 0;
 
 		estaEnElPiso = false;
- 	    if (escenario.colisionPlataforma(this->x,this->y) && !estaEnPlataforma){
-            this->choca();
- 	   }
+		if (escenario.colisionPlataforma(this->x,this->y) && !estaEnPlataforma){
+			this->choca();
+		}
 	}
 }
 
 bool DibujableServer::disparar(){
-	//jugar con el tipo de arma...
 	bool rta = false;
 
 	switch(tipoDeArma){
 
 	case 0:
+		if(!estaDisparando){
+			spX = 0;
+			spY = 3;
+
+			spXaux = 0;
+			spYaux = 3;
+
+			estaDisparando = true;
+			rta = true;
+		}
+		break;
+
+	case 1:
+		if(!estaDisparando){
+			spX = 0;
+			spY = 3;
+
+			spXaux = 0;
+			spYaux = 3;
+
+			estaDisparando = true;
+			rta = true;
+		}
+		break;
+
+	case 2:
+		if(!estaDisparando){
+			spX = 0;
+			spY = 3;
+
+			spXaux = 0;
+			spYaux = 3;
+
+			estaDisparando = true;
+			rta = true;
+		}
+		break;
+
+	case 3:
 		if(!estaDisparando){
 			spX = 0;
 			spY = 3;
@@ -214,31 +253,31 @@ bool DibujableServer::mover(int xCamara){
 
 	//verifico que no este en una plataforma
 	if (!estaEnPlataforma){
-       if (escenario.verificarPlataforma(this->x,this->y)){
-    	   mVelY = 0;
-		   y = NIVEL_PLAT;
-           spY = 1;
-		   spX = 0;
-		   estaEnPlataforma = true;
-       }
+		if (escenario.verificarPlataforma(this->x,this->y)){
+			mVelY = 0;
+			y = NIVEL_PLAT;
+			spY = 1;
+			spX = 0;
+			estaEnPlataforma = true;
+		}
 
 	}
 
 	//una vez arriba de la plataforma, verifico sino me sali
 	if (estaEnPlataforma){
-      if (escenario.salirPlataforma(this->x,this->y)){
-		estaEnPlataforma = false;
-		estaEnElPiso = false;
-      }else{ // lo pongo de nuevo en la plataforma si se pasa.
-          if(y > NIVEL_PLAT){
-        	  mVelY = 0;
-        	  y = NIVEL_PLAT;
-      		  spY = 1;
-      		  spX = 0;
-        	  estaEnElPiso = true;
-          }
+		if (escenario.salirPlataforma(this->x,this->y)){
+			estaEnPlataforma = false;
+			estaEnElPiso = false;
+		}else{ // lo pongo de nuevo en la plataforma si se pasa.
+			if(y > NIVEL_PLAT){
+				mVelY = 0;
+				y = NIVEL_PLAT;
+				spY = 1;
+				spX = 0;
+				estaEnElPiso = true;
+			}
 
-      }
+		}
 	}
 
 	//ACA HAY Q PONERLO EN EL PISO SI SE PASA...
@@ -261,7 +300,37 @@ void DibujableServer::volverAlPrincipio(){
 }
 
 void DibujableServer::actualizarBonus(int tipoBonus){
-	//VER QUE HACER CON CADA TIPO DE BONUS
+	switch(tipoBonus){
+	case 0:
+		//0- recargar arma 1
+		tipoDeArma = 1;
+
+		break;
+	case 1:
+		//1- pasar a arma 2
+		tipoDeArma = 2;
+
+		break;
+	case 2:
+		//2- recargar arma 2
+		break;
+	case 3:
+		//3- pasar a arma 3
+		tipoDeArma = 3;
+
+		break;
+	case 4:
+		//4- recargar arma 3
+		break;
+	case 5:
+		//5- bonus de vida
+		break;
+	case 6:
+		//6- bonus de killall
+		break;
+
+	}
+
 }
 
 bool DibujableServer::estaConectado(){
