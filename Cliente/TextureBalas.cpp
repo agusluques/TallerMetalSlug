@@ -54,25 +54,25 @@ void TextureBalas::render(SDL_Renderer *window, SDL_Texture *mTexture, int camer
 		angle = 0;
 		break;
 	case 1:
-		angle = 45;
+		angle = 315;
 		break;
 	case 2:
-		angle = 90;
+		angle = 270;
 		break;
 	case 3:
-		angle = 135;
+		angle = 225;
 		break;
 	case 4:
 		angle = 180;
 		break;
 	case 5:
-		angle = 225;
+		angle = 135;
 		break;
 	case 6:
-		angle = 270;
+		angle = 90;
 		break;
 	case 7:
-		angle = 315;
+		angle = 45;
 		break;
 
 	}
