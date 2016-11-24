@@ -10,6 +10,7 @@
 #include "TextureBonus.h"
 #include "TextureEnergia.h"
 #include "LTextureEnemigo.h"
+#include "TextureScore.h"
 #include <sstream>
 
 #ifndef GRAFICA_H_
@@ -47,6 +48,7 @@ private:
 
 	list<LTexture> listaDibujable;
 	list<TextureEnergia> listaDibujableEnergia;
+	list<TextureScore> listaDibujableScore;
 	list<TextureBalas> listaDibujableBalas;
 	list<TextureBonus> listaDibujableBonus;
 	list<LTextureEnemigo> listaDibujableEnemigos;
@@ -118,6 +120,7 @@ public:
 	bool modificarBonus(int id, int x, int y, int tipoBonus);
 	void quitarBonus(int id);
 
+	void agregarScores(int id); //inicializa de cero los scores;
 	void mostrarScores(int score);
 
 	void setIdCliente(int numCliente){

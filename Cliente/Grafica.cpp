@@ -204,13 +204,43 @@ void Grafica::agregarEnergia(int id, int spY, string imagen){
 
 	listaDibujableEnergia.push_back(nuevo);
 
-	TTF_Font *font = TTF_OpenFont("OpenSans-ExtraBold.ttf",50);
-	SDL_Color color = {144,77,255,255};
-	SDL_Surface* superficie = TTF_RenderText_Solid(font, "hola a todos",color);
-	puntaje = SDL_CreateTextureFromSurface( window, superficie);
-	puntajeRect.x = puntajeRect.y = 0;
-	SDL_QueryTexture(puntaje, NULL, NULL, &puntajeRect.w, &puntajeRect.h);
-	SDL_FreeSurface(superficie);
+}
+
+void Grafica::agregarScores (int id){
+
+	TextureScore nuevo;
+    nuevo.setId(id);
+    nuevo.setX(posicionEnergia+20);
+    nuevo.setY(35);
+
+	//TTF_Font *font = TTF_OpenFont("OpenSans-ExtraBold.ttf",50);
+	//SDL_Surface* superficie = TTF_RenderText_Solid(font, "000",color);
+	//puntaje = SDL_CreateTextureFromSurface( window, superficie);
+	//puntajeRect.x = puntajeRect.y = 0;
+	//SDL_QueryTexture(puntaje, NULL, NULL, &puntajeRect.w, &puntajeRect.h);
+	//SDL_FreeSurface(superficie);
+
+    SDL_Color color;
+
+    if (id==1){
+       color = {85,170,230,255}; //celeste
+    }
+
+    if( id==2){
+      color = {0,0,255,255}; //azul
+    }
+    if (id ==3){
+    	color = {255,255,255,255}; //blanco
+    }
+    if (id == 4){
+    	color = {0,0,0,255}; //negro
+    }
+
+    nuevo.setColor(color);
+
+	nuevo.inicializarTexture(window);
+
+	listaDibujableScore.push_back(nuevo);
 
 }
 
@@ -381,7 +411,11 @@ void Grafica::mostrarDibujables(){
 
 
 	for (list<TextureEnergia>::iterator it = listaDibujableEnergia.begin(); it != listaDibujableEnergia.end(); ++it) {
-		it->renderEnergia(window, energiaTexture, altoVentana/20);
+		it->renderEnergia(window, altoVentana/20);
+	}
+
+	for (list<TextureScore>::iterator it = listaDibujableScore.begin(); it != listaDibujableScore.end(); ++it) {
+		it->renderScore(window);
 	}
 
 	for (list<LTextureEnemigo>::iterator it = listaDibujableEnemigos.begin(); it != listaDibujableEnemigos.end(); ++it) {
@@ -404,7 +438,7 @@ void Grafica::mostrarDibujables(){
 	advance(i,numeroCliente - 1);
 	(*i).render(window, (*i).texture, xCamara, altoVentana/12);
 
-	SDL_RenderCopy(window, puntaje, NULL, &puntajeRect);
+	//SDL_RenderCopy(window, puntaje, NULL, &puntajeRect);
 
 	SDL_RenderPresent( window );
 }

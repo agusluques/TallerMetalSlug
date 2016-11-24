@@ -18,7 +18,7 @@ TextureEnergia::~TextureEnergia() {
 }
 
 
-void TextureEnergia::renderEnergia(SDL_Renderer* window, SDL_Texture *mTexture, int escala){
+void TextureEnergia::renderEnergia(SDL_Renderer* window, int escala){
 
 	SDL_Rect rect1;
 	SDL_Rect rect2;

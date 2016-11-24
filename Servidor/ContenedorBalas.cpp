@@ -110,13 +110,22 @@ bool hayColision(int xTipo, int yTipo, int xBala, int yBala, int tipoEnemigo){
 	return true;
 }
 
-void ContenedorBalas::detectarColisiones(list<bala> *listaBalasDeBaja, list<DibujableServerEnemigo> *listaEnemigosActivos, list<DibujableServerEnemigo> *listaEnemigosDeBaja){
+void ContenedorBalas::acumuloPuntajes(int tipoDeBala, int idJugador, list<DibujableServerAdicional> *listaScores ){
+     for (list<DibujableServerAdicional>::iterator itScore = listaScores->begin(); itScore != listaScores->end(); ++itScore){
+    	 if(itScore->id == idJugador){
+    		 itScore->aumentar(10);
+    	 }
+     }
+}
+
+void ContenedorBalas::detectarColisiones(list<bala> *listaBalasDeBaja, list<DibujableServerEnemigo> *listaEnemigosActivos, list<DibujableServerEnemigo> *listaEnemigosDeBaja, list<DibujableServerAdicional> *listaScores){
 	for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosActivos->begin(); itEnemigos != listaEnemigosActivos->end(); ++itEnemigos) {
 		if(itEnemigos->estaVivo){
 			for (list<bala>::iterator itBalas = listaDeBalas.begin(); itBalas != listaDeBalas.end(); ++itBalas) {
 				if(itBalas->usr != 5){ //no comparo enemigo contra enemigo
 					if(hayColision(itEnemigos->x, itEnemigos->y, itBalas->x, itBalas->y, itEnemigos->tipoEnemigo)){
 						listaEnemigosDeBaja->push_back((*itEnemigos));
+                        acumuloPuntajes(itBalas->tipoBala, itBalas->id, listaScores);
 						itEnemigos = listaEnemigosActivos->erase(itEnemigos);
 						itEnemigos--;
 

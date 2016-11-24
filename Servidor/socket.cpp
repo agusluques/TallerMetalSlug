@@ -15,6 +15,7 @@
 #include "ContenedorBalas.h"
 #include "ContenedorBonus.h"
 #include "DibujableServerEnemigo.h"
+#include "DibujableServerAdicional.h"
 
 #define DEBUG 2
 
@@ -24,6 +25,7 @@ using namespace std;
 list<int> listaFDClientes;
 list<DibujableServer> listaDibujables;
 list<DibujableServer> listaEnergias;
+list<DibujableServerAdicional> listaScores;
 list<FondoServer> listaFondos;
 int ANCHO_VENTANA;
 int ALTO_VENTANA;
@@ -296,6 +298,10 @@ void enviarMensajeAConectados(string mensaje){
 	pthread_mutex_unlock (&mutexListaUsuarios);
 }
 
+void enviarScoreAConectados (int numeroCliente, int score){
+	//falta mandar el score
+}
+
 void enviarAConectados(int numeroCliente, int nuevaCordX, int nuevaCordY, int nuevoSpX, int nuevoSpY, char flip, bool avanzar, int tipo){
 	//envio a todos los q esten online el mensaje de q se modifico un objeto
 	
@@ -566,13 +572,17 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				DibujableServer nuevo2;
 				nuevo2.setId(listaDeUsuarios.size());
 				pthread_mutex_unlock (&mutexListaUsuarios);
-				//string energiaId = "1barra.png";
-				//nuevo2.setSpriteId(energiaId);
 				nuevo2.setSpY(0);
+
+				//creo dibujable score
+				DibujableServerAdicional scoreNuevo;
+				scoreNuevo.setId(listaDeUsuarios.size());
+				scoreNuevo.setAumentable(0);
 
 				int b = pthread_mutex_trylock(&mutexListaDibujables);
 				listaDibujables.push_back(nuevo);
 				listaEnergias.push_back(nuevo2);
+				listaScores.push_back(scoreNuevo);
 				pthread_mutex_unlock (&mutexListaDibujables);
 
 			}else if(estabaDesconectado){
@@ -775,7 +785,11 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 
 				list<DibujableServerEnemigo> listaEnemigosDisparados;
-				contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados);
+				contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados, &listaScores);
+				//¿¿¿¿ aca deberia ir lo de enviarAconectados los puntos de las muertes???
+                for (list<DibujableServerAdicional>::iterator itScore = listaScores.begin(); itScore != listaScores.end(); ++itScore) {
+				   enviarScoreAConectados(itScore->id,itScore->aumentable);
+			    }
 				pthread_mutex_unlock (&mutexContenedorBalas);
 
 
@@ -787,6 +801,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				//los conectados lo reciban, le envian al servidor un mensaje con un codigo
 				//para que muestre una pantalla con los scores
 				if (pasarDeNivel){
+					//agusss : ya esta la lista de "DibujableServerAdicional" esta el metodo getAumentable que seria el SCORE actual para pasarles, Pablo.
 					enviarAConectados(0, 0, 0, 0, 0, '0', NULL, 11);//TENGO QUE MEJORARLO
 				}
 

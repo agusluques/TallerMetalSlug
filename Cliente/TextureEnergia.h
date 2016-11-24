@@ -31,7 +31,7 @@ public:
 	~TextureEnergia();
 
 	void actualizar(int x, int y, int spy);
-	void renderEnergia(SDL_Renderer* window, SDL_Texture *mTexture, int escala);
+	void renderEnergia(SDL_Renderer* window, int escala);
 	void setX(int movimiento);
 	void setY(int movimiento);
 	void setSpY(int movimiento);
