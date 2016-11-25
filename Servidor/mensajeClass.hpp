@@ -8,7 +8,7 @@ class mensajeClass
 private:
 	int idusrAutor;
 	char usrAutor[50];
-	char usrDestino[50];
+	int usrDestino;
 	int idObjeto;
 	int x;
 	int y;
@@ -24,14 +24,14 @@ public:
 	char flip;
 
 	mensajeClass();
-	mensajeClass(char * autor, char * destino, int id, int x, int y, int spx, int spy, char flip, bool avanzar, int tipoDibujable);
-	mensajeClass(char * autor, char * destino, int id, int x, int y, int spx, int spy, char flip, int tipo);
-	mensajeClass(int tipo, char *destino, string mensajeEnviado);
-	mensajeClass(int tipo, char* destino);
-	mensajeClass(int tipo, char *destino, int autor, int score);
-	mensajeClass(int aux, char * destino, int id, int x, int y, int spx, int spy, char flip, int tipo);
+	mensajeClass(char * autor, int destino, int id, int x, int y, int spx, int spy, char flip, bool avanzar, int tipoDibujable);
+	mensajeClass(char * autor, int destino, int id, int x, int y, int spx, int spy, char flip, int tipo);
+	mensajeClass(int tipo, int destino, string mensajeEnviado);
+	mensajeClass(int tipo, int destino);
+	mensajeClass(int tipo, int destino, int autor, int score);
+	mensajeClass(int aux, int  destino, int id, int x, int y, int spx, int spy, char flip, int tipo);
 
-	std::string nombreDestinatario();
+	int nombreDestinatario();
 	std::string nombreAutor();
 	int numAutor();
 	int getidObjeto();

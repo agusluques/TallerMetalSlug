@@ -267,12 +267,11 @@ void buscarNombreUsuario(char *nombreRetorno, int numeroUsuario){
 }
 
 void agregaraLista(int numeroCliente, int usrDest, int x, int y, int spx, int spy, char flip, bool avanzar, int tipo){
-	char nombreAutor[50];
+	char nombreAutor[50] = "tu vieja";
 	char nombreDestino[50];
-	buscarNombreUsuario(nombreAutor, numeroCliente);
-	buscarNombreUsuario(nombreDestino, usrDest);
-
-	mensajeClass* mensajeObj = new mensajeClass(nombreAutor, nombreDestino, numeroCliente, x, y, spx, spy, flip, avanzar, tipo);
+	//buscarNombreUsuario(nombreAutor, numeroCliente);
+	//buscarNombreUsuario(nombreDestino, usrDest);
+	mensajeClass* mensajeObj = new mensajeClass(nombreAutor, usrDest, numeroCliente, x, y, spx, spy, flip, avanzar, tipo);
 
 	int a = pthread_mutex_trylock(&mutexLista);
 
@@ -288,8 +287,8 @@ void enviarMensajeAConectados(string mensaje){
 		if((**it).estaConectado()){
 			//mensajes = tipo 3
 			char nombreDestino[50];
-			buscarNombreUsuario(nombreDestino, (**it).numCliente());
-			mensajeClass* mensajeObj = new mensajeClass(3,nombreDestino,mensaje);
+			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
+			mensajeClass* mensajeObj = new mensajeClass(3,(**it).numCliente(),mensaje);
 			int a = pthread_mutex_trylock(&mutexLista);
 			listaDeMensajes.push_back(mensajeObj);
 			pthread_mutex_unlock (&mutexLista);
@@ -304,8 +303,8 @@ void enviarScoreAConectados (int numeroCliente, int score){
 		if((**it).estaConectado()){
 			//mensajes = tipo 3
 			char nombreDestino[50],nombreAutor[50];
-			buscarNombreUsuario(nombreDestino, (**it).numCliente());
-			mensajeClass* mensajeObj = new mensajeClass(12,nombreDestino,numeroCliente,score);
+			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
+			mensajeClass* mensajeObj = new mensajeClass(12,(**it).numCliente(),numeroCliente,score);
 			int a = pthread_mutex_trylock(&mutexLista);
 			listaDeMensajes.push_back(mensajeObj);
 			pthread_mutex_unlock (&mutexLista);
@@ -320,8 +319,8 @@ void enviarDanoAConectados (int numeroCliente, int vida){
 		if((**it).estaConectado()){
 			//mensajes = tipo 3
 			char nombreDestino[50],nombreAutor[50];
-			buscarNombreUsuario(nombreDestino, (**it).numCliente());
-			mensajeClass* mensajeObj = new mensajeClass(13,nombreDestino,numeroCliente,vida);
+			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
+			mensajeClass* mensajeObj = new mensajeClass(13,(**it).numCliente(),numeroCliente,vida);
 			int a = pthread_mutex_trylock(&mutexLista);
 			listaDeMensajes.push_back(mensajeObj);
 			pthread_mutex_unlock (&mutexLista);
@@ -350,10 +349,10 @@ void quitarEnemigo(int numeroCliente, int usrDest, int x, int y, int spx, int sp
 		if((**it).estaConectado()){
 			char nombreAutor[50];
 			char nombreDestino[50];
-			buscarNombreUsuario(nombreAutor, numeroCliente);
-			buscarNombreUsuario(nombreDestino, (**it).numCliente());
+			//buscarNombreUsuario(nombreAutor, numeroCliente);
+			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
 
-			mensajeClass* mensajeObj = new mensajeClass(0, nombreDestino, numeroCliente, x, y, spx, spy, flip, 2);
+			mensajeClass* mensajeObj = new mensajeClass(0, (**it).numCliente(), numeroCliente, x, y, spx, spy, flip, 2);
 
 			int a = pthread_mutex_trylock(&mutexLista);
 			listaDeMensajes.push_back(mensajeObj);
@@ -369,10 +368,10 @@ void enviarBalasAConectados(int idBala, int x, int y, int direccion, int tipoBal
 		if((**it).estaConectado()){
 			char nombreAutor[50];
 			char nombreDestino[50];
-			buscarNombreUsuario(nombreAutor, idBala);
-			buscarNombreUsuario(nombreDestino, (**it).numCliente());
+			//buscarNombreUsuario(nombreAutor, idBala);
+			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
 
-			mensajeClass* mensajeObj = new mensajeClass(spY, nombreDestino, idBala, x, y, direccion, tipoBala, 'D', 6);
+			mensajeClass* mensajeObj = new mensajeClass(spY, (**it).numCliente(), idBala, x, y, direccion, tipoBala, 'D', 6);
 
 			int a = pthread_mutex_trylock(&mutexLista);
 			listaDeMensajes.push_back(mensajeObj);
@@ -388,9 +387,9 @@ void enviarBonusAConectados(int idBonus, int x, int y, int tipoBonus){
 		if((**it).estaConectado()){
 			char nombreAutor[50];
 			char nombreDestino[50];
-			buscarNombreUsuario(nombreAutor, idBonus);
-			buscarNombreUsuario(nombreDestino, (**it).numCliente());
-			mensajeClass* mensajeObj = new mensajeClass(nombreAutor, nombreDestino, idBonus, x, y, 0, tipoBonus, 'D', 9);
+			//buscarNombreUsuario(nombreAutor, idBonus);
+			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
+			mensajeClass* mensajeObj = new mensajeClass(0, (**it).numCliente(), idBonus, x, y, 0, tipoBonus, 'D', 9);
 
 			int a = pthread_mutex_trylock(&mutexLista);
 			listaDeMensajes.push_back(mensajeObj);
@@ -406,10 +405,10 @@ void quitarBalas(int idBala){
 		if((**it).estaConectado()){
 			char nombreAutor[50];
 			char nombreDestino[50];
-			buscarNombreUsuario(nombreAutor, idBala);
-			buscarNombreUsuario(nombreDestino, (**it).numCliente());
+			//buscarNombreUsuario(nombreAutor, idBala);
+			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
 
-			mensajeClass* mensajeObj = new mensajeClass(0, nombreDestino, idBala, 0, 0, 0, 0, 'D', 8);
+			mensajeClass* mensajeObj = new mensajeClass(0, (**it).numCliente(), idBala, 0, 0, 0, 0, 'D', 8);
 
 			int a = pthread_mutex_trylock(&mutexLista);
 			listaDeMensajes.push_back(mensajeObj);
@@ -425,10 +424,10 @@ void quitarBonus(int idBonus){
 		if((**it).estaConectado()){
 			char nombreAutor[50];
 			char nombreDestino[50];
-			buscarNombreUsuario(nombreAutor, idBonus);
-			buscarNombreUsuario(nombreDestino, (**it).numCliente());
+			//buscarNombreUsuario(nombreAutor, idBonus);
+			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
 
-			mensajeClass* mensajeObj = new mensajeClass(nombreAutor, nombreDestino, idBonus, 0, 0, 0, 0, 'D', 10);
+			mensajeClass* mensajeObj = new mensajeClass(0, (**it).numCliente(), idBonus, 0, 0, 0, 0, 'D', 10);
 
 			int a = pthread_mutex_trylock(&mutexLista);
 			listaDeMensajes.push_back(mensajeObj);
@@ -670,11 +669,13 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 		case '5': {
 			char nombre[50];
-			buscarNombreUsuario(nombre, numeroCliente);
+			//buscarNombreUsuario(nombre, numeroCliente);
 
 			int a = pthread_mutex_trylock(&mutexLista);
 			for (list<mensajeClass*>::iterator i = listaDeMensajes.begin(); i != listaDeMensajes.end(); ++i) {
-				if ((**i).nombreDestinatario().compare(nombre) == 0 ){
+				//if ((**i).nombreDestinatario().compare(nombre) == 0 ){
+				cout << (**i).nombreDestinatario() << endl;
+				if ((**i).nombreDestinatario() == numeroCliente){
 					int corte = 1;
 					enviarMensaje(newsockfd, &corte, sizeof(int));
 
@@ -838,12 +839,12 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				list<DibujableServerEnemigo> listaEnemigosDisparados;
 				contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados, &listaScores, &listaDibujables);
 
-				for (list<DibujableServerAdicional*>::iterator itScore = listaScores.begin(); itScore != listaScores.end(); ++itScore) {
-					enviarScoreAConectados((*itScore)->id,(*itScore)->getAumentable());
-				}
-				for (list<DibujableServer*>::iterator itUser = listaDibujables.begin(); itUser != listaDibujables.end(); ++itUser) {
-					enviarDanoAConectados((*itUser)->id,(*itUser)->vida);
-				}
+				//for (list<DibujableServerAdicional*>::iterator itScore = listaScores.begin(); itScore != listaScores.end(); ++itScore) {
+				//	enviarScoreAConectados((*itScore)->id,(*itScore)->getAumentable());
+				//}
+				//for (list<DibujableServer*>::iterator itUser = listaDibujables.begin(); itUser != listaDibujables.end(); ++itUser) {
+				//	enviarDanoAConectados((*itUser)->id,(*itUser)->vida);
+				//}
 				pthread_mutex_unlock (&mutexContenedorBalas);
 
 
@@ -1197,9 +1198,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 				if((**it).estaConectado()){
 					char nombreDestino[50];
-					buscarNombreUsuario(nombreDestino, (**it).numCliente());
+					//buscarNombreUsuario(nombreDestino, (**it).numCliente());
 
-					mensajeClass* mensajeObj = new mensajeClass(4, nombreDestino);
+					mensajeClass* mensajeObj = new mensajeClass(4, (**it).numCliente());
 					int a = pthread_mutex_trylock(&mutexLista);
 					listaDeMensajes.push_back(mensajeObj);
 					pthread_mutex_unlock (&mutexLista);
@@ -1236,9 +1237,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 				if((**it).estaConectado()){
 					char nombreDestino[50];
-					buscarNombreUsuario(nombreDestino, (**it).numCliente());
+					//buscarNombreUsuario(nombreDestino, (**it).numCliente());
 
-					mensajeClass* mensajeObj = new mensajeClass(5, nombreDestino);
+					mensajeClass* mensajeObj = new mensajeClass(5, (**it).numCliente());
 					int a = pthread_mutex_trylock(&mutexLista);
 					listaDeMensajes.push_back(mensajeObj);
 					pthread_mutex_unlock (&mutexLista);

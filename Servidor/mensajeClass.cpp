@@ -6,9 +6,10 @@ using namespace std;
 
 mensajeClass::mensajeClass(){}
 
-mensajeClass::mensajeClass(char * autor, char * destino, int id, int x, int y, int spx, int spy, char flip, bool avanzar, int tipoDibujable){
+mensajeClass::mensajeClass(char * autor, int destino, int id, int x, int y, int spx, int spy, char flip, bool avanzar, int tipoDibujable){
 	strcpy(this->usrAutor, autor);
-	strcpy(this->usrDestino, destino);
+	//strcpy(this->usrDestino, destino);
+	this->usrDestino = destino;
 	this->idObjeto = id;
 	this->x = x;
 	this->y = y;
@@ -21,9 +22,10 @@ mensajeClass::mensajeClass(char * autor, char * destino, int id, int x, int y, i
 	this->tipoMensaje = 1;
 }
 
-mensajeClass::mensajeClass(char * autor, char * destino, int id, int x, int y, int spx, int spy, char flip, int tipo){
+mensajeClass::mensajeClass(char * autor, int destino, int id, int x, int y, int spx, int spy, char flip, int tipo){
 	strcpy(this->usrAutor, autor);
-	strcpy(this->usrDestino, destino);
+	//strcpy(this->usrDestino, destino);
+	this->usrDestino = destino;
 	this->idObjeto = id;
 	this->x = x;
 	this->y = y;
@@ -34,26 +36,30 @@ mensajeClass::mensajeClass(char * autor, char * destino, int id, int x, int y, i
 	tipoMensaje = tipo;
 }
 
-mensajeClass::mensajeClass(int tipo, char *destino, string mensajeEnviado){
+mensajeClass::mensajeClass(int tipo, int destino, string mensajeEnviado){
 	this->mensaje = string(mensajeEnviado);
-	strcpy(this->usrDestino, destino);
+	//strcpy(this->usrDestino, destino);
+	this->usrDestino = destino;
 	tipoMensaje = tipo;
 }
 
-mensajeClass::mensajeClass(int tipo, char *destino, int autor, int score){
+mensajeClass::mensajeClass(int tipo, int destino, int autor, int score){
 	this->idusrAutor = autor;
-	strcpy(this->usrDestino, destino);
+	//strcpy(this->usrDestino, destino);
+	this->usrDestino = destino;
 	this->tipoMensaje = tipo;
 	this->score = score;
 }
 
-mensajeClass::mensajeClass(int tipo, char* destino){
-	strcpy(this->usrDestino, destino);
+mensajeClass::mensajeClass(int tipo, int destino){
+	//strcpy(this->usrDestino, destino);
+	this->usrDestino = destino;
 	tipoMensaje = tipo;
 }
 
-mensajeClass::mensajeClass(int aux, char * destino, int id, int x, int y, int spx, int spy, char flip, int tipo){
-	strcpy(this->usrDestino, destino);
+mensajeClass::mensajeClass(int aux, int destino, int id, int x, int y, int spx, int spy, char flip, int tipo){
+	//strcpy(this->usrDestino, destino);
+	this->usrDestino = destino;
 	this->idObjeto = id;
 	this->x = x;
 	this->y = y;
@@ -65,7 +71,7 @@ mensajeClass::mensajeClass(int aux, char * destino, int id, int x, int y, int sp
 	tipoMensaje = tipo;
 }
 
-string mensajeClass::nombreDestinatario(){
+int mensajeClass::nombreDestinatario(){
 	return this->usrDestino;
 }
 

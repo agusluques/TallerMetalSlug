@@ -94,9 +94,9 @@ bool mySocket::enviarMensaje(void* mensaje, int tamanioMensaje){
 	int n = write(sockfd, mensaje, tamanioMensaje);
 	if(n < 0) errorSocket = true;
 
-	//char* tmp = (char*)mensaje;
+	char* tmp = (char*)mensaje;
 	//int* tmp = (int*)mensaje;
-	//cout << "ENVIA: " << (*tmp) << endl;
+	cout << "ENVIA: " << (*tmp) << endl;
 
 	return errorSocket;
 }
@@ -119,18 +119,12 @@ bool mySocket::recibirMensaje(void* buffer, int tamanio){
 			acumulador += bytesRecibidos;
 		}
 	}
-	return errorSocket;
-
-	/*
-	bool errorSocket = false;
-	int n = read(this->sockfd, buffer, tamanio);
-	if(n < 0) errorSocket = true;
 
 	//char* tmp = (char*)mensaje;
-//	int* tmp = (int*)buffer;
-//	cout << "RECIBE: " << (*tmp) << endl;
+	int* tmp = (int*)buffer;
+	cout << "RECIBE: " << (*tmp) << endl;
 
-	return errorSocket;*/
+	return errorSocket;
 }
 
 bool mySocket::recibirMensaje(){
@@ -172,6 +166,7 @@ bool mySocket::recibirMensaje(){
 		switch(tipoMensaje){
 		case 1:{
 			//recibo grafica jugadores
+			cout << "recibo grafica jugadores" << endl;
 			int x,y, spx, spy, idObjeto;
 			int tipo;
 			char flip;
@@ -195,7 +190,8 @@ bool mySocket::recibirMensaje(){
 			break;
 		}
 		case 2:
-			//MATAR ENEMIGO O JUGADOR!
+			//MATAR ENEMIGO!
+			cout << "matar enemigo" << endl;
 			int idObjeto;
 			error = recibirMensaje(&idObjeto, sizeof(int));
 
@@ -204,6 +200,7 @@ bool mySocket::recibirMensaje(){
 			break;
 		case 3:{
 			//recibo mensaje
+			cout << "recibo mensaje" << endl;
 			int tam;
 
 			error = recibirMensaje(&tam, sizeof(int));
@@ -214,10 +211,12 @@ bool mySocket::recibirMensaje(){
 			break;
 		}
 		case 4:{
+			cout << "cerrar grafica" << endl;
 			cerrarGrafica();
 			break;
 		}
 		case 5:{
+			cout << "reiniciar grafica" << endl;
 			error = recibirMensaje(&corte, sizeof(int));
 			iniciarGrafica();
 			cerrarGrafica();
@@ -229,6 +228,7 @@ bool mySocket::recibirMensaje(){
 
 		case 6: {
 			//recibo balas
+			cout << "recibo balas" << endl;
 			int id, x, y, tipoDisp, dirBala, spY;
 
 			error = recibirMensaje(&id, sizeof(int));
@@ -245,6 +245,7 @@ bool mySocket::recibirMensaje(){
 
 		case 9: {
 			//recibo Bonus
+			cout << "recibo bonus" << endl;
 			//cout << "ENTRO A RECIBIR BONUS" << endl;
 			int id, x, y, tipoBonus;
 
@@ -266,6 +267,7 @@ bool mySocket::recibirMensaje(){
 
 		case 8:{
 			//recibo bajas de balas
+			cout << "bajas balas" << endl;
 			int id;
 			error = recibirMensaje(&id, sizeof(int));
 
@@ -275,17 +277,17 @@ bool mySocket::recibirMensaje(){
 		}
 
 		case 10:{
+			cout << "quitar bonus" << endl;
 			int id;
 			error = recibirMensaje(&id, sizeof(int));
-			cout<<"ENTRO A MESNJAE 10"<<endl;
 			grafica.quitarBonus(id);
 
 			break;
 		}
 
 		case 11:{
+			cout << "mostrar score" << endl;
 			int score;
-			cout<<"ENTRO A MESNJAE 11"<<endl;
 			error = recibirMensaje(&score, sizeof(int));
 
 			cout<<score<<endl;
@@ -295,6 +297,7 @@ bool mySocket::recibirMensaje(){
 		}
 
 		case 12:{
+			cout << "actualizar score" << endl;
 			int id,score;
 
 			error = recibirMensaje(&id, sizeof(int));
@@ -306,6 +309,7 @@ bool mySocket::recibirMensaje(){
 		}
 
 		case 13:{
+			cout << "actualizar vida" << endl;
 			int id,vida;
 
 			error = recibirMensaje(&id, sizeof(int));
@@ -322,8 +326,8 @@ bool mySocket::recibirMensaje(){
 			break;
 		}
 
-		default: break;
-
+		default:
+			break;
 		}
 
 		error = recibirMensaje(&corte, sizeof(int));
