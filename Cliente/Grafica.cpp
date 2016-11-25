@@ -214,15 +214,6 @@ void Grafica::agregarScores (int id){
     nuevo.setX(posicionEnergia+20);
     nuevo.setY(35);
 
-	//TTF_Font *font = TTF_OpenFont("OpenSans-ExtraBold.ttf",50);
-	//SDL_Surface* superficie = TTF_RenderText_Solid(font, "000",color);
-	//puntaje = SDL_CreateTextureFromSurface( window, superficie);
-	//puntajeRect.x = puntajeRect.y = 0;
-	//SDL_QueryTexture(puntaje, NULL, NULL, &puntajeRect.w, &puntajeRect.h);
-	//SDL_FreeSurface(superficie);
-
-
-
     if (id==1){
        SDL_Color color1 = {85,170,230,255}; //celeste
        nuevo.setColor(color1);
@@ -240,14 +231,34 @@ void Grafica::agregarScores (int id){
         nuevo.setColor(color4);
     }
 
-	nuevo.inicializarTexture(window);
+    string aMostrar = "0";
+
+	nuevo.inicializarTexture(window, aMostrar);
 
 	listaDibujableScore.push_back(nuevo);
 
 }
 
 void Grafica::actualizarScore(int id, int score){
-	//recorrer la listaDibjableScore y cuando encuentra el id cambiar score
+	for (list<TextureScore>::iterator it = listaDibujableScore.begin(); it != listaDibujableScore.end(); ++it) {
+	   if(it->id == id){
+		   it->setAumentable(score);
+		   string numero="";
+		   numero = static_cast<ostringstream*>(&(ostringstream() << score))->str();
+           it->inicializarTexture(window,numero);
+           it->renderScore(window);
+	   }
+	}
+}
+
+void Grafica::actualizarVida(int id,int vida){
+	for (list<TextureEnergia>::iterator it = listaDibujableEnergia.begin(); it != listaDibujableEnergia.end(); ++it) {
+		if(it->id == id){
+			it->setSpY(vida);
+			it->renderEnergia(window, altoVentana/20);
+		}
+	}
+
 }
 
 void Grafica::mostrarScores(int score){

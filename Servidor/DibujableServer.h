@@ -59,6 +59,8 @@ public:
 	int getId();
 	int getScore();
 
+	void aumentarDano (int cantidad);
+
 	void saltar();
 	void caminarDerecha();
 	void caminarIzquierda();

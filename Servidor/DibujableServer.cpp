@@ -15,7 +15,7 @@ DibujableServer::DibujableServer() {
 	basePlataforma = 0;
 
 	score = 0;
-	vida = 10;
+	vida = 0;
 
 	tipoDeArma = 1;
 
@@ -64,6 +64,13 @@ int DibujableServer::getId(){
 }
 int DibujableServer::getScore(){
 	return this->score;
+}
+
+void DibujableServer::aumentarDano (int cantidad){
+	this->vida += cantidad;
+	if(vida > 10){
+		vida=10;
+	}
 }
 
 void DibujableServer::saltar(){

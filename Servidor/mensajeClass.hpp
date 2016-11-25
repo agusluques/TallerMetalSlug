@@ -40,6 +40,7 @@ public:
 	int getSpX();
 	int getSpY();
 	int getScore();
+	int getEnergia();
 	int getBoolAvanzar();
 
 	int getTipoMensaje(){

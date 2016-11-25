@@ -97,6 +97,10 @@ int mensajeClass::getScore(){
 	return this->score;
 }
 
+int mensajeClass::getEnergia(){
+	return this->score;
+}
+
 int mensajeClass::getidObjeto(){
 	return this->idObjeto;
 }

@@ -314,6 +314,22 @@ void enviarScoreAConectados (int numeroCliente, int score){
 	pthread_mutex_unlock (&mutexListaUsuarios);
 }
 
+void enviarDanoAConectados (int numeroCliente, int vida){
+	int a = pthread_mutex_trylock(&mutexListaUsuarios);
+	for (list<usuarioClass>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+		if((*it).estaConectado()){
+			//mensajes = tipo 3
+			char nombreDestino[50],nombreAutor[50];
+			buscarNombreUsuario(nombreDestino, (*it).numCliente());
+			mensajeClass mensajeObj(13,nombreDestino,numeroCliente,vida);
+			int a = pthread_mutex_trylock(&mutexLista);
+			listaDeMensajes.push_back(mensajeObj);
+			pthread_mutex_unlock (&mutexLista);
+		}
+	}
+	pthread_mutex_unlock (&mutexListaUsuarios);
+}
+
 void enviarAConectados(int numeroCliente, int nuevaCordX, int nuevaCordY, int nuevoSpX, int nuevoSpY, char flip, bool avanzar, int tipo){
 	//envio a todos los q esten online el mensaje de q se modifico un objeto
 
@@ -774,6 +790,16 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 					}
 
+					case 13:{
+                        int vida = (*i).getEnergia();
+                        int autor = (*i).numAutor();
+
+                        enviarMensaje(newsockfd, &autor, sizeof(int));
+                        enviarMensaje(newsockfd, &vida, sizeof(int));
+
+						break;
+					}
+
 					default:
 						break;
 
@@ -808,12 +834,14 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				int bbb = pthread_mutex_trylock(&mutexContenedorBalas);
 				contenedorBalas.buscarActivas(camaraX, &listaBalasActivas, &listaBalasDeBaja);
 
-
 				list<DibujableServerEnemigo> listaEnemigosDisparados;
-				contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados, &listaScores);
-				//¿¿¿¿ aca deberia ir lo de enviarAconectados los puntos de las muertes???
+				contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados, &listaScores, &listaDibujables);
+
 				for (list<DibujableServerAdicional>::iterator itScore = listaScores.begin(); itScore != listaScores.end(); ++itScore) {
-					enviarScoreAConectados(itScore->id,itScore->aumentable);
+					enviarScoreAConectados(itScore->id,itScore->getAumentable());
+				}
+				for (list<DibujableServer>::iterator itUser = listaDibujables.begin(); itUser != listaDibujables.end(); ++itUser) {
+					enviarDanoAConectados(itUser->id,itUser->vida);
 				}
 				pthread_mutex_unlock (&mutexContenedorBalas);
 

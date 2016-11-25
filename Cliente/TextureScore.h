@@ -20,6 +20,7 @@ public:
 
 	SDL_Texture* texture;
 	SDL_Color color;
+	SDL_Rect puntajeRect;
 
 	TextureScore();
 	void setId(int id);
@@ -27,7 +28,7 @@ public:
 	void setY(int y);
 	void setAumentable(int cantidad);
 	void setColor (SDL_Color color);
-	void inicializarTexture (SDL_Renderer* window);
+	void inicializarTexture (SDL_Renderer* window, string aMostrar);
 	void renderScore(SDL_Renderer* window);
 
     ~TextureScore();

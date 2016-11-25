@@ -88,6 +88,7 @@ public:
 	void actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanzar, char flip, int tipo);
 	void quitarEnemigo(int idObjeto);
 	void agregarEnergia (int id, int spY, string imagen);
+	void actualizarVida(int id,int vida);
 
 	void mostrarDibujables();
 	LTexture buscarDibujable(int id);

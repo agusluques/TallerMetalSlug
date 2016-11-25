@@ -24,7 +24,7 @@ void DibujableServerAdicional::setAumentable (int cantidad){
 
 void DibujableServerAdicional::aumentar(int cantidad){
 
-	this->aumentable += cantidad;
+	this->aumentable = aumentable + cantidad;
 }
 
 int DibujableServerAdicional::getAumentable (){
