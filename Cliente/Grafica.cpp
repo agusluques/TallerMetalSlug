@@ -128,15 +128,15 @@ void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanza
 		//no esta en jugadores lo busco en enemigos
 		if(!actualizarDibujableEnemigos(idObjeto,x,y,spx,spy,flip)){
 			//no lo encontro en enemigos entonces lo creo xq es un nuevo enemigo..
-			LTextureEnemigo nuevo;
-			nuevo.setId(idObjeto);
-			nuevo.setX(x);
-			nuevo.setY(y);
-			nuevo.setSpX(spx);
-			nuevo.setSpY(spy);
-			nuevo.setFlip(flip);
-			nuevo.tipo = tipo;
-			nuevo.inicializarTexture(window, "soldado.png"); //pasar nombre como parametro
+			LTextureEnemigo* nuevo = new LTextureEnemigo;
+			nuevo->setId(idObjeto);
+			nuevo->setX(x);
+			nuevo->setY(y);
+			nuevo->setSpX(spx);
+			nuevo->setSpY(spy);
+			nuevo->setFlip(flip);
+			nuevo->tipo = tipo;
+			nuevo->inicializarTexture(window, "soldado.png"); //pasar nombre como parametro
 
 			listaDibujableEnemigos.push_back(nuevo);
 		}
@@ -144,8 +144,9 @@ void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanza
 }
 
 void Grafica::quitarEnemigo(int idObjeto){
-	for (list<LTextureEnemigo>::iterator it = listaDibujableEnemigos.begin(); it != listaDibujableEnemigos.end(); ++it) {
-		if(it->id == idObjeto){
+	for (list<LTextureEnemigo*>::iterator it = listaDibujableEnemigos.begin(); it != listaDibujableEnemigos.end(); ++it) {
+		if((*it)->id == idObjeto){
+			delete (*it);
 			it = listaDibujableEnemigos.erase(it);
 			it--;
 		}
@@ -154,16 +155,16 @@ void Grafica::quitarEnemigo(int idObjeto){
 
 void Grafica::actualizarBalas(int id, int x, int y, int dirBala, int tipoDisp, int spY){
 	if(!modificarBalas(id, x, y, dirBala, tipoDisp, spY)){
-		TextureBalas nueva;
-		nueva.setId(id);
-		nueva.setX(x);
-		nueva.setY(y);
-		nueva.setSpX(dirBala);
-		nueva.setTipoDisparo(tipoDisp);
-		nueva.setSpY(spY);
+		TextureBalas* nueva = new TextureBalas;
+		nueva->setId(id);
+		nueva->setX(x);
+		nueva->setY(y);
+		nueva->setSpX(dirBala);
+		nueva->setTipoDisparo(tipoDisp);
+		nueva->setSpY(spY);
 
 		char pathBalas[] = "img/balas/balas.png";
-		nueva.inicializarTexture(window, pathBalas);
+		nueva->inicializarTexture(window, pathBalas);
 
 		listaDibujableBalas.push_back(nueva);
 	}
@@ -173,9 +174,9 @@ void Grafica::actualizarBalas(int id, int x, int y, int dirBala, int tipoDisp, i
 bool Grafica::modificarBalas(int id, int x, int y, int dirBala, int tipoDisp, int spY){
 	bool actualizo = false;
 
-	for (list<TextureBalas>::iterator it = listaDibujableBalas.begin(); it != listaDibujableBalas.end(); ++it) {
-		if ( it->id == id ){
-			it->actualizar( x, y, dirBala, tipoDisp, spY);
+	for (list<TextureBalas*>::iterator it = listaDibujableBalas.begin(); it != listaDibujableBalas.end(); ++it) {
+		if ( (*it)->id == id ){
+			(*it)->actualizar( x, y, dirBala, tipoDisp, spY);
 			actualizo = true;
 		}
 	}
@@ -184,8 +185,9 @@ bool Grafica::modificarBalas(int id, int x, int y, int dirBala, int tipoDisp, in
 }
 
 void Grafica::quitarBalas(int id){
-	for (list<TextureBalas>::iterator it = listaDibujableBalas.begin(); it != listaDibujableBalas.end(); ++it) {
-		if(it->id == id){
+	for (list<TextureBalas*>::iterator it = listaDibujableBalas.begin(); it != listaDibujableBalas.end(); ++it) {
+		if((*it)->id == id){
+			delete (*it);
 			it = listaDibujableBalas.erase(it);
 			it--;
 		}
@@ -193,15 +195,15 @@ void Grafica::quitarBalas(int id){
 }
 
 void Grafica::agregarEnergia(int id, int spY, string imagen){
-	TextureEnergia nuevo;
+	TextureEnergia* nuevo = new TextureEnergia;
     posicionEnergia +=150;
-	nuevo.setId(id);
-	nuevo.setPos(posicionEnergia);
+	nuevo->setId(id);
+	nuevo->setPos(posicionEnergia);
 
 	char nombre[14];
 	strcpy(nombre, imagen.c_str());
 
-	nuevo.inicializarTexture(window, nombre);
+	nuevo->inicializarTexture(window, nombre);
 
 	listaDibujableEnergia.push_back(nuevo);
 
@@ -209,53 +211,53 @@ void Grafica::agregarEnergia(int id, int spY, string imagen){
 
 void Grafica::agregarScores (int id){
 
-	TextureScore nuevo;
-    nuevo.setId(id);
-    nuevo.setX(posicionEnergia+20);
-    nuevo.setY(35);
+	TextureScore* nuevo = new TextureScore;
+    nuevo->setId(id);
+    nuevo->setX(posicionEnergia+20);
+    nuevo->setY(35);
 
     if (id==1){
        SDL_Color color1 = {85,170,230,255}; //celeste
-       nuevo.setColor(color1);
+       nuevo->setColor(color1);
     }
     if( id==2){
         SDL_Color color2 = {0,0,255,255}; //azul
-        nuevo.setColor(color2);
+        nuevo->setColor(color2);
     }
     if (id ==3){
         SDL_Color color3 = {255,255,255,255}; //blanco
-        nuevo.setColor(color3);
+        nuevo->setColor(color3);
     }
     if (id == 4){
         SDL_Color color4 = {0,0,0,255}; //negro
-        nuevo.setColor(color4);
+        nuevo->setColor(color4);
     }
 
     string aMostrar = "0";
 
-	nuevo.inicializarTexture(window, aMostrar);
+	nuevo->inicializarTexture(window, aMostrar);
 
 	listaDibujableScore.push_back(nuevo);
 
 }
 
 void Grafica::actualizarScore(int id, int score){
-	for (list<TextureScore>::iterator it = listaDibujableScore.begin(); it != listaDibujableScore.end(); ++it) {
-	   if(it->id == id){
-		   it->setAumentable(score);
+	for (list<TextureScore*>::iterator it = listaDibujableScore.begin(); it != listaDibujableScore.end(); ++it) {
+	   if((*it)->id == id){
+		   (*it)->setAumentable(score);
 		   string numero="";
 		   numero = static_cast<ostringstream*>(&(ostringstream() << score))->str();
-           it->inicializarTexture(window,numero);
-           it->renderScore(window);
+           (*it)->inicializarTexture(window,numero);
+           (*it)->renderScore(window);
 	   }
 	}
 }
 
 void Grafica::actualizarVida(int id,int vida){
-	for (list<TextureEnergia>::iterator it = listaDibujableEnergia.begin(); it != listaDibujableEnergia.end(); ++it) {
-		if(it->id == id){
-			it->setSpY(vida);
-			it->renderEnergia(window, altoVentana/20);
+	for (list<TextureEnergia*>::iterator it = listaDibujableEnergia.begin(); it != listaDibujableEnergia.end(); ++it) {
+		if((*it)->id == id){
+			(*it)->setSpY(vida);
+			(*it)->renderEnergia(window, altoVentana/20);
 		}
 	}
 
@@ -278,32 +280,32 @@ void Grafica::mostrarScores(int score){
 void Grafica::agregarBonus(int x, int y, int cont, int tipoBonus){
 	//Busco en la lista con el ID de bonus si esta actualizo sino agrego
 	if(listaDibujableBonus.empty()){
-		TextureBonus nuevo;
-		nuevo.setX(x);
-		nuevo.setY(y);
-		nuevo.setId(cont);
-		nuevo.setTipo(tipoBonus);
+		TextureBonus* nuevo = new TextureBonus;
+		nuevo->setX(x);
+		nuevo->setY(y);
+		nuevo->setId(cont);
+		nuevo->setTipo(tipoBonus);
 		string pathBonus = "img/bonus/bonus.png";
-		nuevo.inicializarTexture(window, &pathBonus[0]);
+		nuevo->inicializarTexture(window, &pathBonus[0]);
 
 		listaDibujableBonus.push_back(nuevo);
 	} else {
 		bool encontrado = false;
-		for(list<TextureBonus>::iterator j = listaDibujableBonus.begin(); j!= listaDibujableBonus.end(); ++j){
-			if((*j).id == cont){
+		for(list<TextureBonus*>::iterator j = listaDibujableBonus.begin(); j!= listaDibujableBonus.end(); ++j){
+			if((**j).id == cont){
 				encontrado = true;
-				(*j).xcord = x;
-				(*j).ycord = y;
+				(**j).xcord = x;
+				(**j).ycord = y;
 			}
 		}
 		if(!encontrado){
-			TextureBonus nuevo;
-			nuevo.setX(x);
-			nuevo.setY(y);
-			nuevo.setId(cont);
-			nuevo.setTipo(tipoBonus);
+			TextureBonus* nuevo = new TextureBonus;
+			nuevo->setX(x);
+			nuevo->setY(y);
+			nuevo->setId(cont);
+			nuevo->setTipo(tipoBonus);
 			string pathBonus = "img/bonus/bonus.png";
-			nuevo.inicializarTexture(window, &pathBonus[0]);
+			nuevo->inicializarTexture(window, &pathBonus[0]);
 
 			listaDibujableBonus.push_back(nuevo);
 		}
@@ -311,8 +313,9 @@ void Grafica::agregarBonus(int x, int y, int cont, int tipoBonus){
 }
 
 void Grafica::borrarBonus(int cont){
-	for(list<TextureBonus>::iterator j = listaDibujableBonus.begin(); j!= listaDibujableBonus.end(); ++j){
-		if((*j).id == cont){
+	for(list<TextureBonus*>::iterator j = listaDibujableBonus.begin(); j!= listaDibujableBonus.end(); ++j){
+		if((**j).id == cont){
+			delete (*j);
 			j = listaDibujableBonus.erase(j);
 			j--;
 		}
@@ -322,14 +325,14 @@ void Grafica::borrarBonus(int cont){
 void Grafica::actualizarBonus(int id, int x, int y, int tipoBonus){
 	if(!modificarBonus(id, x, y, tipoBonus)){
 		//cout << "Creando nuevo bonus" << endl;
-		TextureBonus nueva;
-		nueva.setId(id);
-		nueva.setX(x);
-		nueva.setY(y);
-		nueva.setTipo(tipoBonus);
+		TextureBonus* nueva = new TextureBonus;
+		nueva->setId(id);
+		nueva->setX(x);
+		nueva->setY(y);
+		nueva->setTipo(tipoBonus);
 
 		char pathBonus[] = "img/bonus/bonus.png";
-		nueva.inicializarTexture(window, pathBonus);
+		nueva->inicializarTexture(window, pathBonus);
 
 		listaDibujableBonus.push_back(nueva);
 	}
@@ -339,11 +342,11 @@ void Grafica::actualizarBonus(int id, int x, int y, int tipoBonus){
 bool Grafica::modificarBonus(int id, int x, int y, int tipoBonus){
 	bool actualizo = false;
 
-	for (list<TextureBonus>::iterator it = listaDibujableBonus.begin(); it != listaDibujableBonus.end(); ++it) {
+	for (list<TextureBonus*>::iterator it = listaDibujableBonus.begin(); it != listaDibujableBonus.end(); ++it) {
 		//cout << "IT->ID: " << it->id << endl;
 		//cout << "ID: " << id << endl;
-		if ( it->id == id ){
-			it->actualizar( x, y);
+		if ( (*it)->id == id ){
+			(*it)->actualizar( x, y);
 			actualizo = true;
 		}
 	}
@@ -351,8 +354,9 @@ bool Grafica::modificarBonus(int id, int x, int y, int tipoBonus){
 }
 
 void Grafica::quitarBonus(int id){
-	for (list<TextureBonus>::iterator it = listaDibujableBonus.begin(); it != listaDibujableBonus.end(); ++it) {
-		if(it->id == id){
+	for (list<TextureBonus*>::iterator it = listaDibujableBonus.begin(); it != listaDibujableBonus.end(); ++it) {
+		if((*it)->id == id){
+			delete (*it);
 			it = listaDibujableBonus.erase(it);
 			it--;
 		}
@@ -362,45 +366,45 @@ void Grafica::quitarBonus(int id){
 void Grafica::agregarBala(int x, int y, int cont, bool dirBala, int tipoDisp){
 	//Busco en la lista con el ID de bala si esta actualizo sino agrego
 	if(listaDibujableBalas.empty()){
-		TextureBalas nuevo;
-		nuevo.setX(x);
-		nuevo.setY(y);
-		nuevo.setTipoArma(2);
-		nuevo.setId(cont);
-		nuevo.setTipoDisparo(tipoDisp);
+		TextureBalas* nuevo = new TextureBalas;
+		nuevo->setX(x);
+		nuevo->setY(y);
+		nuevo->setTipoArma(2);
+		nuevo->setId(cont);
+		nuevo->setTipoDisparo(tipoDisp);
 		if(dirBala == true){
-			nuevo.setFlip('D');
+			nuevo->setFlip('D');
 		} else {
-			nuevo.setFlip('I'); 
+			nuevo->setFlip('I'); 
 		}
 		string pathBalas = "img/balas/balas.png";
-		nuevo.inicializarTexture(window, &pathBalas[0]);
+		nuevo->inicializarTexture(window, &pathBalas[0]);
 
 		listaDibujableBalas.push_back(nuevo);
 	} else {
 		bool encontrado = false;
-		for(list<TextureBalas>::iterator j = listaDibujableBalas.begin(); j!= listaDibujableBalas.end(); ++j){
-			if((*j).id == cont){
+		for(list<TextureBalas*>::iterator j = listaDibujableBalas.begin(); j!= listaDibujableBalas.end(); ++j){
+			if((**j).id == cont){
 				encontrado = true;
-				(*j).xcord = x;
-				(*j).ycord = y;
+				(**j).xcord = x;
+				(**j).ycord = y;
 			}
 		}
 		if(!encontrado){
-			TextureBalas nuevo;
-			nuevo.setX(x);
-			nuevo.setY(y);
+			TextureBalas* nuevo = new TextureBalas;
+			nuevo->setX(x);
+			nuevo->setY(y);
 			//cout << "YYYY: " << y << endl;
-			nuevo.setTipoArma(2);
-			nuevo.setId(cont);
-			nuevo.setTipoDisparo(tipoDisp);
+			nuevo->setTipoArma(2);
+			nuevo->setId(cont);
+			nuevo->setTipoDisparo(tipoDisp);
 			if(dirBala == true){
-				nuevo.setFlip('D');
+				nuevo->setFlip('D');
 			} else {
-				nuevo.setFlip('I'); 
+				nuevo->setFlip('I'); 
 			}
 			string pathBalas = "img/balas/balas.png";
-			nuevo.inicializarTexture(window, &pathBalas[0]);
+			nuevo->inicializarTexture(window, &pathBalas[0]);
 
 			listaDibujableBalas.push_back(nuevo);
 		} else {
@@ -410,8 +414,9 @@ void Grafica::agregarBala(int x, int y, int cont, bool dirBala, int tipoDisp){
 }
 
 void Grafica::borrarBala(int cont){
-	for(list<TextureBalas>::iterator j = listaDibujableBalas.begin(); j!= listaDibujableBalas.end(); ++j){
-		if((*j).id == cont){
+	for(list<TextureBalas*>::iterator j = listaDibujableBalas.begin(); j!= listaDibujableBalas.end(); ++j){
+		if((**j).id == cont){
+			delete (*j);
 			j = listaDibujableBalas.erase(j);
 			j--;
 		}
@@ -427,33 +432,33 @@ void Grafica::mostrarDibujables(){
 	SDL_RenderCopy (window, spriteFondo3, &camera3, NULL);
 
 
-	for (list<TextureEnergia>::iterator it = listaDibujableEnergia.begin(); it != listaDibujableEnergia.end(); ++it) {
-		it->renderEnergia(window, altoVentana/20);
+	for (list<TextureEnergia*>::iterator it = listaDibujableEnergia.begin(); it != listaDibujableEnergia.end(); ++it) {
+		(*it)->renderEnergia(window, altoVentana/20);
 	}
 
-	for (list<TextureScore>::iterator it = listaDibujableScore.begin(); it != listaDibujableScore.end(); ++it) {
-		it->renderScore(window);
+	for (list<TextureScore*>::iterator it = listaDibujableScore.begin(); it != listaDibujableScore.end(); ++it) {
+		(*it)->renderScore(window);
 	}
 
-	for (list<LTextureEnemigo>::iterator it = listaDibujableEnemigos.begin(); it != listaDibujableEnemigos.end(); ++it) {
-		it->render(window, soldadosTexture, xCamara, altoVentana/10);
+	for (list<LTextureEnemigo*>::iterator it = listaDibujableEnemigos.begin(); it != listaDibujableEnemigos.end(); ++it) {
+		(*it)->render(window, soldadosTexture, xCamara, altoVentana/10);
 	}
 
-	for(list<TextureBalas>::iterator j = listaDibujableBalas.begin(); j!= listaDibujableBalas.end(); ++j){
-		(*j).render(window,(*j).texture, xCamara, altoVentana/48);
+	for(list<TextureBalas*>::iterator j = listaDibujableBalas.begin(); j!= listaDibujableBalas.end(); ++j){
+		(**j).render(window,(**j).texture, xCamara, altoVentana/48);
 	}
 
-	for (list<TextureBonus>::iterator it2 = listaDibujableBonus.begin(); it2 != listaDibujableBonus.end(); ++it2)
+	for (list<TextureBonus*>::iterator it2 = listaDibujableBonus.begin(); it2 != listaDibujableBonus.end(); ++it2)
 	{
-		(*it2).render(window, (*it2).texture, xCamara, altoVentana/15);
+		(**it2).render(window, (**it2).texture, xCamara, altoVentana/15);
 	}
-	for (list<LTexture>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
-		(*i).render(window,(*i).texture, xCamara, altoVentana/12);
+	for (list<LTexture*>::iterator i = listaDibujable.begin(); i != listaDibujable.end(); ++i) {
+		(**i).render(window,(**i).texture, xCamara, altoVentana/12);
 	}
 
-	list<LTexture>::iterator i = listaDibujable.begin();
+	list<LTexture*>::iterator i = listaDibujable.begin();
 	advance(i,numeroCliente - 1);
-	(*i).render(window, (*i).texture, xCamara, altoVentana/12);
+	(**i).render(window, (**i).texture, xCamara, altoVentana/12);
 
 	//SDL_RenderCopy(window, puntaje, NULL, &puntajeRect);
 
@@ -465,32 +470,32 @@ void Grafica::nuevoDibujable(char* sprite, int idObjeto, int posX, int posY, int
 	//nuevo.inicializarTexture("Clark.png");
 	//}else
 
-	LTexture nuevo;
-	nuevo.setId(idObjeto);
-	nuevo.setX(posX);
-	nuevo.setY(posY);
-	nuevo.setSpX(spx);
-	nuevo.setSpY(spy);
-	nuevo.setFlip(flip);
+	LTexture* nuevo = new LTexture;
+	nuevo->setId(idObjeto);
+	nuevo->setX(posX);
+	nuevo->setY(posY);
+	nuevo->setSpX(spx);
+	nuevo->setSpY(spy);
+	nuevo->setFlip(flip);
 
-	nuevo.inicializarTexture(window, sprite); //pasar nombre como parametro
+	nuevo->inicializarTexture(window, sprite); //pasar nombre como parametro
 
 	listaDibujable.push_back(nuevo);
 }
 
-LTexture Grafica::buscarDibujable(int id){
-	for (list<LTexture>::iterator it = listaDibujable.begin(); it != listaDibujable.end(); ++it) {
-		if ((*it).getId() == id ){
+LTexture* Grafica::buscarDibujable(int id){
+	for (list<LTexture*>::iterator it = listaDibujable.begin(); it != listaDibujable.end(); ++it) {
+		if ((**it).getId() == id ){
 			return (*it);
 		}
 	}
-	return LTexture();
+	return new LTexture();
 }
 
 void Grafica::actualizarDibujable(LTexture nuevo) {
-	for (list<LTexture>::iterator it = listaDibujable.begin(); it != listaDibujable.end(); ++it) {
-		if ((*it).getId() == nuevo.getId() ){
-			memcpy(&(*it),&nuevo,sizeof(LTexture));
+	for (list<LTexture*>::iterator it = listaDibujable.begin(); it != listaDibujable.end(); ++it) {
+		if ((**it).getId() == nuevo.getId() ){
+			memcpy(&(**it),&nuevo,sizeof(LTexture));
 		}
 	}
 }
@@ -498,9 +503,9 @@ void Grafica::actualizarDibujable(LTexture nuevo) {
 bool Grafica::actualizarDibujable(int idObjeto,int x,int y, int spx, int spy, char flip){
 	bool actualizo = false;
 
-	for (list<LTexture>::iterator it = listaDibujable.begin(); it != listaDibujable.end(); ++it) {
-		if ( it->getId() == idObjeto ){
-			it->actualizar( x, y, spx, spy, flip);
+	for (list<LTexture*>::iterator it = listaDibujable.begin(); it != listaDibujable.end(); ++it) {
+		if ( (*it)->getId() == idObjeto ){
+			(*it)->actualizar( x, y, spx, spy, flip);
 			actualizo = true;
 		}
 	}
@@ -511,9 +516,9 @@ bool Grafica::actualizarDibujable(int idObjeto,int x,int y, int spx, int spy, ch
 bool Grafica::actualizarDibujableEnemigos(int idObjeto,int x,int y, int spx, int spy, char flip){
 	bool actualizo = false;
 
-	for (list<LTextureEnemigo>::iterator it = listaDibujableEnemigos.begin(); it != listaDibujableEnemigos.end(); ++it) {
-		if ( it->getId() == idObjeto ){
-			it->actualizar( x, y, spx, spy, flip);
+	for (list<LTextureEnemigo*>::iterator it = listaDibujableEnemigos.begin(); it != listaDibujableEnemigos.end(); ++it) {
+		if ( (*it)->getId() == idObjeto ){
+			(*it)->actualizar( x, y, spx, spy, flip);
 			actualizo = true;
 		}
 	}
@@ -522,8 +527,9 @@ bool Grafica::actualizarDibujableEnemigos(int idObjeto,int x,int y, int spx, int
 }
 
 void Grafica::borrarDibujable(int id) {
-	for (list<LTexture>::iterator it = listaDibujable.begin(); it != listaDibujable.end(); ++it) {
-		if ((*it).getId() == id ){
+	for (list<LTexture*>::iterator it = listaDibujable.begin(); it != listaDibujable.end(); ++it) {
+		if ((**it).getId() == id ){
+			delete (*it);
 			it = listaDibujable.erase(it);
 			it--;
 		}

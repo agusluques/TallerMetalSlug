@@ -46,12 +46,12 @@ private:
 	SDL_Texture *puntaje;
 	SDL_Rect puntajeRect;
 
-	list<LTexture> listaDibujable;
-	list<TextureEnergia> listaDibujableEnergia;
-	list<TextureScore> listaDibujableScore;
-	list<TextureBalas> listaDibujableBalas;
-	list<TextureBonus> listaDibujableBonus;
-	list<LTextureEnemigo> listaDibujableEnemigos;
+	list<LTexture*> listaDibujable;
+	list<TextureEnergia*> listaDibujableEnergia;
+	list<TextureScore*> listaDibujableScore;
+	list<TextureBalas*> listaDibujableBalas;
+	list<TextureBonus*> listaDibujableBonus;
+	list<LTextureEnemigo*> listaDibujableEnemigos;
 
 	//lo de agus
     SDL_Rect renderQuad;
@@ -91,7 +91,7 @@ public:
 	void actualizarVida(int id,int vida);
 
 	void mostrarDibujables();
-	LTexture buscarDibujable(int id);
+	LTexture* buscarDibujable(int id);
 	void nuevoDibujable(char* sprite, int idObjeto, int posX, int posY, int spx, int spy, char flip);
 	void actualizarDibujable(LTexture nuevo);
 	bool actualizarDibujable(int idObjeto,int x,int y, int spx, int spy, char flip);
