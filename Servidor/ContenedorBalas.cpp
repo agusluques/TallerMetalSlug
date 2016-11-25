@@ -138,15 +138,15 @@ void ContenedorBalas::agregarDano (DibujableServer *usuario, int balaEnemiga){
 
 }
 
-void ContenedorBalas::acumuloPuntajes(int tipoDeBala, int idJugador, list<DibujableServerAdicional> *listaScores ){
-     for (list<DibujableServerAdicional>::iterator itScore = listaScores->begin(); itScore != listaScores->end(); ++itScore){
-    	 if(itScore->id == idJugador){
-    		 itScore->aumentar(10);
+void ContenedorBalas::acumuloPuntajes(int tipoDeBala, int idJugador, list<DibujableServerAdicional*> *listaScores ){
+     for (list<DibujableServerAdicional*>::iterator itScore = listaScores->begin(); itScore != listaScores->end(); ++itScore){
+    	 if((*itScore)->id == idJugador){
+    		 (*itScore)->aumentar(10);
     	 }
      }
 }
 
-void ContenedorBalas::detectarColisiones(list<bala> *listaBalasDeBaja, list<DibujableServerEnemigo> *listaEnemigosActivos, list<DibujableServerEnemigo> *listaEnemigosDeBaja, list<DibujableServerAdicional> *listaScores, list<DibujableServer> *listaUsuarios){
+void ContenedorBalas::detectarColisiones(list<bala> *listaBalasDeBaja, list<DibujableServerEnemigo> *listaEnemigosActivos, list<DibujableServerEnemigo> *listaEnemigosDeBaja, list<DibujableServerAdicional*> *listaScores, list<DibujableServer*> *listaUsuarios){
 	for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosActivos->begin(); itEnemigos != listaEnemigosActivos->end(); ++itEnemigos) {
 		if(itEnemigos->estaVivo){
 			for (list<bala>::iterator itBalas = listaDeBalas.begin(); itBalas != listaDeBalas.end(); ++itBalas) {
@@ -165,14 +165,14 @@ void ContenedorBalas::detectarColisiones(list<bala> *listaBalasDeBaja, list<Dibu
 			}
 		}
 	}
-    for(list<DibujableServer>::iterator itUser = listaUsuarios->begin(); itUser != listaUsuarios->end(); ++itUser){
-    	if(itUser->estaOnline){
+    for(list<DibujableServer*>::iterator itUser = listaUsuarios->begin(); itUser != listaUsuarios->end(); ++itUser){
+    	if((*itUser)->estaOnline){
     		for (list<bala>::iterator itBalas = listaDeBalas.begin(); itBalas != listaDeBalas.end(); ++itBalas) {
     				if(itBalas->usr == 5){
-    	                   if(hayColisionConUser(itUser->x,itUser->y,itBalas->x,itBalas->y,itBalas->tipoBala)){
+    	                   if(hayColisionConUser((*itUser)->x,(*itUser)->y,itBalas->x,itBalas->y,itBalas->tipoBala)){
 
     	                	   // agregarDano((*itUser), itBalas->usr);
-    	                	    itUser->aumentarDano(1);
+    	                	    (*itUser)->aumentarDano(1);
     							listaBalasDeBaja->push_back((*itBalas));
     							itBalas = listaDeBalas.erase(itBalas);
     							itBalas--;

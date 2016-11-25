@@ -23,8 +23,8 @@ public:
 	void nuevaBala(int posX, int posY, int idUsuario, int direccionDisparo, int tipoDeArma);
 	void buscarActivas(int camaraX, list<bala> *listaEnemigosActivos, list<bala>* listaEnemigosDeBaja);
 	void agregarDano (DibujableServer *usuario, int balaEnemiga);
-	void detectarColisiones(list<bala> *listaBalasDeBaja, list<DibujableServerEnemigo> *listaEnemigosActivos, list<DibujableServerEnemigo> *listaEnemigosDeBaja, list<DibujableServerAdicional> *listaScores, list<DibujableServer> *listaUsuarios);
-    void acumuloPuntajes(int tipoDeBala, int idJugador, list<DibujableServerAdicional> *listaScores);
+	void detectarColisiones(list<bala> *listaBalasDeBaja, list<DibujableServerEnemigo> *listaEnemigosActivos, list<DibujableServerEnemigo> *listaEnemigosDeBaja, list<DibujableServerAdicional*> *listaScores, list<DibujableServer*> *listaUsuarios);
+    void acumuloPuntajes(int tipoDeBala, int idJugador, list<DibujableServerAdicional*> *listaScores);
 	virtual ~ContenedorBalas();
 };
 

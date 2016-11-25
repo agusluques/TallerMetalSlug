@@ -45,25 +45,25 @@ void ContenedorBonus::borrarBonus(int id, list<Bonus>* listaBonusDeBaja, list<Bo
 	}
 }
 
-bool ContenedorBonus::detectarColision(list<Bonus>* listaBonusDeBaja, list<Bonus>* listaBonusActivos, list<DibujableServer>* listaPersonajes){
+bool ContenedorBonus::detectarColision(list<Bonus>* listaBonusDeBaja, list<Bonus>* listaBonusActivos, list<DibujableServer*>* listaPersonajes){
 	bool huboColision = false;
 
 	for(list<Bonus>::iterator it = listaBonusActivos->begin(); it != listaBonusActivos->end(); ++it){
-		for(list<DibujableServer>::iterator itPjs = listaPersonajes->begin(); itPjs != listaPersonajes->end(); ++itPjs){
+		for(list<DibujableServer*>::iterator itPjs = listaPersonajes->begin(); itPjs != listaPersonajes->end(); ++itPjs){
 			
 			//cout << "Y Bonus: " << (it->getPosY()) << endl;
 			//cout << "Y Personaje: " << itPjs->y << endl;
 
 			int xBonus = it->getPosX();
 			int yBonus = it->getPosY();
-			int xPersonaje = itPjs->x;
-			int yPersonaje = itPjs->y;
+			int xPersonaje = (*itPjs)->x;
+			int yPersonaje = (*itPjs)->y;
 			int tipoBonus = it->getTipoBonus();
 
 			if((xPersonaje > xBonus - 40) && (xPersonaje < xBonus + 40) && ((yBonus - yPersonaje) <= 40)){
 
 				huboColision = true;
-				itPjs->actualizarBonus(tipoBonus);
+				(*itPjs)->actualizarBonus(tipoBonus);
 
 				borrarBonus(it->getId(), listaBonusDeBaja, listaBonusActivos);
 
