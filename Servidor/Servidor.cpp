@@ -10,6 +10,7 @@ void *escuchar_clientes(void *arg){
     servidor = (mySocketSrv*) arg;
     servidor->aceptarClientes();
 
+
 	return NULL;
 }
 
@@ -87,6 +88,5 @@ int main(int argc, char *argv[])
 	}
 
 	servidor.cerrar();
-
 	return 0; /* we never get here */
 }

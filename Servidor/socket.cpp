@@ -1244,6 +1244,12 @@ void mySocketSrv::cerrar(){
 		enviarMensaje((*it), &corte, sizeof(int));
 		enviarMensaje((*it), &tipoMsj, sizeof(int));
 	}
+	for(list<FondoServer*>::iterator i =listaFondos.begin(); i != listaFondos.end();++i){
+		delete (*i);
+		i = listaFondos.erase(i);
+		i--;
+
+	}
 
 	close(this->sockfd);
 	loggearInterno( " SE CERRO EL SOCKET");
