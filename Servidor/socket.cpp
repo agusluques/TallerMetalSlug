@@ -390,7 +390,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 				char flip;
 
-				int b = pthread_mutex_trylock(&mutexListaDibujables);
+				pthread_mutex_lock(&mutexListaDibujables);
 				list<DibujableServer*>::iterator it = listaDibujables.begin();
 				advance(it, numeroCliente-1);
 
@@ -405,7 +405,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				flip = (*it)->flip;
 				(*it)->desconectar();
 				pthread_mutex_unlock (&mutexListaDibujables);
-				int a = pthread_mutex_trylock(&mutexListaUsuarios);
+				pthread_mutex_lock(&mutexListaUsuarios);
 				list<usuarioClass*>::iterator it2 = listaDeUsuarios.begin();
 				advance(it2, numeroCliente-1);
 
@@ -427,7 +427,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		//int data = read(newsockfd, &codigo, sizeof(char));
 		//		cout << "RECIBE: " << codigo << endl;
 
-		int a = pthread_mutex_trylock(&mutexLista);
+		pthread_mutex_lock(&mutexLista);
 
 		//cout << "SOY " << numeroCliente << endl;
 		cout << "---------------" << endl;
