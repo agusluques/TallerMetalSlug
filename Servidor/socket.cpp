@@ -203,7 +203,8 @@ void cargarFondos(char* xml){
 
 		FondoServer* nuevo = new FondoServer;
 		nuevo->setAncho(atoi(anchoFondo->value()));
-		nuevo->setSpriteId(fondoXML->value());
+		string spriteID(fondoXML->value());
+		nuevo->setSpriteId(spriteID);
 		nuevo->setZindex(atoi(zFondo->value()));
 		listaFondos.push_back(nuevo);
 
@@ -241,7 +242,7 @@ void cargarBonus(char* xml){
 	}
 }
 
-char* parseXMLPj(){
+string parseXMLPj(){
 	const char *cstr = archivoXml.c_str();
 	file<> xmlFile(cstr);
 	xml_document<> doc;    // character type defaults to char
@@ -251,7 +252,8 @@ char* parseXMLPj(){
 	xml_node<> *pj = sprites->first_node("personaje");
 	xml_node<> *path = pj->first_node("path");
 
-	return path->value();
+	string retorno(path->value());
+	return retorno;
 
 }
 
@@ -427,7 +429,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 		int a = pthread_mutex_trylock(&mutexLista);
 
-		cout << "SOY " << numeroCliente << endl;
+		//cout << "SOY " << numeroCliente << endl;
 		cout << "---------------" << endl;
 
 		switch(codigo){
@@ -504,7 +506,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				//creo el dibujable del nuevo cliente
 				DibujableServer* nuevo = new DibujableServer;
 				nuevo->setId(listaDeUsuarios.size());
-				char* spriteId = parseXMLPj();
+				string spriteId = parseXMLPj();
 				nuevo->setSpriteId(spriteId);
 				nuevo->setX(1 + rand() % (150));
 				nuevo->setY(ALTO_VENTANA - 100);
@@ -1072,7 +1074,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				advance(it, i-1);
 
 				//DibujableServer nuevo;
-				char* spriteId = parseXMLPj();
+				string spriteId = parseXMLPj();
 				(*it)->setSpriteId(spriteId);
 				(*it)->setX(1+rand() % (150));
 				(*it)->setY(ALTO_VENTANA-100);
