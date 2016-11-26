@@ -118,11 +118,10 @@ void recibirMensaje(int sockfd, void* buffer, int tamanio){
 }
 
 bool enviarMensaje(int sockfd, void* mensaje, int tamanioMensaje){
-	/*
 	int bytesEnviados = 0;
 	bool errorSocket = false;
 
-	while((bytesEnviados < tamanioMensaje) && (!errorSocket)){
+	/*while((bytesEnviados < tamanioMensaje) && (!errorSocket)){
 		int n = send(sockfd, mensaje, tamanioMensaje - bytesEnviados, MSG_NOSIGNAL);
 		if(n < 0){
 			errorSocket = true;
@@ -130,10 +129,10 @@ bool enviarMensaje(int sockfd, void* mensaje, int tamanioMensaje){
 			bytesEnviados += n;
 		}
 	}
-	return errorSocket;
-	 */
-	bool errorSocket = false;
+	return errorSocket;*/
+
 	int n = write(sockfd, mensaje, tamanioMensaje);
+	//int n = send(sockfd, mensaje, tamanioMensaje, MSG_NOSIGNAL);
 	if(n < 0) errorSocket = true;
 
 	//char* tmp = (char*)mensaje;
@@ -266,175 +265,93 @@ void buscarNombreUsuario(char *nombreRetorno, int numeroUsuario){
 	pthread_mutex_unlock (&mutexListaUsuarios);
 }
 
-void agregaraLista(int numeroCliente, int usrDest, int x, int y, int spx, int spy, char flip, bool avanzar, int tipo){
-	char nombreAutor[50] = "tu vieja";
-	char nombreDestino[50];
-	//buscarNombreUsuario(nombreAutor, numeroCliente);
-	//buscarNombreUsuario(nombreDestino, usrDest);
-	mensajeClass* mensajeObj = new mensajeClass(nombreAutor, usrDest, numeroCliente, x, y, spx, spy, flip, avanzar, tipo);
-
-	int a = pthread_mutex_trylock(&mutexLista);
-
-	listaDeMensajes.push_back(mensajeObj);
-	//loggear(mensajeObj.nombreAutor(),mensajeObj.nombreDestinatario(),mensajeObj.getMensaje());
-	pthread_mutex_unlock (&mutexLista);
-}
-
 void enviarMensajeAConectados(string mensaje){
 	//envio a todos los q esten online el mensaje
-	int a = pthread_mutex_trylock(&mutexListaUsuarios);
 	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 		if((**it).estaConectado()){
-			//mensajes = tipo 3
-			char nombreDestino[50];
-			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
 			mensajeClass* mensajeObj = new mensajeClass(3,(**it).numCliente(),mensaje);
-			int a = pthread_mutex_trylock(&mutexLista);
 			listaDeMensajes.push_back(mensajeObj);
-			pthread_mutex_unlock (&mutexLista);
 		}
 	}
-	pthread_mutex_unlock (&mutexListaUsuarios);
 }
 
 void enviarScoreAConectados (int numeroCliente, int score){
-	int a = pthread_mutex_trylock(&mutexListaUsuarios);
 	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 		if((**it).estaConectado()){
-			//mensajes = tipo 3
-			char nombreDestino[50],nombreAutor[50];
-			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
 			mensajeClass* mensajeObj = new mensajeClass(12,(**it).numCliente(),numeroCliente,score);
-			int a = pthread_mutex_trylock(&mutexLista);
 			listaDeMensajes.push_back(mensajeObj);
-			pthread_mutex_unlock (&mutexLista);
 		}
 	}
-	pthread_mutex_unlock (&mutexListaUsuarios);
 }
 
 void enviarDanoAConectados (int numeroCliente, int vida){
-	int a = pthread_mutex_trylock(&mutexListaUsuarios);
 	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 		if((**it).estaConectado()){
-			//mensajes = tipo 3
-			char nombreDestino[50],nombreAutor[50];
-			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
 			mensajeClass* mensajeObj = new mensajeClass(13,(**it).numCliente(),numeroCliente,vida);
-			int a = pthread_mutex_trylock(&mutexLista);
 			listaDeMensajes.push_back(mensajeObj);
-			pthread_mutex_unlock (&mutexLista);
 		}
 	}
-	pthread_mutex_unlock (&mutexListaUsuarios);
+}
+
+void agregaraLista(int numeroCliente, int usrDest, int x, int y, int spx, int spy, char flip, bool avanzar, int tipo){
+	char nombreAutor[50] = "tu vieja";
+	mensajeClass* mensajeObj = new mensajeClass(nombreAutor, usrDest, numeroCliente, x, y, spx, spy, flip, avanzar, tipo);
+
+	listaDeMensajes.push_back(mensajeObj);
 }
 
 void enviarAConectados(int numeroCliente, int nuevaCordX, int nuevaCordY, int nuevoSpX, int nuevoSpY, char flip, bool avanzar, int tipo){
 	//envio a todos los q esten online el mensaje de q se modifico un objeto
-
-	int a = pthread_mutex_trylock(&mutexListaUsuarios);
 	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
-
 		if((**it).estaConectado()){
 			agregaraLista(numeroCliente, (**it).numCliente(), nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, avanzar, tipo);
 		}
-
 	}
-	pthread_mutex_unlock (&mutexListaUsuarios);
 }
 
 void quitarEnemigo(int numeroCliente, int usrDest, int x, int y, int spx, int spy, char flip){
-	int a = pthread_mutex_trylock(&mutexListaUsuarios);
 	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 		if((**it).estaConectado()){
-			char nombreAutor[50];
-			char nombreDestino[50];
-			//buscarNombreUsuario(nombreAutor, numeroCliente);
-			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
-
 			mensajeClass* mensajeObj = new mensajeClass(0, (**it).numCliente(), numeroCliente, x, y, spx, spy, flip, 2);
-
-			int a = pthread_mutex_trylock(&mutexLista);
 			listaDeMensajes.push_back(mensajeObj);
-			pthread_mutex_unlock (&mutexLista);
 		}
 	}
-	pthread_mutex_unlock (&mutexListaUsuarios);
 }
 
 void enviarBalasAConectados(int idBala, int x, int y, int direccion, int tipoBala, int spY){
-	int a = pthread_mutex_trylock(&mutexListaUsuarios);
 	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 		if((**it).estaConectado()){
-			char nombreAutor[50];
-			char nombreDestino[50];
-			//buscarNombreUsuario(nombreAutor, idBala);
-			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
-
 			mensajeClass* mensajeObj = new mensajeClass(spY, (**it).numCliente(), idBala, x, y, direccion, tipoBala, 'D', 6);
-
-			int a = pthread_mutex_trylock(&mutexLista);
 			listaDeMensajes.push_back(mensajeObj);
-			pthread_mutex_unlock (&mutexLista);
 		}
 	}
-	pthread_mutex_unlock (&mutexListaUsuarios);
 }
 
 void enviarBonusAConectados(int idBonus, int x, int y, int tipoBonus){
-	int a = pthread_mutex_trylock(&mutexListaUsuarios);
 	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 		if((**it).estaConectado()){
-			char nombreAutor[50];
-			char nombreDestino[50];
-			//buscarNombreUsuario(nombreAutor, idBonus);
-			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
 			mensajeClass* mensajeObj = new mensajeClass(0, (**it).numCliente(), idBonus, x, y, 0, tipoBonus, 'D', 9);
-
-			int a = pthread_mutex_trylock(&mutexLista);
 			listaDeMensajes.push_back(mensajeObj);
-			pthread_mutex_unlock (&mutexLista);
 		}
 	}
-	pthread_mutex_unlock (&mutexListaUsuarios);
 }
 
 void quitarBalas(int idBala){
-	int a = pthread_mutex_trylock(&mutexListaUsuarios);
 	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 		if((**it).estaConectado()){
-			char nombreAutor[50];
-			char nombreDestino[50];
-			//buscarNombreUsuario(nombreAutor, idBala);
-			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
-
 			mensajeClass* mensajeObj = new mensajeClass(0, (**it).numCliente(), idBala, 0, 0, 0, 0, 'D', 8);
-
-			int a = pthread_mutex_trylock(&mutexLista);
 			listaDeMensajes.push_back(mensajeObj);
-			pthread_mutex_unlock (&mutexLista);
 		}
 	}
-	pthread_mutex_unlock (&mutexListaUsuarios);
 }
 
 void quitarBonus(int idBonus){
-	int a = pthread_mutex_trylock(&mutexListaUsuarios);
 	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 		if((**it).estaConectado()){
-			char nombreAutor[50];
-			char nombreDestino[50];
-			//buscarNombreUsuario(nombreAutor, idBonus);
-			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
-
 			mensajeClass* mensajeObj = new mensajeClass(0, (**it).numCliente(), idBonus, 0, 0, 0, 0, 'D', 10);
-
-			int a = pthread_mutex_trylock(&mutexLista);
 			listaDeMensajes.push_back(mensajeObj);
-			pthread_mutex_unlock (&mutexLista);
 		}
 	}
-	pthread_mutex_unlock (&mutexListaUsuarios);
 }
 
 void *atender_cliente(void *arg) //FUNCION PROTOCOLO
@@ -445,7 +362,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 	bool inicioGrafica = false;
 	int numeroCliente;
 	usuarioClass* userPoint= NULL;
-
 
 	while (abierto){
 
@@ -509,6 +425,11 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		//int data = read(newsockfd, &codigo, sizeof(char));
 		//		cout << "RECIBE: " << codigo << endl;
 
+		int a = pthread_mutex_trylock(&mutexLista);
+
+		cout << "SOY " << numeroCliente << endl;
+		cout << "---------------" << endl;
+
 		switch(codigo){
 
 		case '0': {
@@ -529,7 +450,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case '1': {
-			//cout << "Entro a /1 que es conectar " << endl;
+			cout << "Entro a /1 que es conectar " << endl;
 			int tamNombre;
 
 			recibirMensaje(newsockfd, &tamNombre, sizeof(int));
@@ -542,7 +463,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			char mensaje[256];
 
 			//comparo con todos los usuarios q esten si existe devuelvo error
-			int a = pthread_mutex_trylock(&mutexListaUsuarios);
 			for (list<usuarioClass*>::iterator i = listaDeUsuarios.begin(); i != listaDeUsuarios.end(); ++i) {
 
 				if ((**i).nombreUsuario().compare(nombre) == 0){
@@ -554,7 +474,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						//mandar msj a todos q volvio asi no esta mas gris
 						int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 						char flip;
-						int b = pthread_mutex_trylock(&mutexListaDibujables);
 						list<DibujableServer*>::iterator it = listaDibujables.begin();
 						advance(it, numeroCliente-1);
 
@@ -566,7 +485,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						flip = (*it)->flip;
 
 						(*it)->conectar();
-						pthread_mutex_unlock (&mutexListaDibujables);
 						//envio a todos los q esten online el mensaje de q se modifico un objeto
 						enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, false,0);
 					}
@@ -575,11 +493,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					strcpy(mensaje,"El nombre ya esta en uso");
 				}
 			}
-			pthread_mutex_unlock (&mutexListaUsuarios);
 
 			if (respuesta){
 				strcpy(mensaje,"Bienvenido");
-				int a = pthread_mutex_trylock(&mutexListaUsuarios);
 				usuarioClass* nuevoUsuario = new usuarioClass(nombre, listaDeUsuarios.size()+1);
 				listaDeUsuarios.push_back(nuevoUsuario);
 
@@ -598,7 +514,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				//creo dibujable energia
 				DibujableServer* nuevo2 = new DibujableServer;
 				nuevo2->setId(listaDeUsuarios.size());
-				pthread_mutex_unlock (&mutexListaUsuarios);
 				nuevo2->setSpY(0);
 
 				//creo dibujable score
@@ -606,11 +521,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				scoreNuevo->setId(listaDeUsuarios.size());
 				scoreNuevo->setAumentable(0);
 
-				int b = pthread_mutex_trylock(&mutexListaDibujables);
 				listaDibujables.push_back(nuevo);
 				listaEnergias.push_back(nuevo2);
 				listaScores.push_back(scoreNuevo);
-				pthread_mutex_unlock (&mutexListaDibujables);
 
 			}else if(estabaDesconectado){
 				strcpy(mensaje,"Bienvenido nuevamente");
@@ -618,26 +531,23 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				/*list<DibujableServer>::iterator it2 = listaDibujables.begin();
 					advance(it2, numeroCliente-1);
 					it2->conectar();*/
-				pthread_mutex_unlock (&mutexListaUsuarios);
 				respuesta = true;
-			} else {pthread_mutex_unlock (&mutexListaUsuarios);}
+			}
 
 			responderLogin(newsockfd,respuesta,mensaje, numeroCliente);
 
 			break;
 		}
 		case '2':{
-			//cout << "Entro a /2 que es desconectar" << endl;
+			cout << "Entro a /2 que es desconectar" << endl;
 			abierto = false;
-			int a = pthread_mutex_trylock(&mutexListaUsuarios);
 			list<usuarioClass*>::iterator it = listaDeUsuarios.begin();
 			advance(it, numeroCliente-1);
 			(*it)->desconectar();
-			pthread_mutex_unlock (&mutexListaUsuarios);
 			break;
 		}
 		case '3':{
-			//cout << "Entro a /3 que es ventana" << endl;
+			cout << "Entro a /3 que es ventana" << endl;
 			//cargarFondos(archivoXml);
 			enviarMensaje(newsockfd, &ANCHO_VENTANA, sizeof(int));
 			enviarMensaje(newsockfd, &ALTO_VENTANA, sizeof(int));
@@ -645,7 +555,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 		case '4':{
-			//cout << "Entro a /4 que es fondos" << endl;
+			cout << "Entro a /4 que es fondos" << endl;
 			//cargarFondos(archivoXml);
 			inicioGrafica = true;
 			int tamano = listaFondos.size();
@@ -668,14 +578,11 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 		case '5': {
-			char nombre[50];
-			//buscarNombreUsuario(nombre, numeroCliente);
-
-			int a = pthread_mutex_trylock(&mutexLista);
+			cout << "ENTRO A BUSCAR MSJS NUEVOS" << endl;
 			for (list<mensajeClass*>::iterator i = listaDeMensajes.begin(); i != listaDeMensajes.end(); ++i) {
 				//if ((**i).nombreDestinatario().compare(nombre) == 0 ){
-				cout << (**i).nombreDestinatario() << endl;
-				if ((**i).nombreDestinatario() == numeroCliente){
+				if ((*i)->usrDestino == numeroCliente){
+					cout << "TENGO UN MENSAJE: "<< (*i)->usrDestino << endl;
 					int corte = 1;
 					enviarMensaje(newsockfd, &corte, sizeof(int));
 
@@ -792,11 +699,11 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					}
 
 					case 13:{
-                        int vida = (**i).getEnergia();
-                        int autor = (**i).numAutor();
+						int vida = (**i).getEnergia();
+						int autor = (**i).numAutor();
 
-                        enviarMensaje(newsockfd, &autor, sizeof(int));
-                        enviarMensaje(newsockfd, &vida, sizeof(int));
+						enviarMensaje(newsockfd, &autor, sizeof(int));
+						enviarMensaje(newsockfd, &vida, sizeof(int));
 
 						break;
 					}
@@ -807,33 +714,27 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					}
 
 					delete (*i);
+
 					i = listaDeMensajes.erase(i);
 					i--;
 				}
-				pthread_mutex_unlock (&mutexLista);
 			}
 
 			int tamanioMensaje = 0;
 			enviarMensaje(newsockfd, &tamanioMensaje, sizeof(int));
 
 			if(numeroCliente == 1){
+				cout << "MUEVO ENEMIGOS" << endl;
 				//BUSCO ENEMIGOS
 				list<DibujableServerEnemigo> listaEnemigosActivos;
 				list<DibujableServerEnemigo> listaEnemigosDeBaja;
 
-				int aa = pthread_mutex_trylock(&mutexContenedorEnemigos);
-				int bb = pthread_mutex_trylock(&mutexContenedorBalas);
-
 				contenedorEnemigos.buscarActivos(camaraX,&listaEnemigosActivos, &listaEnemigosDeBaja, &contenedorBalas);
-
-				pthread_mutex_unlock (&mutexContenedorBalas);
-				pthread_mutex_unlock (&mutexContenedorEnemigos);
 
 				//BUSCO BALAS
 				list<bala> listaBalasActivas;
 				list<bala> listaBalasDeBaja;
 
-				int bbb = pthread_mutex_trylock(&mutexContenedorBalas);
 				contenedorBalas.buscarActivas(camaraX, &listaBalasActivas, &listaBalasDeBaja);
 
 				list<DibujableServerEnemigo> listaEnemigosDisparados;
@@ -845,12 +746,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				//for (list<DibujableServer*>::iterator itUser = listaDibujables.begin(); itUser != listaDibujables.end(); ++itUser) {
 				//	enviarDanoAConectados((*itUser)->id,(*itUser)->vida);
 				//}
-				pthread_mutex_unlock (&mutexContenedorBalas);
 
-
-				int aaa = pthread_mutex_trylock(&mutexContenedorEnemigos);
 				int pasarDeNivel = contenedorEnemigos.matarEnemigos(camaraX, listaEnemigosDisparados);
-				pthread_mutex_unlock (&mutexContenedorEnemigos);
 
 				//hay que enviar a conectados un msjedel tipo pasaste de nivel y cuando
 				//los conectados lo reciban, le envian al servidor un mensaje con un codigo
@@ -863,14 +760,12 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				list<Bonus> listaBonusActivos;
 				list<Bonus> listaBonusDeBaja;
 
-				int aaaa = pthread_mutex_trylock(&mutexContenedorBonus);
 				contenedorBonus.buscarActivos(camaraX, &listaBonusActivos, &listaBonusDeBaja);
-				pthread_mutex_unlock (&mutexContenedorBonus);
 
 				//list<Bonus> listaBonusAgarrados;
-				int zzz = pthread_mutex_trylock(&mutexListaDibujables);
+
 				contenedorBonus.detectarColision(&listaBonusDeBaja, &listaBonusActivos, &listaDibujables);
-				pthread_mutex_unlock (&mutexListaDibujables);
+
 
 				for (list<bala>::iterator itBalas = listaBalasActivas.begin(); itBalas != listaBalasActivas.end(); ++itBalas) {
 					enviarBalasAConectados(itBalas->id,itBalas->x,itBalas->y,itBalas->direccionDisparo, itBalas->tipoBala, itBalas->spY);
@@ -887,7 +782,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosDeBaja.begin(); itEnemigos != listaEnemigosDeBaja.end(); ++itEnemigos) {
 					quitarEnemigo(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, false);
 				}
-				//se puede hacer lo mismo con los tiros
 
 				for (list<Bonus>::iterator itBonus = listaBonusActivos.begin(); itBonus != listaBonusActivos.end(); ++itBonus) {
 					enviarBonusAConectados(itBonus->getId(), itBonus->getPosX(), itBonus->getPosY(), itBonus->getTipoBonus());
@@ -904,6 +798,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 		case '6': {
 			//peticion de cantidad de objetos a dibujar
+			cout << "PIDO CANT OBJ A DIBUJAR" << endl;
 			int cantidad = listaDibujables.size();
 			enviarMensaje(newsockfd,&cantidad,sizeof(int));
 
@@ -911,9 +806,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case '7': {
+			cout << "PIDO SI PUEDO EMEPZAR A JUGAR" << endl;
 			//pido si puede empezar el juego
 			int respuesta = 1;
-			int a = pthread_mutex_trylock(&mutexListaUsuarios);
 			if (listaDeUsuarios.size() < cantidadJugadores){
 				respuesta = 0;
 			} else if (listaDeUsuarios.size() > cantidadJugadores){
@@ -923,28 +818,25 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				delete (*it);
 				listaDeUsuarios.erase(it);
 
-				int b = pthread_mutex_trylock(&mutexListaDibujables);
 				list<DibujableServer*>::iterator it2 = listaDibujables.begin();
 				advance(it2, numeroCliente-1);
 				delete (*it2);
 				listaDibujables.erase(it2);
-				pthread_mutex_unlock (&mutexListaDibujables);
 
 			}
-			pthread_mutex_unlock (&mutexListaUsuarios);
 			enviarMensaje(newsockfd,&respuesta,sizeof(int));
 
 			break;
 		}
 
 		case '8': {
+			cout << "CASE 8" << endl;
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			char flip;
 
 			avanzar = false;
 			camaraX = 0;
 			camaraSet = 0;
-			int b = pthread_mutex_trylock(&mutexListaDibujables);
 			for (list<DibujableServer*>::iterator it = listaDibujables.begin(); it != listaDibujables.end(); ++it) {
 				//empiezo de nuevo
 				nuevaCordY = (*it)->y = ALTO_VENTANA - 100;
@@ -955,15 +847,14 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 				enviarAConectados((*it)->id,nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, avanzar,0);
 			}
-			pthread_mutex_unlock (&mutexListaDibujables);
 			break;
 		}
 
 		case '9':{
+			cout << "ENVIO DIBUJABLES" << endl;
 			//caso envio objetos dibujables
 			int numeroUsuario;
 			recibirMensaje(newsockfd, &numeroUsuario, sizeof(int));
-			int b = pthread_mutex_trylock(&mutexListaDibujables);
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroUsuario-1);
 
@@ -985,14 +876,13 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			enviarMensaje(newsockfd,&(**it).spX,sizeof(int));
 			enviarMensaje(newsockfd,&(**it).spY,sizeof(int));
 			enviarMensaje(newsockfd,&(**it).flip,sizeof(char));
-			pthread_mutex_unlock (&mutexListaDibujables);
 			break;
 		}
 
 		case 'a':{
+			cout << "PIDO ENERGIAS" << endl;
 			int cant = listaEnergias.size();
 			enviarMensaje(newsockfd, &cant, sizeof(int));
-			int b = pthread_mutex_trylock(&mutexListaDibujables);
 			for (list<DibujableServer*>::iterator it = listaEnergias.begin(); it != listaEnergias.end(); ++it)
 			{
 				int id = (**it).getId();
@@ -1002,20 +892,18 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				enviarMensaje(newsockfd, &spY, sizeof(int));
 
 			}
-			pthread_mutex_unlock (&mutexListaDibujables);
 			break;
 		}
 
 		case 'c':{
-			//envio X camara
+			cout << "ENVIO CAM X" << endl;
 			enviarMensaje(newsockfd,&camaraX,sizeof(int));
 
 			break;
 		}
 
 		case 'M':{
-			int b = pthread_mutex_trylock(&mutexListaDibujables);
-
+			cout << "ENTRO A MOVER" << endl;
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
@@ -1040,14 +928,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						}
 					}
 
-					pthread_mutex_unlock (&mutexListaDibujables); //esto capaz tarde mucho COMENTARIO
-
 					if (camaraX >= 8075){  //quitar para hacer escenario infinito
 						avanzarCamara = false;
 						jefePresente = true;
-						int aaa = pthread_mutex_trylock(&mutexContenedorEnemigos);
 						contenedorEnemigos.iniciarJefe(camaraX);
-						pthread_mutex_unlock (&mutexContenedorEnemigos);
 					}
 
 					if(avanzarCamara){
@@ -1056,7 +940,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						}
 					}
 
-					int a = pthread_mutex_trylock(&mutexListaDibujables);
 					//itero desconectados
 					for (list<DibujableServer*>::iterator it2 = listaDibujables.begin(); it2 != listaDibujables.end(); ++it2) {
 						if (!(*it2)->estaConectado()){
@@ -1066,27 +949,24 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 							}
 						}
 					}
-					pthread_mutex_unlock (&mutexListaDibujables);
 				}
-			}else pthread_mutex_unlock (&mutexListaDibujables); //esto capaz tarde mucho COMENTARIO
+			}
 
 			break;
 		}
 
 		case 'U':{
-			int b = pthread_mutex_trylock(&mutexListaDibujables);
+			cout << "SALTO" << endl;
 
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 			(*it)->saltar();
 
-			pthread_mutex_unlock (&mutexListaDibujables);
-
 			break;
 		}
 
 		case 'L':{
-			int b = pthread_mutex_trylock(&mutexListaDibujables);
+			cout << "LEFT" << endl;
 
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
@@ -1095,12 +975,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				(*it)->caminarIzquierda();
 			}else (*it)->quieto();
 
-			pthread_mutex_unlock (&mutexListaDibujables);
-
 			break;
 		}
 		case 'R':{
-			int b = pthread_mutex_trylock(&mutexListaDibujables);
+			cout << "RIGHT" << endl;
 
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
@@ -1109,35 +987,14 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				(*it)->caminarDerecha();
 			}else (*it)->quieto();
 
-			if(camaraX >= 7800){
-
-				avanzar = false;
-
-				// hacer aparecer el BOOS
-			}
-
-
-			/* escenario infinito
-				if(camaraX >= 8075){
-					for (list<DibujableServer>::iterator it2 = listaDibujables.begin(); it2 != listaDibujables.end(); ++it2) {
-						it2->x = it2->x - camaraX;
-						enviarAConectados(it2->id , it2->x, it2->y, it2->spX, it2->spY, it2->flip, false);
-					}
-					camaraX = 0;
-					camaraSet = 0;
-					avanzar = false;
-				}
-			 */
-
-			pthread_mutex_unlock (&mutexListaDibujables);
-
 			break;
 		}
 		case 'C':{
+			cout << "CERRAR GRAFICA" << endl;
+
 			//caso cerrar ventana grafica
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			char flip;
-			int b = pthread_mutex_trylock(&mutexListaDibujables);
 
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
@@ -1148,9 +1005,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			nuevoSpY = (*it)->spY = 1;
 			flip = (*it)->flip;
 			(*it)->desconectar();
-			pthread_mutex_unlock (&mutexListaDibujables);
 
-			int a = pthread_mutex_trylock(&mutexListaUsuarios);
 			list<usuarioClass*>::iterator it2 = listaDeUsuarios.begin();
 			advance(it2, numeroCliente-1);
 			(*it2)->desconectar();
@@ -1160,23 +1015,23 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			//envio un msj a todos los q esten online q se desconecto el usuario
 			string mensaje = (**it2).nombreUsuario() + " Se ha desconectado";
-			pthread_mutex_unlock (&mutexListaUsuarios);
+
 			enviarMensajeAConectados(mensaje);
 			inicioGrafica = false;
 
 			break;
 		}
 		case 'S':{
+			cout << "STOP" << endl;
+
 			//caso se queda parado
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			char flip;
-			int b = pthread_mutex_trylock(&mutexListaDibujables);
 
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
 			(*it)->quieto();
-
 
 			//sprite parado
 			nuevaCordX = (*it)->x;
@@ -1184,7 +1039,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			nuevoSpX = (*it)->spX;
 			nuevoSpY = (*it)->spY;
 			flip = (*it)->flip;
-			pthread_mutex_unlock (&mutexListaDibujables);
+
 			//envio a todos los q esten online el mensaje de q se modifico un objeto
 			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, false, 0);
 
@@ -1192,8 +1047,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'i':{
+			cout << "PIDO Q TODOS CIERREN LA GRAFICA" << endl;
+
 			//envio a conectados q cierren grafica
-			int b = pthread_mutex_trylock(&mutexListaUsuarios);
 			for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 
 				if((**it).estaConectado()){
@@ -1201,20 +1057,16 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					//buscarNombreUsuario(nombreDestino, (**it).numCliente());
 
 					mensajeClass* mensajeObj = new mensajeClass(4, (**it).numCliente());
-					int a = pthread_mutex_trylock(&mutexLista);
 					listaDeMensajes.push_back(mensajeObj);
-					pthread_mutex_unlock (&mutexLista);
 				}
 
 			}
-			pthread_mutex_unlock (&mutexListaUsuarios);
 
 			avanzar = false;
 			camaraX = 0;
 			camaraSet = 0;
 
 			for(int i = 1; i <= listaDeUsuarios.size(); i++){
-				int b = pthread_mutex_trylock(&mutexListaDibujables);
 
 				list<DibujableServer*>::iterator it = listaDibujables.begin();
 				advance(it, i-1);
@@ -1227,12 +1079,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				//me saca a la momia si esta desconectado..
 				//it->setSpX(0);
 				//it->setSpY(1);
-				pthread_mutex_unlock (&mutexListaDibujables);
 
 			}
 
 			//envio a conectados q abran grafica
-			int bb = pthread_mutex_trylock(&mutexListaUsuarios);
 			for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 
 				if((**it).estaConectado()){
@@ -1240,22 +1090,20 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					//buscarNombreUsuario(nombreDestino, (**it).numCliente());
 
 					mensajeClass* mensajeObj = new mensajeClass(5, (**it).numCliente());
-					int a = pthread_mutex_trylock(&mutexLista);
 					listaDeMensajes.push_back(mensajeObj);
-					pthread_mutex_unlock (&mutexLista);
 				}
 
 			}
-			pthread_mutex_unlock (&mutexListaUsuarios);
 			break;
 		}
 
 		case 'd': {
+			cout << "DISPARO" << endl;
+
 			int direccionDisparo;
 			recibirMensaje(newsockfd, &direccionDisparo, sizeof(int));
 
 			//busco quien la disparo..
-			int a = pthread_mutex_trylock(&mutexListaDibujables);
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 			if( (*it)->disparar() ){
@@ -1264,18 +1112,15 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				int usr = (*it)->getId();
 				char flip = (*it)->flip;
 				int tipoDeArma = (*it)->tipoDeArma;
-				pthread_mutex_unlock (&mutexListaDibujables);
 
 				if(direccionDisparo == -1){
 					if(flip == 'D') direccionDisparo = 0;
 					else direccionDisparo = 4;
 				}
 
-				int bb = pthread_mutex_trylock(&mutexContenedorBalas);
 				contenedorBalas.nuevaBala(x, y, usr, direccionDisparo, tipoDeArma); //pasar tipo de disparo..
-				pthread_mutex_unlock (&mutexContenedorBalas);
-
 			}
+
 			break;
 		}
 
@@ -1284,7 +1129,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 
+		cout << "---------------" << endl;
+		pthread_mutex_unlock (&mutexLista);
 	}
+
 	//close(newsockfd);
 	pthread_exit(NULL);
 }

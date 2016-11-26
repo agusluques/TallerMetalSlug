@@ -8,7 +8,6 @@ class mensajeClass
 private:
 	int idusrAutor;
 	char usrAutor[50];
-	int usrDestino;
 	int idObjeto;
 	int x;
 	int y;
@@ -19,6 +18,7 @@ private:
 	int tipoMensaje;
 	string mensaje;
 public:
+	int usrDestino;
 	int tipoDibujable;
 	int avanzar;
 	char flip;

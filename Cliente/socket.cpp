@@ -94,9 +94,9 @@ bool mySocket::enviarMensaje(void* mensaje, int tamanioMensaje){
 	int n = write(sockfd, mensaje, tamanioMensaje);
 	if(n < 0) errorSocket = true;
 
-	char* tmp = (char*)mensaje;
-	//int* tmp = (int*)mensaje;
-	cout << "ENVIA: " << (*tmp) << endl;
+	//char* tmp = (char*)mensaje;
+//	int* tmp = (int*)mensaje;
+//	cout << "ENVIA: " << (*tmp) << endl;
 
 	return errorSocket;
 }
@@ -110,19 +110,22 @@ bool mySocket::recibirMensaje(void* buffer, int tamanio){
 	setsockopt(this->sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));
 
 	bool errorSocket = false;
-	while ((acumulador < tamanio) && (errorSocket == false)){
-		bytesRecibidos = read(this->sockfd, buffer, tamanio);
-		if (bytesRecibidos < 0){
-			cout << "Se cayo la conexion con el servidor" << endl;
-			errorSocket = true;
-		} else {
-			acumulador += bytesRecibidos;
-		}
-	}
+	//while ((acumulador < tamanio) && (errorSocket == false)){
+	//	bytesRecibidos = read(this->sockfd, buffer, tamanio);
+	//	if (bytesRecibidos < 0){
+	//		cout << "Se cayo la conexion con el servidor" << endl;
+	//		errorSocket = true;
+	//	} else {
+	//		acumulador += bytesRecibidos;
+	//	}
+	//}
+
+	int n = read(this->sockfd, buffer, tamanio);
+	if (n < 0) errorSocket = true;
 
 	//char* tmp = (char*)mensaje;
-	int* tmp = (int*)buffer;
-	cout << "RECIBE: " << (*tmp) << endl;
+//	int* tmp = (int*)buffer;
+//	cout << "RECIBE: " << (*tmp) << endl;
 
 	return errorSocket;
 }

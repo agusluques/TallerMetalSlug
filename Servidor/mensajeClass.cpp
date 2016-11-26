@@ -7,7 +7,8 @@ using namespace std;
 mensajeClass::mensajeClass(){}
 
 mensajeClass::mensajeClass(char * autor, int destino, int id, int x, int y, int spx, int spy, char flip, bool avanzar, int tipoDibujable){
-	strcpy(this->usrAutor, autor);
+	//cout << "1: " << destino << endl;
+	//strcpy(this->usrAutor, autor);
 	//strcpy(this->usrDestino, destino);
 	this->usrDestino = destino;
 	this->idObjeto = id;
@@ -23,6 +24,7 @@ mensajeClass::mensajeClass(char * autor, int destino, int id, int x, int y, int 
 }
 
 mensajeClass::mensajeClass(char * autor, int destino, int id, int x, int y, int spx, int spy, char flip, int tipo){
+	//cout << "2: " << destino << endl;
 	strcpy(this->usrAutor, autor);
 	//strcpy(this->usrDestino, destino);
 	this->usrDestino = destino;
@@ -37,6 +39,7 @@ mensajeClass::mensajeClass(char * autor, int destino, int id, int x, int y, int 
 }
 
 mensajeClass::mensajeClass(int tipo, int destino, string mensajeEnviado){
+	//cout << "3: " << destino << endl;
 	this->mensaje = string(mensajeEnviado);
 	//strcpy(this->usrDestino, destino);
 	this->usrDestino = destino;
@@ -44,6 +47,7 @@ mensajeClass::mensajeClass(int tipo, int destino, string mensajeEnviado){
 }
 
 mensajeClass::mensajeClass(int tipo, int destino, int autor, int score){
+	//cout << "4: " << destino << endl;
 	this->idusrAutor = autor;
 	//strcpy(this->usrDestino, destino);
 	this->usrDestino = destino;
@@ -52,12 +56,14 @@ mensajeClass::mensajeClass(int tipo, int destino, int autor, int score){
 }
 
 mensajeClass::mensajeClass(int tipo, int destino){
+	//cout << "5: " << destino << endl;
 	//strcpy(this->usrDestino, destino);
 	this->usrDestino = destino;
 	tipoMensaje = tipo;
 }
 
 mensajeClass::mensajeClass(int aux, int destino, int id, int x, int y, int spx, int spy, char flip, int tipo){
+	//cout << "6: " << destino << endl;
 	//strcpy(this->usrDestino, destino);
 	this->usrDestino = destino;
 	this->idObjeto = id;
@@ -72,7 +78,7 @@ mensajeClass::mensajeClass(int aux, int destino, int id, int x, int y, int spx, 
 }
 
 int mensajeClass::nombreDestinatario(){
-	return this->usrDestino;
+	return usrDestino;
 }
 
 string mensajeClass::nombreAutor(){
