@@ -18,6 +18,8 @@ public:
 
 	int aumentable;
 
+	SDL_Surface* superficie;
+	TTF_Font* font;
 	SDL_Texture* texture;
 	SDL_Color color;
 	SDL_Rect puntajeRect;

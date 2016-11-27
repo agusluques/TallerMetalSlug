@@ -3,6 +3,7 @@
 
 TextureScore::TextureScore() {
 	texture = NULL;
+	font = TTF_OpenFont("OpenSans-ExtraBold.ttf",50);
 
 }
 
@@ -30,10 +31,10 @@ void TextureScore::setAumentable(int cantidad){
 
 void TextureScore::inicializarTexture(SDL_Renderer* window, string aMostrar){
 
+	texture = NULL;
 	char score[4];
 	strcpy(score, aMostrar.c_str());
-	TTF_Font *font = TTF_OpenFont("OpenSans-ExtraBold.ttf",50);
-	SDL_Surface* superficie = TTF_RenderText_Solid(font, score,color);
+	superficie = TTF_RenderText_Solid(font, score,color);
 	texture = SDL_CreateTextureFromSurface( window, superficie);
 
 	SDL_FreeSurface(superficie);

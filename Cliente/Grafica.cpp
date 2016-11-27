@@ -242,12 +242,15 @@ void Grafica::agregarScores (int id){
 }
 
 void Grafica::actualizarScore(int id, int score){
+	cout << " id recibido del score : "<< id << endl;
 	for (list<TextureScore*>::iterator it = listaDibujableScore.begin(); it != listaDibujableScore.end(); ++it) {
 	   if((*it)->id == id){
 		   (*it)->setAumentable(score);
 		   string numero="";
 		   numero = static_cast<ostringstream*>(&(ostringstream() << score))->str();
+		   cout << " inicializo textu :" << id << endl;
            (*it)->inicializarTexture(window,numero);
+           cout<< " render score " << endl;
            (*it)->renderScore(window);
 	   }
 	}

@@ -742,12 +742,12 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				list<DibujableServerEnemigo> listaEnemigosDisparados;
 				contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados, &listaScores, &listaDibujables);
 
-				//for (list<DibujableServerAdicional*>::iterator itScore = listaScores.begin(); itScore != listaScores.end(); ++itScore) {
-				//	enviarScoreAConectados((*itScore)->id,(*itScore)->getAumentable());
-				//}
-				//for (list<DibujableServer*>::iterator itUser = listaDibujables.begin(); itUser != listaDibujables.end(); ++itUser) {
-				//	enviarDanoAConectados((*itUser)->id,(*itUser)->vida);
-				//}
+			    for (list<DibujableServerAdicional*>::iterator itScore = listaScores.begin(); itScore != listaScores.end(); ++itScore) {
+					enviarScoreAConectados((*itScore)->id,(*itScore)->getAumentable());
+				}
+				for (list<DibujableServer*>::iterator itUser = listaDibujables.begin(); itUser != listaDibujables.end(); ++itUser) {
+					enviarDanoAConectados((*itUser)->id,(*itUser)->vida);
+				}
 
 				int pasarDeNivel = contenedorEnemigos.matarEnemigos(camaraX, listaEnemigosDisparados);
 
