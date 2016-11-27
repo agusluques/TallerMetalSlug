@@ -18,6 +18,7 @@ DibujableServer::DibujableServer() {
 	vida = 0;
 
 	tipoDeArma = 1;
+	cantBalas = 200;
 
 	flip = 'D';
 }
@@ -101,65 +102,72 @@ void DibujableServer::saltar(){
 bool DibujableServer::disparar(){
 	bool rta = false;
 
-	switch(tipoDeArma){
+	if(cantBalas > 0){
+		cantBalas--;
 
-	case 0:
-		if(!estaDisparando){
-			spX = 0;
-			spY = 3;
+		switch(tipoDeArma){
 
-			spXaux = 0;
-			spYaux = 3;
+		case 0:
+			if(!estaDisparando){
+				spX = 0;
+				spY = 3;
 
-			estaDisparando = true;
-			rta = true;
+				spXaux = 0;
+				spYaux = 3;
+
+				estaDisparando = true;
+				rta = true;
+			}
+			break;
+
+		case 1:
+			if(!estaDisparando){
+				spX = 0;
+				spY = 3;
+
+				spXaux = 0;
+				spYaux = 3;
+
+				estaDisparando = true;
+				rta = true;
+			}
+			break;
+
+		case 2:
+			if(!estaDisparando){
+				spX = 0;
+				spY = 3;
+
+				spXaux = 0;
+				spYaux = 3;
+
+				estaDisparando = true;
+				rta = true;
+			}
+			break;
+
+		case 3:
+			if(!estaDisparando){
+				spX = 0;
+				spY = 3;
+
+				spXaux = 0;
+				spYaux = 3;
+
+				estaDisparando = true;
+				rta = true;
+			}
+			break;
+
+		default:
+			break;
 		}
-		break;
 
-	case 1:
-		if(!estaDisparando){
-			spX = 0;
-			spY = 3;
-
-			spXaux = 0;
-			spYaux = 3;
-
-			estaDisparando = true;
-			rta = true;
-		}
-		break;
-
-	case 2:
-		if(!estaDisparando){
-			spX = 0;
-			spY = 3;
-
-			spXaux = 0;
-			spYaux = 3;
-
-			estaDisparando = true;
-			rta = true;
-		}
-		break;
-
-	case 3:
-		if(!estaDisparando){
-			spX = 0;
-			spY = 3;
-
-			spXaux = 0;
-			spYaux = 3;
-
-			estaDisparando = true;
-			rta = true;
-		}
-		break;
-
-	default:
-		break;
+		return rta;
+	} else {
+		rta = false;
+		return rta;
 	}
-
-	return rta;
 }
 
 int DibujableServer::velocidadXJugador(){
@@ -311,26 +319,36 @@ void DibujableServer::actualizarBonus(int tipoBonus){
 	case 0:
 		//0- recargar arma 1
 		tipoDeArma = 1;
+		cantBalas += 150;
 
 		break;
 	case 1:
 		//1- pasar a arma 2
 		tipoDeArma = 2;
+		cantBalas = 30;
 
 		break;
 	case 2:
 		//2- recargar arma 2
+		if(tipoDeArma == 2){
+			cantBalas += 15;
+		}
 		break;
 	case 3:
 		//3- pasar a arma 3
 		tipoDeArma = 3;
+		cantBalas = 30;
 
 		break;
 	case 4:
 		//4- recargar arma 3
+		if(tipoDeArma == 3){
+			cantBalas += 10;
+		}
 		break;
 	case 5:
 		//5- bonus de vida
+		vida = 0;
 		break;
 	case 6:
 		//6- bonus de killall
