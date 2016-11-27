@@ -231,8 +231,7 @@ void cargarBonus(char* xml){
 		//4- recargar arma 3
 		//5- bonus de vida
 		//6- bonus de killall
-		//int tipoBonus = rand() % 7;
-		int tipoBonus = 6;
+		int tipoBonus = rand() % 7;
 		int x = sum + 800;
 		sum = x;
 		int y = ALTO_VENTANA - 60;
