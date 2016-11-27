@@ -24,6 +24,7 @@ Grafica::Grafica() {
 	posicionEnergia = -150;
 
 	cameraSet = 0;
+	muerto = false;
 }
 
 Grafica::~Grafica() {
@@ -256,14 +257,23 @@ void Grafica::actualizarScore(int id, int score){
 	}
 }
 
+
+void Grafica::morir(){
+	this->muerto = true;
+}
 void Grafica::actualizarVida(int id,int vida){
 	for (list<TextureEnergia*>::iterator it = listaDibujableEnergia.begin(); it != listaDibujableEnergia.end(); ++it) {
 		if((*it)->id == id){
+			if (vida == 10) morir();
 			(*it)->setSpY(vida);
 			(*it)->renderEnergia(window, altoVentana/20);
 		}
 	}
 
+}
+
+bool Grafica::estaMuerto(){
+	return this->muerto;
 }
 
 void Grafica::mostrarScores(int score){

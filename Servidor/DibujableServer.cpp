@@ -68,9 +68,6 @@ int DibujableServer::getScore(){
 
 void DibujableServer::aumentarDano (int cantidad){
 	this->vida += cantidad;
-	if(vida > 10){
-		vida=10;
-	}
 }
 
 void DibujableServer::saltar(){

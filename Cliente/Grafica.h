@@ -64,6 +64,7 @@ private:
     int count;
     int cameraSet;
     int posicionEnergia;
+    bool muerto;
 
 public:
 	SDL_Rect camera1;
@@ -125,6 +126,8 @@ public:
 	void mostrarScores(int score);
 	void actualizarScore(int id, int score);
 
+	void morir();
+	bool estaMuerto();
 	void setIdCliente(int numCliente){
 		this->numeroCliente = numCliente;
 	}
