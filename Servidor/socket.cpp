@@ -231,7 +231,8 @@ void cargarBonus(char* xml){
 		//4- recargar arma 3
 		//5- bonus de vida
 		//6- bonus de killall
-		int tipoBonus = rand() % 7;
+		//int tipoBonus = rand() % 7;
+		int tipoBonus = 6;
 		int x = sum + 800;
 		sum = x;
 		int y = ALTO_VENTANA - 60;
@@ -766,7 +767,11 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 				//list<Bonus> listaBonusAgarrados;
 
-				contenedorBonus.detectarColision(&listaBonusDeBaja, &listaBonusActivos, &listaDibujables);
+				if(contenedorBonus.detectarColision(&listaBonusDeBaja, &listaBonusActivos, &listaDibujables)){
+					//Si entra es porque agarro el bonus de Kill All
+					cout << "ENTRO AL KILL ALL!!!!!!!!!!!" << endl;
+					contenedorEnemigos.killAll(&listaEnemigosActivos, &listaEnemigosDeBaja);
+				}
 
 
 				for (list<bala>::iterator itBalas = listaBalasActivas.begin(); itBalas != listaBalasActivas.end(); ++itBalas) {
