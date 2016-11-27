@@ -33,6 +33,7 @@ public:
 	int score;
 	int vida;
 	int tipoDeArma;
+	int cantBalas;
 
 	Escenario escenario;
 

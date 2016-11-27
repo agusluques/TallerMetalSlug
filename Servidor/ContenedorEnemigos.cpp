@@ -109,6 +109,36 @@ void ContenedorEnemigos::buscarActivos(int camaraX, list<DibujableServerEnemigo>
 	}
 }
 
+void ContenedorEnemigos::sumarPuntaje(int usrKillAll, list<DibujableServerAdicional*> *listaScores){
+    for (list<DibujableServerAdicional*>::iterator itScore = listaScores->begin(); itScore != listaScores->end(); ++itScore){
+		if((*itScore)->id == usrKillAll){
+			(*itScore)->aumentar(10);
+		}
+    }
+}
+
+void ContenedorEnemigos::killAll(list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, int usrKillAll, list<DibujableServerAdicional*> *listaScores){
+	for(list<DibujableServerEnemigo>::iterator it = listaEnemigosActivos->begin(); it != listaEnemigosActivos->end(); ++it){
+			listaEnemigosDeBaja->push_back((*it));
+			sumarPuntaje(usrKillAll, listaScores);
+			int idEnemigo = it->id;
+			it = listaEnemigosActivos->erase(it);
+			it--;
+
+			bool encontrado = false;
+			for(list<DibujableServerEnemigo>::iterator i = listaEnemigos.begin(); i != listaEnemigos.end(); ++i){
+				if(i->id == idEnemigo){
+					encontrado = true;
+					i = listaEnemigos.erase(i);
+					i--;
+				}
+				if(encontrado){
+					break;
+				}
+			}
+	}
+}
+
 bool ContenedorEnemigos::matarEnemigos(int camaraX, list<DibujableServerEnemigo> listaEnemigosDisparados){
 	bool esJefe = false;
 	for (list<DibujableServerEnemigo>::iterator it = listaEnemigos.begin(); it != listaEnemigos.end(); ++it) {
