@@ -45,7 +45,7 @@ void ContenedorBonus::borrarBonus(int id, list<Bonus>* listaBonusDeBaja, list<Bo
 	}
 }
 
-bool ContenedorBonus::detectarColision(list<Bonus>* listaBonusDeBaja, list<Bonus>* listaBonusActivos, list<DibujableServer*>* listaPersonajes){
+bool ContenedorBonus::detectarColision(list<Bonus>* listaBonusDeBaja, list<Bonus>* listaBonusActivos, list<DibujableServer*>* listaPersonajes, int &usrKillAll){
 	bool huboColision = false;
 	bool killAll = false;
 
@@ -65,6 +65,7 @@ bool ContenedorBonus::detectarColision(list<Bonus>* listaBonusDeBaja, list<Bonus
 
 				huboColision = true;
 				if(tipoBonus == 6){
+					usrKillAll = (*itPjs)->id;
 					killAll = true;
 				} else {
 					(*itPjs)->actualizarBonus(tipoBonus);

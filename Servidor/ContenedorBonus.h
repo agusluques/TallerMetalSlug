@@ -15,7 +15,7 @@ class ContenedorBonus{
 		void nuevoBonus(int posX, int posY, int tipoBonus);
 		void buscarActivos(int camaraX, list<Bonus>* listaBonusActivos, list<Bonus>* listaBonusDeBaja);
 		void borrarBonus(int id, list<Bonus>* listaBonusDeBaja, list<Bonus>* listaBonusActivos);
-		bool detectarColision(list<Bonus>* listaBonusDeBaja, list<Bonus>* listaBonusActivos, list<DibujableServer*>* listaPersonajes);
+		bool detectarColision(list<Bonus>* listaBonusDeBaja, list<Bonus>* listaBonusActivos, list<DibujableServer*>* listaPersonajes, int &usrKillAll);
 		void aumentarId();
 		virtual ~ContenedorBonus();
 };

@@ -18,7 +18,8 @@ class ContenedorEnemigos {
 		void buscarActivos(int camaraX, list<DibujableServerEnemigo> *listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, ContenedorBalas *contenedorBalas);
 		bool detectarColision(int camaraX, list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, int xBala, int yBala);
 		bool matarEnemigos(int camaraX, list<DibujableServerEnemigo> listaEnemigosDisparados);
-		void killAll(list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja);
+		void sumarPuntaje(int usrKillAll, list<DibujableServerAdicional*> *listaScores);
+		void killAll(list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, int usrKillAll, list<DibujableServerAdicional*> *listaScores);
 
 		void iniciarJefe(int camaraX);
 

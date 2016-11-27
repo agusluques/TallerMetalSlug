@@ -109,9 +109,18 @@ void ContenedorEnemigos::buscarActivos(int camaraX, list<DibujableServerEnemigo>
 	}
 }
 
-void ContenedorEnemigos::killAll(list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja){
+void ContenedorEnemigos::sumarPuntaje(int usrKillAll, list<DibujableServerAdicional*> *listaScores){
+    for (list<DibujableServerAdicional*>::iterator itScore = listaScores->begin(); itScore != listaScores->end(); ++itScore){
+		if((*itScore)->id == usrKillAll){
+			(*itScore)->aumentar(10);
+		}
+    }
+}
+
+void ContenedorEnemigos::killAll(list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, int usrKillAll, list<DibujableServerAdicional*> *listaScores){
 	for(list<DibujableServerEnemigo>::iterator it = listaEnemigosActivos->begin(); it != listaEnemigosActivos->end(); ++it){
 			listaEnemigosDeBaja->push_back((*it));
+			sumarPuntaje(usrKillAll, listaScores);
 			int idEnemigo = it->id;
 			it = listaEnemigosActivos->erase(it);
 			it--;
