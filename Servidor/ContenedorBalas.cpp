@@ -15,7 +15,7 @@ void ContenedorBalas::nuevaBala(int posX, int posY, int idUsuario, int direccion
 
 void ContenedorBalas::buscarActivas(int camaraX, list<bala> *listaBalasActivas, list<bala>* listaBalasDeBaja){
 	for (list<bala>::iterator it = listaDeBalas.begin(); it != listaDeBalas.end(); ++it) {
-		if(it->estaVisible(camaraX)){
+		if(it->estaVisible(camaraX) && it->visible){
 			it->mover();
 			listaBalasActivas->push_back((*it));
 		}else{
@@ -173,9 +173,10 @@ void ContenedorBalas::detectarColisiones(list<bala> *listaBalasDeBaja, list<Dibu
 						itEnemigos--;
 						//}
 
-						listaBalasDeBaja->push_back((*itBalas));
-						itBalas = listaDeBalas.erase(itBalas);
-						itBalas--;
+						itBalas->visible = false;
+						//listaBalasDeBaja->push_back((*itBalas));
+						//itBalas = listaDeBalas.erase(itBalas);
+						//itBalas--;
 					}
 				}
 			}

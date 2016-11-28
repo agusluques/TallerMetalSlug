@@ -8,6 +8,7 @@ bala::bala(int xPos, int yPos, int usr, int id, int direccionDeDisparo, int tipo
 	this->tipoBala = tipoDeBala;
 	this->spY = 0;
     this->tipoEnemigo= tipoEnemigo;
+    visible = true;
 
 	switch(tipoBala){
 	case 0:
@@ -134,15 +135,19 @@ void bala::mover(){
 	 * 3 S
 	 */
 //aumentar velocidad de R..
-	if (tipoBala != 3){
-		x += xVel;
-		y += yVel;
-	}else{
+	if (tipoBala == 3){
 		spY += 1;
 		if (spY > 5) {
 			spY = 6;
 			x = -100;
 		}
+
+		if(xVel != 0) x+= xVel/10;
+		if(yVel != 0) y+= yVel/10;
+
+	} else {
+		x += xVel;
+		y += yVel;
 	}
 
 }

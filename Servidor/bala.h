@@ -12,6 +12,7 @@ class bala{
 		int direccionDisparo;
 		int tipoBala;
 		int tipoEnemigo;
+		bool visible;
 
 		int spY;
 

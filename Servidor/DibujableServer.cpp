@@ -397,7 +397,7 @@ bool DibujableServer::mover(int xCamara){
 		mVelY = 0;
 		y = NIVEL_PISO;
 		spY = 1;
-		//spX = 0;
+		spX = 0;
 		estaEnElPiso = true;
 	}
 
