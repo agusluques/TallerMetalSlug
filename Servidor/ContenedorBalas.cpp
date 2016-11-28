@@ -32,11 +32,17 @@ bool hayColisionConUser(int xTipo, int yTipo, int xBala, int yBala, int tipoEnem
 	int w2 = 5; int h2 = 5;
 	int escala = 66;
 
+	cout << "Y BALA: " << yBala << endl;
+	cout << "Y PERS: " << yTipo << endl;
+
 	if(xBala + w2 < xTipo) return false;
 	if(xBala > xTipo + w1) return false;
 
-	if(yBala + h2 < yTipo) return false;
-	if(yBala > yTipo + h1) return false;
+	if(yBala < yTipo) return false;
+	if(yBala > yTipo + 70) return false;
+
+	//if(yBala + h2 < yTipo) return false;
+	//if(yBala > yTipo + h1) return false;
 
 
 	return true;
