@@ -58,6 +58,7 @@ pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutexListaUsuarios = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutexListaDibujables = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutexListaBalas = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutexListaFD = PTHREAD_MUTEX_INITIALIZER;
 
 pthread_mutex_t mutexContenedorEnemigos = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutexContenedorBalas = PTHREAD_MUTEX_INITIALIZER;
@@ -237,7 +238,7 @@ void cargarBonus(char* xml){
 		sum = x;
 		int y = ALTO_VENTANA - 60;
 
-		int a = pthread_mutex_trylock(&mutexContenedorBonus);
+		int a = pthread_mutex_lock(&mutexContenedorBonus);
 		contenedorBonus.nuevoBonus(x,y,tipoBonus);
 		pthread_mutex_unlock (&mutexContenedorBonus);
 	}
@@ -259,7 +260,7 @@ string parseXMLPj(){
 }
 
 void buscarNombreUsuario(char *nombreRetorno, int numeroUsuario){
-	int a = pthread_mutex_trylock(&mutexListaUsuarios);
+	int a = pthread_mutex_lock(&mutexListaUsuarios);
 
 	list<usuarioClass*>::iterator it = listaDeUsuarios.begin();
 	advance(it, numeroUsuario-1);
@@ -726,7 +727,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			int tamanioMensaje = 0;
 			enviarMensaje(newsockfd, &tamanioMensaje, sizeof(int));
 
-			if(numeroCliente == 1){
+			list<int>::iterator itFD = listaFDClientes.begin();
+			if(newsockfd == (*itFD)){
+			//if(numeroCliente == 1){
 				cout << "MUEVO ENEMIGOS" << endl;
 				//BUSCO ENEMIGOS
 				list<DibujableServerEnemigo> listaEnemigosActivos;
@@ -1027,6 +1030,15 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			enviarMensajeAConectados(mensaje);
 			inicioGrafica = false;
 
+			pthread_mutex_lock(&mutexListaFD);
+			for(list<int>::iterator itFD = listaFDClientes.begin(); itFD != listaFDClientes.end(); ++itFD){
+				if((*itFD) == newsockfd){
+					itFD = listaFDClientes.erase(itFD);
+					itFD--;
+				}
+			}
+			pthread_mutex_unlock(&mutexListaFD);
+
 			break;
 		}
 		case 'S':{
@@ -1206,6 +1218,7 @@ void mySocketSrv::aceptarClientes(){
 			cout << "ERROR on accept" << endl;
 			loggearInterno( " ERROR ON ACCEPT");
 		}else {
+			pthread_mutex_lock(&mutexListaUsuarios);
 			pthread_create(&thread, NULL, atender_cliente, (void*)(long)newsockfd);
 			listaFDClientes.push_back(newsockfd);
 			cantidadJugadoresConectados++;
@@ -1213,6 +1226,7 @@ void mySocketSrv::aceptarClientes(){
 			cout << "CONECTADOS: " << cantidadJugadoresConectados << endl;
 			/*printf("Conectado!\n");
 			printf("Leyendo mensaje...\n");*/
+			pthread_mutex_unlock(&mutexListaUsuarios);
 		}
 
 	} /* end of while */
