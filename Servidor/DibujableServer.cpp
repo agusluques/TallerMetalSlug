@@ -338,7 +338,7 @@ bool DibujableServer::mover(int xCamara){
 	if(estaDisparando) {
 		spXaux += 1;
 
-		if(mVelX == 0 && mVelY == 0){
+		if( (mVelX == 0 && mVelY == 0) || !estaEnElPiso){
 			spX = spXaux;
 			spY = spYaux;
 		}
@@ -366,7 +366,7 @@ bool DibujableServer::mover(int xCamara){
 			mVelY = 0;
 			y = NIVEL_PLAT;
 			spY = 1;
-			spX = 0;
+			//spX = 0;
 			estaEnPlataforma = true;
 		}
 	}
