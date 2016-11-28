@@ -101,7 +101,7 @@ void DibujableServer::saltar(){
 bool DibujableServer::disparar(int direccionDisparo){
 	bool rta = false;
 
-	if(cantBalas > 0){
+	if((cantBalas > 0)&&(!estaDisparando)){
 		cantBalas--;
 
 		if(!estaDisparando){
