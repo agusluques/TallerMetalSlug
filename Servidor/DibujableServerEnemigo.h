@@ -27,6 +27,7 @@ public:
 	int punto;
 	bool actuo;
 	bool salto;
+	int bala;
 
 	bool estaVivo;
 

@@ -148,6 +148,8 @@ bool ContenedorEnemigos::matarEnemigos(int camaraX, list<DibujableServerEnemigo>
 	for (list<DibujableServerEnemigo>::iterator it = listaEnemigos.begin(); it != listaEnemigos.end(); ++it) {
 		for (list<DibujableServerEnemigo>::iterator it2 = listaEnemigosDisparados.begin(); it2 != listaEnemigosDisparados.end(); ++it2) {
 			if(it2->id == it->id){
+				//cout << "ENTRA CON: " << it2->bala << endl;
+				it->bala = it2->bala;
 				esJefe = it->matar();
 			}
 		}

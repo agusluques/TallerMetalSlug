@@ -9,6 +9,7 @@ DibujableServerEnemigo::DibujableServerEnemigo() {
 	caminaIzquierda = false;
 	mVelX = 0;
 	mVelY = 0;
+	bala = -1;
 
 	actuo = false;
 	salto = false;
@@ -414,7 +415,8 @@ void  DibujableServerEnemigo::morirBoss(){
 }
 
 bool  DibujableServerEnemigo::matar(){
-	if(vida == 1){
+	cout << "ULTIMA BALA: " << bala << endl;
+	if((vida == 1)||(bala!=1)){
 		mVelX = 0;
 		mVelY = 0;
 
