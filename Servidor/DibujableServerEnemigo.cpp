@@ -414,25 +414,29 @@ void  DibujableServerEnemigo::morirBoss(){
 }
 
 bool  DibujableServerEnemigo::matar(){
-	mVelX = 0;
-	mVelY = 0;
+	if(vida == 1){
+		mVelX = 0;
+		mVelY = 0;
 
-	estaVivo = false;
-	if (tipoEnemigo == 6){
-		spY = 6;
-		spX = 1;
+		estaVivo = false;
+		if (tipoEnemigo == 6){
+			spY = 6;
+			spX = 1;
 
-		tipoEnemigo = 10; //muriendo boss
+			tipoEnemigo = 10; //muriendo boss
 
-		return true;
-		
+			return true;
+			
+		} else {
+			spY = 8;
+			spX = -1;
+
+			tipoEnemigo = 0; //muriendo
+
+			return false;
+		}
 	} else {
-		spY = 8;
-		spX = -1;
-
-		tipoEnemigo = 0; //muriendo
-
-		return false;
+		vida--;
 	}
 	
 }

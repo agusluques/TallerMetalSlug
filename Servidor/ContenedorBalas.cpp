@@ -149,14 +149,14 @@ void ContenedorBalas::detectarColisiones(list<bala> *listaBalasDeBaja, list<Dibu
 				if(itBalas->usr != 5){ //no comparo enemigo contra enemigo
 					if(hayColision(itEnemigos->x, itEnemigos->y, itBalas->x, itBalas->y, itEnemigos->tipoEnemigo, itBalas->tipoBala)){
 
-						itEnemigos->quitarEnergia(1);
+						//itEnemigos->quitarEnergia(1);
 
-						if(itEnemigos->getVida()==0){
+						//if(itEnemigos->getVida()==0){
 						    listaEnemigosDeBaja->push_back((*itEnemigos));
 	                        acumuloPuntajes(itEnemigos->getPunto(), itBalas->usr, listaScores);
 							itEnemigos = listaEnemigosActivos->erase(itEnemigos);
 							itEnemigos--;
-						}
+						//}
 
 						listaBalasDeBaja->push_back((*itBalas));
 						itBalas = listaDeBalas.erase(itBalas);

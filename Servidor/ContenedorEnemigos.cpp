@@ -77,7 +77,7 @@ void ContenedorEnemigos::nuevoEnemigo(int posX, int posY, int tipoEnemigo) {
 	nuevo.setSpX(-1);
 	nuevo.setSpY(5);
 	nuevo.setFlip('I');
-	nuevo.setVida(1); //energia enemiga
+	nuevo.setVida(2); //energia enemiga
 	nuevo.setPunto(5);
 
 	//soldados jefe1
