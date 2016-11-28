@@ -18,6 +18,14 @@ DibujableServerEnemigo::DibujableServerEnemigo() {
 	flip = 'D';
 }
 
+void DibujableServerEnemigo::setVida(int vida){
+	this->vida = vida;
+}
+
+void DibujableServerEnemigo::setFuerza(int fuerza){
+	this->fuerza = fuerza;
+}
+
 void DibujableServerEnemigo::setX(int pos) {
 	x = pos;
 }
@@ -47,6 +55,18 @@ void DibujableServerEnemigo::setFlip(char flip){
 	this->flip = flip;
 }
 
+void DibujableServerEnemigo::setPunto(int punto){
+	this->punto=punto;
+}
+
+int DibujableServerEnemigo::getVida(){
+	return this->vida;
+}
+
+int DibujableServerEnemigo::getFuerza(){
+   return this->fuerza;
+}
+
 int DibujableServerEnemigo::getX(){
 	return this->x;
 }
@@ -61,6 +81,9 @@ int DibujableServerEnemigo::getSpY(){
 }
 int DibujableServerEnemigo::getId(){
 	return this->id;
+}
+int DibujableServerEnemigo::getPunto(){
+	return this->punto;
 }
 
 void DibujableServerEnemigo::saltar(){
@@ -239,10 +262,11 @@ void DibujableServerEnemigo::largarNuevoEnemigo(list<DibujableServerEnemigo> *li
 	nuevo.setSpY(5);
 	nuevo.setFlip('D');
 	nuevo.estaEnElPiso = false;
+	nuevo.setFuerza(2);
+	nuevo.setVida(1);
+	nuevo.setPunto(20);
 
 	listaEnemigos->push_back(nuevo);
-
-	cout << "LARGO ENEMIGO POS: " << x + 50 << " " << y << endl;
 
 	actuo = true;
 	tiempoUltimoEnemigo = time(NULL);
@@ -260,9 +284,14 @@ void DibujableServerEnemigo::quieto(){
 
 }
 
+void DibujableServerEnemigo::quitarEnergia (int golpe){
+	this-> vida = vida - golpe;
+
+}
+
 bool DibujableServerEnemigo::mover(int camaraX, list<DibujableServerEnemigo> *listaEnemigos){
 	//me muevo dependiendo de la camara y del tipo del tipo de enemigo
-	/* 1)camina izquierda buscando pegarte
+	/* 1)camina izquierda buscando pegarte (cuchillo)
 	 * 2)dispara y se agacha
 	 * 3)parado boludiando.. ve a player y le tira tiros
 	 * 4)parado boludiando.. ve a player y camina a la derecha rajando (cagon)

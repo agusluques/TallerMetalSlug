@@ -77,14 +77,18 @@ void ContenedorEnemigos::nuevoEnemigo(int posX, int posY, int tipoEnemigo) {
 	nuevo.setSpX(-1);
 	nuevo.setSpY(5);
 	nuevo.setFlip('I');
+	nuevo.setVida(1); //energia enemiga
+	nuevo.setPunto(5);
 
 	//soldados jefe1
 	if(tipoEnemigo == 5) {
 		nuevo.estaEnElPiso = false;
 		nuevo.setFlip('D');
+
 	}
 	if(tipoEnemigo == 6) {
 		nuevo.setFlip('D');
+
 	}
 
 	listaEnemigos.push_back(nuevo);
@@ -95,7 +99,7 @@ void ContenedorEnemigos::buscarActivos(int camaraX, list<DibujableServerEnemigo>
 		if(it->x > camaraX + 800) break; //usar anchoventana.. esta ordenada por posicion la lista..
 		if(it->estaVisible(camaraX)){
 			if(it->mover(camaraX, &listaEnemigos)){
-				contenedorBalas->nuevaBala(it->x-5, it->y, 5, 4, 0); //5 = maquina
+				contenedorBalas->nuevaBala(it->x-5, it->y, 5, 4, 0, it->tipoEnemigo); //5 = maquina
 			}
 			listaEnemigosActivos->push_back((*it));
 			//cout << "HAY ENEMIGOS ACTIVOS!" << endl;
@@ -154,7 +158,7 @@ bool ContenedorEnemigos::matarEnemigos(int camaraX, list<DibujableServerEnemigo>
 
 void ContenedorEnemigos::iniciarJefe(int camaraX){
 	posicionJefe = camaraX + 800;
-
+    cout << "iniciaaaaaaa jefeeeeeeeeeeeeeeeeeeee" << endl;
 	DibujableServerEnemigo nuevo;
 	nuevo.setId(ultimoId += 1); //ver q id le seteo...
 	//char* spriteId = parseXMLPj();
@@ -163,6 +167,8 @@ void ContenedorEnemigos::iniciarJefe(int camaraX){
 	nuevo.setY(100);
 	nuevo.setSpX(-1);
 	nuevo.setSpY(5);
+	nuevo.setVida(1);
+	nuevo.setPunto(150);
 
 	nuevo.ultimoId = ultimoId;
 

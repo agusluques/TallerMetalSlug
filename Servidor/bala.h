@@ -11,10 +11,11 @@ class bala{
 		int usr;
 		int direccionDisparo;
 		int tipoBala;
+		int tipoEnemigo;
 
 		int spY;
 
-		bala(int xPos, int yPos, int usr, int id, int direccionDeDisparo, int tipoDeBala);
+		bala(int xPos, int yPos, int usr, int id, int direccionDeDisparo, int tipoDeBala, int tipoEnemigo);
 		int getPosX();
 		int getPosY();
 		float getVelX();
@@ -23,6 +24,7 @@ class bala{
 		int getId();
 		int getDestinatario();
 		int getTipoDisparo();
+		int getTipo();
 		void setTipoDisparo(int tipo);
 		void setDestinatario(int usrDestino);
 		void setPosX(int x);
@@ -30,6 +32,7 @@ class bala{
 		void setVelX(int vel);
 		void setVelY(int vel);
 		void setUsr(int usr);
+		void setTipo (int tipo);
 		bool getDireccion();
 		void setDireccion(bool dir);
 

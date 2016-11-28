@@ -585,7 +585,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			for (list<mensajeClass*>::iterator i = listaDeMensajes.begin(); i != listaDeMensajes.end(); ++i) {
 				//if ((**i).nombreDestinatario().compare(nombre) == 0 ){
 				if ((*i)->usrDestino == numeroCliente){
-					cout << "TENGO UN MENSAJE: "<< (*i)->usrDestino << endl;
+					//cout << "TENGO UN MENSAJE: "<< (*i)->usrDestino << endl;
 					int corte = 1;
 					enviarMensaje(newsockfd, &corte, sizeof(int));
 
@@ -1126,7 +1126,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					else direccionDisparo = 4;
 				}
 
-				contenedorBalas.nuevaBala(x, y, usr, direccionDisparo, tipoDeArma); //pasar tipo de disparo..
+				contenedorBalas.nuevaBala(x, y, usr, direccionDisparo, tipoDeArma, 0); //pasar tipo de disparo..
 			}
 
 			break;

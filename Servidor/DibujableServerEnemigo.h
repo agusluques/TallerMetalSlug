@@ -22,6 +22,9 @@ public:
 	int y;
 	int spX;
 	int spY;
+	int fuerza;
+	int vida;
+	int punto;
 	bool actuo;
 	bool salto;
 
@@ -48,12 +51,20 @@ public:
 	void setTipoEnemigo(int tipo);
 	void setId(int id);
 	void setFlip(char flip);
+	void setFuerza(int fuerza);
+	void setVida (int vida);
+	void setPunto (int punto);
+
+	int getFuerza();
+	int getVida();
 	int getX();
 	int getY();
 	int getSpX();
 	int getSpY();
 	int getId();
+	int getPunto();
 
+	void quitarEnergia(int golpe);
 	void saltar();
 	void caminar(int camaraX);
 	void caminarDerecha();
@@ -71,6 +82,7 @@ public:
 	void morir();
 	void morirBoss();
 	void volverAlPrincipio();
+
 
 	int velocidadXJugador();
 

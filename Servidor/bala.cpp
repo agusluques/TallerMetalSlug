@@ -1,12 +1,13 @@
 #include "bala.h"
 
-bala::bala(int xPos, int yPos, int usr, int id, int direccionDeDisparo, int tipoDeBala){
+bala::bala(int xPos, int yPos, int usr, int id, int direccionDeDisparo, int tipoDeBala, int tipoEnemigo){
 	this->id = id;
 	this->x = xPos;
 	this->y = yPos;
 	this->direccionDisparo = direccionDeDisparo;
 	this->tipoBala = tipoDeBala;
 	this->spY = 0;
+    this->tipoEnemigo= tipoEnemigo;
 
 	switch(tipoBala){
 	case 0:
@@ -91,6 +92,14 @@ int bala::getUsr(){
 
 int bala::getId(){
 	return this->id;
+}
+
+int bala::getTipo(){
+	return this->tipoEnemigo;
+}
+
+void bala::setTipo(int tipo){
+	this-> tipoEnemigo = tipo;
 }
 
 void bala::setPosX(int x){

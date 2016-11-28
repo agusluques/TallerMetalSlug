@@ -5,10 +5,10 @@ ContenedorBalas::ContenedorBalas() {
 	ultimoId = 0;
 }
 
-void ContenedorBalas::nuevaBala(int posX, int posY, int idUsuario, int direccionDisparo, int tipoDeArma){ //5 maquina
+void ContenedorBalas::nuevaBala(int posX, int posY, int idUsuario, int direccionDisparo, int tipoDeArma, int tipoEnemigo){ //5 maquina
 	if(ultimoId > 500) ultimoId = 0; //para no usar numeros muy grandes...
 
-	bala nuevaBala(posX,posY,idUsuario, ultimoId += 1,direccionDisparo, tipoDeArma);
+	bala nuevaBala(posX,posY,idUsuario, ultimoId += 1,direccionDisparo, tipoDeArma, tipoEnemigo);
 
 	listaDeBalas.push_back(nuevaBala);
 }
@@ -27,7 +27,7 @@ void ContenedorBalas::buscarActivas(int camaraX, list<bala> *listaBalasActivas, 
 }
 
 
-bool hayColisionConUser(int xTipo, int yTipo, int xBala, int yBala, int tipoBala){
+bool hayColisionConUser(int xTipo, int yTipo, int xBala, int yBala, int tipoEnemigo){
 	int w1 = 30; int h1 = 40;
 	int w2 = 5; int h2 = 5;
 	int escala = 66;
@@ -127,21 +127,17 @@ bool hayColision(int xTipo, int yTipo, int xBala, int yBala, int tipoEnemigo, in
 
 void ContenedorBalas::agregarDano (DibujableServer *usuario, int balaEnemiga){
 
-	/*
-	if(balaEnemiga == 5) //enemigo comun
-		usuario->aumentarDaño(1);
-	if(balaEnemiga == 6) //bala boss
-		usuario->aumentarDaño(3);
-	*/
-
+	if(balaEnemiga == 5){ //soldado jefe quita 2
+		usuario->aumentarDano(1);
+	}
 	usuario->aumentarDano(1);
 
 }
 
-void ContenedorBalas::acumuloPuntajes(int tipoDeBala, int idJugador, list<DibujableServerAdicional*> *listaScores ){
+void ContenedorBalas::acumuloPuntajes(int puntos, int idJugador, list<DibujableServerAdicional*> *listaScores ){
      for (list<DibujableServerAdicional*>::iterator itScore = listaScores->begin(); itScore != listaScores->end(); ++itScore){
     	 if((*itScore)->id == idJugador){
-    		 (*itScore)->aumentar(10);
+    		 (*itScore)->aumentar(puntos);
     	 }
      }
 }
@@ -152,10 +148,15 @@ void ContenedorBalas::detectarColisiones(list<bala> *listaBalasDeBaja, list<Dibu
 			for (list<bala>::iterator itBalas = listaDeBalas.begin(); itBalas != listaDeBalas.end(); ++itBalas) {
 				if(itBalas->usr != 5){ //no comparo enemigo contra enemigo
 					if(hayColision(itEnemigos->x, itEnemigos->y, itBalas->x, itBalas->y, itEnemigos->tipoEnemigo, itBalas->tipoBala)){
-						listaEnemigosDeBaja->push_back((*itEnemigos));
-                        acumuloPuntajes(itBalas->tipoBala, itBalas->usr, listaScores);
-						itEnemigos = listaEnemigosActivos->erase(itEnemigos);
-						itEnemigos--;
+
+						itEnemigos->quitarEnergia(1);
+
+						if(itEnemigos->getVida()==0){
+						    listaEnemigosDeBaja->push_back((*itEnemigos));
+	                        acumuloPuntajes(itEnemigos->getPunto(), itBalas->usr, listaScores);
+							itEnemigos = listaEnemigosActivos->erase(itEnemigos);
+							itEnemigos--;
+						}
 
 						listaBalasDeBaja->push_back((*itBalas));
 						itBalas = listaDeBalas.erase(itBalas);
@@ -164,15 +165,13 @@ void ContenedorBalas::detectarColisiones(list<bala> *listaBalasDeBaja, list<Dibu
 				}
 			}
 		}
-	}
+	} //balas enemigas
     for(list<DibujableServer*>::iterator itUser = listaUsuarios->begin(); itUser != listaUsuarios->end(); ++itUser){
     	if((*itUser)->estaOnline){
     		for (list<bala>::iterator itBalas = listaDeBalas.begin(); itBalas != listaDeBalas.end(); ++itBalas) {
     				if(itBalas->usr == 5){
-    	                   if(hayColisionConUser((*itUser)->x,(*itUser)->y,itBalas->x,itBalas->y,itBalas->tipoBala)){
-
-    	                	   // agregarDano((*itUser), itBalas->usr);
-    	                	    (*itUser)->aumentarDano(1);
+    	                   if(hayColisionConUser((*itUser)->x,(*itUser)->y,itBalas->x,itBalas->y,itBalas->tipoEnemigo)){
+    	                	    agregarDano((*itUser), itBalas->tipoEnemigo);
     							listaBalasDeBaja->push_back((*itBalas));
     							itBalas = listaDeBalas.erase(itBalas);
     							itBalas--;
