@@ -99,7 +99,7 @@ void DibujableServer::saltar(){
 bool DibujableServer::disparar(){
 	bool rta = false;
 
-	if(cantBalas > 0){
+	if((cantBalas > 0) && (!estaDisparando)){
 		cantBalas--;
 
 		switch(tipoDeArma){
