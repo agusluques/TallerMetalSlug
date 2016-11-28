@@ -179,7 +179,7 @@ void ContenedorBalas::detectarColisiones(list<bala> *listaBalasDeBaja, list<Dibu
 		}
 	} //balas enemigas
 	for(list<DibujableServer*>::iterator itUser = listaUsuarios->begin(); itUser != listaUsuarios->end(); ++itUser){
-		if((*itUser)->estaOnline){
+		if((*itUser)->estaOnline && (*itUser)->estaVivo){
 			for (list<bala>::iterator itBalas = listaDeBalas.begin(); itBalas != listaDeBalas.end(); ++itBalas) {
 				if(itBalas->usr == 5){
 					bool murio;
