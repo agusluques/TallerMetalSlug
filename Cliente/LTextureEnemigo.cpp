@@ -26,6 +26,7 @@ void LTextureEnemigo::render(SDL_Renderer *window, SDL_Texture *texture, int cam
 	else drawingRect.x = xcord; //BUSCAR MANERA MAS LINDA...
 
 	drawingRect.y = ycord; //- cameraY;
+	drawingRect.y -= 15;
 
     //pasar escala x xml
 	drawingRect.w = player[spX][spY].w + escala;// + 30;
@@ -43,7 +44,7 @@ void LTextureEnemigo::render(SDL_Renderer *window, SDL_Texture *texture, int cam
 	}
 
 	//si ycord + drawingRect.h se pasa de la pantalla, hay q subirlo x el tamaño del sprite..
-	if((drawingRect.y + drawingRect.h > 600)) drawingRect.y = 600 - drawingRect.h;
+	if((drawingRect.y + drawingRect.h > 600)) drawingRect.y = 600 - drawingRect.h - 15;
 
 	SDL_RenderCopyEx( window, texture, &player[spX][spY], &drawingRect, 0, NULL, flipType );
 }

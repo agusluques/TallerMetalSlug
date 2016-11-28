@@ -426,13 +426,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			int data = read(newsockfd, &codigo, sizeof(char));
 		}
 
-		//int data = read(newsockfd, &codigo, sizeof(char));
-		//		cout << "RECIBE: " << codigo << endl;
-
 		pthread_mutex_lock(&mutexLista);
-
-		//cout << "SOY " << numeroCliente << endl;
-		cout << "---------------" << endl;
 
 		switch(codigo){
 
@@ -454,7 +448,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case '1': {
-			cout << "Entro a /1 que es conectar " << endl;
+			//cout << "Entro a /1 que es conectar " << endl;
 			int tamNombre;
 
 			recibirMensaje(newsockfd, &tamNombre, sizeof(int));
@@ -543,7 +537,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 		case '2':{
-			cout << "Entro a /2 que es desconectar" << endl;
+			//cout << "Entro a /2 que es desconectar" << endl;
 			abierto = false;
 			list<usuarioClass*>::iterator it = listaDeUsuarios.begin();
 			advance(it, numeroCliente-1);
@@ -551,7 +545,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 		case '3':{
-			cout << "Entro a /3 que es ventana" << endl;
+			//cout << "Entro a /3 que es ventana" << endl;
 			//cargarFondos(archivoXml);
 			enviarMensaje(newsockfd, &ANCHO_VENTANA, sizeof(int));
 			enviarMensaje(newsockfd, &ALTO_VENTANA, sizeof(int));
@@ -559,7 +553,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 		case '4':{
-			cout << "Entro a /4 que es fondos" << endl;
+			//cout << "Entro a /4 que es fondos" << endl;
 			//cargarFondos(archivoXml);
 			inicioGrafica = true;
 			int tamano = listaFondos.size();
@@ -582,7 +576,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 		case '5': {
-			cout << "ENTRO A BUSCAR MSJS NUEVOS" << endl;
+			//cout << "ENTRO A BUSCAR MSJS NUEVOS" << endl;
 			for (list<mensajeClass*>::iterator i = listaDeMensajes.begin(); i != listaDeMensajes.end(); ++i) {
 				//if ((**i).nombreDestinatario().compare(nombre) == 0 ){
 				if ((*i)->usrDestino == numeroCliente){
@@ -729,8 +723,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 			list<int>::iterator itFD = listaFDClientes.begin();
 			if(newsockfd == (*itFD)){
-			//if(numeroCliente == 1){
-				cout << "MUEVO ENEMIGOS" << endl;
+				//if(numeroCliente == 1){
+				//cout << "MUEVO ENEMIGOS" << endl;
 				//BUSCO ENEMIGOS
 				list<DibujableServerEnemigo> listaEnemigosActivos;
 				list<DibujableServerEnemigo> listaEnemigosDeBaja;
@@ -746,7 +740,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				list<DibujableServerEnemigo> listaEnemigosDisparados;
 				contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados, &listaScores, &listaDibujables);
 
-			    for (list<DibujableServerAdicional*>::iterator itScore = listaScores.begin(); itScore != listaScores.end(); ++itScore) {
+				for (list<DibujableServerAdicional*>::iterator itScore = listaScores.begin(); itScore != listaScores.end(); ++itScore) {
 					enviarScoreAConectados((*itScore)->id,(*itScore)->getAumentable());
 				}
 				for (list<DibujableServer*>::iterator itUser = listaDibujables.begin(); itUser != listaDibujables.end(); ++itUser) {
@@ -809,7 +803,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 		case '6': {
 			//peticion de cantidad de objetos a dibujar
-			cout << "PIDO CANT OBJ A DIBUJAR" << endl;
+			//cout << "PIDO CANT OBJ A DIBUJAR" << endl;
 			int cantidad = listaDibujables.size();
 			enviarMensaje(newsockfd,&cantidad,sizeof(int));
 
@@ -817,7 +811,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case '7': {
-			cout << "PIDO SI PUEDO EMEPZAR A JUGAR" << endl;
+			//cout << "PIDO SI PUEDO EMEPZAR A JUGAR" << endl;
 			//pido si puede empezar el juego
 			int respuesta = 1;
 			if (listaDeUsuarios.size() < cantidadJugadores){
@@ -841,7 +835,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case '8': {
-			cout << "CASE 8" << endl;
+			//cout << "CASE 8" << endl;
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
 			char flip;
 
@@ -862,7 +856,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case '9':{
-			cout << "ENVIO DIBUJABLES" << endl;
+			//cout << "ENVIO DIBUJABLES" << endl;
 			//caso envio objetos dibujables
 			int numeroUsuario;
 			recibirMensaje(newsockfd, &numeroUsuario, sizeof(int));
@@ -891,7 +885,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'a':{
-			cout << "PIDO ENERGIAS" << endl;
+			//cout << "PIDO ENERGIAS" << endl;
 			int cant = listaEnergias.size();
 			enviarMensaje(newsockfd, &cant, sizeof(int));
 			for (list<DibujableServer*>::iterator it = listaEnergias.begin(); it != listaEnergias.end(); ++it)
@@ -907,14 +901,14 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'c':{
-			cout << "ENVIO CAM X" << endl;
+			//cout << "ENVIO CAM X" << endl;
 			enviarMensaje(newsockfd,&camaraX,sizeof(int));
 
 			break;
 		}
 
 		case 'M':{
-			cout << "ENTRO A MOVER" << endl;
+			//cout << "ENTRO A MOVER" << endl;
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
@@ -966,42 +960,102 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 
-		case 'U':{
-			cout << "SALTO" << endl;
+		case 'J':{
+			//cout << "SALTO" << endl;
 
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
-			(*it)->saltar();
+			if((*it)->estaVivo)
+				(*it)->saltar();
+
+			break;
+		}
+
+		case 'U':{
+			//cout << "UP" << endl;
+
+			list<DibujableServer*>::iterator it = listaDibujables.begin();
+			advance(it, numeroCliente-1);
+
+			if((*it)->estaVivo)
+				if (((*it)->x)>(camaraX)) {
+					(*it)->apuntarArriba();
+				}else (*it)->quieto();
+
+			break;
+		}
+
+		case 'D':{
+			//cout << "DOWN" << endl;
+
+			list<DibujableServer*>::iterator it = listaDibujables.begin();
+			advance(it, numeroCliente-1);
+
+			if((*it)->estaVivo)
+				if (((*it)->x) > (camaraX)){
+					(*it)->apuntarAbajo();
+				}else (*it)->quieto();
 
 			break;
 		}
 
 		case 'L':{
-			cout << "LEFT" << endl;
+			//cout << "LEFT" << endl;
 
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
-			if (((*it)->x) > (camaraX)){
-				(*it)->caminarIzquierda();
-			}else (*it)->quieto();
+			if((*it)->estaVivo)
+				if (((*it)->x) > (camaraX)){
+					(*it)->caminarIzquierda();
+				}else (*it)->quieto();
 
 			break;
 		}
 		case 'R':{
-			cout << "RIGHT" << endl;
+			//cout << "RIGHT" << endl;
 
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
-			//camino hasta ANCHO_VENTANA (uso toda la pantalla)
-			if (((*it)->x) < (camaraX + ANCHO_VENTANA)-80){ // - lo q ocupa el sprite en pantalla..
-				(*it)->caminarDerecha();
-			}else (*it)->quieto();
+
+			if((*it)->estaVivo)
+				if (((*it)->x) < (camaraX + ANCHO_VENTANA)-80){ // - lo q ocupa el sprite en pantalla..
+					(*it)->caminarDerecha();
+				}else (*it)->quieto();
 
 			break;
 		}
+
+		case 'E':{
+			//cout << "DIAGDER" << endl;
+
+			list<DibujableServer*>::iterator it = listaDibujables.begin();
+			advance(it, numeroCliente-1);
+
+			if((*it)->estaVivo)
+				if (((*it)->x) > (camaraX)){
+					(*it)->apuntarDiagDer();
+				}else (*it)->quieto();
+
+			break;
+		}
+
+		case 'Q':{
+			//cout << "DIAGIZQ" << endl;
+
+			list<DibujableServer*>::iterator it = listaDibujables.begin();
+			advance(it, numeroCliente-1);
+
+			if((*it)->estaVivo)
+				if (((*it)->x) > (camaraX)){
+					(*it)->apuntarDiagIzq();
+				}else (*it)->quieto();
+
+			break;
+		}
+
 		case 'C':{
-			cout << "CERRAR GRAFICA" << endl;
+			//cout << "CERRAR GRAFICA" << endl;
 
 			//caso cerrar ventana grafica
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
@@ -1042,7 +1096,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 		case 'S':{
-			cout << "STOP" << endl;
+			//			cout << "STOP" << endl;
 
 			//caso se queda parado
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
@@ -1051,23 +1105,24 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
-			(*it)->quieto();
+			if((*it)->estaVivo){
+				(*it)->quieto();
 
-			//sprite parado
-			nuevaCordX = (*it)->x;
-			nuevaCordY = (*it)->y;
-			nuevoSpX = (*it)->spX;
-			nuevoSpY = (*it)->spY;
-			flip = (*it)->flip;
+				//sprite parado
+				nuevaCordX = (*it)->x;
+				nuevaCordY = (*it)->y;
+				nuevoSpX = (*it)->spX;
+				nuevoSpY = (*it)->spY;
+				flip = (*it)->flip;
 
-			//envio a todos los q esten online el mensaje de q se modifico un objeto
-			enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, false, 0);
-
+				//envio a todos los q esten online el mensaje de q se modifico un objeto
+				enviarAConectados(numeroCliente, nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY, flip, false, 0);
+			}
 			break;
 		}
 
 		case 'i':{
-			cout << "PIDO Q TODOS CIERREN LA GRAFICA" << endl;
+			//cout << "PIDO Q TODOS CIERREN LA GRAFICA" << endl;
 
 			//envio a conectados q cierren grafica
 			for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
@@ -1118,7 +1173,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'd': {
-			cout << "DISPARO" << endl;
+			//			cout << "DISPARO" << endl;
 
 			int direccionDisparo;
 			recibirMensaje(newsockfd, &direccionDisparo, sizeof(int));
@@ -1126,20 +1181,22 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			//busco quien la disparo..
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
-			if( (*it)->disparar() ){
-				int x = (*it)->getX();
-				int y = (*it)->getY();
-				int usr = (*it)->getId();
-				char flip = (*it)->flip;
-				int tipoDeArma = (*it)->tipoDeArma;
 
-				if(direccionDisparo == -1){
-					if(flip == 'D') direccionDisparo = 0;
-					else direccionDisparo = 4;
+			if((*it)->estaVivo)
+				if( (*it)->disparar(direccionDisparo) ){
+					int x = (*it)->getX();
+					int y = (*it)->getY();
+					int usr = (*it)->getId();
+					char flip = (*it)->flip;
+					int tipoDeArma = (*it)->tipoDeArma;
+
+					if(direccionDisparo == -1){
+						if(flip == 'D') direccionDisparo = 0;
+						else direccionDisparo = 4;
+					}
+
+					contenedorBalas.nuevaBala(x, y, usr, direccionDisparo, tipoDeArma, 0); //pasar tipo de disparo..
 				}
-
-				contenedorBalas.nuevaBala(x, y, usr, direccionDisparo, tipoDeArma, 0); //pasar tipo de disparo..
-			}
 
 			break;
 		}
@@ -1149,7 +1206,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 
-		cout << "---------------" << endl;
 		pthread_mutex_unlock (&mutexLista);
 	}
 

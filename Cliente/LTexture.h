@@ -13,7 +13,7 @@ class LTexture {
 public:
 	int id;
 
-	SDL_Rect player[7][4];
+	SDL_Rect player[9][9];
 	
 	int xcord;
 	int ycord;
@@ -73,7 +73,7 @@ public:
 				//mWidth = loadedSurface->w;
 				//mHeight = loadedSurface->h;
 			}
-			SDL_FreeSurface( loadedSurface );
+			//SDL_FreeSurface( loadedSurface );
 		}
 
 		return (texture != NULL);

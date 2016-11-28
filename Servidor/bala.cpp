@@ -59,7 +59,7 @@ bala::bala(int xPos, int yPos, int usr, int id, int direccionDeDisparo, int tipo
 		break;
 	case 6:
 		xVel = 0;
-		yVel = -30;
+		yVel = 30;
 		break;
 	case 7:
 		xVel = 30;

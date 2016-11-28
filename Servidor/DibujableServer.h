@@ -27,8 +27,11 @@ public:
 	int spY;
 	int spXaux;
 	int spYaux;
+	int spXinicial;
 	bool estaOnline;
 	bool estaDisparando;
+	bool apunta;
+	bool estaVivo;
 	
 	int score;
 	int vida;
@@ -63,12 +66,18 @@ public:
 	void aumentarDano (int cantidad);
 
 	void saltar();
+	void apuntarArriba();
+	void apuntarAbajo();
+	void apuntarDiagDer();
+	void apuntarDiagIzq();
 	void caminarDerecha();
 	void caminarIzquierda();
 	void quieto();
 	bool mover(int camaraX);
 	void volverAlPrincipio();
-	bool disparar();
+	bool disparar(int direccionDisparo);
+	void matar();
+	void morir();
 	void choca();
 	void actualizarBonus(int tipoBonus);
 

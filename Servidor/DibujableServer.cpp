@@ -20,6 +20,8 @@ DibujableServer::DibujableServer() {
 	tipoDeArma = 1;
 	cantBalas = 200;
 
+	estaVivo = true;
+
 	flip = 'D';
 }
 
@@ -96,79 +98,158 @@ void DibujableServer::saltar(){
 	}
 }
 
-bool DibujableServer::disparar(){
+bool DibujableServer::disparar(int direccionDisparo){
 	bool rta = false;
 
-	if((cantBalas > 0) && (!estaDisparando)){
+	if(cantBalas > 0){
 		cantBalas--;
 
-		switch(tipoDeArma){
+		if(!estaDisparando){
+			estaDisparando = true;
+			rta = true;
 
-		case 0:
-			if(!estaDisparando){
+			if(direccionDisparo == -1){
+				if(flip == 'D') direccionDisparo = 0;
+				else direccionDisparo = 4;
+			}
+
+			cout << "DIR DISP: " << direccionDisparo << endl;
+			switch(direccionDisparo){
+			case 0:
 				spX = 0;
 				spY = 3;
-
+				spXinicial = 0;
 				spXaux = 0;
 				spYaux = 3;
 
-				estaDisparando = true;
-				rta = true;
-			}
-			break;
+				break;
 
-		case 1:
-			if(!estaDisparando){
+			case 1:
+				spX = 1;
+				spY = 7;
+				spXinicial = 1;
+				spXaux = 1;
+				spYaux = 7;
+
+				break;
+
+			case 2:
+				spX = 1;
+				spY = 4;
+				spXinicial = 1;
+				spXaux = 1;
+				spYaux = 4;
+
+				break;
+
+			case 3:
+				spX = 1;
+				spY = 7;
+				spXinicial = 1;
+				spXaux = 1;
+				spYaux = 7;
+				strcpy(&flip,"I");
+
+				break;
+
+			case 4:
 				spX = 0;
 				spY = 3;
-
+				spXinicial = 0;
 				spXaux = 0;
 				spYaux = 3;
 
-				estaDisparando = true;
-				rta = true;
+				break;
+
+			case 5:
+				spX = 1;
+				spY = 8;
+				spXinicial = 1;
+				spXaux = 1;
+				spYaux = 8;
+				strcpy(&flip,"I");
+				break;
+
+			case 6:
+				//				if(!estaEnElPiso){
+				spX = 1;
+				spY = 5;
+				spXinicial = 1;
+				spXaux = 1;
+				spYaux = 5;
+
+				//					estaDisparando = false;
+				//				}
+				break;
+
+			case 7:
+				spX = 1;
+				spY = 8;
+				spXinicial = 1;
+				spXaux = 1;
+				spYaux = 8;
+				break;
+
 			}
-			break;
-
-		case 2:
-			if(!estaDisparando){
-				spX = 0;
-				spY = 3;
-
-				spXaux = 0;
-				spYaux = 3;
-
-				estaDisparando = true;
-				rta = true;
-			}
-			break;
-
-		case 3:
-			if(!estaDisparando){
-				spX = 0;
-				spY = 3;
-
-				spXaux = 0;
-				spYaux = 3;
-
-				estaDisparando = true;
-				rta = true;
-			}
-			break;
-
-		default:
-			break;
 		}
+		return rta;
 
+	}else
 		return rta;
-	} else {
-		rta = false;
-		return rta;
+
+}
+
+void DibujableServer::matar(){
+	mVelX = 0;
+	mVelY = 0;
+
+	estaVivo = false;
+	spY = 6;
+	spX = -1;
+}
+
+void DibujableServer::morir(){
+	spX += 1;
+	if (spX > 6){
+		spX = 6;
 	}
 }
 
 int DibujableServer::velocidadXJugador(){
 	return mVelX;
+}
+
+
+void DibujableServer::apuntarArriba(){
+	spY = 4;
+	spX = 0;
+
+	apunta = true;
+}
+
+void DibujableServer::apuntarAbajo(){
+	if(!estaEnElPiso){
+		spY = 5;
+		spX = 0;
+
+		apunta = true;
+	}
+}
+
+void DibujableServer::apuntarDiagDer(){
+	spY = 7;
+	spX = 1;
+
+	apunta = true;
+}
+
+void DibujableServer::apuntarDiagIzq(){
+	spY = 7;
+	spX = 1;
+
+	apunta = true;
+
+	flip = 'D';
 }
 
 void DibujableServer::caminarDerecha(){
@@ -239,6 +320,16 @@ bool DibujableServer::mover(int xCamara){
 		meMovi = true;
 	}
 
+	if(!estaVivo){
+		morir();
+		meMovi = true;
+	}
+
+	if (apunta) {
+		meMovi = true;
+		apunta = false;
+	}
+
 	if(estaDisparando) {
 		spXaux += 1;
 
@@ -247,10 +338,11 @@ bool DibujableServer::mover(int xCamara){
 			spY = spYaux;
 		}
 
-		if(spXaux > 5) {
-			estaDisparando = false;
-			spY = 1;
-			spX = 0;
+		if(spXaux >= spXinicial + 3) {
+			if(spXaux == spXinicial + 5)
+				estaDisparando = false;
+
+			spX = spXinicial;
 		}
 	}
 
@@ -272,7 +364,6 @@ bool DibujableServer::mover(int xCamara){
 			spX = 0;
 			estaEnPlataforma = true;
 		}
-
 	}
 
 	//una vez arriba de la plataforma, verifico sino me sali
@@ -297,7 +388,7 @@ bool DibujableServer::mover(int xCamara){
 		mVelY = 0;
 		y = NIVEL_PISO;
 		spY = 1;
-		spX = 0;
+		//spX = 0;
 		estaEnElPiso = true;
 	}
 
