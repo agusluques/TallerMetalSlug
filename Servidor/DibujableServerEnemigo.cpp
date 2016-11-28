@@ -415,7 +415,6 @@ void  DibujableServerEnemigo::morirBoss(){
 }
 
 bool  DibujableServerEnemigo::matar(){
-	cout << "ULTIMA BALA: " << bala << endl;
 	if((vida == 1)||(bala!=1)){
 		mVelX = 0;
 		mVelY = 0;

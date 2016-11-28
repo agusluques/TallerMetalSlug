@@ -49,7 +49,7 @@ public:
 	float mVelX;
 	float mVelY;
 
-	DibujableServer();
+	DibujableServer(bool modoDios);
 	void setX(int pos);
 	void setY(int pos);
 	void setSpX(int pos);

@@ -44,6 +44,7 @@ int modoPrueba = 0; //default modo de prueba OFF
 
 int topeSalto = 20;
 bool avanzar;
+bool modoDios = false;
 
 int camaraX = 0;
 int camaraSet = 0;
@@ -500,7 +501,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				numeroCliente = listaDeUsuarios.size();
 
 				//creo el dibujable del nuevo cliente
-				DibujableServer* nuevo = new DibujableServer;
+				DibujableServer* nuevo = new DibujableServer(modoDios);
 				nuevo->setId(listaDeUsuarios.size());
 				string spriteId = parseXMLPj();
 				nuevo->setSpriteId(spriteId);
@@ -510,7 +511,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				nuevo->setSpY(1);
 
 				//creo dibujable energia
-				DibujableServer* nuevo2 = new DibujableServer;
+				DibujableServer* nuevo2 = new DibujableServer(modoDios);
 				nuevo2->setId(listaDeUsuarios.size());
 				nuevo2->setSpY(0);
 

@@ -3,7 +3,7 @@
 #include <cstring>
 #include <string>
 
-DibujableServer::DibujableServer() {
+DibujableServer::DibujableServer(bool modoDios) {
 	estaEnElPiso = true;
 	caminaDerecha = false;
 	caminaIzquierda = false;
@@ -15,7 +15,11 @@ DibujableServer::DibujableServer() {
 	basePlataforma = 0;
 
 	score = 0;
-	vida = 0;
+	if(modoDios){
+		vida = -10000;
+	} else {
+		vida = 0;
+	}
 
 	tipoDeArma = 1;
 	cantBalas = 200;

@@ -306,6 +306,10 @@ bool mySocket::recibirMensaje(){
 			error = recibirMensaje(&id, sizeof(int));
 			error = recibirMensaje(&vida, sizeof(int));
 
+			if(vida < 0){
+				vida = 0;
+			}
+
 			grafica.actualizarVida(id, vida);
 
 			break;
