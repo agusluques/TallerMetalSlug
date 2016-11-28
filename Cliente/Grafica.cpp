@@ -147,6 +147,7 @@ void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanza
 void Grafica::quitarEnemigo(int idObjeto){
 	for (list<LTextureEnemigo*>::iterator it = listaDibujableEnemigos.begin(); it != listaDibujableEnemigos.end(); ++it) {
 		if((*it)->id == idObjeto){
+			(*it)->free();
 			delete (*it);
 			it = listaDibujableEnemigos.erase(it);
 			it--;
@@ -156,6 +157,7 @@ void Grafica::quitarEnemigo(int idObjeto){
 
 void Grafica::actualizarBalas(int id, int x, int y, int dirBala, int tipoDisp, int spY){
 	if(!modificarBalas(id, x, y, dirBala, tipoDisp, spY)){
+		cout<<"CREA BALA NUEVAAAAAAA"<<endl;
 		TextureBalas* nueva = new TextureBalas;
 		nueva->setId(id);
 		nueva->setX(x);
@@ -188,6 +190,7 @@ bool Grafica::modificarBalas(int id, int x, int y, int dirBala, int tipoDisp, in
 void Grafica::quitarBalas(int id){
 	for (list<TextureBalas*>::iterator it = listaDibujableBalas.begin(); it != listaDibujableBalas.end(); ++it) {
 		if((*it)->id == id){
+			(*it)->free();
 			delete (*it);
 			it = listaDibujableBalas.erase(it);
 			it--;
@@ -282,7 +285,26 @@ void Grafica::mostrarScores(int score){
 	puntaje = SDL_CreateTextureFromSurface( window, superficie);
 	puntajeRect.x = puntajeRect.y = 250;
 	SDL_QueryTexture(puntaje, NULL, NULL, &puntajeRect.w, &puntajeRect.h);
+	SDL_RenderCopy(window, puntaje, NULL, &puntajeRect);
 	SDL_FreeSurface(superficie);
+	int x = 260;
+	for (list<TextureScore*>::iterator it = listaDibujableScore.begin(); it != listaDibujableScore.end(); ++it) {
+		std::stringstream ss, ss2;
+		ss << (*it)->id;
+		ss2 << (*it)->aumentable;
+		string str = ss.str();
+		string str2 = ss2.str();
+		string texto = "JUGADOR " + str + " HIZO " + str2 + " PUNTOS"; 
+		const char * c = texto.c_str();
+		SDL_Surface* superficie = TTF_RenderText_Solid(font, c,color);
+		puntaje = SDL_CreateTextureFromSurface( window, superficie);
+		puntajeRect.x = puntajeRect.y = x + 50;
+		x = x+50;
+		SDL_QueryTexture(puntaje, NULL, NULL, &puntajeRect.w, &puntajeRect.h);
+		SDL_RenderCopy(window, puntaje, NULL, &puntajeRect);
+		SDL_FreeSurface(superficie);
+
+	}
 
 }
 
@@ -325,6 +347,7 @@ void Grafica::agregarBonus(int x, int y, int cont, int tipoBonus){
 void Grafica::borrarBonus(int cont){
 	for(list<TextureBonus*>::iterator j = listaDibujableBonus.begin(); j!= listaDibujableBonus.end(); ++j){
 		if((**j).id == cont){
+			(*j)->free();
 			delete (*j);
 			j = listaDibujableBonus.erase(j);
 			j--;
@@ -366,6 +389,7 @@ bool Grafica::modificarBonus(int id, int x, int y, int tipoBonus){
 void Grafica::quitarBonus(int id){
 	for (list<TextureBonus*>::iterator it = listaDibujableBonus.begin(); it != listaDibujableBonus.end(); ++it) {
 		if((*it)->id == id){
+			(*it)->free();
 			delete (*it);
 			it = listaDibujableBonus.erase(it);
 			it--;
@@ -426,6 +450,7 @@ void Grafica::agregarBala(int x, int y, int cont, bool dirBala, int tipoDisp){
 void Grafica::borrarBala(int cont){
 	for(list<TextureBalas*>::iterator j = listaDibujableBalas.begin(); j!= listaDibujableBalas.end(); ++j){
 		if((**j).id == cont){
+			(*j)->free();
 			delete (*j);
 			j = listaDibujableBalas.erase(j);
 			j--;
@@ -539,6 +564,7 @@ bool Grafica::actualizarDibujableEnemigos(int idObjeto,int x,int y, int spx, int
 void Grafica::borrarDibujable(int id) {
 	for (list<LTexture*>::iterator it = listaDibujable.begin(); it != listaDibujable.end(); ++it) {
 		if ((**it).getId() == id ){
+			(*it)->free();
 			delete (*it);
 			it = listaDibujable.erase(it);
 			it--;

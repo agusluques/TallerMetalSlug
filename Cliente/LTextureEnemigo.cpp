@@ -111,7 +111,7 @@ bool LTextureEnemigo::loadFromFile(SDL_Renderer* window, char* path ) {
 			//mWidth = loadedSurface->w;
 			//mHeight = loadedSurface->h;
 		}
-		//SDL_FreeSurface( loadedSurface );
+		SDL_FreeSurface( loadedSurface );
 	}
 
 	return (texture != NULL);
@@ -327,9 +327,9 @@ void LTextureEnemigo::inicializarTexture(SDL_Renderer* window, char* text){
 void LTextureEnemigo::free()
 {
 	//Free texture if it exists
-	if( mTexture != NULL )
+	if( texture != NULL )
 	{
-		SDL_DestroyTexture( mTexture );
+		SDL_DestroyTexture( texture );
 		mTexture = NULL;
 		mWidth = 0;
 		mHeight = 0;

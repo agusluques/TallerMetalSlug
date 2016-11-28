@@ -88,9 +88,9 @@ void TextureBonus::inicializarTexture(SDL_Renderer* window, char* text){
 void TextureBonus::free()
 {
 	//Free texture if it exists
-	if( mTexture != NULL )
+	if( texture != NULL )
 	{
-		SDL_DestroyTexture( mTexture );
+		SDL_DestroyTexture( texture );
 		mTexture = NULL;
 		mWidth = 0;
 		mHeight = 0;

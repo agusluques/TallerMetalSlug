@@ -65,7 +65,7 @@ public:
 				//mWidth = loadedSurface->w;
 				//mHeight = loadedSurface->h;
 			}
-			//SDL_FreeSurface( loadedSurface );
+			SDL_FreeSurface( loadedSurface );
 		}
 
 		return (texture != NULL);
