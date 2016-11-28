@@ -32,11 +32,17 @@ bool hayColisionConUser(int xTipo, int yTipo, int xBala, int yBala, int tipoEnem
 	int w2 = 5; int h2 = 5;
 	int escala = 66;
 
+	cout << "Y BALA: " << yBala << endl;
+	cout << "Y PERS: " << yTipo << endl;
+
 	if(xBala + w2 < xTipo) return false;
 	if(xBala > xTipo + w1) return false;
 
-	if(yBala + h2 < yTipo) return false;
-	if(yBala > yTipo + h1) return false;
+	if(yBala < yTipo) return false;
+	if(yBala > yTipo + 70) return false;
+
+	//if(yBala + h2 < yTipo) return false;
+	//if(yBala > yTipo + h1) return false;
 
 
 	return true;
@@ -149,14 +155,14 @@ void ContenedorBalas::detectarColisiones(list<bala> *listaBalasDeBaja, list<Dibu
 				if(itBalas->usr != 5){ //no comparo enemigo contra enemigo
 					if(hayColision(itEnemigos->x, itEnemigos->y, itBalas->x, itBalas->y, itEnemigos->tipoEnemigo, itBalas->tipoBala)){
 
-						itEnemigos->quitarEnergia(1);
+						//itEnemigos->quitarEnergia(1);
 
-						if(itEnemigos->getVida()==0){
+						//if(itEnemigos->getVida()==0){
 						    listaEnemigosDeBaja->push_back((*itEnemigos));
 	                        acumuloPuntajes(itEnemigos->getPunto(), itBalas->usr, listaScores);
 							itEnemigos = listaEnemigosActivos->erase(itEnemigos);
 							itEnemigos--;
-						}
+						//}
 
 						listaBalasDeBaja->push_back((*itBalas));
 						itBalas = listaDeBalas.erase(itBalas);
