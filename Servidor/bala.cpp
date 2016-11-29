@@ -207,7 +207,7 @@ void bala::setUsr(int usr){
 }
 
 bool bala::estaVisible(int camaraX){
-	return ( x >= camaraX && x <= (camaraX + 800) ); //PASARLE ANCHO DE LA VENTANA!!!!
+	return ((x >= camaraX && x <= (camaraX + 800)) && ((y > 0) && (y < 600)) ); //PASARLE ANCHO DE LA VENTANA!!!!
 }
 
 void bala::mover(){
@@ -232,7 +232,6 @@ void bala::mover(){
 		x += xVel;
 		y += yVel;
 	}
-
 }
 
 bala::~bala(){}
