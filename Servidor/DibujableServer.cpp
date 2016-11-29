@@ -96,7 +96,7 @@ void DibujableServer::saltar(){
 		spX = 0;
 
 		estaEnElPiso = false;
-		if (escenario.colisionPlataforma(this->x,this->y) && !estaEnPlataforma){
+		if (escenario.colisionPlataforma(this->x,this->y,this->caminaIzquierda,this->caminaDerecha) && !estaEnPlataforma){
 			this->choca();
 		}
 	}
@@ -314,7 +314,7 @@ void DibujableServer::quieto(){
 
 void DibujableServer::choca(){
 
-	mVelY = -18;
+	mVelY = -16;
 }
 
 bool DibujableServer::mover(int xCamara){

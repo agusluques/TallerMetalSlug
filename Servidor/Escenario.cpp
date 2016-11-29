@@ -23,10 +23,10 @@ void Escenario::crearPlataformas(){
 
 	Plataforma nueva;
 	nueva.setId(idPlataforma);
-	nueva.setX(397);
+	nueva.setX(380);
 	nueva.setY(360);
 	nueva.setSuelo(350);
-	nueva.setLong(436);
+	nueva.setLong(440);
 
 	plataformas.push_back(nueva);
 	idPlataforma++;
@@ -118,11 +118,16 @@ bool Escenario::salirPlataforma (int spriteX, int spriteY){
 
 }
 
-bool Escenario::colisionPlataforma (int cordX, int cordY){
+bool Escenario::colisionPlataforma (int cordX, int cordY, bool camIzq, bool camDer){
 	bool tocaPlataforma = false;
 	for (list<Plataforma>::iterator it = plataformas.begin(); it != plataformas.end(); ++it) {
-			if (cordX >= it->getX() && cordX <= it->getLong() && cordY >= it->getSuelo()){
+			if (cordX >= it->getX()-10 && cordX <= it->getLong()+10 && (cordY >= it->getSuelo() || cordY >= it->getSuelo()-30)){
 				tocaPlataforma = true;
+			}
+			if (!tocaPlataforma && (camIzq||camDer)){
+				if(cordX+60 >= it->getX() && cordX-60 <= it->getLong()+10){
+					tocaPlataforma =true;
+				}
 			}
 	}
 
