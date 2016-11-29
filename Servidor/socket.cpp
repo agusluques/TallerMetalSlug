@@ -875,7 +875,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 				list<DibujableServerEnemigo> listaEnemigosDisparados;
 				contenedorBalas.detectarColisionPlataforma(&escenario);
-				contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados, &listaScores, &listaDibujables);
+				contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados, &listaScores, &listaDibujables, modoJuego);
 
 
 				for (list<DibujableServerAdicional*>::iterator itScore = listaScores.begin(); itScore != listaScores.end(); ++itScore) {
