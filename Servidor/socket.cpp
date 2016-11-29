@@ -913,7 +913,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					int usrKillAll;
 					if(contenedorBonus.detectarColision(&listaBonusDeBaja, &listaBonusActivos, &listaDibujables, usrKillAll)){
 						//Si entra es porque agarro el bonus de Kill All
-						contenedorEnemigos.killAll(&listaEnemigosActivos, &listaEnemigosDeBaja, usrKillAll, &listaScores);
+						contenedorEnemigos.killAll(&listaEnemigosActivos, &listaEnemigosDeBaja, usrKillAll, &listaScores, modoJuego);
 					}
 
 					for (list<bala>::iterator itBalas = listaBalasActivas.begin(); itBalas != listaBalasActivas.end(); ++itBalas) {

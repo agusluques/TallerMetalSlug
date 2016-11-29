@@ -118,18 +118,38 @@ void ContenedorEnemigos::buscarActivos(int camaraX, list<DibujableServerEnemigo>
 	}
 }
 
-void ContenedorEnemigos::sumarPuntaje(int usrKillAll, list<DibujableServerAdicional*> *listaScores){
-	for (list<DibujableServerAdicional*>::iterator itScore = listaScores->begin(); itScore != listaScores->end(); ++itScore){
-		if((*itScore)->id == usrKillAll){
-			(*itScore)->aumentar(10);
+void ContenedorEnemigos::sumarPuntaje(int usrKillAll, list<DibujableServerAdicional*> *listaScores, int modoJuego){
+	if(modoJuego == 2){
+		for (list<DibujableServerAdicional*>::iterator itScore = listaScores->begin(); itScore != listaScores->end(); ++itScore){
+				(*itScore)->aumentar(10);
+		}
+	} else if(modoJuego == 1){
+		for (list<DibujableServerAdicional*>::iterator itScore = listaScores->begin(); itScore != listaScores->end(); ++itScore){
+			if((*itScore)->id == usrKillAll){
+				(*itScore)->aumentar(10);
+			}
+		}
+	} else if(modoJuego == 3){
+		if((usrKillAll == 1) || (usrKillAll == 2)){
+			for (list<DibujableServerAdicional*>::iterator itScore = listaScores->begin(); itScore != listaScores->end(); ++itScore){
+				if( ((*itScore)->id == 1) || ((*itScore)->id == 2) ){
+					(*itScore)->aumentar(10);
+				}
+			}
+		} else if((usrKillAll == 3) || (usrKillAll == 4)){
+			for (list<DibujableServerAdicional*>::iterator itScore = listaScores->begin(); itScore != listaScores->end(); ++itScore){
+				if( ((*itScore)->id == 3) || ((*itScore)->id == 4) ){
+					(*itScore)->aumentar(10);
+				} 
+			}			
 		}
 	}
 }
 
-void ContenedorEnemigos::killAll(list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, int usrKillAll, list<DibujableServerAdicional*> *listaScores){
+void ContenedorEnemigos::killAll(list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, int usrKillAll, list<DibujableServerAdicional*> *listaScores, int modoJuego){
 	for(list<DibujableServerEnemigo>::iterator it = listaEnemigosActivos->begin(); it != listaEnemigosActivos->end(); ++it){
 		//listaEnemigosDeBaja->push_back((*it));
-		sumarPuntaje(usrKillAll, listaScores);
+		sumarPuntaje(usrKillAll, listaScores, modoJuego);
 		int idEnemigo = it->id;
 		it->matar();
 		//it = listaEnemigosActivos->erase(it);
