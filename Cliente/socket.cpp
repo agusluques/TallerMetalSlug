@@ -323,6 +323,7 @@ bool mySocket::recibirMensaje(){
 		case 20:{
 			//PASAR DE NIVEL
 			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
+
 		}
 
 		default:

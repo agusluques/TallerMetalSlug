@@ -20,7 +20,7 @@ class ContenedorEnemigos {
 		bool matarEnemigos(int camaraX, list<DibujableServerEnemigo> listaEnemigosDisparados);
 		void sumarPuntaje(int usrKillAll, list<DibujableServerAdicional*> *listaScores);
 		void killAll(list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, int usrKillAll, list<DibujableServerAdicional*> *listaScores);
-
+		void killAll(list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja);
 		void iniciarJefe(int camaraX);
 
 		virtual ~ContenedorEnemigos();

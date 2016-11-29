@@ -145,6 +145,27 @@ void ContenedorEnemigos::killAll(list<DibujableServerEnemigo>* listaEnemigosActi
 	}
 }
 
+void ContenedorEnemigos::killAll(list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja){
+	for(list<DibujableServerEnemigo>::iterator it = listaEnemigosActivos->begin(); it != listaEnemigosActivos->end(); ++it){
+			listaEnemigosDeBaja->push_back((*it));
+			int idEnemigo = it->id;
+			it = listaEnemigosActivos->erase(it);
+			it--;
+
+			bool encontrado = false;
+			for(list<DibujableServerEnemigo>::iterator i = listaEnemigos.begin(); i != listaEnemigos.end(); ++i){
+				if(i->id == idEnemigo){
+					encontrado = true;
+					i = listaEnemigos.erase(i);
+					i--;
+				}
+				if(encontrado){
+					break;
+				}
+			}
+	}
+}
+
 bool ContenedorEnemigos::matarEnemigos(int camaraX, list<DibujableServerEnemigo> listaEnemigosDisparados){
 	bool esJefe = false;
 	for (list<DibujableServerEnemigo>::iterator it = listaEnemigos.begin(); it != listaEnemigos.end(); ++it) {

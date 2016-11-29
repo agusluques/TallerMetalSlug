@@ -792,7 +792,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 					case 20:{
 						//PASAR DE NIVEL
-						
+
 					}
 
 					default:
@@ -838,13 +838,14 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					enviarDanoAConectados((*itUser)->id,(*itUser)->vida);
 				}
 
-				int pasarDeNivel = contenedorEnemigos.matarEnemigos(camaraX, listaEnemigosDisparados);
+				bool pasarDeNivel = contenedorEnemigos.matarEnemigos(camaraX, listaEnemigosDisparados);
 
 				//hay que enviar a conectados un msjedel tipo pasaste de nivel y cuando
 				//los conectados lo reciban, le envian al servidor un mensaje con un codigo
 				//para que muestre una pantalla con los scores
 				if (pasarDeNivel){
 					//agusss : ya esta la lista de "DibujableServerAdicional" esta el metodo getAumentable que seria el SCORE actual para pasarles, Pablo.
+					contenedorEnemigos.killAll(&listaEnemigosActivos, &listaEnemigosDeBaja);
 					enviarAConectados(0, 0, 0, 0, 0, '0', NULL, 11);//TENGO QUE MEJORARLO
 					nivelActual++;
 					avanzarAlSiguienteNivel();
