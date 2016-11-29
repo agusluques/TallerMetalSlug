@@ -236,7 +236,10 @@ void cargarBonus(char* xml){
 		//4- recargar arma 3
 		//5- bonus de vida
 		//6- bonus de killall
-		int tipoBonus = rand() % 7;
+		int tipoBonus = rand() % 8;
+		if(tipoBonus > 6){
+			tipoBonus = 6;
+		}
 		//int tipoBonus = 6;
 		int x = sum + 800;
 		sum = x;
@@ -792,7 +795,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 					case 20:{
 						//PASAR DE NIVEL
-
+						break;
 					}
 
 					default:

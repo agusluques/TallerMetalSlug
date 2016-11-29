@@ -40,7 +40,7 @@ class mySocket{
 		void enviarMensaje();
 		void enviarMensaje(int usuario, char* mensaje, int tamanio);
 		bool enviarMensaje(void* mensaje, int tamanioMensaje);
-		bool recibirMensaje();
+		bool recibirMensaje(bool &pasarNivel);
 		bool recibirMensaje(void* buffer, int tamanio);
 		int cantidadUsuariosDisponibles();
 		void pedirUsuarios();
@@ -50,7 +50,7 @@ class mySocket{
 		bool conexion();
 
 		void cargarDibujables();
-		bool iniciarGrafica();
+		bool iniciarGrafica(bool &pasarNivel);
 		~mySocket();
 };
 

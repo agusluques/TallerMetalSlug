@@ -101,10 +101,15 @@ int main(int argc, char *argv[])
 
 			case '5': {
 				//repetir si sale mal ?..
-				if(!Cliente.iniciarGrafica()){
+				bool pasarNivel = false;
+				if(!Cliente.iniciarGrafica(pasarNivel)){
 					Cliente.cerrarGrafica();
-					Cliente.cerrar();
-					Cliente.desconectar();
+					if(pasarNivel){
+
+					} else {
+						Cliente.cerrar();
+						Cliente.desconectar();
+					}
 				}
 				break;
 			}

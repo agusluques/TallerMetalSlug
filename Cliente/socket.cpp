@@ -130,7 +130,7 @@ bool mySocket::recibirMensaje(void* buffer, int tamanio){
 	return errorSocket;
 }
 
-bool mySocket::recibirMensaje(){
+bool mySocket::recibirMensaje(bool &pasarNivel){
 	bool error = false;
 	char codigo;
 	codigo = '5';
@@ -216,7 +216,7 @@ bool mySocket::recibirMensaje(){
 		}
 		case 5:{
 			error = recibirMensaje(&corte, sizeof(int));
-			iniciarGrafica();
+			iniciarGrafica(pasarNivel);
 			cerrarGrafica();
 			cerrar();
 			desconectar();
@@ -284,7 +284,7 @@ bool mySocket::recibirMensaje(){
 			error = recibirMensaje(&score, sizeof(int));
 
 			cout<<score<<endl;
-			grafica.mostrarScores(score);
+			//grafica.mostrarScores(score);
 
 			break;
 		}
@@ -323,7 +323,9 @@ bool mySocket::recibirMensaje(){
 		case 20:{
 			//PASAR DE NIVEL
 			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
-
+			error = recibirMensaje(&corte, sizeof(int));
+			pasarNivel = true;
+			//cerrarGrafica();
 		}
 
 		default:
@@ -432,7 +434,7 @@ void mySocket::cargarDibujables(){
 
 }
 
-bool mySocket::iniciarGrafica(){
+bool mySocket::iniciarGrafica(bool &pasarNivel){
 	bool returnIGrafica = true;
 	//chequeo que esten todos los jugadores
 	char codigo;
@@ -538,6 +540,7 @@ bool mySocket::iniciarGrafica(){
 	}
 
 	bool quit = false;
+	pasarNivel = false;
 	SDL_Event event;
 
 	cargarDibujables();
@@ -554,7 +557,11 @@ bool mySocket::iniciarGrafica(){
 		enviarMensaje(&codigoMover, sizeof(char));
 
 		//recibo si hay cambios
-		bool huboError = recibirMensaje();
+		bool huboError = recibirMensaje(pasarNivel);
+		if(pasarNivel){
+			quit = true;
+			returnIGrafica = false;
+		}
 		if(huboError){
 			cout << "Hubo error" << endl;
 			grafica.close();
@@ -665,7 +672,7 @@ bool mySocket::iniciarGrafica(){
 			enviarMensaje(&codigo, sizeof(char));
 			strcpy(&codigo,"i");
 			enviarMensaje(&codigo, sizeof(char));
-			recibirMensaje();
+			recibirMensaje(pasarNivel);
 			returnIGrafica = false;
 			quit = true;
 			quieto = true;
