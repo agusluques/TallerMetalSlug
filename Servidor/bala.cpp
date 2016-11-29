@@ -40,8 +40,8 @@ bala::bala(int xPos, int yPos, int usr, int id, int direccionDeDisparo, int tipo
 			y += 20;
 		}
 		if (tipoBala == 3){
-			x += 90;
-			y -= 80;
+			x += 70;
+			y -= 120;
 		}
 
 		xVel = 30;
@@ -74,8 +74,8 @@ bala::bala(int xPos, int yPos, int usr, int id, int direccionDeDisparo, int tipo
 			y += 20;
 		}
 		if (tipoBala == 3){
-			x -= 110;
-			y -= 90;
+			x -= 90;
+			y -= 120;
 		}
 
 		xVel = -30;

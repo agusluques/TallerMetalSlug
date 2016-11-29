@@ -973,7 +973,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'U':{
-			//cout << "UP" << endl;
+			cout << "UP" << endl;
 
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
@@ -987,7 +987,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'D':{
-			//cout << "DOWN" << endl;
+			cout << "DOWN" << endl;
 
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
@@ -1001,7 +1001,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'L':{
-			//cout << "LEFT" << endl;
+			cout << "LEFT" << endl;
 
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
@@ -1014,7 +1014,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 		case 'R':{
-			//cout << "RIGHT" << endl;
+			cout << "RIGHT" << endl;
 
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
@@ -1174,7 +1174,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'd': {
-			//			cout << "DISPARO" << endl;
+			cout << "DISPARO" << endl;
 
 			int direccionDisparo;
 			recibirMensaje(newsockfd, &direccionDisparo, sizeof(int));

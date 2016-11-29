@@ -21,7 +21,7 @@ DibujableServer::DibujableServer(bool modoDios) {
 		vida = 0;
 	}
 
-	tipoDeArma = 1;
+	tipoDeArma = 3;
 	cantBalas = 200;
 
 	estaVivo = true;

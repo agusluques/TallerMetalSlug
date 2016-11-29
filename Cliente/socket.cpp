@@ -534,6 +534,8 @@ bool mySocket::iniciarGrafica(){
 
 	char codigoMover = 'M';
 
+	const Uint8 *keyAnterior;
+
 	while( !quit ) {
 		//le envio un mover siempre
 		codigoMover = 'M';
@@ -554,6 +556,12 @@ bool mySocket::iniciarGrafica(){
 		//if (!grafica.estaMuerto()){
 		SDL_PumpEvents();
 		const Uint8 *keys = SDL_GetKeyboardState(NULL);
+
+		if((keyAnterior[SDL_GetScancodeFromKey(SDLK_h)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)])){
+			strcpy(&codigo,"S");
+			enviarMensaje(&codigo, sizeof(char));
+			quieto = true;
+		}
 
 		if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_a)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
 			strcpy(&codigo,"d");
@@ -599,13 +607,6 @@ bool mySocket::iniciarGrafica(){
 			int direccionDisparo = 2;
 			enviarMensaje(&direccionDisparo, sizeof(int));
 		}
-		/*else if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_a)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
-					strcpy(&codigo,"d");
-					enviarMensaje(&codigo, sizeof(char));
-					int direccionDisparo = 3;
-					enviarMensaje(&direccionDisparo, sizeof(int));
-				}*/
-		//AGREGAR DISPAROS PARA ABAJO Y EN DIAGONAL ABAJO
 		else if (keys[SDL_GetScancodeFromKey(SDLK_h)]){
 			strcpy(&codigo,"d");
 			enviarMensaje(&codigo, sizeof(char));
@@ -663,6 +664,8 @@ bool mySocket::iniciarGrafica(){
 			quieto = true;
 		}
 		//}
+
+		keyAnterior = keys;
 	}
 
 	return returnIGrafica;
