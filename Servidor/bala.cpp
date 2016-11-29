@@ -7,62 +7,145 @@ bala::bala(int xPos, int yPos, int usr, int id, int direccionDeDisparo, int tipo
 	this->direccionDisparo = direccionDeDisparo;
 	this->tipoBala = tipoDeBala;
 	this->spY = 0;
-    this->tipoEnemigo= tipoEnemigo;
-    visible = true;
-
-	switch(tipoBala){
-	case 0:
-		x += 30;
-		y += 20;
-		break;
-
-	case 1:
-		x += 30;
-		y += 20;
-		break;
-
-	case 2:
-		x += 30;
-		y += 20;
-		break;
-
-	case 3:
-		x += 60;
-		y -= 30;
-		break;
-	}
+	this->tipoEnemigo= tipoEnemigo;
+	visible = true;
 
 	switch(direccionDisparo){
 	//DIRECCIONES DE DISPAROS: der diagder arriba diagizq izq abajoizq abajo abajoder
 	case 0:
+		if (tipoBala == 1){
+			x += 30;
+			y += 20;
+		}
+		if (tipoBala == 2){
+			x += 30;
+			y += 20;
+		}
+		if (tipoBala == 3){
+			x += 90;
+			y -= 25;
+		}
+
 		xVel = 30;
 		yVel = 0;
+
 		break;
 	case 1:
+		if (tipoBala == 1){
+			x += 30;
+			y += 20;
+		}
+		if (tipoBala == 2){
+			x += 30;
+			y += 20;
+		}
+		if (tipoBala == 3){
+			x += 90;
+			y -= 80;
+		}
+
 		xVel = 30;
 		yVel = -30;
 		break;
 	case 2:
+		if (tipoBala == 1){
+			x += 30;
+			y += 20;
+		}
+		if (tipoBala == 2){
+			x -= 10;
+			y += 20;
+		}
+		if (tipoBala == 3){
+			x -= 10;
+			y -= 160;
+		}
+
 		xVel = 0;
 		yVel = -30;
 		break;
 	case 3:
+		if (tipoBala == 1){
+			x += 30;
+			y += 20;
+		}
+		if (tipoBala == 2){
+			x += 30;
+			y += 20;
+		}
+		if (tipoBala == 3){
+			x -= 110;
+			y -= 90;
+		}
+
 		xVel = -30;
 		yVel = -30;
 		break;
 	case 4:
+		if (tipoBala == 1){
+			x += 30;
+			y += 20;
+		}
+		if (tipoBala == 2){
+			x += 30;
+			y += 20;
+		}
+		if (tipoBala == 3){
+			x -= 140;
+			y -= 25;
+		}
+
 		xVel = -30;
 		yVel = 0;
 		break;
 	case 5:
+		if (tipoBala == 1){
+			x += 30;
+			y += 20;
+		}
+		if (tipoBala == 2){
+			x += 30;
+			y += 20;
+		}
+		if (tipoBala == 3){
+			x -= 110;
+			y += 90;
+		}
+
 		xVel = -30;
 		yVel = 30;
 		break;
 	case 6:
+		if (tipoBala == 1){
+			x += 30;
+			y += 20;
+		}
+		if (tipoBala == 2){
+			x += 30;
+			y += 20;
+		}
+		if (tipoBala == 3){
+			x -= 10;
+			y += 90;
+		}
+
 		xVel = 0;
 		yVel = 30;
 		break;
 	case 7:
+		if (tipoBala == 1){
+			x += 30;
+			y += 20;
+		}
+		if (tipoBala == 2){
+			x += 30;
+			y += 20;
+		}
+		if (tipoBala == 3){
+			x += 90;
+			y += 80;
+		}
+
 		xVel = 30;
 		yVel = 30;
 		break;
@@ -134,7 +217,7 @@ void bala::mover(){
 	 * 2 R
 	 * 3 S
 	 */
-//aumentar velocidad de R..
+	//aumentar velocidad de R..
 	if (tipoBala == 3){
 		spY += 1;
 		if (spY > 5) {

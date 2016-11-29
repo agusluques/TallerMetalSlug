@@ -438,6 +438,7 @@ bool  DibujableServerEnemigo::matar(){
 		}
 	} else {
 		vida--;
+		return false;
 	}
 	
 }
