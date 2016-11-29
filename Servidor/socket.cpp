@@ -561,21 +561,90 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			//cargarFondos(archivoXml);
 			inicioGrafica = true;
 			int tamano = listaFondos.size();
+			cout << "TAMANO: " << tamano << endl;
 			enviarMensaje(newsockfd, &tamano, sizeof(int));
-			for(list<FondoServer*>::iterator i =listaFondos.begin(); i != listaFondos.end();++i){
-				int ancho = (**i).ancho;
-				int z = (**i).zindex;
-				int tamFondoId = (**i).spriteId.length() + 1;
-				//cout << "tamFondoId: " << tamFondoId << endl;
-				char spriteId[tamFondoId];
-				strcpy(spriteId, (**i).spriteId.c_str());
+			if(nivelActual == 1){
+				for(list<FondoServer*>::iterator i =listaFondos.begin(); i != listaFondos.end();++i){
+					int ancho = (**i).ancho;
+					int z = (**i).zindex;
+					int tamFondoId = (**i).spriteId.length() + 1;
+					//cout << "tamFondoId: " << tamFondoId << endl;
+					char spriteId[tamFondoId];
+					strcpy(spriteId, (**i).spriteId.c_str());
 
-				//cout << "spriteId: " << spriteId << endl;
+					//cout << "spriteId: " << spriteId << endl;
 
-				enviarMensaje(newsockfd, &tamFondoId, sizeof(int));
-				enviarMensaje(newsockfd, &spriteId, sizeof(char)*tamFondoId);
-				enviarMensaje(newsockfd, &ancho, sizeof(int));
-				//enviarMensaje(newsockfd, &z, sizeof(int));
+					enviarMensaje(newsockfd, &tamFondoId, sizeof(int));
+					enviarMensaje(newsockfd, &spriteId, sizeof(char)*tamFondoId);
+					enviarMensaje(newsockfd, &ancho, sizeof(int));
+					//enviarMensaje(newsockfd, &z, sizeof(int));
+				}
+			} else if(nivelActual == 2){
+
+					string fondo1 = "l2fondo1.png";
+					string fondo2 = "l2fondo2.png";
+					string fondo3 = "l2fondo3.png";
+
+					int tamFondo1 = fondo1.length() + 1;
+					int tamFondo2 = fondo2.length() + 1;
+					int tamFondo3 = fondo3.length() + 1;
+
+					char spriteId1[tamFondo1];
+					strcpy(spriteId1, "l2fondo1.png");
+					char spriteId2[tamFondo2];
+					strcpy(spriteId2, "l2fondo2.png");
+					char spriteId3[tamFondo3];
+					strcpy(spriteId3, "l2fondo3.png");
+
+
+					int ancho1 = 1000;
+					int ancho2 = 2000;
+					int ancho3 = 4000;
+
+					enviarMensaje(newsockfd, &tamFondo1, sizeof(int));
+					enviarMensaje(newsockfd, &spriteId1, sizeof(char)*tamFondo1);
+					enviarMensaje(newsockfd, &ancho1, sizeof(int));
+
+					enviarMensaje(newsockfd, &tamFondo2, sizeof(int));
+					enviarMensaje(newsockfd, &spriteId2, sizeof(char)*tamFondo2);
+					enviarMensaje(newsockfd, &ancho2, sizeof(int));
+
+					enviarMensaje(newsockfd, &tamFondo3, sizeof(int));
+					enviarMensaje(newsockfd, &spriteId3, sizeof(char)*tamFondo3);
+					enviarMensaje(newsockfd, &ancho3, sizeof(int));
+			} else if(nivelActual == 3){
+
+				string fondo1 = "l3fondo1.png";
+				string fondo2 = "l3fondo2.png";
+				string fondo3 = "l3fondo3.png";
+
+				int tamFondo1 = fondo1.length() + 1;
+				int tamFondo2 = fondo2.length() + 1;
+				int tamFondo3 = fondo3.length() + 1;
+
+				char spriteId1[tamFondo1];
+				strcpy(spriteId1, "l3fondo1.png");
+				char spriteId2[tamFondo2];
+				strcpy(spriteId2, "l3fondo2.png");
+				char spriteId3[tamFondo3];
+				strcpy(spriteId3, "l3fondo3.png");
+
+
+				int ancho1 = 1000;
+				int ancho2 = 2000;
+				int ancho3 = 4000;
+
+				enviarMensaje(newsockfd, &tamFondo1, sizeof(int));
+				enviarMensaje(newsockfd, &spriteId1, sizeof(char)*tamFondo1);
+				enviarMensaje(newsockfd, &ancho1, sizeof(int));
+
+				enviarMensaje(newsockfd, &tamFondo2, sizeof(int));
+				enviarMensaje(newsockfd, &spriteId2, sizeof(char)*tamFondo2);
+				enviarMensaje(newsockfd, &ancho2, sizeof(int));
+
+				enviarMensaje(newsockfd, &tamFondo3, sizeof(int));
+				enviarMensaje(newsockfd, &spriteId3, sizeof(char)*tamFondo3);
+				enviarMensaje(newsockfd, &ancho3, sizeof(int));
 			}
 			break;
 		}
