@@ -667,6 +667,7 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 			enviarMensaje(&codigo, sizeof(char));
 			quieto = false;
 		}
+		/*
 		else if (keys[SDL_GetScancodeFromKey(SDLK_r)]){
 			strcpy(&codigo,"S");
 			enviarMensaje(&codigo, sizeof(char));
@@ -676,7 +677,7 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 			returnIGrafica = false;
 			quit = true;
 			quieto = true;
-		}
+		}*/
 		else if(!quieto){
 			strcpy(&codigo,"S");
 			enviarMensaje(&codigo, sizeof(char));
