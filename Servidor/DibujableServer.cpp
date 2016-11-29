@@ -446,7 +446,9 @@ void DibujableServer::actualizarBonus(int tipoBonus){
 		break;
 	case 5:
 		//5- bonus de vida
-		vida = 0;
+		if(vida > 0){
+			vida = 0;
+		}
 		break;
 	case 6:
 		//6- bonus de killall

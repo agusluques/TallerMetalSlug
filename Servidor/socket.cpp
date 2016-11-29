@@ -362,6 +362,17 @@ void quitarBonus(int idBonus){
 	}
 }
 
+void avanzarAlSiguienteNivel(){
+
+	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+		if((**it).estaConectado()){
+			mensajeClass* mensajeObj = new mensajeClass(0, (**it).numCliente(), 0, 0, 0, 0, 0, 'D', 20);
+			listaDeMensajes.push_back(mensajeObj);
+		}
+	}
+
+}
+
 void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 {
 	//char buffer[TAM_MAX];
@@ -779,6 +790,11 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						break;
 					}
 
+					case 20:{
+						//PASAR DE NIVEL
+						
+					}
+
 					default:
 						break;
 
@@ -831,6 +847,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					//agusss : ya esta la lista de "DibujableServerAdicional" esta el metodo getAumentable que seria el SCORE actual para pasarles, Pablo.
 					enviarAConectados(0, 0, 0, 0, 0, '0', NULL, 11);//TENGO QUE MEJORARLO
 					nivelActual++;
+					avanzarAlSiguienteNivel();
 				}
 
 				list<Bonus> listaBonusActivos;
