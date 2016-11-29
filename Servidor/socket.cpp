@@ -42,6 +42,7 @@ int cantidadJugadores = 2;
 int cantidadJugadoresConectados = 0;
 int modoJuego = 1; //default individual multijugador
 //int modoPrueba = 0; //default modo de prueba OFF
+int nivelActual = 1;
 
 int topeSalto = 20;
 bool avanzar;
@@ -760,6 +761,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				if (pasarDeNivel){
 					//agusss : ya esta la lista de "DibujableServerAdicional" esta el metodo getAumentable que seria el SCORE actual para pasarles, Pablo.
 					enviarAConectados(0, 0, 0, 0, 0, '0', NULL, 11);//TENGO QUE MEJORARLO
+					nivelActual++;
 				}
 
 				list<Bonus> listaBonusActivos;
@@ -1247,7 +1249,7 @@ mySocketSrv::mySocketSrv(char* puerto, string xml){
 	serv_addr.sin_port = htons(this->puerto);
 
 	//cargo enemigos nivel 1
-	contenedorEnemigos.cargarEnemigosDelNivel(1, ALTO_VENTANA);
+	contenedorEnemigos.cargarEnemigosDelNivel(nivelActual, ALTO_VENTANA);
 
 }
 
