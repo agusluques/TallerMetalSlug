@@ -41,7 +41,7 @@ list<usuarioClass*> listaDeUsuarios;
 int cantidadJugadores = 2;
 int cantidadJugadoresConectados = 0;
 int modoJuego = 1; //default individual multijugador
-int modoPrueba = 0; //default modo de prueba OFF
+//int modoPrueba = 0; //default modo de prueba OFF
 
 int topeSalto = 20;
 bool avanzar;
@@ -180,7 +180,7 @@ void modoDeJuego(char* xml){
 		modoJuego = atoi(modo->value());
 		xml_node<> *prueba = modo->next_sibling("prueba");
 		if (prueba != NULL){
-			modoPrueba = atoi(prueba->value());
+			modoDios = atoi(prueba->value());
 		}
 	}
 
