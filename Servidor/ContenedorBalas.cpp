@@ -48,6 +48,7 @@ bool hayColisionConUser(int xTipo, int yTipo, int xBala, int yBala, int tipoEnem
 	return true;
 }
 
+
 bool hayColision(int xTipo, int yTipo, int xBala, int yBala, int tipoEnemigo, int tipoBala){
 	int w1 = 30; int h1 = 40;
 	int w2 = 5; int h2 = 5;
@@ -154,6 +155,18 @@ void ContenedorBalas::acumuloPuntajes(int puntos, int idJugador, list<DibujableS
 	}
 }
 
+void ContenedorBalas::detectarColisionPlataforma (Escenario *escenario){
+
+	for (list<bala>::iterator itBalas = listaDeBalas.begin(); itBalas != listaDeBalas.end(); ++itBalas) {
+		if(itBalas->usr != 5){
+			if( escenario->colisionPlataformaBalas(itBalas->x,itBalas->y)){
+				itBalas->visible = false;
+			}
+		}
+	}
+
+}
+
 void ContenedorBalas::detectarColisiones(list<bala> *listaBalasDeBaja, list<DibujableServerEnemigo> *listaEnemigosActivos, list<DibujableServerEnemigo> *listaEnemigosDeBaja, list<DibujableServerAdicional*> *listaScores, list<DibujableServer*> *listaUsuarios){
 	for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosActivos->begin(); itEnemigos != listaEnemigosActivos->end(); ++itEnemigos) {
 		if(itEnemigos->estaVivo){
@@ -178,6 +191,7 @@ void ContenedorBalas::detectarColisiones(list<bala> *listaBalasDeBaja, list<Dibu
 						//itBalas = listaDeBalas.erase(itBalas);
 						//itBalas--;
 					}
+
 				}
 			}
 		}

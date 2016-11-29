@@ -25,6 +25,7 @@ void Escenario::crearPlataformas(){
 	nueva.setId(idPlataforma);
 	nueva.setX(380);
 	nueva.setY(360);
+	nueva.setLongY(20);
 	nueva.setSuelo(350);
 	nueva.setLong(440);
 
@@ -132,6 +133,15 @@ bool Escenario::colisionPlataforma (int cordX, int cordY, bool camIzq, bool camD
 	}
 
 	return tocaPlataforma;
+}
+
+bool Escenario::colisionPlataformaBalas (int xBala, int yBala){
+	for (list<Plataforma>::iterator itPlat = plataformas.begin(); itPlat != plataformas.end(); ++itPlat){
+		if (((xBala >= itPlat->getX()-20) && (xBala <= itPlat->getLong()+80) &&  (yBala > HPLAT_NIVEL2) && (yBala < 455) )){ // || (spriteX <= it->getLong() && spriteX > (it->getLong()-22) && (spriteY < HPLAT_NIVEL1))){
+		  return true;
+		}
+	}
+	return false;
 }
 
 Escenario::~Escenario() {

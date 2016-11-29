@@ -38,7 +38,7 @@ public:
 	int tipoDeArma;
 	int cantBalas;
 
-	Escenario escenario;
+	Escenario *escenario;
 
 	bool estaEnPlataforma;
 	bool estaEnElPiso;
@@ -49,7 +49,7 @@ public:
 	float mVelX;
 	float mVelY;
 
-	DibujableServer(bool modoDios);
+	DibujableServer(bool modoDios, Escenario *escenario);
 	void setX(int pos);
 	void setY(int pos);
 	void setSpX(int pos);

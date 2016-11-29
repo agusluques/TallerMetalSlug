@@ -16,6 +16,7 @@
 #include "ContenedorBonus.h"
 #include "DibujableServerEnemigo.h"
 #include "DibujableServerAdicional.h"
+#include "Escenario.h"
 
 #define DEBUG 2
 
@@ -53,6 +54,7 @@ bool jefePresente = false;
 ContenedorEnemigos contenedorEnemigos;
 ContenedorBalas contenedorBalas;
 ContenedorBonus contenedorBonus;
+Escenario escenario;
 
 //list<mensajeClass> listaDeMensajesAlCliente;
 pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
@@ -501,7 +503,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				numeroCliente = listaDeUsuarios.size();
 
 				//creo el dibujable del nuevo cliente
-				DibujableServer* nuevo = new DibujableServer(modoDios);
+				DibujableServer* nuevo = new DibujableServer(modoDios, &escenario);
 				nuevo->setId(listaDeUsuarios.size());
 				string spriteId = parseXMLPj();
 				nuevo->setSpriteId(spriteId);
@@ -511,7 +513,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				nuevo->setSpY(1);
 
 				//creo dibujable energia
-				DibujableServer* nuevo2 = new DibujableServer(modoDios);
+				DibujableServer* nuevo2 = new DibujableServer(modoDios, &escenario);
 				nuevo2->setId(listaDeUsuarios.size());
 				nuevo2->setSpY(0);
 
@@ -739,7 +741,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				contenedorBalas.buscarActivas(camaraX, &listaBalasActivas, &listaBalasDeBaja);
 
 				list<DibujableServerEnemigo> listaEnemigosDisparados;
+				contenedorBalas.detectarColisionPlataforma(&escenario);
 				contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados, &listaScores, &listaDibujables);
+
 
 				for (list<DibujableServerAdicional*>::iterator itScore = listaScores.begin(); itScore != listaScores.end(); ++itScore) {
 					enviarScoreAConectados((*itScore)->id,(*itScore)->getAumentable());

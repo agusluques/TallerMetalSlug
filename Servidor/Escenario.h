@@ -16,6 +16,7 @@
 using namespace std;
 
 static int HPLAT_NIVEL1 = 380;
+static int HPLAT_NIVEL2 = 405;
 
 
 class Escenario {
@@ -31,6 +32,7 @@ public:
 	bool verificarPlataforma(int spriteX, int spriteY);
 	bool salirPlataforma (int spriteX, int spriteY);
 	bool colisionPlataforma (int cordX, int cordY, bool camIzq, bool camDer);
+	bool colisionPlataformaBalas (int xBala, int yBala);
 	virtual ~Escenario();
 };
 

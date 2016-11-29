@@ -21,6 +21,7 @@ public:
 	int y;
 	int longitud;
 	int suelo;
+	int longY;
 
 
 	Plataforma();
@@ -29,11 +30,13 @@ public:
 	int getY();
 	int getLong();
 	int getSuelo();
+	int getLongY();
 	void setSuelo(int cordY);
 	void setId(int id);
 	void setX(int x);
 	void setY(int y);
 	void setLong(int longitud);
+	void setLongY(int longitud);
 
 	virtual ~Plataforma();
 };

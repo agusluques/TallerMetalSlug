@@ -3,7 +3,7 @@
 #include <cstring>
 #include <string>
 
-DibujableServer::DibujableServer(bool modoDios) {
+DibujableServer::DibujableServer(bool modoDios, Escenario *escenario) {
 	estaEnElPiso = true;
 	caminaDerecha = false;
 	caminaIzquierda = false;
@@ -13,6 +13,7 @@ DibujableServer::DibujableServer(bool modoDios) {
 	mVelY = 0;
 	conectar();
 	basePlataforma = 0;
+	this->escenario= escenario;
 
 	score = 0;
 	if(modoDios){
@@ -96,7 +97,7 @@ void DibujableServer::saltar(){
 		spX = 0;
 
 		estaEnElPiso = false;
-		if (escenario.colisionPlataforma(this->x,this->y,this->caminaIzquierda,this->caminaDerecha) && !estaEnPlataforma){
+		if (escenario->colisionPlataforma(this->x,this->y,this->caminaIzquierda,this->caminaDerecha) && !estaEnPlataforma){
 			this->choca();
 		}
 	}
@@ -366,7 +367,7 @@ bool DibujableServer::mover(int xCamara){
 
 	//verifico que no este en una plataforma
 	if (!estaEnPlataforma){
-		if (escenario.verificarPlataforma(this->x,this->y)){
+		if (escenario->verificarPlataforma(this->x,this->y)){
 			mVelY = 0;
 			y = NIVEL_PLAT;
 			spY = 1;
@@ -377,7 +378,7 @@ bool DibujableServer::mover(int xCamara){
 
 	//una vez arriba de la plataforma, verifico sino me sali
 	if (estaEnPlataforma){
-		if (escenario.salirPlataforma(this->x,this->y)){
+		if (escenario->salirPlataforma(this->x,this->y)){
 			estaEnPlataforma = false;
 			estaEnElPiso = false;
 		}else{ // lo pongo de nuevo en la plataforma si se pasa.

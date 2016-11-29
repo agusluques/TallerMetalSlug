@@ -24,6 +24,7 @@ public:
 	void buscarActivas(int camaraX, list<bala> *listaEnemigosActivos, list<bala>* listaEnemigosDeBaja);
 	bool agregarDano (DibujableServer *usuario, int balaEnemiga);
 	void detectarColisiones(list<bala> *listaBalasDeBaja, list<DibujableServerEnemigo> *listaEnemigosActivos, list<DibujableServerEnemigo> *listaEnemigosDeBaja, list<DibujableServerAdicional*> *listaScores, list<DibujableServer*> *listaUsuarios);
+	void detectarColisionPlataforma(Escenario *escenario);
     void acumuloPuntajes(int puntos, int idJugador, list<DibujableServerAdicional*> *listaScores);
 	virtual ~ContenedorBalas();
 };
