@@ -366,13 +366,57 @@ void quitarBonus(int idBonus){
 }
 
 void avanzarAlSiguienteNivel(){
+	jefePresente = false;
+	contenedorEnemigos.cargarEnemigosDelNivel(nivelActual,ALTO_VENTANA);
+	//contenedorBalas.clear();
+	//contenedorBonus.cargarBonusNivel();
 
+	//envio a conectados q cierren grafica
+	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+		if((**it).estaConectado()){
+			char nombreDestino[50];
+			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
+
+			mensajeClass* mensajeObj = new mensajeClass(4, (**it).numCliente());
+			listaDeMensajes.push_back(mensajeObj);
+		}
+
+	}
+
+	for(int i = 1; i <= listaDeUsuarios.size(); i++){
+		list<DibujableServer*>::iterator it = listaDibujables.begin();
+		advance(it, i-1);
+
+		(*it)->quieto(); //no alcanza
+		//string spriteId = parseXMLPj();
+		//(*it)->setSpriteId(spriteId);
+		(*it)->setX(1+rand() % (150));
+		(*it)->setY(ALTO_VENTANA-100);
+		//me saca a la momia si esta desconectado..
+		(*it)->setSpX(0);
+		(*it)->setSpY(1);
+	}
+
+	//envio a conectados q abran grafica
+	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+
+		if((**it).estaConectado()){
+			char nombreDestino[50];
+			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
+
+			mensajeClass* mensajeObj = new mensajeClass(5, (**it).numCliente());
+			listaDeMensajes.push_back(mensajeObj);
+		}
+
+	}
+
+	/*
 	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 		if((**it).estaConectado()){
 			mensajeClass* mensajeObj = new mensajeClass(0, (**it).numCliente(), 0, 0, 0, 0, 0, 'D', 20);
 			listaDeMensajes.push_back(mensajeObj);
 		}
-	}
+	}*/
 
 }
 
@@ -595,37 +639,37 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				}
 			} else if(nivelActual == 2){
 
-					string fondo1 = "l2fondo1.png";
-					string fondo2 = "l2fondo2.png";
-					string fondo3 = "l2fondo3.png";
+				string fondo1 = "l2fondo1.png";
+				string fondo2 = "l2fondo2.png";
+				string fondo3 = "l2fondo3.png";
 
-					int tamFondo1 = fondo1.length() + 1;
-					int tamFondo2 = fondo2.length() + 1;
-					int tamFondo3 = fondo3.length() + 1;
+				int tamFondo1 = fondo1.length() + 1;
+				int tamFondo2 = fondo2.length() + 1;
+				int tamFondo3 = fondo3.length() + 1;
 
-					char spriteId1[tamFondo1];
-					strcpy(spriteId1, "l2fondo1.png");
-					char spriteId2[tamFondo2];
-					strcpy(spriteId2, "l2fondo2.png");
-					char spriteId3[tamFondo3];
-					strcpy(spriteId3, "l2fondo3.png");
+				char spriteId1[tamFondo1];
+				strcpy(spriteId1, "l2fondo1.png");
+				char spriteId2[tamFondo2];
+				strcpy(spriteId2, "l2fondo2.png");
+				char spriteId3[tamFondo3];
+				strcpy(spriteId3, "l2fondo3.png");
 
 
-					int ancho1 = 1000;
-					int ancho2 = 2000;
-					int ancho3 = 4000;
+				int ancho1 = 1000;
+				int ancho2 = 2000;
+				int ancho3 = 4000;
 
-					enviarMensaje(newsockfd, &tamFondo1, sizeof(int));
-					enviarMensaje(newsockfd, &spriteId1, sizeof(char)*tamFondo1);
-					enviarMensaje(newsockfd, &ancho1, sizeof(int));
+				enviarMensaje(newsockfd, &tamFondo1, sizeof(int));
+				enviarMensaje(newsockfd, &spriteId1, sizeof(char)*tamFondo1);
+				enviarMensaje(newsockfd, &ancho1, sizeof(int));
 
-					enviarMensaje(newsockfd, &tamFondo2, sizeof(int));
-					enviarMensaje(newsockfd, &spriteId2, sizeof(char)*tamFondo2);
-					enviarMensaje(newsockfd, &ancho2, sizeof(int));
+				enviarMensaje(newsockfd, &tamFondo2, sizeof(int));
+				enviarMensaje(newsockfd, &spriteId2, sizeof(char)*tamFondo2);
+				enviarMensaje(newsockfd, &ancho2, sizeof(int));
 
-					enviarMensaje(newsockfd, &tamFondo3, sizeof(int));
-					enviarMensaje(newsockfd, &spriteId3, sizeof(char)*tamFondo3);
-					enviarMensaje(newsockfd, &ancho3, sizeof(int));
+				enviarMensaje(newsockfd, &tamFondo3, sizeof(int));
+				enviarMensaje(newsockfd, &spriteId3, sizeof(char)*tamFondo3);
+				enviarMensaje(newsockfd, &ancho3, sizeof(int));
 			} else if(nivelActual == 3){
 
 				string fondo1 = "l3fondo1.png";
@@ -849,50 +893,53 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				if (pasarDeNivel){
 					//agusss : ya esta la lista de "DibujableServerAdicional" esta el metodo getAumentable que seria el SCORE actual para pasarles, Pablo.
 					contenedorEnemigos.killAll(&listaEnemigosActivos, &listaEnemigosDeBaja);
-					enviarAConectados(0, 0, 0, 0, 0, '0', NULL, 11);//TENGO QUE MEJORARLO
+					//enviarAConectados(0, 0, 0, 0, 0, '0', NULL, 11);//TENGO QUE MEJORARLO
 					nivelActual++;
+					avanzar = false;
+					camaraX = 0;
+					camaraSet = 0;
 					avanzarAlSiguienteNivel();
+
+					//PARAR TODOS LOS MENSAJES POSIBLES SINO ROMPE!!!!!
+
+				}else{
+					list<Bonus> listaBonusActivos;
+					list<Bonus> listaBonusDeBaja;
+
+					contenedorBonus.buscarActivos(camaraX, &listaBonusActivos, &listaBonusDeBaja);
+
+					//list<Bonus> listaBonusAgarrados;
+
+					int usrKillAll;
+					if(contenedorBonus.detectarColision(&listaBonusDeBaja, &listaBonusActivos, &listaDibujables, usrKillAll)){
+						//Si entra es porque agarro el bonus de Kill All
+						contenedorEnemigos.killAll(&listaEnemigosActivos, &listaEnemigosDeBaja, usrKillAll, &listaScores);
+					}
+
+					for (list<bala>::iterator itBalas = listaBalasActivas.begin(); itBalas != listaBalasActivas.end(); ++itBalas) {
+						enviarBalasAConectados(itBalas->id,itBalas->x,itBalas->y,itBalas->direccionDisparo, itBalas->tipoBala, itBalas->spY);
+					}
+
+					for (list<bala>::iterator itBalas = listaBalasDeBaja.begin(); itBalas != listaBalasDeBaja.end(); ++itBalas) {
+						quitarBalas(itBalas->id);
+					}
+
+					for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosActivos.begin(); itEnemigos != listaEnemigosActivos.end(); ++itEnemigos) {
+						enviarAConectados(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, true, itEnemigos->tipoEnemigo);
+					}
+
+					for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosDeBaja.begin(); itEnemigos != listaEnemigosDeBaja.end(); ++itEnemigos) {
+						quitarEnemigo(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, false);
+					}
+
+					for (list<Bonus>::iterator itBonus = listaBonusActivos.begin(); itBonus != listaBonusActivos.end(); ++itBonus) {
+						enviarBonusAConectados(itBonus->getId(), itBonus->getPosX(), itBonus->getPosY(), itBonus->getTipoBonus());
+					}
+
+					for (list<Bonus>::iterator itBonus = listaBonusDeBaja.begin(); itBonus != listaBonusDeBaja.end(); ++itBonus) {
+						quitarBonus(itBonus->getId());
+					}
 				}
-
-				list<Bonus> listaBonusActivos;
-				list<Bonus> listaBonusDeBaja;
-
-				contenedorBonus.buscarActivos(camaraX, &listaBonusActivos, &listaBonusDeBaja);
-
-				//list<Bonus> listaBonusAgarrados;
-
-				int usrKillAll;
-				if(contenedorBonus.detectarColision(&listaBonusDeBaja, &listaBonusActivos, &listaDibujables, usrKillAll)){
-					//Si entra es porque agarro el bonus de Kill All
-					cout << "ENTRO AL KILL ALL!!!!!!!!!!!" << endl;
-					contenedorEnemigos.killAll(&listaEnemigosActivos, &listaEnemigosDeBaja, usrKillAll, &listaScores);
-				}
-
-
-				for (list<bala>::iterator itBalas = listaBalasActivas.begin(); itBalas != listaBalasActivas.end(); ++itBalas) {
-					enviarBalasAConectados(itBalas->id,itBalas->x,itBalas->y,itBalas->direccionDisparo, itBalas->tipoBala, itBalas->spY);
-				}
-
-				for (list<bala>::iterator itBalas = listaBalasDeBaja.begin(); itBalas != listaBalasDeBaja.end(); ++itBalas) {
-					quitarBalas(itBalas->id);
-				}
-
-				for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosActivos.begin(); itEnemigos != listaEnemigosActivos.end(); ++itEnemigos) {
-					enviarAConectados(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, true, itEnemigos->tipoEnemigo);
-				}
-
-				for (list<DibujableServerEnemigo>::iterator itEnemigos = listaEnemigosDeBaja.begin(); itEnemigos != listaEnemigosDeBaja.end(); ++itEnemigos) {
-					quitarEnemigo(itEnemigos->id , itEnemigos->x, itEnemigos->y, itEnemigos->spX, itEnemigos->spY, itEnemigos->flip, false);
-				}
-
-				for (list<Bonus>::iterator itBonus = listaBonusActivos.begin(); itBonus != listaBonusActivos.end(); ++itBonus) {
-					enviarBonusAConectados(itBonus->getId(), itBonus->getPosX(), itBonus->getPosY(), itBonus->getTipoBonus());
-				}
-
-				for (list<Bonus>::iterator itBonus = listaBonusDeBaja.begin(); itBonus != listaBonusDeBaja.end(); ++itBonus) {
-					quitarBonus(itBonus->getId());
-				}
-
 			}
 
 			break;
@@ -1030,10 +1077,10 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						}
 					}
 
-					if (camaraX >= 8075){  //quitar para hacer escenario infinito
+					if (camaraX >= 1500){ //8075
 						avanzarCamara = false;
 						jefePresente = true;
-						contenedorEnemigos.iniciarJefe(camaraX);
+						contenedorEnemigos.iniciarJefe(camaraX, nivelActual);
 					}
 
 					if(avanzarCamara){

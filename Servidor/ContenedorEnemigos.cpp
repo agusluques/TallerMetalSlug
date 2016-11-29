@@ -16,12 +16,15 @@ ContenedorEnemigos::ContenedorEnemigos() {
 }
 
 void ContenedorEnemigos::cargarEnemigosDelNivel(int nivel, int ALTO_VENTANA){
+	listaEnemigos.clear();
+	ultimoId = 4;
+
 	if (nivel == 1) {
 		nuevoEnemigo(750, ALTO_VENTANA - 100, 2);
 		nuevoEnemigo(800, ALTO_VENTANA - 100, 3);
 		nuevoEnemigo(1000, ALTO_VENTANA - 100, 2);
 		nuevoEnemigo(1200, ALTO_VENTANA - 100, 3);
-		nuevoEnemigo(1400, ALTO_VENTANA - 100, 3);
+		/*nuevoEnemigo(1400, ALTO_VENTANA - 100, 3);
 		nuevoEnemigo(1650, ALTO_VENTANA - 100, 2);
 		nuevoEnemigo(1800, ALTO_VENTANA - 100, 3);
 		nuevoEnemigo(1850, ALTO_VENTANA - 100, 3);
@@ -63,7 +66,7 @@ void ContenedorEnemigos::cargarEnemigosDelNivel(int nivel, int ALTO_VENTANA){
 		nuevoEnemigo(7700, ALTO_VENTANA - 100, 1);
 		nuevoEnemigo(7800, ALTO_VENTANA - 100, 1);
 		nuevoEnemigo(7900, ALTO_VENTANA - 100, 4);
-		nuevoEnemigo(8000, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(8000, ALTO_VENTANA - 100, 2);*/
 	} else if (nivel == 2){
 		nuevoEnemigo(750, ALTO_VENTANA - 100, 2);
 	}
@@ -116,53 +119,52 @@ void ContenedorEnemigos::buscarActivos(int camaraX, list<DibujableServerEnemigo>
 }
 
 void ContenedorEnemigos::sumarPuntaje(int usrKillAll, list<DibujableServerAdicional*> *listaScores){
-    for (list<DibujableServerAdicional*>::iterator itScore = listaScores->begin(); itScore != listaScores->end(); ++itScore){
+	for (list<DibujableServerAdicional*>::iterator itScore = listaScores->begin(); itScore != listaScores->end(); ++itScore){
 		if((*itScore)->id == usrKillAll){
 			(*itScore)->aumentar(10);
 		}
-    }
+	}
 }
 
 void ContenedorEnemigos::killAll(list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, int usrKillAll, list<DibujableServerAdicional*> *listaScores){
 	for(list<DibujableServerEnemigo>::iterator it = listaEnemigosActivos->begin(); it != listaEnemigosActivos->end(); ++it){
-			listaEnemigosDeBaja->push_back((*it));
-			sumarPuntaje(usrKillAll, listaScores);
-			int idEnemigo = it->id;
-			it = listaEnemigosActivos->erase(it);
-			it--;
+		//listaEnemigosDeBaja->push_back((*it));
+		sumarPuntaje(usrKillAll, listaScores);
+		int idEnemigo = it->id;
+		it->matar();
+		//it = listaEnemigosActivos->erase(it);
+		//it--;
 
-			bool encontrado = false;
-			for(list<DibujableServerEnemigo>::iterator i = listaEnemigos.begin(); i != listaEnemigos.end(); ++i){
-				if(i->id == idEnemigo){
-					encontrado = true;
-					i = listaEnemigos.erase(i);
-					i--;
-				}
-				if(encontrado){
-					break;
-				}
+		bool encontrado = false;
+		for(list<DibujableServerEnemigo>::iterator i = listaEnemigos.begin(); i != listaEnemigos.end(); ++i){
+			if(i->id == idEnemigo){
+				encontrado = true;
+				i->matar();
+				//i = listaEnemigos.erase(i);
+				//i--;
 			}
+			if(encontrado){
+				break;
+			}
+		}
 	}
 }
 
 void ContenedorEnemigos::killAll(list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja){
 	for(list<DibujableServerEnemigo>::iterator it = listaEnemigosActivos->begin(); it != listaEnemigosActivos->end(); ++it){
-			listaEnemigosDeBaja->push_back((*it));
-			int idEnemigo = it->id;
-			it = listaEnemigosActivos->erase(it);
-			it--;
+		int idEnemigo = it->id;
+		it->matar();
 
-			bool encontrado = false;
-			for(list<DibujableServerEnemigo>::iterator i = listaEnemigos.begin(); i != listaEnemigos.end(); ++i){
-				if(i->id == idEnemigo){
-					encontrado = true;
-					i = listaEnemigos.erase(i);
-					i--;
-				}
-				if(encontrado){
-					break;
-				}
+		bool encontrado = false;
+		for(list<DibujableServerEnemigo>::iterator i = listaEnemigos.begin(); i != listaEnemigos.end(); ++i){
+			if(i->id == idEnemigo){
+				encontrado = true;
+				i->matar();
 			}
+			if(encontrado){
+				break;
+			}
+		}
 	}
 }
 
@@ -181,14 +183,19 @@ bool ContenedorEnemigos::matarEnemigos(int camaraX, list<DibujableServerEnemigo>
 	return esJefe;
 }
 
-void ContenedorEnemigos::iniciarJefe(int camaraX){
-	posicionJefe = camaraX + 800;
-    cout << "iniciaaaaaaa jefeeeeeeeeeeeeeeeeeeee" << endl;
+void ContenedorEnemigos::iniciarJefe(int camaraX, int nivelActual){
 	DibujableServerEnemigo nuevo;
 	nuevo.setId(ultimoId += 1); //ver q id le seteo...
+	cout << "ID JEFE!" << ultimoId << endl;
 	//char* spriteId = parseXMLPj();
-	nuevo.setTipoEnemigo(6);
-	nuevo.setX(posicionJefe); //+ ANCHO VENTANA/2
+
+	if(nivelActual == 1)
+		nuevo.setTipoEnemigo(6);
+	else if(nivelActual == 2)
+		nuevo.setTipoEnemigo(6);
+	else nuevo.setTipoEnemigo(6);
+
+	nuevo.setX(camaraX + 800);
 	nuevo.setY(100);
 	nuevo.setSpX(-1);
 	nuevo.setSpY(5);

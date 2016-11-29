@@ -9,7 +9,6 @@ class ContenedorEnemigos {
 	private:
 		//list<DibujableServerEnemigo> listaEnemigos;
 		int ultimoId;
-		int posicionJefe;
 	public:
 		list<DibujableServerEnemigo> listaEnemigos;
 		ContenedorEnemigos();
@@ -21,7 +20,7 @@ class ContenedorEnemigos {
 		void sumarPuntaje(int usrKillAll, list<DibujableServerAdicional*> *listaScores);
 		void killAll(list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja, int usrKillAll, list<DibujableServerAdicional*> *listaScores);
 		void killAll(list<DibujableServerEnemigo>* listaEnemigosActivos, list<DibujableServerEnemigo>* listaEnemigosDeBaja);
-		void iniciarJefe(int camaraX);
+		void iniciarJefe(int camaraX, int nivelActual);
 
 		virtual ~ContenedorEnemigos();
 };

@@ -298,6 +298,8 @@ bool DibujableServerEnemigo::mover(int camaraX, list<DibujableServerEnemigo> *li
 	 * 4)parado boludiando.. ve a player y camina a la derecha rajando (cagon)
 	 * 5)soldados jefe1
 	 * 6)jefe1
+	 * 7)jefe2
+	 * 8)jefe3
 	 */
 
 	bool dispare = false;
