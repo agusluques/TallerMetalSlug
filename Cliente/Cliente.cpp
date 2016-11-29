@@ -55,6 +55,8 @@ void* controlarConexion(void *arg){
 int main(int argc, char *argv[])
 {
 
+	bool pasarNivel = false;
+
 	if (argc < 3) {
 		cout << "Falta proveer datos al programa" << endl;
 		cout << "Modo de uso: ./Cliente hostname/IP puerto" << endl;
@@ -75,7 +77,11 @@ int main(int argc, char *argv[])
 		}
 		else{
 			cout << "1) Desconectar" << endl;
-			cout << "5) Grafica" << endl;
+			if(pasarNivel){
+				cout << "5) Iniciar siguiente nivel" << endl;
+			} else {
+				cout << "5) Grafica" << endl;
+			}
 		}
 		cin >> opc;
 		cin.get();
@@ -101,7 +107,7 @@ int main(int argc, char *argv[])
 
 			case '5': {
 				//repetir si sale mal ?..
-				bool pasarNivel = false;
+				pasarNivel = false;
 				if(!Cliente.iniciarGrafica(pasarNivel)){
 					Cliente.cerrarGrafica();
 					if(pasarNivel){
