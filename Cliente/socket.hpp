@@ -29,6 +29,7 @@ class mySocket{
 		//string address;
 		//struct hostent* server;
 		bool conectado;
+		bool estaEnPantallaScore;
 		Grafica grafica;
 	public:
 		int numeroCliente;

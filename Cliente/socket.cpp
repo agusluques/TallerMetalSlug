@@ -15,6 +15,8 @@ mySocket::mySocket(char* puerto, char* IP){
 	server.sin_family = AF_INET;
 	server.sin_port = htons(this->puerto);
 	this->conectado = false;
+
+	estaEnPantallaScore = false;
 }
 
 bool mySocket::conexion(){
@@ -216,6 +218,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		}
 		case 5:{
 			error = recibirMensaje(&corte, sizeof(int));
+			grafica.setearFondoScore(false);
 			iniciarGrafica(pasarNivel);
 			cerrarGrafica();
 			cerrar();
@@ -321,32 +324,13 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		}
 
 		case 20:{
-			//PASAR DE NIVEL
-			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
-			error = recibirMensaje(&corte, sizeof(int));
-			//pasarNivel = true;
-			//cerrarGrafica();
-
-			break;
-		}
-
-		case 14:{
-			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
-			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
-			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
-			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
-			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
-			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
-			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
-			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
-			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
-			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
 			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
 
 			//pasarNivel = true;
 			//cerrarGrafica();
 
-			grafica.setearFondoScore();
+			grafica.setearFondoScore(true);
+			estaEnPantallaScore = true;
 
 			break;
 		}
@@ -574,6 +558,8 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 
 	const Uint8 *keyAnterior;
 
+	estaEnPantallaScore = false;
+
 	while( !quit ) {
 		//le envio un mover siempre
 		codigoMover = 'M';
@@ -595,102 +581,103 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 			grafica.mostrarDibujables();
 		}
 
-		//if (!grafica.estaMuerto()){
-		SDL_PumpEvents();
-		const Uint8 *keys = SDL_GetKeyboardState(NULL);
+		if(!estaEnPantallaScore){
+			//if (!grafica.estaMuerto()){
+			SDL_PumpEvents();
+			const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
-		/*if((keyAnterior[SDL_GetScancodeFromKey(SDLK_h)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)])){
-			strcpy(&codigo,"S");
-			enviarMensaje(&codigo, sizeof(char));
-			quieto = true;
-		}*/
+			if((keyAnterior[SDL_GetScancodeFromKey(SDLK_h)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)])){
+				strcpy(&codigo,"S");
+				enviarMensaje(&codigo, sizeof(char));
+				quieto = true;
+			}
 
-		if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_a)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
-			strcpy(&codigo,"d");
-			enviarMensaje(&codigo, sizeof(char));
-			int direccionDisparo = 3;
-			enviarMensaje(&direccionDisparo, sizeof(int));
-		}
+			if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_a)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
+				strcpy(&codigo,"d");
+				enviarMensaje(&codigo, sizeof(char));
+				int direccionDisparo = 3;
+				enviarMensaje(&direccionDisparo, sizeof(int));
+			}
 
-		if (SDL_QuitRequested()){
-			strcpy(&codigo,"C");
-			enviarMensaje(&codigo, sizeof(char));
-			//grafica.close();
-			quit = true;
-			returnIGrafica = false;
-		}
-		else if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_d)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
-			strcpy(&codigo,"d");
-			enviarMensaje(&codigo, sizeof(char));
-			int direccionDisparo = 1;
-			enviarMensaje(&direccionDisparo, sizeof(int));
-		}
-		else if( (keys[SDL_GetScancodeFromKey(SDLK_s)]) && (keys[SDL_GetScancodeFromKey(SDLK_a)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
-			strcpy(&codigo,"d");
-			enviarMensaje(&codigo, sizeof(char));
-			int direccionDisparo = 5;
-			enviarMensaje(&direccionDisparo, sizeof(int));
-		}
-		else if( (keys[SDL_GetScancodeFromKey(SDLK_s)]) && (keys[SDL_GetScancodeFromKey(SDLK_d)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
-			strcpy(&codigo,"d");
-			enviarMensaje(&codigo, sizeof(char));
-			int direccionDisparo = 7;
-			enviarMensaje(&direccionDisparo, sizeof(int));
-		}
-		else if( (keys[SDL_GetScancodeFromKey(SDLK_s)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
-			strcpy(&codigo,"d");
-			enviarMensaje(&codigo, sizeof(char));
-			int direccionDisparo = 6;
-			enviarMensaje(&direccionDisparo, sizeof(int));
-		}
-		else if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
-			strcpy(&codigo,"d");
-			enviarMensaje(&codigo, sizeof(char));
-			int direccionDisparo = 2;
-			enviarMensaje(&direccionDisparo, sizeof(int));
-		}
-		else if (keys[SDL_GetScancodeFromKey(SDLK_h)]){
-			strcpy(&codigo,"d");
-			enviarMensaje(&codigo, sizeof(char));
-			int direccionDisparo = -1;
-			enviarMensaje(&direccionDisparo, sizeof(int));
-		}
-		else if (keys[SDL_GetScancodeFromKey(SDLK_j)]){
-			strcpy(&codigo,"J");
-			enviarMensaje(&codigo, sizeof(char));
-			quieto = false;
-		}
-		else if (keys[SDL_GetScancodeFromKey(SDLK_a)]){
-			strcpy(&codigo,"L");
-			enviarMensaje(&codigo, sizeof(char));
-			quieto = false;
-		}
-		else if (keys[SDL_GetScancodeFromKey(SDLK_d)]){
-			strcpy(&codigo,"R");
-			enviarMensaje(&codigo, sizeof(char));
-			quieto = false;
-		}
-		else if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_d)]) ){
-			strcpy(&codigo,"Q");
-			enviarMensaje(&codigo, sizeof(char));
-			quieto = false;
-		}
-		else if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_a)]) ){
-			strcpy(&codigo,"E");
-			enviarMensaje(&codigo, sizeof(char));
-			quieto = false;
-		}
-		else if (keys[SDL_GetScancodeFromKey(SDLK_w)]){
-			strcpy(&codigo,"U");
-			enviarMensaje(&codigo, sizeof(char));
-			quieto = false;
-		}
-		else if (keys[SDL_GetScancodeFromKey(SDLK_s)]){
-			strcpy(&codigo,"D");
-			enviarMensaje(&codigo, sizeof(char));
-			quieto = false;
-		}
-		/*else if (keys[SDL_GetScancodeFromKey(SDLK_r)]){
+			if (SDL_QuitRequested()){
+				strcpy(&codigo,"C");
+				enviarMensaje(&codigo, sizeof(char));
+				//grafica.close();
+				quit = true;
+				returnIGrafica = false;
+			}
+			else if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_d)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
+				strcpy(&codigo,"d");
+				enviarMensaje(&codigo, sizeof(char));
+				int direccionDisparo = 1;
+				enviarMensaje(&direccionDisparo, sizeof(int));
+			}
+			else if( (keys[SDL_GetScancodeFromKey(SDLK_s)]) && (keys[SDL_GetScancodeFromKey(SDLK_a)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
+				strcpy(&codigo,"d");
+				enviarMensaje(&codigo, sizeof(char));
+				int direccionDisparo = 5;
+				enviarMensaje(&direccionDisparo, sizeof(int));
+			}
+			else if( (keys[SDL_GetScancodeFromKey(SDLK_s)]) && (keys[SDL_GetScancodeFromKey(SDLK_d)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
+				strcpy(&codigo,"d");
+				enviarMensaje(&codigo, sizeof(char));
+				int direccionDisparo = 7;
+				enviarMensaje(&direccionDisparo, sizeof(int));
+			}
+			else if( (keys[SDL_GetScancodeFromKey(SDLK_s)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
+				strcpy(&codigo,"d");
+				enviarMensaje(&codigo, sizeof(char));
+				int direccionDisparo = 6;
+				enviarMensaje(&direccionDisparo, sizeof(int));
+			}
+			else if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
+				strcpy(&codigo,"d");
+				enviarMensaje(&codigo, sizeof(char));
+				int direccionDisparo = 2;
+				enviarMensaje(&direccionDisparo, sizeof(int));
+			}
+			else if (keys[SDL_GetScancodeFromKey(SDLK_h)]){
+				strcpy(&codigo,"d");
+				enviarMensaje(&codigo, sizeof(char));
+				int direccionDisparo = -1;
+				enviarMensaje(&direccionDisparo, sizeof(int));
+			}
+			else if (keys[SDL_GetScancodeFromKey(SDLK_j)]){
+				strcpy(&codigo,"J");
+				enviarMensaje(&codigo, sizeof(char));
+				quieto = false;
+			}
+			else if (keys[SDL_GetScancodeFromKey(SDLK_a)]){
+				strcpy(&codigo,"L");
+				enviarMensaje(&codigo, sizeof(char));
+				quieto = false;
+			}
+			else if (keys[SDL_GetScancodeFromKey(SDLK_d)]){
+				strcpy(&codigo,"R");
+				enviarMensaje(&codigo, sizeof(char));
+				quieto = false;
+			}
+			else if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_d)]) ){
+				strcpy(&codigo,"Q");
+				enviarMensaje(&codigo, sizeof(char));
+				quieto = false;
+			}
+			else if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_a)]) ){
+				strcpy(&codigo,"E");
+				enviarMensaje(&codigo, sizeof(char));
+				quieto = false;
+			}
+			else if (keys[SDL_GetScancodeFromKey(SDLK_w)]){
+				strcpy(&codigo,"U");
+				enviarMensaje(&codigo, sizeof(char));
+				quieto = false;
+			}
+			else if (keys[SDL_GetScancodeFromKey(SDLK_s)]){
+				strcpy(&codigo,"D");
+				enviarMensaje(&codigo, sizeof(char));
+				quieto = false;
+			}
+			/*else if (keys[SDL_GetScancodeFromKey(SDLK_r)]){
 			strcpy(&codigo,"S");
 			enviarMensaje(&codigo, sizeof(char));
 			strcpy(&codigo,"i");
@@ -699,15 +686,17 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 			returnIGrafica = false;
 			quit = true;
 			quieto = true;
-		}*/
-		else if(!quieto){
-			strcpy(&codigo,"S");
-			enviarMensaje(&codigo, sizeof(char));
-			quieto = true;
-		}
-		//}
+			}*/
+			else if(!quieto){
+				strcpy(&codigo,"S");
+				enviarMensaje(&codigo, sizeof(char));
+				quieto = true;
+			}
+			//}
 
-		keyAnterior = keys;
+			keyAnterior = keys;
+
+		}
 	}
 
 	return returnIGrafica;

@@ -134,7 +134,7 @@ public:
 		this->numeroCliente = numCliente;
 	}
 
-	void setearFondoScore();
+	void setearFondoScore(bool estado);
 
 	bool empiezaDeNuevo();
 

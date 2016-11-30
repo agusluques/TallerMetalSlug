@@ -324,11 +324,9 @@ void Grafica::mostrarScores(int score){
 
 }
 
-void Grafica::setearFondoScore(){
-	cout << "SETEO FONDO NEGRO" << endl;
-	esFondoScore = true;
+void Grafica::setearFondoScore(bool estado){
+	esFondoScore = estado;
 }
-
 
 void Grafica::agregarBonus(int x, int y, int cont, int tipoBonus){
 	//Busco en la lista con el ID de bonus si esta actualizo sino agrego
@@ -488,7 +486,6 @@ void Grafica::mostrarDibujables(){
 		SDL_RenderCopy (window, spriteFondo2, &camera2, NULL);
 		SDL_RenderCopy (window, spriteFondo3, &camera3, NULL);
 	}else{
-		cout << "IMPRIMO FONDO NEGRO" << endl;
 		//SDL_RenderCopy (window, spriteFondoScore, &camera, NULL);
 		//SDL_RenderCopy (window, spriteFondoScore, &camera2, NULL);
 		//SDL_RenderCopy (window, spriteFondoScore, &camera3, NULL);

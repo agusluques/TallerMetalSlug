@@ -371,8 +371,12 @@ void quitarBonus(int idBonus){
 }
 
 void avanzarPantallaScore(){
-	cout << "AVANZAR PANTALLA SCORE" << endl;
-	enviarAConectados(0,0,0,0,0,'0',0,14);
+	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+		if((**it).estaConectado()){
+			mensajeClass* mensajeObj = new mensajeClass(0, (**it).numCliente(), 0, 0, 0, 0, 0, '0', 20);
+			listaDeMensajes.push_back(mensajeObj);
+		}
+	}
 
 	estaEnPantallaScore = true;
 	//seteo un tiempo de espera..
@@ -381,7 +385,7 @@ void avanzarPantallaScore(){
 
 bool puedeSalirScore(){
 	time_t aux = time(NULL);
-	if(tiempoEsperaScore + 3 <= aux) return true;
+	if(tiempoEsperaScore + 4 <= aux) return true;
 	else return false;
 }
 
@@ -875,6 +879,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					}
 
 					case 20:{
+						cout << "LEE EL 20" << endl;
 						//PASAR DE NIVEL
 						break;
 					}
@@ -932,8 +937,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 					if (nivelActual <= 3){
 						contenedorEnemigos.killAll(&listaEnemigosActivos, &listaEnemigosDeBaja);
-						cout << "AVANZAR PANTALLA SCORE" << endl;
-						enviarAConectados(0,0,0,0,0,'0',0,14);
 						avanzarPantallaScore();
 					}
 
