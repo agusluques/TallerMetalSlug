@@ -462,7 +462,10 @@ void avanzarAlSiguienteNivel(){
 		(*it)->estaEnElPiso = true;
 		(*it)->apunta = false;
 		(*it)->score = 0;
-		(*it)->vida = 0;
+		if(((*it)->vida) > 0){
+			(*it)->vida = 0;
+		}
+
 
 		//string spriteId = parseXMLPj();
 		//(*it)->setSpriteId(spriteId);
