@@ -472,19 +472,22 @@ void  DibujableServerEnemigo::morirBoss(){
 }
 
 bool  DibujableServerEnemigo::matar(){
-	if((vida == 1)||(bala!=1)){
+	if(bala == 1){
+		vida--;
+	} else {
+		vida -= 2;
+	}
+
+	if(vida <= 0){
 		mVelX = 0;
 		mVelY = 0;
-
 		estaVivo = false;
 		if (tipoEnemigo == 6 || tipoEnemigo == 7 || tipoEnemigo == 8){
 			spY = 6;
 			spX = 1;
 
 			tipoEnemigo = 10; //muriendo boss
-
 			return true;
-
 		} else {
 			spY = 8;
 			spX = -1;
@@ -494,10 +497,8 @@ bool  DibujableServerEnemigo::matar(){
 			return false;
 		}
 	} else {
-		vida--;
 		return false;
 	}
-
 }
 
 bool DibujableServerEnemigo::estaVisible(int camaraX){

@@ -245,7 +245,7 @@ void cargarBonus(char* xml){
 		if(tipoBonus > 6){
 			tipoBonus = 6;
 		}
-		//int tipoBonus = 6;
+		tipoBonus = 1;
 		int x = sum + 800;
 		sum = x;
 		int y = ALTO_VENTANA - 60;
