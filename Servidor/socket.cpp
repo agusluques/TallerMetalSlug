@@ -1070,7 +1070,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 					bool avanzarCamara = false;
 					for (list<DibujableServer*>::iterator i = listaDibujables.begin(); i != listaDibujables.end(); ++i) {
-						if((*i)->estaConectado()){
+						if((*i)->estaConectado() && (*i)->estaVivo){
 							//si alguno supero la mitad de la pantalla avanzo camara
 							if((*i)->x >= camaraX + (ANCHO_VENTANA/2)-80) avanzarCamara = true;
 							if((*i)->x < xMin) xMin = (*i)->x;

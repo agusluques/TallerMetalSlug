@@ -207,6 +207,11 @@ void LTexture::inicializarTexture(SDL_Renderer* window, char* text){
 	player[6][6].x=240; player[6][6].y=390;
 	player[6][6].w=40; player[6][6].h=65;
 
+	player[7][6].x=410; player[7][6].y=200;
+	player[7][6].w=40; player[7][6].h=65;
+
+
+
 }
 
 void LTexture::free()

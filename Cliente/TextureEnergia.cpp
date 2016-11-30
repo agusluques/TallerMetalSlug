@@ -23,51 +23,21 @@ TextureEnergia::~TextureEnergia() {
 
 
 void TextureEnergia::renderEnergia(SDL_Renderer* window, int escala){
-	if (spY < 10){
-		SDL_Rect rect1;
-		SDL_Rect rect2;
+	SDL_Rect rect1;
+	SDL_Rect rect2;
 
-		rect1.h = 215;
-		rect1.w = 800;
-		rect1.x = 0;
-		rect1.y = 0;
+	rect1.h = 215;
+	rect1.w = 800;
+	rect1.x = 0;
+	rect1.y = 0;
 
-		rect2.h = 50;
-		rect2.w = 140;
-		rect2.x = getPos();
-		rect2.y = 0;
+	rect2.h = 50;
+	rect2.w = 140;
+	rect2.x = getPos();
+	rect2.y = 0;
 
-		SDL_RenderCopy( window, texture, &energia[spY], &rect2 );
-	} else if (spY == 10 ){
-		SDL_Rect rect2;
-		rect2.h = 50;
-		rect2.w = 140;
-		rect2.x = getPos();
-		rect2.y = 0;
-		SDL_RenderCopy( window, texture, &energia[spY], &rect2 );
-		TTF_Font *font = TTF_OpenFont("OpenSans-ExtraBold.ttf",50);
-		SDL_Color color = {249, 249, 16, 1};
-		std::stringstream ss;
-		ss << id;
-		string str = ss.str();
-		string texto = "MURIO JUGADOR " + str; 
-		const char * c = texto.c_str();
-		SDL_Surface* superficie = TTF_RenderText_Solid(font, c,color);
-		SDL_Texture* muerto = SDL_CreateTextureFromSurface( window, superficie);
-		SDL_Rect muertoRect;
-		muertoRect.x = muertoRect.y = 250;
-		SDL_QueryTexture(muerto, NULL, NULL, &muertoRect.w, &muertoRect.h);
-		SDL_RenderCopy(window, muerto, NULL, &muertoRect);
-		SDL_FreeSurface(superficie);
-		
-	} else {
-		SDL_Rect rect2;
-		rect2.h = 50;
-		rect2.w = 140;
-		rect2.x = getPos();
-		rect2.y = 0;
-		SDL_RenderCopy( window, texture, &energia[10], &rect2 );
-	}
+	SDL_RenderCopy( window, texture, &energia[spY], &rect2 );
+	
 }
 
 void TextureEnergia::actualizar(int x, int y, int spy){
