@@ -163,6 +163,9 @@ void TextureBalas::inicializarTexture(SDL_Renderer* window, char* text){
 	bala[3][5].x = 357; bala[3][5].y = 108;
 	bala[3][5].w = 88; bala[3][5].h = 64;
 
+	bala[3][6].x = 180; bala[3][6].y = 374;
+	bala[3][6].w = 88; bala[3][6].h = 64;
+
 	//BALAS JEFE 2 TANQUE
 	bala[4][0].x = 0; bala[4][0].y = 200;
 	bala[4][0].w = 47; bala[4][0].h = 119;
