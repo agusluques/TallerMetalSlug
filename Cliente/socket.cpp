@@ -324,8 +324,29 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 			//PASAR DE NIVEL
 			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
 			error = recibirMensaje(&corte, sizeof(int));
-			pasarNivel = true;
+			//pasarNivel = true;
 			//cerrarGrafica();
+
+			break;
+		}
+
+		case 14:{
+			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
+			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
+			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
+			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
+			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
+			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
+			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
+			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
+			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
+			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
+			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
+
+			//pasarNivel = true;
+			//cerrarGrafica();
+
+			grafica.setearFondoScore();
 
 			break;
 		}

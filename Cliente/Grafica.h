@@ -37,6 +37,7 @@ private:
 	SDL_Surface* fondo3;
 
 	SDL_Texture *spriteFondo1;
+	SDL_Texture *spriteFondoScore;
 	SDL_Texture *spriteFondo2;
 	SDL_Texture *spriteFondo3;
 
@@ -65,6 +66,7 @@ private:
     int cameraSet;
     int posicionEnergia;
     bool muerto;
+    bool esFondoScore;
 
 public:
 	SDL_Rect camera1;
@@ -131,6 +133,8 @@ public:
 	void setIdCliente(int numCliente){
 		this->numeroCliente = numCliente;
 	}
+
+	void setearFondoScore();
 
 	bool empiezaDeNuevo();
 

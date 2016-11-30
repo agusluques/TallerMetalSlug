@@ -25,6 +25,7 @@ Grafica::Grafica() {
 
 	cameraSet = 0;
 	muerto = false;
+	esFondoScore = false;
 }
 
 Grafica::~Grafica() {
@@ -66,12 +67,14 @@ void Grafica::close() {
 	window = NULL;
 
 	SDL_DestroyTexture(spriteFondo1);
+	SDL_DestroyTexture(spriteFondoScore);
 	SDL_DestroyTexture(spriteFondo2);
 	SDL_DestroyTexture(spriteFondo3);
 	SDL_DestroyTexture(soldadosTexture);
 	SDL_DestroyTexture(energiaTexture);
 	SDL_DestroyTexture(puntaje);
 	spriteFondo1 = NULL;
+	spriteFondoScore = NULL;
 	spriteFondo2 = NULL;
 	spriteFondo3 = NULL;
 	soldadosTexture = NULL;
@@ -321,6 +324,11 @@ void Grafica::mostrarScores(int score){
 
 }
 
+void Grafica::setearFondoScore(){
+	cout << "SETEO FONDO NEGRO" << endl;
+	esFondoScore = true;
+}
+
 
 void Grafica::agregarBonus(int x, int y, int cont, int tipoBonus){
 	//Busco en la lista con el ID de bonus si esta actualizo sino agrego
@@ -475,10 +483,16 @@ void Grafica::mostrarDibujables(){
 	//bool finFondo1, finFondo2, finFondo3;
 	SDL_RenderClear(window);
 
-	SDL_RenderCopy (window, spriteFondo1, &camera1, NULL);
-	SDL_RenderCopy (window, spriteFondo2, &camera2, NULL);
-	SDL_RenderCopy (window, spriteFondo3, &camera3, NULL);
-
+	if(!esFondoScore){
+		SDL_RenderCopy (window, spriteFondo1, &camera1, NULL);
+		SDL_RenderCopy (window, spriteFondo2, &camera2, NULL);
+		SDL_RenderCopy (window, spriteFondo3, &camera3, NULL);
+	}else{
+		cout << "IMPRIMO FONDO NEGRO" << endl;
+		//SDL_RenderCopy (window, spriteFondoScore, &camera, NULL);
+		//SDL_RenderCopy (window, spriteFondoScore, &camera2, NULL);
+		//SDL_RenderCopy (window, spriteFondoScore, &camera3, NULL);
+	}
 
 	for (list<TextureEnergia*>::iterator it = listaDibujableEnergia.begin(); it != listaDibujableEnergia.end(); ++it) {
 		(*it)->renderEnergia(window, altoVentana/20);
@@ -631,6 +645,13 @@ bool Grafica::inicializarVentana(int ancho, int alto){
 bool Grafica::inicializarFondo(char *path1, char* path2, char* path3){
 	//Loading success flag
 	bool success = true;
+
+	fondo1 = IMG_Load( "img/fondos/negro.png");
+	if( fondo1 == NULL ) {
+		cout << "No se pudo cargar la imagen " << "negro.png" << "SDL Error: " << SDL_GetError() << endl;
+	}
+	spriteFondoScore = SDL_CreateTextureFromSurface(window, fondo1);
+	SDL_FreeSurface(fondo1);
 
 	fondo1 = IMG_Load( path1);
 

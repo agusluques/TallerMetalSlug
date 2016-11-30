@@ -17,6 +17,7 @@
 #include "DibujableServerEnemigo.h"
 #include "DibujableServerAdicional.h"
 #include "Escenario.h"
+#include <ctime>
 
 #define DEBUG 2
 
@@ -52,11 +53,14 @@ bool pasarDeNivel = false;
 int camaraX = 0;
 int camaraSet = 0;
 bool jefePresente = false;
+bool estaEnPantallaScore = false;
 
 ContenedorEnemigos contenedorEnemigos;
 ContenedorBalas contenedorBalas;
 ContenedorBonus contenedorBonus;
 Escenario escenario;
+
+time_t tiempoEsperaScore;
 
 //list<mensajeClass> listaDeMensajesAlCliente;
 pthread_mutex_t mutexLista = PTHREAD_MUTEX_INITIALIZER;
@@ -366,8 +370,24 @@ void quitarBonus(int idBonus){
 	}
 }
 
+void avanzarPantallaScore(){
+	cout << "AVANZAR PANTALLA SCORE" << endl;
+	enviarAConectados(0,0,0,0,0,'0',0,14);
+
+	estaEnPantallaScore = true;
+	//seteo un tiempo de espera..
+	tiempoEsperaScore = time(NULL);
+}
+
+bool puedeSalirScore(){
+	time_t aux = time(NULL);
+	if(tiempoEsperaScore + 3 <= aux) return true;
+	else return false;
+}
+
 void avanzarAlSiguienteNivel(){
 	jefePresente = false;
+	estaEnPantallaScore = false;
 	listaDeMensajes.clear();
 	contenedorEnemigos.cargarEnemigosDelNivel(nivelActual,ALTO_VENTANA);
 	contenedorBalas.listaDeBalas.clear();
@@ -912,11 +932,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 					if (nivelActual <= 3){
 						contenedorEnemigos.killAll(&listaEnemigosActivos, &listaEnemigosDeBaja);
-						//enviarAConectados(0, 0, 0, 0, 0, '0', NULL, 11);//TENGO QUE MEJORARLO
-						avanzar = false;
-						camaraX = 0;
-						camaraSet = 0;
-						avanzarAlSiguienteNivel();
+						cout << "AVANZAR PANTALLA SCORE" << endl;
+						enviarAConectados(0,0,0,0,0,'0',0,14);
+						avanzarPantallaScore();
 					}
 
 					//PARAR TODOS LOS MENSAJES POSIBLES SINO ROMPE!!!!!
@@ -958,6 +976,16 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					for (list<Bonus>::iterator itBonus = listaBonusDeBaja.begin(); itBonus != listaBonusDeBaja.end(); ++itBonus) {
 						quitarBonus(itBonus->getId());
 					}
+				}
+
+				if(estaEnPantallaScore){
+					if(puedeSalirScore()){
+						cout << "PUDE SALIR DEL SCORE" << endl;
+						avanzar = false;
+						camaraX = 0;
+						camaraSet = 0;
+						avanzarAlSiguienteNivel();
+					}else cout << "NO PUDE SALIR DEL SCORE" << endl;
 				}
 			}
 
@@ -1071,7 +1099,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'M':{
-			cout << "ENTRO A MOVER" << endl;
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
