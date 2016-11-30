@@ -85,6 +85,8 @@ bool hayColision(int xTipo, int yTipo, int xBala, int yBala, int tipoEnemigo, in
 	 * 4)parado boludiando.. ve a player y camina a la derecha rajando (cagon)
 	 * 5)soldados jefe1
 	 * 6)jefe1
+	 * 7)jefe2
+	 * 8)jefe3
 	 */
 	case 1:
 		w1 = 10 + escala;
@@ -116,6 +118,18 @@ bool hayColision(int xTipo, int yTipo, int xBala, int yBala, int tipoEnemigo, in
 	case 6:
 		w1 = 170 + escala + 120;
 		h1 = 90 + escala + 100;
+
+		break;
+
+	case 7:
+		w1 = 100 + escala + 160;
+		h1 = 50 + escala + 90;
+
+		break;
+
+	case 8:
+		w1 = 50 + escala + 60;
+		h1 = 80 + escala + 80;
 
 		break;
 

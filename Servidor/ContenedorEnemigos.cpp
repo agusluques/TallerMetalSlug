@@ -327,7 +327,6 @@ void ContenedorEnemigos::iniciarJefe(int camaraX, int nivelActual){
 	nuevo.setX(camaraX + 800);
 	nuevo.setSpX(-1);
 	nuevo.setSpY(5);
-	//nuevo.setVida(1);
 	nuevo.setPunto(150);
 
 	nuevo.ultimoId = ultimoId;

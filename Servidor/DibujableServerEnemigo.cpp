@@ -398,15 +398,19 @@ bool DibujableServerEnemigo::mover(int camaraX, list<DibujableServerEnemigo> *li
 		moverseEnPantalla(camaraX);
 
 		if(tiempoFinDisparo2 + 2 <= time(NULL)) {
-			dispare = dispararTorreta();
-			*direccion = 2;
+			*direccion = 4;
 			*tipoBala = 5;
+			dispare = dispararTorreta();
+			*direccion = 4;
+			*tipoBala = 5;
+			dispare = dispararTorreta();
+
 		}
-		if(tiempoFinDisparo + 4 <= time(NULL)) {
+		/*if(tiempoFinDisparo + 4 <= time(NULL)) {
 			dispare = dispararLaser();
-			*direccion = 2;
+			*direccion = 4;
 			*tipoBala = 4;
-		}
+		}*/
 
 		break;
 
