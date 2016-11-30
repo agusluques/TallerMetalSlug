@@ -901,13 +901,16 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				//para que muestre una pantalla con los scores
 				if (pasarDeNivel){
 					//agusss : ya esta la lista de "DibujableServerAdicional" esta el metodo getAumentable que seria el SCORE actual para pasarles, Pablo.
-					contenedorEnemigos.killAll(&listaEnemigosActivos, &listaEnemigosDeBaja);
-					//enviarAConectados(0, 0, 0, 0, 0, '0', NULL, 11);//TENGO QUE MEJORARLO
 					nivelActual++;
-					avanzar = false;
-					camaraX = 0;
-					camaraSet = 0;
-					avanzarAlSiguienteNivel();
+
+					if (nivelActual <= 3){
+						contenedorEnemigos.killAll(&listaEnemigosActivos, &listaEnemigosDeBaja);
+						//enviarAConectados(0, 0, 0, 0, 0, '0', NULL, 11);//TENGO QUE MEJORARLO
+						avanzar = false;
+						camaraX = 0;
+						camaraSet = 0;
+						avanzarAlSiguienteNivel();
+					}
 
 					//PARAR TODOS LOS MENSAJES POSIBLES SINO ROMPE!!!!!
 
@@ -1061,7 +1064,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'M':{
-			//cout << "ENTRO A MOVER" << endl;
+			cout << "ENTRO A MOVER" << endl;
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
@@ -1109,7 +1112,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						}
 					}
 				}
-			} else pasarDeNivel = false;
+			}else pasarDeNivel = false;
 
 			break;
 		}

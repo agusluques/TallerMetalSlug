@@ -477,7 +477,7 @@ bool  DibujableServerEnemigo::matar(){
 		mVelY = 0;
 
 		estaVivo = false;
-		if (tipoEnemigo == 6){
+		if (tipoEnemigo == 6 || tipoEnemigo == 7 || tipoEnemigo == 8){
 			spY = 6;
 			spX = 1;
 
