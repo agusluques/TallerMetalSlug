@@ -314,15 +314,12 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 				vida = 0;
 			}
 
+			if(vida > 10){
+				vida = 10;
+			}
+
 			grafica.actualizarVida(id, vida);
 
-			if((!enviado) && (vida == 10)){
-				cout << "Mando que mori" << endl;
-				enviado = true;
-				char cod = 'Z';
-				enviarMensaje(&cod, sizeof(char));
-				enviarMensaje(&id, sizeof(int));
-			} 
 			break;
 		}
 

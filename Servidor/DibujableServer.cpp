@@ -20,6 +20,7 @@ DibujableServer::DibujableServer(bool modoDios, Escenario *escenario) {
 		vida = -10000;
 	} else {
 		vida = 0;
+		vidaAnterior = 0;
 	}
 
 	tipoDeArma = 1;
@@ -75,6 +76,7 @@ int DibujableServer::getScore(){
 }
 
 void DibujableServer::aumentarDano (int cantidad){
+	this->vidaAnterior = vida;
 	this->vida += cantidad;
 	if(vida > 10){
 		vida=10;

@@ -927,9 +927,22 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				for (list<DibujableServerAdicional*>::iterator itScore = listaScores.begin(); itScore != listaScores.end(); ++itScore) {
 					enviarScoreAConectados((*itScore)->id,(*itScore)->getAumentable());
 				}
-				for (list<DibujableServer*>::iterator itUser = listaDibujables.begin(); itUser != listaDibujables.end(); ++itUser) {
-					enviarDanoAConectados((*itUser)->id,(*itUser)->vida);
+
+				int iCont = 0;
+				for (list<DibujableServer*>::iterator itUser = listaDibujables.begin(); itUser != listaDibujables.end(); ++itUser) {		
+					if(((*itUser)->vida) == 10){
+						(*itUser)->desconectar();
+						iCont++;
+					}
+					if(((*itUser)->vida) != ((*itUser)->vidaAnterior)){
+						enviarDanoAConectados((*itUser)->id,(*itUser)->vida);
+					}
 				}
+
+				if(cantidadJugadores == iCont){
+					cout << "GAME OVER!" << endl;
+				}
+
 
 				pasarDeNivel = contenedorEnemigos.matarEnemigos(camaraX, listaEnemigosDisparados);
 
@@ -1248,16 +1261,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					(*it)->apuntarDiagIzq();
 				}else (*it)->quieto();
 
-			break;
-		}
-
-		case 'Z':{
-			cout << "Se murio..." << endl;
-			int idUsr;
-			recibirMensaje(newsockfd, &idUsr, sizeof(int));
-			list<DibujableServer*>::iterator it = listaDibujables.begin();
-			advance(it, idUsr-1);
-			(*it)->desconectar();
 			break;
 		}
 

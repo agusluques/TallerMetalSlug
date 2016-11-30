@@ -35,6 +35,7 @@ public:
 	
 	int score;
 	int vida;
+	int vidaAnterior;
 	int tipoDeArma;
 	int cantBalas;
 
