@@ -47,6 +47,7 @@ int nivelActual = 1;
 int topeSalto = 20;
 bool avanzar;
 bool modoDios = false;
+bool pasarDeNivel = false;
 
 int camaraX = 0;
 int camaraSet = 0;
@@ -388,7 +389,13 @@ void avanzarAlSiguienteNivel(){
 		list<DibujableServer*>::iterator it = listaDibujables.begin();
 		advance(it, i-1);
 
-		(*it)->quieto(); //no alcanza
+		(*it)->quieto();
+		(*it)->mVelX = 0;
+		(*it)->mVelY = 0;
+		(*it)->estaDisparando = false;
+		(*it)->estaEnElPiso = true;
+		(*it)->apunta = false;
+
 		//string spriteId = parseXMLPj();
 		//(*it)->setSpriteId(spriteId);
 		(*it)->setX(1+rand() % (150));
@@ -410,6 +417,8 @@ void avanzarAlSiguienteNivel(){
 		}
 
 	}
+
+	cout << "FIN SIG NIVEL.." << endl;
 
 	/*
 	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
@@ -885,7 +894,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					enviarDanoAConectados((*itUser)->id,(*itUser)->vida);
 				}
 
-				bool pasarDeNivel = contenedorEnemigos.matarEnemigos(camaraX, listaEnemigosDisparados);
+				pasarDeNivel = contenedorEnemigos.matarEnemigos(camaraX, listaEnemigosDisparados);
 
 				//hay que enviar a conectados un msjedel tipo pasaste de nivel y cuando
 				//los conectados lo reciban, le envian al servidor un mensaje con un codigo
@@ -914,7 +923,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					if(contenedorBonus.detectarColision(&listaBonusDeBaja, &listaBonusActivos, &listaDibujables, usrKillAll)){
 						//Si entra es porque agarro el bonus de Kill All
 						contenedorEnemigos.killAll(&listaEnemigosActivos, &listaEnemigosDeBaja, usrKillAll, &listaScores, modoJuego);
-					 }
+					}
 
 					for (list<bala>::iterator itBalas = listaBalasActivas.begin(); itBalas != listaBalasActivas.end(); ++itBalas) {
 						enviarBalasAConectados(itBalas->id,itBalas->x,itBalas->y,itBalas->direccionDisparo, itBalas->tipoBala, itBalas->spY);
@@ -1056,50 +1065,51 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
-			bool seMovio = (*it)->mover(camaraX);
+			if(!pasarDeNivel){
+				bool seMovio = (*it)->mover(camaraX);
+				//enviar si realmente hay cambios..
+				if (seMovio) {
+					VELOCIDAD_JUGADOR = (*it)->velocidadXJugador();
+					enviarAConectados(numeroCliente, (*it)->x, (*it)->y, (*it)->spX, (*it)->spY, (*it)->flip, avanzar,0);
 
-			//enviar si realmente hay cambios..
-			if (seMovio) {
-				VELOCIDAD_JUGADOR = (*it)->velocidadXJugador();
-				enviarAConectados(numeroCliente, (*it)->x, (*it)->y, (*it)->spX, (*it)->spY, (*it)->flip, avanzar,0);
+					//CALCULO DE LA CAMARA
+					if(!jefePresente){
+						int xMin, xMax;
+						xMin = 10000;
 
-				//CALCULO DE LA CAMARA
-				if(!jefePresente){
-					int xMin, xMax;
-					xMin = 10000;
-
-					bool avanzarCamara = false;
-					for (list<DibujableServer*>::iterator i = listaDibujables.begin(); i != listaDibujables.end(); ++i) {
-						if((*i)->estaConectado()){
-							//si alguno supero la mitad de la pantalla avanzo camara
-							if((*i)->x >= camaraX + (ANCHO_VENTANA/2)-80) avanzarCamara = true;
-							if((*i)->x < xMin) xMin = (*i)->x;
+						bool avanzarCamara = false;
+						for (list<DibujableServer*>::iterator i = listaDibujables.begin(); i != listaDibujables.end(); ++i) {
+							if((*i)->estaConectado()){
+								//si alguno supero la mitad de la pantalla avanzo camara
+								if((*i)->x >= camaraX + (ANCHO_VENTANA/2)-80) avanzarCamara = true;
+								if((*i)->x < xMin) xMin = (*i)->x;
+							}
 						}
-					}
 
-					if (camaraX >= 1000){ //8075
-						avanzarCamara = false;
-						jefePresente = true;
-						contenedorEnemigos.iniciarJefe(camaraX, nivelActual);
-					}
-
-					if(avanzarCamara){
-						if(xMin > camaraX){
-							camaraX += VELOCIDAD_JUGADOR;
+						if (camaraX >= 1000){ //8075
+							avanzarCamara = false;
+							jefePresente = true;
+							contenedorEnemigos.iniciarJefe(camaraX, nivelActual);
 						}
-					}
 
-					//itero desconectados
-					for (list<DibujableServer*>::iterator it2 = listaDibujables.begin(); it2 != listaDibujables.end(); ++it2) {
-						if (!(*it2)->estaConectado()){
-							if ((*it2)->x <= camaraX){
-								(*it2)->x = camaraX;//adelanto a la momia
-								enviarAConectados((*it2)->id , (*it2)->x, (*it2)->y, (*it2)->spX, (*it2)->spY, (*it2)->flip, false,0);
+						if(avanzarCamara){
+							if(xMin > camaraX){
+								camaraX += VELOCIDAD_JUGADOR;
+							}
+						}
+
+						//itero desconectados
+						for (list<DibujableServer*>::iterator it2 = listaDibujables.begin(); it2 != listaDibujables.end(); ++it2) {
+							if (!(*it2)->estaConectado()){
+								if ((*it2)->x <= camaraX){
+									(*it2)->x = camaraX;//adelanto a la momia
+									enviarAConectados((*it2)->id , (*it2)->x, (*it2)->y, (*it2)->spX, (*it2)->spY, (*it2)->flip, false,0);
+								}
 							}
 						}
 					}
 				}
-			}
+			} else pasarDeNivel = false;
 
 			break;
 		}
@@ -1108,7 +1118,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			//cout << "SALTO" << endl;
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
-			if((*it)->estaVivo)
+			if((*it)->estaVivo && (!pasarDeNivel))
 				(*it)->saltar();
 
 			break;
@@ -1119,7 +1129,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
-			if((*it)->estaVivo)
+			if((*it)->estaVivo && (!pasarDeNivel))
 				if (((*it)->x)>(camaraX)) {
 					(*it)->apuntarArriba();
 				}else (*it)->quieto();
@@ -1133,7 +1143,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
-			if((*it)->estaVivo)
+			if((*it)->estaVivo && (!pasarDeNivel))
 				if (((*it)->x) > (camaraX)){
 					(*it)->apuntarAbajo();
 				}else (*it)->quieto();
@@ -1147,7 +1157,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
-			if((*it)->estaVivo)
+			if((*it)->estaVivo && (!pasarDeNivel))
 				if (((*it)->x) > (camaraX)){
 					(*it)->caminarIzquierda();
 				}else (*it)->quieto();
@@ -1160,7 +1170,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
-			if((*it)->estaVivo)
+			if((*it)->estaVivo && (!pasarDeNivel))
 				if (((*it)->x) < (camaraX + ANCHO_VENTANA)-80){ // - lo q ocupa el sprite en pantalla..
 					(*it)->caminarDerecha();
 				}else (*it)->quieto();
@@ -1174,7 +1184,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
-			if((*it)->estaVivo)
+			if((*it)->estaVivo && (!pasarDeNivel))
 				if (((*it)->x) > (camaraX)){
 					(*it)->apuntarDiagDer();
 				}else (*it)->quieto();
@@ -1188,7 +1198,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
-			if((*it)->estaVivo)
+			if((*it)->estaVivo && (!pasarDeNivel))
 				if (((*it)->x) > (camaraX)){
 					(*it)->apuntarDiagIzq();
 				}else (*it)->quieto();
@@ -1238,7 +1248,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 		case 'S':{
-			//			cout << "STOP" << endl;
+			//cout << "STOP" << endl;
 
 			//caso se queda parado
 			int nuevaCordX, nuevaCordY, nuevoSpX, nuevoSpY;
@@ -1247,7 +1257,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
-			if((*it)->estaVivo){
+			if((*it)->estaVivo && (!pasarDeNivel)){
 				(*it)->quieto();
 
 				//sprite parado
@@ -1324,7 +1334,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
-			if((*it)->estaVivo)
+			if((*it)->estaVivo && (!pasarDeNivel))
 				if( (*it)->disparar(direccionDisparo) ){
 					int x = (*it)->getX();
 					int y = (*it)->getY();
