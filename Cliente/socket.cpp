@@ -484,16 +484,16 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 
 	int anchoFondo1, tamId1, anchoFondo2,  tamId2, anchoFondo3, tamId3;
 	recibirMensaje(&tamId1, sizeof(int));
-	cout << "TAMID1: " << tamId1 << endl;
+	//cout << "TAMID1: " << tamId1 << endl;
 	char idFondo1[tamId1];
 	recibirMensaje(&idFondo1, sizeof(char)*tamId1);
-	cout << "ID Fondo 1: " << idFondo1 << endl;
+	//cout << "ID Fondo 1: " << idFondo1 << endl;
 	recibirMensaje(&anchoFondo1, sizeof(int));
-	cout << "Ancho 1: " << anchoFondo1 << endl;
+	//cout << "Ancho 1: " << anchoFondo1 << endl;
 	//recibirMensaje(&zIndex, sizeof(int));
 	string resultado1(idFondo1, tamId1);
 	resultado1 = "img/fondos/" + resultado1;
-	cout << "FONDO 1: " << resultado1 << endl; 
+	//cout << "FONDO 1: " << resultado1 << endl;
 
 	recibirMensaje(&tamId2, sizeof(int));
 	char idFondo2[tamId2];
@@ -502,7 +502,7 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 	//recibirMensaje(&zIndex, sizeof(int));
 	string resultado2(idFondo2, tamId2);
 	resultado2 = "img/fondos/" + resultado2;
-	cout << "FONDO 2: " << resultado2 << endl;
+	//cout << "FONDO 2: " << resultado2 << endl;
 
 	recibirMensaje(&tamId3, sizeof(int));
 	char idFondo3[tamId3];
@@ -511,7 +511,7 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 	//recibirMensaje(&zIndex, sizeof(int));
 	string resultado3(idFondo3, tamId3);
 	resultado3 = "img/fondos/" + resultado3;
-	cout << "FONDO 3: " << resultado3 << endl;
+	//cout << "FONDO 3: " << resultado3 << endl;
 
 	ifstream infile1(resultado1.c_str());
 	if ((infile1.good()) == false) {
