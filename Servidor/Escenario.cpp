@@ -34,7 +34,7 @@ void Escenario::crearPlataformas(){
 
 	nueva.setId(idPlataforma);
 	nueva.setX(1050);
-	nueva.setLong(204);
+	nueva.setLong(208);
 
 	plataformas.push_back(nueva);
 	idPlataforma++;
