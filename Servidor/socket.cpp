@@ -424,6 +424,28 @@ bool puedeSalirScore(){
 	else return false;
 }
 
+void terminarJuego(){
+	jefePresente = false;
+	estaEnPantallaScore = false;
+	listaDeMensajes.clear();
+	contenedorBalas.listaDeBalas.clear();
+	contenedorBonus.listaBonus.clear();
+	listaEnergias.clear();
+	listaScores.clear();
+
+	//envio a conectados q cierren grafica
+	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+		if((**it).estaConectado()){
+			char nombreDestino[50];
+			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
+
+			mensajeClass* mensajeObj = new mensajeClass(4, (**it).numCliente());
+			listaDeMensajes.push_back(mensajeObj);
+		}
+
+	}
+}
+
 void avanzarAlSiguienteNivel(){
 	jefePresente = false;
 	estaEnPantallaScore = false;
@@ -984,7 +1006,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					//agusss : ya esta la lista de "DibujableServerAdicional" esta el metodo getAumentable que seria el SCORE actual para pasarles, Pablo.
 					nivelActual++;
 
-					if (nivelActual <= 3){
+					if (nivelActual <= 4){
 						contenedorEnemigos.killAll(&listaEnemigosActivos, &listaEnemigosDeBaja);
 						avanzarPantallaScore();
 					}
@@ -1035,7 +1057,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						avanzar = false;
 						camaraX = 0;
 						camaraSet = 0;
-						avanzarAlSiguienteNivel();
+						if(nivelActual < 4){
+							avanzarAlSiguienteNivel();
+						}else terminarJuego();
 					}
 				}
 			}
