@@ -564,6 +564,7 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 	const Uint8 *keyAnterior;
 
 	estaEnPantallaScore = false;
+	bool hayAnterior = false;
 
 	while( !quit ) {
 		//le envio un mover siempre
@@ -591,10 +592,12 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 			SDL_PumpEvents();
 			const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
-			if((keyAnterior[SDL_GetScancodeFromKey(SDLK_h)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)])){
-				strcpy(&codigo,"S");
-				enviarMensaje(&codigo, sizeof(char));
-				quieto = true;
+			if(hayAnterior){
+				if((keyAnterior[SDL_GetScancodeFromKey(SDLK_h)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)])){
+					strcpy(&codigo,"S");
+					enviarMensaje(&codigo, sizeof(char));
+					quieto = true;
+				}
 			}
 
 			if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_a)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){
@@ -700,6 +703,7 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 			//}
 
 			keyAnterior = keys;
+			hayAnterior = true;
 
 		}
 	}
