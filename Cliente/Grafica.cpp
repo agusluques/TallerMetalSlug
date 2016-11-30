@@ -505,7 +505,7 @@ void Grafica::mostrarDibujables(){
 		SDL_QueryTexture(puntaje, NULL, NULL, &puntajeRect.w, &puntajeRect.h);
 		SDL_RenderCopy(window, puntaje, NULL, &puntajeRect);
 		SDL_FreeSurface(superficie);
-		int y = 150;
+		int y = 130;
 		for (list<TextureScore*>::iterator it = listaDibujableScore.begin(); it != listaDibujableScore.end(); ++it) {
 		std::stringstream ss, ss2;
 		ss << (*it)->id;
