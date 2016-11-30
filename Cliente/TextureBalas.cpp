@@ -30,21 +30,6 @@ void TextureBalas::render(SDL_Renderer *window, SDL_Texture *mTexture, int camer
 	drawingRect.w = bala[tipoDisp][spY].w;
 	drawingRect.h = bala[tipoDisp][spY].h;
 
-	if(drawingRect.h == 5) { //H
-		drawingRect.w += 10;
-		//drawingRect.h += ;
-	}else if(drawingRect.h == 8) { //R
-		drawingRect.w += 50;
-		//drawingRect.h += ;
-	}else if(drawingRect.h == 64){ //S
-		drawingRect.w += 80;
-		drawingRect.h += 30;
-	}
-
-	drawingRect.w += escala;
-	drawingRect.h += escala;
-
-
 	if (drawingRect.x < 0) drawingRect.x = 0;
 
 	int angle;
@@ -76,6 +61,29 @@ void TextureBalas::render(SDL_Renderer *window, SDL_Texture *mTexture, int camer
 		break;
 
 	}
+
+	if(drawingRect.h == 5) { //H
+		drawingRect.w += 10;
+		//drawingRect.h += ;
+	}else if(drawingRect.h == 8) { //R
+		drawingRect.w += 50;
+		//drawingRect.h += ;
+	}else if(drawingRect.h == 64){ //S
+		drawingRect.w += 80;
+		drawingRect.h += 30;
+	}else if(drawingRect.h == 119){ //rayo tanque
+		angle = 0;
+		drawingRect.w += 80;
+		drawingRect.h += 30;
+	}
+	else if(drawingRect.h == 31){ //bomba helicoptero
+		angle = 0;
+		drawingRect.w += 30;
+		drawingRect.h += 10;
+	}
+
+	drawingRect.w += escala;
+	drawingRect.h += escala;
 
 	SDL_RenderCopyEx( window, mTexture, &bala[tipoDisp][spY], &drawingRect, angle, NULL, flipType );
 }
@@ -154,6 +162,20 @@ void TextureBalas::inicializarTexture(SDL_Renderer* window, char* text){
 
 	bala[3][5].x = 357; bala[3][5].y = 108;
 	bala[3][5].w = 88; bala[3][5].h = 64;
+
+	//BALAS JEFE 2 TANQUE
+	bala[4][0].x = 0; bala[4][0].y = 200;
+	bala[4][0].w = 47; bala[4][0].h = 119;
+	//tiritos
+	bala[5][0].x = 0; bala[5][0].y = 25;
+	bala[5][0].w = 25; bala[5][0].h = 5;
+
+	//BALAS JEFE 3 HELICOPTERO
+	bala[6][0].x = 0; bala[6][0].y = 320;
+	bala[6][0].w = 17; bala[6][0].h = 31;
+	//tiritos
+	bala[7][0].x = 0; bala[7][0].y = 25;
+	bala[7][0].w = 25; bala[7][0].h = 5;
 
 }
 

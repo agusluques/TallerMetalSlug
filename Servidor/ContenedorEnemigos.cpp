@@ -103,8 +103,13 @@ void ContenedorEnemigos::buscarActivos(int camaraX, list<DibujableServerEnemigo>
 	for (list<DibujableServerEnemigo>::iterator it = listaEnemigos.begin(); it != listaEnemigos.end(); ++it) {
 		if(it->x > camaraX + 800) break; //usar anchoventana.. esta ordenada por posicion la lista..
 		if(it->estaVisible(camaraX)){
-			if(it->mover(camaraX, &listaEnemigos)){
-				contenedorBalas->nuevaBala(it->x-5, it->y, 5, 4, 0, it->tipoEnemigo); //5 = maquina
+			int direccion, tipoBala;
+			if(it->mover(camaraX, &listaEnemigos, &direccion, &tipoBala)){
+				if(tipoBala == 5) //doble bala del tanque
+					contenedorBalas->nuevaBala(it->x + 300, it->y, 5, direccion, tipoBala, it->tipoEnemigo); //5 = maquina
+				if(tipoBala == 7) //doble bala helicoptero
+					contenedorBalas->nuevaBala(it->x + 200, it->y, 5, 7, tipoBala, it->tipoEnemigo); //5 = maquina
+				contenedorBalas->nuevaBala(it->x-5, it->y, 5, direccion, tipoBala, it->tipoEnemigo); //5 = maquina
 			}
 			listaEnemigosActivos->push_back((*it));
 			//cout << "HAY ENEMIGOS ACTIVOS!" << endl;
@@ -140,8 +145,8 @@ void ContenedorEnemigos::sumarPuntaje(int usrKillAll, list<DibujableServerAdicio
 			for (list<DibujableServerAdicional*>::iterator itScore = listaScores->begin(); itScore != listaScores->end(); ++itScore){
 				if( ((*itScore)->id == 3) || ((*itScore)->id == 4) ){
 					(*itScore)->aumentar(10);
-				} 
-			}			
+				}
+			}
 		}
 	}
 }
@@ -209,14 +214,20 @@ void ContenedorEnemigos::iniciarJefe(int camaraX, int nivelActual){
 	cout << "ID JEFE!" << ultimoId << endl;
 	//char* spriteId = parseXMLPj();
 
-	if(nivelActual == 1)
+	if(nivelActual == 1){
 		nuevo.setTipoEnemigo(6);
-	else if(nivelActual == 2)
-		nuevo.setTipoEnemigo(6);
-	else nuevo.setTipoEnemigo(6);
+		nuevo.setY(100);
+	}
+	else if(nivelActual == 2) {
+		nuevo.setTipoEnemigo(7);
+		nuevo.setY(500);
+	}
+	else {
+		nuevo.setTipoEnemigo(8);
+		nuevo.setY(100);
+	}
 
 	nuevo.setX(camaraX + 800);
-	nuevo.setY(100);
 	nuevo.setSpX(-1);
 	nuevo.setSpY(5);
 	nuevo.setVida(1);

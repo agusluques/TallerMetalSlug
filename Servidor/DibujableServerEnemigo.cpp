@@ -16,6 +16,9 @@ DibujableServerEnemigo::DibujableServerEnemigo() {
 
 	estaVivo = true;
 
+	tiempoFinDisparo2 = time(NULL);
+	tiempoFinDisparo = time(NULL);
+
 	flip = 'D';
 }
 
@@ -65,7 +68,7 @@ int DibujableServerEnemigo::getVida(){
 }
 
 int DibujableServerEnemigo::getFuerza(){
-   return this->fuerza;
+	return this->fuerza;
 }
 
 int DibujableServerEnemigo::getX(){
@@ -236,20 +239,35 @@ bool DibujableServerEnemigo::dispararBazooka(){
 	return false;
 }
 
+bool DibujableServerEnemigo::dispararLaser(){
+	tiempoFinDisparo = time(NULL);
+	return true;
+}
+
+bool DibujableServerEnemigo::dispararTorreta(){
+	tiempoFinDisparo2 = time(NULL);
+	return true;
+}
+
 void DibujableServerEnemigo::moverseEnPantalla(int camaraX){
 	spY = 6;
-	spX += 1;
-	if (spX == 2) spX = 0;
+	if(tipoEnemigo == 7) spY = 9;
+	else if(tipoEnemigo == 8) spY = 10;
+
+	//spX += 1;
+	spX = 0;
+
+	if (spX > 1) spX = 0;
 
 	if(x <= camaraX + 200){
 		mVelX = 8;
 		strcpy(&flip,"D");
 	}
 	else
-	if(x >= camaraX + 400){
-		mVelX = -8;
-		strcpy(&flip,"I");
-	}
+		if(x >= camaraX + 400){
+			mVelX = -8;
+			strcpy(&flip,"I");
+		}
 }
 
 void DibujableServerEnemigo::largarNuevoEnemigo(list<DibujableServerEnemigo> *listaEnemigos){
@@ -290,17 +308,20 @@ void DibujableServerEnemigo::quitarEnergia (int golpe){
 
 }
 
-bool DibujableServerEnemigo::mover(int camaraX, list<DibujableServerEnemigo> *listaEnemigos){
+bool DibujableServerEnemigo::mover(int camaraX, list<DibujableServerEnemigo> *listaEnemigos, int* direccion, int* tipoBala){
 	//me muevo dependiendo de la camara y del tipo del tipo de enemigo
 	/* 1)camina izquierda buscando pegarte (cuchillo)
 	 * 2)dispara y se agacha
 	 * 3)parado boludiando.. ve a player y le tira tiros
 	 * 4)parado boludiando.. ve a player y camina a la derecha rajando (cagon)
 	 * 5)soldados jefe1
-	 * 6)jefe1
-	 * 7)jefe2
-	 * 8)jefe3
+	 * 6)jefe1 Airbuster Riberts
+	 * 7)jefe2 Tani Oh
+	 * 8)jefe3 Hi-Do
 	 */
+
+	*direccion = 4;
+	*tipoBala = 0;
 
 	bool dispare = false;
 
@@ -346,16 +367,16 @@ bool DibujableServerEnemigo::mover(int camaraX, list<DibujableServerEnemigo> *li
 
 	case 5:
 		//if(x <= camaraX + (800-80)){ // ancho pantalla - tam sprite
-			if (!estaEnElPiso){
-				spY = 4;
-				caerHelicoptero();
-			} else {
-				spY = 5;
-				if (!actuo) dispare = dispararBazooka();
-				else if(tiempoFinDisparo+1 <= time(NULL)) {
-					actuo = false;
-				}
+		if (!estaEnElPiso){
+			spY = 4;
+			caerHelicoptero();
+		} else {
+			spY = 5;
+			if (!actuo) dispare = dispararBazooka();
+			else if(tiempoFinDisparo+1 <= time(NULL)) {
+				actuo = false;
 			}
+		}
 		//}
 		break;
 
@@ -368,6 +389,40 @@ bool DibujableServerEnemigo::mover(int camaraX, list<DibujableServerEnemigo> *li
 		}
 		else if(tiempoUltimoEnemigo+3 <= time(NULL)) {
 			actuo = false;
+		}
+
+		break;
+
+	case 7:
+		//jefe7
+		moverseEnPantalla(camaraX);
+
+		if(tiempoFinDisparo2 + 2 <= time(NULL)) {
+			dispare = dispararTorreta();
+			*direccion = 2;
+			*tipoBala = 5;
+		}
+		if(tiempoFinDisparo + 4 <= time(NULL)) {
+			dispare = dispararLaser();
+			*direccion = 2;
+			*tipoBala = 4;
+		}
+
+		break;
+
+	case 8:
+		//jefe8
+		moverseEnPantalla(camaraX);
+
+		if(tiempoFinDisparo2 + 2 <= time(NULL)) {
+			dispare = dispararTorreta();
+			*direccion = 6;
+			*tipoBala = 6;
+		}
+		if(tiempoFinDisparo + 4 <= time(NULL)) {
+			dispare = dispararLaser();
+			*direccion = 5;
+			*tipoBala = 7;
 		}
 
 		break;
@@ -429,7 +484,7 @@ bool  DibujableServerEnemigo::matar(){
 			tipoEnemigo = 10; //muriendo boss
 
 			return true;
-			
+
 		} else {
 			spY = 8;
 			spX = -1;
@@ -442,7 +497,7 @@ bool  DibujableServerEnemigo::matar(){
 		vida--;
 		return false;
 	}
-	
+
 }
 
 bool DibujableServerEnemigo::estaVisible(int camaraX){

@@ -367,6 +367,7 @@ void quitarBonus(int idBonus){
 
 void avanzarAlSiguienteNivel(){
 	jefePresente = false;
+	listaDeMensajes.clear();
 	contenedorEnemigos.cargarEnemigosDelNivel(nivelActual,ALTO_VENTANA);
 	//contenedorBalas.clear();
 	//contenedorBonus.cargarBonusNivel();
@@ -877,7 +878,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				contenedorBalas.detectarColisionPlataforma(&escenario);
 				contenedorBalas.detectarColisiones(&listaBalasDeBaja, &listaEnemigosActivos, &listaEnemigosDisparados, &listaScores, &listaDibujables, modoJuego);
 
-
 				for (list<DibujableServerAdicional*>::iterator itScore = listaScores.begin(); itScore != listaScores.end(); ++itScore) {
 					enviarScoreAConectados((*itScore)->id,(*itScore)->getAumentable());
 				}
@@ -914,7 +914,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					if(contenedorBonus.detectarColision(&listaBonusDeBaja, &listaBonusActivos, &listaDibujables, usrKillAll)){
 						//Si entra es porque agarro el bonus de Kill All
 						contenedorEnemigos.killAll(&listaEnemigosActivos, &listaEnemigosDeBaja, usrKillAll, &listaScores, modoJuego);
-					}
+					 }
 
 					for (list<bala>::iterator itBalas = listaBalasActivas.begin(); itBalas != listaBalasActivas.end(); ++itBalas) {
 						enviarBalasAConectados(itBalas->id,itBalas->x,itBalas->y,itBalas->direccionDisparo, itBalas->tipoBala, itBalas->spY);
@@ -1077,7 +1077,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						}
 					}
 
-					if (camaraX >= 1500){ //8075
+					if (camaraX >= 1000){ //8075
 						avanzarCamara = false;
 						jefePresente = true;
 						contenedorEnemigos.iniciarJefe(camaraX, nivelActual);
@@ -1106,7 +1106,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 		case 'J':{
 			//cout << "SALTO" << endl;
-
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 			if((*it)->estaVivo)
@@ -1116,8 +1115,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'U':{
-			cout << "UP" << endl;
-
+			//cout << "UP" << endl;
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
 
@@ -1130,7 +1128,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'D':{
-			cout << "DOWN" << endl;
+			//cout << "DOWN" << endl;
 
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
@@ -1144,7 +1142,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'L':{
-			cout << "LEFT" << endl;
+			//cout << "LEFT" << endl;
 
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
@@ -1157,7 +1155,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 		case 'R':{
-			cout << "RIGHT" << endl;
+			//cout << "RIGHT" << endl;
 
 			list<DibujableServer*>::iterator it = listaDibujables.begin();
 			advance(it, numeroCliente-1);
@@ -1317,7 +1315,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		}
 
 		case 'd': {
-			cout << "DISPARO" << endl;
+			//cout << "DISPARO" << endl;
 
 			int direccionDisparo;
 			recibirMensaje(newsockfd, &direccionDisparo, sizeof(int));

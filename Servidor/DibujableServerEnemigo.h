@@ -34,6 +34,8 @@ public:
 	int ultimoId;
 
 	time_t tiempoFinDisparo;
+	time_t tiempoFinDisparo2;
+	time_t tiempoFinDisparo3;
 	time_t tiempoUltimoEnemigo;
 
 	bool estaEnElPiso;
@@ -75,10 +77,12 @@ public:
 	void huirDerecha();
 	void caerHelicoptero();
 	bool dispararBazooka();
+	bool dispararLaser();
+	bool dispararTorreta();
 	void moverseEnPantalla(int camaraX);
 	void largarNuevoEnemigo(list<DibujableServerEnemigo> *listaEnemigos);
 	void quieto();
-	bool mover(int camaraX, list<DibujableServerEnemigo> *listaEnemigos);
+	bool mover(int camaraX, list<DibujableServerEnemigo> *listaEnemigos, int *direccion, int *tipoBala);
 	bool matar();
 	void morir();
 	void morirBoss();

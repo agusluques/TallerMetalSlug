@@ -28,13 +28,19 @@ void LTextureEnemigo::render(SDL_Renderer *window, SDL_Texture *texture, int cam
 	drawingRect.y = ycord; //- cameraY;
 	drawingRect.y -= 15;
 
-    //pasar escala x xml
+	//pasar escala x xml
 	drawingRect.w = player[spX][spY].w + escala;// + 30;
 	drawingRect.h = player[spX][spY].h + escala;// + 30;
 
 	if(tipo == 6) { //jefe1
 		drawingRect.w += 120;
 		drawingRect.h += 100;
+	}else if(tipo == 7) { //jefe2
+		drawingRect.w += 80;
+		drawingRect.h += 50;
+	}else if(tipo == 8) { //jefe3
+		drawingRect.w += 80;
+		drawingRect.h += 60;
 	}else if(tipo == 5) { //rifle
 		drawingRect.w += 10;
 		drawingRect.h += 20;
@@ -322,6 +328,20 @@ void LTextureEnemigo::inicializarTexture(SDL_Renderer* window, char* text){
 
 	player[6][8].x=240; player[6][8].y=660;
 	player[6][8].w=40; player[6][8].h=40;
+
+	//JEFE 2 tanque
+	player[0][9].x=0; player[0][9].y=700;
+	player[0][9].w=253; player[0][9].h=108;
+
+	player[1][9].x=0; player[1][9].y=808;
+	player[1][9].w=253; player[1][9].h=108;
+
+	//JEFE 3 helicoptero
+	player[0][10].x=0; player[0][10].y=820;
+	player[0][10].w=114; player[0][10].h=112;
+
+	player[1][10].x=0; player[1][10].y=820;
+	player[1][10].w=114; player[1][10].h=112;
 
 }
 

@@ -15,7 +15,7 @@ public:
 	int id;
 	int tipoDisp;
 
-	SDL_Rect bala[4][6]; //[tipoDeBala][spY]
+	SDL_Rect bala[8][6]; //[tipoDeBala][spY]
 
 	int xcord;
 	int ycord;

@@ -7,7 +7,6 @@ ContenedorBalas::ContenedorBalas() {
 
 void ContenedorBalas::nuevaBala(int posX, int posY, int idUsuario, int direccionDisparo, int tipoDeArma, int tipoEnemigo){ //5 maquina
 	if(ultimoId > 500) ultimoId = 0; //para no usar numeros muy grandes...
-
 	bala nuevaBala(posX,posY,idUsuario, ultimoId += 1,direccionDisparo, tipoDeArma, tipoEnemigo);
 
 	listaDeBalas.push_back(nuevaBala);
@@ -170,8 +169,8 @@ void ContenedorBalas::acumuloPuntajes(int puntos, int idJugador, list<DibujableS
 			for (list<DibujableServerAdicional*>::iterator itScore = listaScores->begin(); itScore != listaScores->end(); ++itScore){
 				if( ((*itScore)->id == 3) || ((*itScore)->id == 4) ){
 					(*itScore)->aumentar(puntos);
-				} 
-			}			
+				}
+			}
 		}
 	}
 }

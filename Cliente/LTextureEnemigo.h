@@ -14,7 +14,7 @@ public:
 	int id;
 	int tipo;
 
-	SDL_Rect player[13][9];
+	SDL_Rect player[13][11];
 	
 	int xcord;
 	int ycord;

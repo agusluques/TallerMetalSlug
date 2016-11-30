@@ -25,7 +25,7 @@ public:
 	bool agregarDano (DibujableServer *usuario, int balaEnemiga);
 	void detectarColisiones(list<bala> *listaBalasDeBaja, list<DibujableServerEnemigo> *listaEnemigosActivos, list<DibujableServerEnemigo> *listaEnemigosDeBaja, list<DibujableServerAdicional*> *listaScores, list<DibujableServer*> *listaUsuarios, int modoJuego);
 	void detectarColisionPlataforma(Escenario *escenario);
-    void acumuloPuntajes(int puntos, int idJugador, list<DibujableServerAdicional*> *listaScores, int modoJuego);
+	void acumuloPuntajes(int puntos, int idJugador, list<DibujableServerAdicional*> *listaScores, int modoJuego);
 	virtual ~ContenedorBalas();
 };
 

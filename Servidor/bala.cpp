@@ -1,4 +1,7 @@
 #include "bala.h"
+#include <iostream>
+
+using namespace std;
 
 bala::bala(int xPos, int yPos, int usr, int id, int direccionDeDisparo, int tipoDeBala, int tipoEnemigo){
 	this->id = id;
@@ -60,6 +63,13 @@ bala::bala(int xPos, int yPos, int usr, int id, int direccionDeDisparo, int tipo
 			x -= 10;
 			y -= 160;
 		}
+		if(tipoBala == 4){
+			x += 50;
+		}
+		if (tipoBala == 5){
+			x -= 10;
+			y += 20;
+		}
 
 		xVel = 0;
 		yVel = -30;
@@ -111,6 +121,10 @@ bala::bala(int xPos, int yPos, int usr, int id, int direccionDeDisparo, int tipo
 			x -= 110;
 			y += 90;
 		}
+		if (tipoBala == 7){
+			x += 30;
+			y += 20;
+		}
 
 		xVel = -30;
 		yVel = 30;
@@ -128,6 +142,10 @@ bala::bala(int xPos, int yPos, int usr, int id, int direccionDeDisparo, int tipo
 			x -= 10;
 			y += 90;
 		}
+		if (tipoBala == 6){
+			x += 30;
+			y += 20;
+		}
 
 		xVel = 0;
 		yVel = 30;
@@ -144,6 +162,10 @@ bala::bala(int xPos, int yPos, int usr, int id, int direccionDeDisparo, int tipo
 		if (tipoBala == 3){
 			x += 90;
 			y += 80;
+		}
+		if (tipoBala == 7){
+			x += 30;
+			y += 20;
 		}
 
 		xVel = 30;
