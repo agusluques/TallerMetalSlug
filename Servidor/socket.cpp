@@ -1251,6 +1251,16 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			break;
 		}
 
+		case 'Z':{
+			cout << "Se murio..." << endl;
+			int idUsr;
+			recibirMensaje(newsockfd, &idUsr, sizeof(int));
+			list<DibujableServer*>::iterator it = listaDibujables.begin();
+			advance(it, idUsr-1);
+			(*it)->desconectar();
+			break;
+		}
+
 		case 'C':{
 			//cout << "CERRAR GRAFICA" << endl;
 
