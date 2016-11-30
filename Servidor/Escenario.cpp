@@ -34,15 +34,15 @@ void Escenario::crearPlataformas(){
 
 	nueva.setId(idPlataforma);
 	nueva.setX(1050);
-	nueva.setLong(219);
+	nueva.setLong(204);
 
 	plataformas.push_back(nueva);
 	idPlataforma++;
 
      // 3 - id2
     nueva.setId(idPlataforma);
-	nueva.setX(1808);
-	nueva.setLong(142);
+	nueva.setX(1804);
+	nueva.setLong(148);
 
 	plataformas.push_back(nueva);
 	idPlataforma++;
@@ -50,15 +50,15 @@ void Escenario::crearPlataformas(){
    //4
     nueva.setId(idPlataforma);
 	nueva.setX(2758);
-	nueva.setLong(230);
+	nueva.setLong(234);
 
 	plataformas.push_back(nueva);
 	idPlataforma++;
 
 	//5
     nueva.setId(idPlataforma);
-	nueva.setX(3320);
-	nueva.setLong(110);
+	nueva.setX(3315);
+	nueva.setLong(115);
 
 	plataformas.push_back(nueva);
 	idPlataforma++;
@@ -66,7 +66,7 @@ void Escenario::crearPlataformas(){
 	//6
     nueva.setId(idPlataforma);
 	nueva.setX(3960);
-	nueva.setLong(255);
+	nueva.setLong(245);
 
 	plataformas.push_back(nueva);
 
@@ -126,7 +126,7 @@ bool Escenario::colisionPlataforma (int cordX, int cordY, bool camIzq, bool camD
 				tocaPlataforma = true;
 			}
 			if (!tocaPlataforma && (camIzq||camDer)){
-				if(cordX+60 >= it->getX() && cordX-60 <= it->getLong()+10){
+				if(cordX+60 >= it->getX() && cordX-58 <= it->getLong()){
 					tocaPlataforma =true;
 				}
 			}
