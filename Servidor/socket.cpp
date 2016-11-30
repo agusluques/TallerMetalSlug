@@ -370,6 +370,10 @@ void avanzarAlSiguienteNivel(){
 	jefePresente = false;
 	listaDeMensajes.clear();
 	contenedorEnemigos.cargarEnemigosDelNivel(nivelActual,ALTO_VENTANA);
+	contenedorBalas.listaDeBalas.clear();
+	contenedorBonus.listaBonus.clear();
+	listaScores.clear();
+
 	//contenedorBalas.clear();
 	//contenedorBonus.cargarBonusNivel();
 
@@ -395,6 +399,8 @@ void avanzarAlSiguienteNivel(){
 		(*it)->estaDisparando = false;
 		(*it)->estaEnElPiso = true;
 		(*it)->apunta = false;
+		(*it)->score = 0;
+		(*it)->vida = 0;
 
 		//string spriteId = parseXMLPj();
 		//(*it)->setSpriteId(spriteId);
@@ -1089,7 +1095,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 							}
 						}
 
-						if (camaraX >= 1000){ //8075
+						if (camaraX >= 8075){ //8075
 							avanzarCamara = false;
 							jefePresente = true;
 							contenedorEnemigos.iniciarJefe(camaraX, nivelActual);

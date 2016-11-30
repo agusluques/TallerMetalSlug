@@ -24,7 +24,7 @@ void ContenedorEnemigos::cargarEnemigosDelNivel(int nivel, int ALTO_VENTANA){
 		nuevoEnemigo(800, ALTO_VENTANA - 100, 3);
 		nuevoEnemigo(1000, ALTO_VENTANA - 100, 2);
 		nuevoEnemigo(1200, ALTO_VENTANA - 100, 3);
-		/*nuevoEnemigo(1400, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(1400, ALTO_VENTANA - 100, 3);
 		nuevoEnemigo(1650, ALTO_VENTANA - 100, 2);
 		nuevoEnemigo(1800, ALTO_VENTANA - 100, 3);
 		nuevoEnemigo(1850, ALTO_VENTANA - 100, 3);
@@ -66,9 +66,103 @@ void ContenedorEnemigos::cargarEnemigosDelNivel(int nivel, int ALTO_VENTANA){
 		nuevoEnemigo(7700, ALTO_VENTANA - 100, 1);
 		nuevoEnemigo(7800, ALTO_VENTANA - 100, 1);
 		nuevoEnemigo(7900, ALTO_VENTANA - 100, 4);
-		nuevoEnemigo(8000, ALTO_VENTANA - 100, 2);*/
-	} else if (nivel == 2){
+		nuevoEnemigo(8000, ALTO_VENTANA - 100, 2);
+	} else if (nivel == 2) {
 		nuevoEnemigo(750, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(800, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(1000, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(1200, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(1400, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(1650, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(1800, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(1850, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(2000, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(2250, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(2500, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(2700, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(3000, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(3300, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(3700, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(4000, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(4050, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(4200, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(4400, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(4600, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(4650, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(4800, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(4950, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(5000, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(5250, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(5300, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(5400, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(5600, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(5800, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(6000, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(6200, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(6250, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(6400, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(6500, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(6700, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(6850, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(7000, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(7150, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(7200, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(7350, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(7400, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(7500, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(7600, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(7700, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(7800, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(7900, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(8000, ALTO_VENTANA - 100, 2);
+	} else if (nivel == 3) {
+		nuevoEnemigo(750, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(800, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(1000, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(1200, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(1400, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(1650, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(1800, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(1850, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(2000, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(2250, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(2500, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(2700, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(3000, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(3300, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(3700, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(4000, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(4050, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(4200, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(4400, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(4600, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(4650, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(4800, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(4950, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(5000, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(5250, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(5300, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(5400, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(5600, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(5800, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(6000, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(6200, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(6250, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(6400, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(6500, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(6700, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(6850, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(7000, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(7150, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(7200, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(7350, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(7400, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(7500, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(7600, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(7700, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(7800, ALTO_VENTANA - 100, 1);
+		nuevoEnemigo(7900, ALTO_VENTANA - 100, 4);
+		nuevoEnemigo(8000, ALTO_VENTANA - 100, 2);
 	}
 }
 
@@ -126,7 +220,7 @@ void ContenedorEnemigos::buscarActivos(int camaraX, list<DibujableServerEnemigo>
 void ContenedorEnemigos::sumarPuntaje(int usrKillAll, list<DibujableServerAdicional*> *listaScores, int modoJuego){
 	if(modoJuego == 2){
 		for (list<DibujableServerAdicional*>::iterator itScore = listaScores->begin(); itScore != listaScores->end(); ++itScore){
-				(*itScore)->aumentar(10);
+			(*itScore)->aumentar(10);
 		}
 	} else if(modoJuego == 1){
 		for (list<DibujableServerAdicional*>::iterator itScore = listaScores->begin(); itScore != listaScores->end(); ++itScore){

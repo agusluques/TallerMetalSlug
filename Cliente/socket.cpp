@@ -326,6 +326,8 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 			error = recibirMensaje(&corte, sizeof(int));
 			pasarNivel = true;
 			//cerrarGrafica();
+
+			break;
 		}
 
 		default:
