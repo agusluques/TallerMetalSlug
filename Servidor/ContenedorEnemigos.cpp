@@ -311,20 +311,23 @@ void ContenedorEnemigos::iniciarJefe(int camaraX, int nivelActual){
 	if(nivelActual == 1){
 		nuevo.setTipoEnemigo(6);
 		nuevo.setY(100);
+		nuevo.setVida(10);
 	}
 	else if(nivelActual == 2) {
 		nuevo.setTipoEnemigo(7);
 		nuevo.setY(500);
+		nuevo.setVida(20);
 	}
 	else {
 		nuevo.setTipoEnemigo(8);
 		nuevo.setY(100);
+		nuevo.setVida(30);
 	}
 
 	nuevo.setX(camaraX + 800);
 	nuevo.setSpX(-1);
 	nuevo.setSpY(5);
-	nuevo.setVida(1);
+	//nuevo.setVida(1);
 	nuevo.setPunto(150);
 
 	nuevo.ultimoId = ultimoId;
