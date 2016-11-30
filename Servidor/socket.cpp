@@ -1080,23 +1080,22 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			//cout << "PIDO SI PUEDO EMEPZAR A JUGAR" << endl;
 			//pido si puede empezar el juego
 			int respuesta = 1;
-			if (nivelActual == 1){
-				if (listaDeUsuarios.size() < cantidadJugadores){
-					respuesta = 0;
-				} else if (listaDeUsuarios.size() > cantidadJugadores){
-					respuesta = -1;
-					list<usuarioClass*>::iterator it = listaDeUsuarios.begin();
-					advance(it, numeroCliente-1);
-					delete (*it);
-					listaDeUsuarios.erase(it);
+			if (listaDeUsuarios.size() < cantidadJugadores){
+				respuesta = 0;
+			} else if (listaDeUsuarios.size() > cantidadJugadores){
+				respuesta = -1;
+				list<usuarioClass*>::iterator it = listaDeUsuarios.begin();
+				advance(it, numeroCliente-1);
+				delete (*it);
+				listaDeUsuarios.erase(it);
 
-					list<DibujableServer*>::iterator it2 = listaDibujables.begin();
-					advance(it2, numeroCliente-1);
-					delete (*it2);
-					listaDibujables.erase(it2);
+				list<DibujableServer*>::iterator it2 = listaDibujables.begin();
+				advance(it2, numeroCliente-1);
+				delete (*it2);
+				listaDibujables.erase(it2);
 
-				}
 			}
+			
 			enviarMensaje(newsockfd,&respuesta,sizeof(int));
 
 			break;
