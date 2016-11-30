@@ -305,7 +305,6 @@ bool ContenedorEnemigos::matarEnemigos(int camaraX, list<DibujableServerEnemigo>
 void ContenedorEnemigos::iniciarJefe(int camaraX, int nivelActual){
 	DibujableServerEnemigo nuevo;
 	nuevo.setId(ultimoId += 1); //ver q id le seteo...
-	cout << "ID JEFE!" << ultimoId << endl;
 	//char* spriteId = parseXMLPj();
 
 	if(nivelActual == 1){

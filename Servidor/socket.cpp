@@ -461,7 +461,6 @@ void avanzarAlSiguienteNivel(){
 		(*it)->estaDisparando = false;
 		(*it)->estaEnElPiso = true;
 		(*it)->apunta = false;
-		(*it)->score = 0;
 		if(((*it)->vida) > 0){
 			(*it)->vida = 0;
 		}
@@ -488,8 +487,6 @@ void avanzarAlSiguienteNivel(){
 		}
 
 	}
-
-	cout << "FIN SIG NIVEL.." << endl;
 
 	/*
 	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
@@ -919,7 +916,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 					}
 
 					case 20:{
-						cout << "LEE EL 20" << endl;
 						//PASAR DE NIVEL
 						break;
 					}
@@ -1036,12 +1032,11 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 				if(estaEnPantallaScore){
 					if(puedeSalirScore()){
-						cout << "PUDE SALIR DEL SCORE" << endl;
 						avanzar = false;
 						camaraX = 0;
 						camaraSet = 0;
 						avanzarAlSiguienteNivel();
-					}else cout << "NO PUDE SALIR DEL SCORE" << endl;
+					}
 				}
 			}
 

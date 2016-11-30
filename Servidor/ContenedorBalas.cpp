@@ -76,6 +76,12 @@ bool hayColision(int xTipo, int yTipo, int xBala, int yBala, int tipoEnemigo, in
 
 		break;
 
+	case 6: //BOMBITA HELICOPTERO
+		w2 = 30 + escala;
+		h2 = 50 + escala;
+
+		break;
+
 	}
 
 	switch(tipoEnemigo){

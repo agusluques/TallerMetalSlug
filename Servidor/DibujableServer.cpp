@@ -133,7 +133,6 @@ bool DibujableServer::disparar(int direccionDisparo){
 				else direccionDisparo = 4;
 			}
 
-			cout << "DIR DISP: " << direccionDisparo << endl;
 			switch(direccionDisparo){
 			case 0:
 				spX = 0;
