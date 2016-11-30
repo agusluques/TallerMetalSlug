@@ -371,10 +371,15 @@ void quitarBonus(int idBonus){
 }
 
 void avanzarPantallaScore(){
-	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
-		if((**it).estaConectado()){
-			mensajeClass* mensajeObj = new mensajeClass(0, (**it).numCliente(), 0, 0, 0, 0, 0, '0', 20);
-			listaDeMensajes.push_back(mensajeObj);
+	for (list<DibujableServer*>::iterator itD = listaDibujables.begin(); itD != listaDibujables.end(); ++itD) {
+		for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+			if((**it).estaConectado()){
+				char nombreAutor[50] = "tu vieja";
+				mensajeClass* mensajeObj = new mensajeClass(nombreAutor, (**it).numCliente(), (*itD)->id, (*itD)->x, (*itD)->y, 0, 9, (*itD)->flip, 0, 0);
+				listaDeMensajes.push_back(mensajeObj);
+				mensajeObj = new mensajeClass(0, (**it).numCliente(), 0, 0, 0, 0, 0, '0', 20);
+				listaDeMensajes.push_back(mensajeObj);
+			}
 		}
 	}
 
@@ -1126,7 +1131,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 							}
 						}
 
-						if (camaraX >= 8075){ //8075
+						if (camaraX >= 1000){ //8075
 							avanzarCamara = false;
 							jefePresente = true;
 							contenedorEnemigos.iniciarJefe(camaraX, nivelActual);

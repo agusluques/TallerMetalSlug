@@ -210,7 +210,9 @@ void LTexture::inicializarTexture(SDL_Renderer* window, char* text){
 	player[7][6].x=410; player[7][6].y=200;
 	player[7][6].w=40; player[7][6].h=65;
 
-
+	//cancheriando
+	player[0][9].x=0; player[0][9].y=520;
+	player[0][9].w=40; player[0][9].h=65;
 
 }
 

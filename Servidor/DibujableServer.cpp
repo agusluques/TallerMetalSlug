@@ -81,6 +81,11 @@ void DibujableServer::aumentarDano (int cantidad){
 	}
 }
 
+void DibujableServer::cancheriar(){
+	spX = 0;
+	spY = 9;
+}
+
 void DibujableServer::saltar(){
 
 	if(estaEnElPiso){

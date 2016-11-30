@@ -65,6 +65,7 @@ public:
 
 	void aumentarDano (int cantidad);
 
+	void cancheriar();
 	void saltar();
 	void apuntarArriba();
 	void apuntarAbajo();

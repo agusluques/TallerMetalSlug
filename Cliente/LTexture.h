@@ -13,7 +13,7 @@ class LTexture {
 public:
 	int id;
 
-	SDL_Rect player[9][9];
+	SDL_Rect player[9][10];
 	
 	int xcord;
 	int ycord;
