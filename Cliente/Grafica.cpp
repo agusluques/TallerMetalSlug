@@ -477,6 +477,12 @@ void Grafica::borrarBala(int cont){
 	}
 }
 
+struct Comparator {
+    bool operator()(const TextureScore* o1, const TextureScore* o2) const {
+        return o1->aumentable > o2->aumentable;
+    }
+};
+
 void Grafica::mostrarDibujables(){
 	//bool finFondo1, finFondo2, finFondo3;
 	SDL_RenderClear(window);
@@ -486,9 +492,39 @@ void Grafica::mostrarDibujables(){
 		SDL_RenderCopy (window, spriteFondo2, &camera2, NULL);
 		SDL_RenderCopy (window, spriteFondo3, &camera3, NULL);
 	}else{
-		//SDL_RenderCopy (window, spriteFondoScore, &camera, NULL);
-		//SDL_RenderCopy (window, spriteFondoScore, &camera2, NULL);
-		//SDL_RenderCopy (window, spriteFondoScore, &camera3, NULL);
+
+		listaDibujableScore.sort(Comparator());
+
+
+		TTF_Font *font = TTF_OpenFont("OpenSans-ExtraBold.ttf",50);
+		SDL_Color color = {249, 249, 16, 1};
+		SDL_Surface* superficie = TTF_RenderText_Solid(font, "SCORES",color);
+		puntaje = SDL_CreateTextureFromSurface( window, superficie);
+		puntajeRect.x = 270;
+		puntajeRect.y = 90;
+		SDL_QueryTexture(puntaje, NULL, NULL, &puntajeRect.w, &puntajeRect.h);
+		SDL_RenderCopy(window, puntaje, NULL, &puntajeRect);
+		SDL_FreeSurface(superficie);
+		int y = 150;
+		for (list<TextureScore*>::iterator it = listaDibujableScore.begin(); it != listaDibujableScore.end(); ++it) {
+		std::stringstream ss, ss2;
+		ss << (*it)->id;
+		ss2 << (*it)->aumentable;
+		string str = ss.str();
+		string str2 = ss2.str();
+		string texto = "Jugador " + str + " : " + str2 + " puntos"; 
+		const char * c = texto.c_str();
+		SDL_Color color = {255, 255, 255, 1};
+		SDL_Surface* superficie = TTF_RenderText_Solid(font, c,color);
+		puntaje = SDL_CreateTextureFromSurface( window, superficie);
+		puntajeRect.x = 50;
+		puntajeRect.y = y + 70;
+		y = y+70;
+		SDL_QueryTexture(puntaje, NULL, NULL, &puntajeRect.w, &puntajeRect.h);
+		SDL_RenderCopy(window, puntaje, NULL, &puntajeRect);
+		SDL_FreeSurface(superficie);
+
+	}
 	}
 
 	for (list<TextureEnergia*>::iterator it = listaDibujableEnergia.begin(); it != listaDibujableEnergia.end(); ++it) {
