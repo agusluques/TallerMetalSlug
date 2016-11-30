@@ -254,8 +254,8 @@ void DibujableServerEnemigo::moverseEnPantalla(int camaraX){
 	if(tipoEnemigo == 7) spY = 9;
 	else if(tipoEnemigo == 8) spY = 10;
 
-	//spX += 1;
-	spX = 0;
+	spX += 1;
+	//spX = 0;
 
 	if (spX > 1) spX = 0;
 

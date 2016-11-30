@@ -333,14 +333,14 @@ void LTextureEnemigo::inicializarTexture(SDL_Renderer* window, char* text){
 	player[0][9].x=0; player[0][9].y=700;
 	player[0][9].w=253; player[0][9].h=108;
 
-	player[1][9].x=0; player[1][9].y=808;
+	player[1][9].x=253; player[1][9].y=700;
 	player[1][9].w=253; player[1][9].h=108;
 
 	//JEFE 3 helicoptero
 	player[0][10].x=0; player[0][10].y=820;
 	player[0][10].w=114; player[0][10].h=112;
 
-	player[1][10].x=0; player[1][10].y=820;
+	player[1][10].x=114; player[1][10].y=820;
 	player[1][10].w=114; player[1][10].h=112;
 
 }
