@@ -85,10 +85,36 @@ void Grafica::close() {
 	fondo2 = NULL;
 	fondo3 = NULL;
 
+	for (list<LTexture*>::iterator it = listaDibujable.begin(); it != listaDibujable.end(); ++it){
+		(*it)->free();
+		delete (*it);
+	}
 	listaDibujable.clear();
+	for (list<LTextureEnemigo*>::iterator it2 = listaDibujableEnemigos.begin(); it2 != listaDibujableEnemigos.end(); ++it2){
+		(*it2)->free();
+		delete (*it2);
+	}
 	listaDibujableEnemigos.clear();
+	for (list<TextureBalas*>::iterator it3 = listaDibujableBalas.begin(); it3 != listaDibujableBalas.end(); ++it3){
+		(*it3)->free();
+		delete (*it3);
+	}
 	listaDibujableBalas.clear();
+	for (list<TextureBonus*>::iterator it4 = listaDibujableBonus.begin(); it4 != listaDibujableBonus.end(); ++it4){
+		(*it4)->free();
+		delete (*it4);
+	}
 	listaDibujableBonus.clear();
+	for (list<TextureEnergia*>::iterator it5 = listaDibujableEnergia.begin(); it5 != listaDibujableEnergia.end(); ++it5){
+		(*it5)->free();
+		delete (*it5);
+	}
+	listaDibujableEnergia.clear();
+	for (list<TextureScore*>::iterator it6 = listaDibujableScore.begin(); it6 != listaDibujableScore.end(); ++it6){
+		(*it6)->free();
+		delete (*it6);
+	}
+	listaDibujableScore.clear();
 
 	anchoVentana = 0;
 	altoVentana = 0;
@@ -99,6 +125,7 @@ void Grafica::close() {
 	camera2.x = 0;
 	camera3.x = 0;
 
+	
 	//CIERRO SDL
 	SDL_Quit();
 }

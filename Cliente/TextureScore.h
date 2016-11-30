@@ -33,6 +33,7 @@ public:
 	void inicializarTexture (SDL_Renderer* window, string aMostrar);
 	void renderScore(SDL_Renderer* window);
 
+	void free();
     ~TextureScore();
 };
 

@@ -52,3 +52,14 @@ TextureScore::~TextureScore() {
 	// TODO Auto-generated destructor stub
 }
 
+void TextureScore::free()
+{
+	//Free texture if it exists
+	if( texture != NULL )
+	{
+		SDL_DestroyTexture( texture );
+		texture = NULL;
+	
+	}
+}
+
