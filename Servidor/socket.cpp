@@ -223,6 +223,36 @@ void cargarFondos(char* xml){
 
 }
 
+void cargarBonus(){
+
+	//contenedorBonus.clear();
+
+	int sum = 0;
+	for (int i = 0; i < 20; ++i)
+	{
+		//7 tipos de bonus:
+		//0- recargar arma 1
+		//1- pasar a arma 2
+		//2- recargar arma 2
+		//3- pasar a arma 3
+		//4- recargar arma 3
+		//5- bonus de vida
+		//6- bonus de killall
+		int tipoBonus = rand() % 8;
+		if(tipoBonus > 6){
+			tipoBonus = 6;
+		}
+		//tipoBonus = 1;
+		int x = sum + 800;
+		sum = x;
+		int y = ALTO_VENTANA - 60;
+
+		int a = pthread_mutex_lock(&mutexContenedorBonus);
+		contenedorBonus.nuevoBonus(x,y,tipoBonus);
+		pthread_mutex_unlock (&mutexContenedorBonus);
+	}
+}
+
 void cargarBonus(char* xml){
 	file<> xmlFile(xml);
 	xml_document<> doc;    // character type defaults to char
@@ -245,7 +275,7 @@ void cargarBonus(char* xml){
 		if(tipoBonus > 6){
 			tipoBonus = 6;
 		}
-		tipoBonus = 1;
+		//tipoBonus = 1;
 		int x = sum + 800;
 		sum = x;
 		int y = ALTO_VENTANA - 60;
@@ -401,6 +431,8 @@ void avanzarAlSiguienteNivel(){
 	contenedorEnemigos.cargarEnemigosDelNivel(nivelActual,ALTO_VENTANA);
 	contenedorBalas.listaDeBalas.clear();
 	contenedorBonus.listaBonus.clear();
+
+	cargarBonus();
 	//listaEnergias.clear();
 	//listaScores.clear();
 

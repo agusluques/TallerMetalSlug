@@ -82,7 +82,14 @@ bool ContenedorBonus::detectarColision(list<Bonus>* listaBonusDeBaja, list<Bonus
 	}
 	return killAll;
 }
-		
+
+void ContenedorBonus::clear(){
+
+	for(list<Bonus>::iterator it = listaBonus.begin(); it != listaBonus.end(); ++it){
+			it = listaBonus.erase(it);
+			it--;
+	}
+}
 
 ContenedorBonus::~ContenedorBonus() {
 	listaBonus.clear();
