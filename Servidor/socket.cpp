@@ -432,18 +432,6 @@ void terminarJuego(){
 	contenedorBonus.listaBonus.clear();
 	listaEnergias.clear();
 	listaScores.clear();
-
-	//envio a conectados q cierren grafica
-	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
-		if((**it).estaConectado()){
-			char nombreDestino[50];
-			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
-
-			mensajeClass* mensajeObj = new mensajeClass(4, (**it).numCliente());
-			listaDeMensajes.push_back(mensajeObj);
-		}
-
-	}
 }
 
 void avanzarAlSiguienteNivel(){
@@ -1199,7 +1187,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 							}
 						}
 
-						if (camaraX >= 1000){ //8075
+						if (camaraX >= 8075){ //8075
 							avanzarCamara = false;
 							jefePresente = true;
 							contenedorEnemigos.iniciarJefe(camaraX, nivelActual);
