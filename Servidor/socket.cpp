@@ -372,7 +372,8 @@ void avanzarAlSiguienteNivel(){
 	contenedorEnemigos.cargarEnemigosDelNivel(nivelActual,ALTO_VENTANA);
 	contenedorBalas.listaDeBalas.clear();
 	contenedorBonus.listaBonus.clear();
-	listaScores.clear();
+	//listaEnergias.clear();
+	//listaScores.clear();
 
 	//contenedorBalas.clear();
 	//contenedorBonus.cargarBonusNivel();

@@ -199,45 +199,58 @@ void Grafica::quitarBalas(int id){
 }
 
 void Grafica::agregarEnergia(int id, int spY, string imagen){
-	TextureEnergia* nuevo = new TextureEnergia;
-    posicionEnergia +=150;
-	nuevo->setId(id);
-	nuevo->setPos(posicionEnergia);
+	bool esta = false;
 
-	char nombre[14];
-	strcpy(nombre, imagen.c_str());
+	for (list<TextureEnergia*>::iterator it = listaDibujableEnergia.begin(); it != listaDibujableEnergia.end(); ++it) {
+		if((*it)->id == id){
+			char nombre[14];
+			strcpy(nombre, imagen.c_str());
+			(*it)->inicializarTexture(window, nombre);
+			esta = true;
+			break;
+		}
+	}
 
-	nuevo->inicializarTexture(window, nombre);
+	if(!esta){
+		TextureEnergia* nuevo = new TextureEnergia;
+		posicionEnergia +=150;
+		nuevo->setId(id);
+		nuevo->setPos(posicionEnergia);
 
-	listaDibujableEnergia.push_back(nuevo);
+		char nombre[14];
+		strcpy(nombre, imagen.c_str());
 
+		nuevo->inicializarTexture(window, nombre);
+
+		listaDibujableEnergia.push_back(nuevo);
+	}
 }
 
 void Grafica::agregarScores (int id){
 
 	TextureScore* nuevo = new TextureScore;
-    nuevo->setId(id);
-    nuevo->setX(posicionEnergia+20);
-    nuevo->setY(35);
+	nuevo->setId(id);
+	nuevo->setX(posicionEnergia+20);
+	nuevo->setY(35);
 
-    if (id==1){
-       SDL_Color color1 = {85,170,230,255}; //celeste
-       nuevo->setColor(color1);
-    }
-    if( id==2){
-        SDL_Color color2 = {0,0,255,255}; //azul
-        nuevo->setColor(color2);
-    }
-    if (id ==3){
-        SDL_Color color3 = {255,255,255,255}; //blanco
-        nuevo->setColor(color3);
-    }
-    if (id == 4){
-        SDL_Color color4 = {0,0,0,255}; //negro
-        nuevo->setColor(color4);
-    }
+	if (id==1){
+		SDL_Color color1 = {85,170,230,255}; //celeste
+		nuevo->setColor(color1);
+	}
+	if( id==2){
+		SDL_Color color2 = {0,0,255,255}; //azul
+		nuevo->setColor(color2);
+	}
+	if (id ==3){
+		SDL_Color color3 = {255,255,255,255}; //blanco
+		nuevo->setColor(color3);
+	}
+	if (id == 4){
+		SDL_Color color4 = {0,0,0,255}; //negro
+		nuevo->setColor(color4);
+	}
 
-    string aMostrar = "0";
+	string aMostrar = "0";
 
 	nuevo->inicializarTexture(window, aMostrar);
 
@@ -247,13 +260,13 @@ void Grafica::agregarScores (int id){
 
 void Grafica::actualizarScore(int id, int score){
 	for (list<TextureScore*>::iterator it = listaDibujableScore.begin(); it != listaDibujableScore.end(); ++it) {
-	   if((*it)->id == id){
-		   (*it)->setAumentable(score);
-		   string numero="";
-		   numero = static_cast<ostringstream*>(&(ostringstream() << score))->str();
-           (*it)->inicializarTexture(window,numero);
-           (*it)->renderScore(window);
-	   }
+		if((*it)->id == id){
+			(*it)->setAumentable(score);
+			string numero="";
+			numero = static_cast<ostringstream*>(&(ostringstream() << score))->str();
+			(*it)->inicializarTexture(window,numero);
+			(*it)->renderScore(window);
+		}
 	}
 }
 
@@ -694,13 +707,13 @@ void Grafica::setXCamara(int camaraX){
 	this->xCamara = camaraX;
 
 	//if(camera3.x < (4000-camera3.w))
-		camera3.x = xCamara*camera3.w/anchoVentana;
+	camera3.x = xCamara*camera3.w/anchoVentana;
 
 	//if(camera2.x < (2000-camera2.w))
-		camera2.x = (((2000-camera3.w)*camera3.x)/(4000-camera3.w));
+	camera2.x = (((2000-camera3.w)*camera3.x)/(4000-camera3.w));
 
 	//if(camera1.x < (1000-camera1.w))
-		camera1.x = (((1000-camera3.w)*camera3.x)/(4000-camera3.w));
+	camera1.x = (((1000-camera3.w)*camera3.x)/(4000-camera3.w));
 
 }
 
@@ -729,7 +742,7 @@ void Grafica::setXCamara(int camaraX){
 
 bool Grafica::empiezaDeNuevo () {
 
-		return false;
+	return false;
 }
 /* caso empezaria de nuevo
 
@@ -751,4 +764,4 @@ bool Grafica::empiezaDeNuevo () {
 		return false;
 }
 
-*/
+ */
