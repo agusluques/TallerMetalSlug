@@ -5,6 +5,7 @@
 bool avanzar;
 char nombreCliente[50];
 bool enviado = false;
+bool cambiaNivel = false;
 
 mySocket::mySocket(char* puerto, char* IP){
 
@@ -127,8 +128,8 @@ bool mySocket::recibirMensaje(void* buffer, int tamanio){
 	if (n < 0) errorSocket = true;
 
 	//char* tmp = (char*)mensaje;
-	//	int* tmp = (int*)buffer;
-	//	cout << "RECIBE: " << (*tmp) << endl;
+		int* tmp = (int*)buffer;
+		cout << "RECIBE: " << (*tmp) << endl;
 
 	return errorSocket;
 }
@@ -214,7 +215,13 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 			break;
 		}
 		case 4:{
-			cerrarGrafica();
+			//cerrarGrafica();
+			error = recibirMensaje(&corte, sizeof(int));
+			cambiarDeNivel();
+			estaEnPantallaScore = false;
+			cout << "SALGO CAMBIAR NIVEL" << endl;
+			cambiaNivel = true;
+
 			break;
 		}
 		case 5:{
@@ -344,7 +351,12 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 			break;
 		}
 
-		error = recibirMensaje(&corte, sizeof(int));
+		if(!cambiaNivel)
+			error = recibirMensaje(&corte, sizeof(int));
+		cambiaNivel = false;
+
+		cout << "SALGO CASES" << endl;
+
 	}
 	return error;
 }
@@ -444,6 +456,71 @@ void mySocket::cargarDibujables(){
 	recibirMensaje(&xCamara, sizeof(int));
 	grafica.setXCamara(xCamara);
 
+}
+
+void mySocket::cambiarDeNivel(){
+	cout << "RE Inicio grafica" << endl;
+
+	//pido informacion de los fondos
+	char codigo = '4';
+	enviarMensaje(&codigo, sizeof(char));
+
+	int cantidad;
+	recibirMensaje(&cantidad, sizeof(int));
+	cout << "CANTIDAD: " << cantidad << endl;
+
+	int anchoFondo1, tamId1, anchoFondo2,  tamId2, anchoFondo3, tamId3;
+	recibirMensaje(&tamId1, sizeof(int));
+	cout << "TAMID1: " << tamId1 << endl;
+	char idFondo1[tamId1];
+	recibirMensaje(&idFondo1, sizeof(char)*tamId1);
+	cout << "ID Fondo 1: " << idFondo1 << endl;
+	recibirMensaje(&anchoFondo1, sizeof(int));
+	cout << "Ancho 1: " << anchoFondo1 << endl;
+	string resultado1(idFondo1, tamId1);
+	resultado1 = "img/fondos/" + resultado1;
+	cout << "FONDO 1: " << resultado1 << endl;
+
+	recibirMensaje(&tamId2, sizeof(int));
+	char idFondo2[tamId2];
+	recibirMensaje(&idFondo2, sizeof(char)*tamId2);
+	recibirMensaje(&anchoFondo2, sizeof(int));
+	string resultado2(idFondo2, tamId2);
+	resultado2 = "img/fondos/" + resultado2;
+	cout << "FONDO 2: " << resultado2 << endl;
+
+	recibirMensaje(&tamId3, sizeof(int));
+	char idFondo3[tamId3];
+	recibirMensaje(&idFondo3, sizeof(char)*tamId3);
+	recibirMensaje(&anchoFondo3, sizeof(int));
+	string resultado3(idFondo3, tamId3);
+	resultado3 = "img/fondos/" + resultado3;
+	cout << "FONDO 3: " << resultado3 << endl;
+
+	ifstream infile1(resultado1.c_str());
+	if ((infile1.good()) == false) {
+		resultado1 = "img/fondos/notFoundFondo1.png";
+	}
+	ifstream infile2(resultado2.c_str());
+	if ((infile2.good()) == false) {
+		resultado2 = "img/fondos/notFoundFondo2.png";
+	}
+	ifstream infile3(resultado3.c_str());
+	if ((infile3.good()) == false) {
+		resultado3 = "img/fondos/notFoundFondo3.png";
+	}
+
+	grafica.inicializarFondo(&resultado1[0], &resultado2[0],&resultado3[0]);
+
+	grafica.setearFondoScore(false);
+
+	//cargarDibujables();
+
+	estaEnPantallaScore = false;
+	bool quieto = true;
+	bool hayAnterior = false;
+
+	cout << "inicie fondos" << endl;
 }
 
 bool mySocket::iniciarGrafica(bool &pasarNivel){
@@ -587,7 +664,7 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 			grafica.mostrarDibujables();
 		}
 
-		if(!estaEnPantallaScore){
+		//if(!estaEnPantallaScore){
 			//if (!grafica.estaMuerto()){
 			SDL_PumpEvents();
 			const Uint8 *keys = SDL_GetKeyboardState(NULL);
@@ -705,7 +782,7 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 			keyAnterior = keys;
 			hayAnterior = true;
 
-		}
+		//}
 	}
 
 	return returnIGrafica;

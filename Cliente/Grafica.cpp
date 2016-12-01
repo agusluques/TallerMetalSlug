@@ -127,7 +127,7 @@ void Grafica::close() {
 	camera2.x = 0;
 	camera3.x = 0;
 
-	
+
 	//CIERRO SDL
 	SDL_Quit();
 }
@@ -549,7 +549,7 @@ void Grafica::mostrarDibujables(){
 		ss2 << (*it)->aumentable;
 		string str = ss.str();
 		string str2 = ss2.str();
-		string texto = "Jugador " + str + " : " + str2 + " puntos"; 
+		string texto = "Jugador " + str + " : " + str2 + " puntos";
 		const char * c = texto.c_str();
 		SDL_Color color = {255, 255, 255, 1};
 		SDL_Surface* superficie = TTF_RenderText_Solid(font, c,color);
@@ -715,13 +715,6 @@ bool Grafica::inicializarVentana(int ancho, int alto){
 bool Grafica::inicializarFondo(char *path1, char* path2, char* path3){
 	//Loading success flag
 	bool success = true;
-
-	fondo1 = IMG_Load( "img/fondos/negro.png");
-	if( fondo1 == NULL ) {
-		cout << "No se pudo cargar la imagen " << "negro.png" << "SDL Error: " << SDL_GetError() << endl;
-	}
-	spriteFondoScore = SDL_CreateTextureFromSurface(window, fondo1);
-	SDL_FreeSurface(fondo1);
 
 	fondo1 = IMG_Load( path1);
 

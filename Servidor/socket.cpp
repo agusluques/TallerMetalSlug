@@ -449,18 +449,6 @@ void avanzarAlSiguienteNivel(){
 	//contenedorBalas.clear();
 	//contenedorBonus.cargarBonusNivel();
 
-	//envio a conectados q cierren grafica
-	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
-		if((**it).estaConectado()){
-			char nombreDestino[50];
-			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
-
-			mensajeClass* mensajeObj = new mensajeClass(4, (**it).numCliente());
-			listaDeMensajes.push_back(mensajeObj);
-		}
-
-	}
-
 	for(int i = 1; i <= listaDeUsuarios.size(); i++){
 		list<DibujableServer*>::iterator it = listaDibujables.begin();
 		advance(it, i-1);
@@ -485,8 +473,20 @@ void avanzarAlSiguienteNivel(){
 		(*it)->setSpY(1);
 	}
 
-	//envio a conectados q abran grafica
+	//envio a conectados q cierren grafica
 	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
+		if((**it).estaConectado()){
+			char nombreDestino[50];
+			//buscarNombreUsuario(nombreDestino, (**it).numCliente());
+
+			mensajeClass* mensajeObj = new mensajeClass(4, (**it).numCliente());
+			listaDeMensajes.push_back(mensajeObj);
+		}
+
+	}
+
+	//envio a conectados q abran grafica
+	/*for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 
 		if((**it).estaConectado()){
 			char nombreDestino[50];
@@ -496,7 +496,7 @@ void avanzarAlSiguienteNivel(){
 			listaDeMensajes.push_back(mensajeObj);
 		}
 
-	}
+	}*/
 
 	/*
 	for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
@@ -520,6 +520,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 	while (abierto){
 
 		char codigo;
+
+		pthread_mutex_lock(&mutexLista);
 
 		if(inicioGrafica){
 			struct timeval tv;
@@ -575,8 +577,6 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 		} else {
 			int data = read(newsockfd, &codigo, sizeof(char));
 		}
-
-		pthread_mutex_lock(&mutexLista);
 
 		switch(codigo){
 
@@ -748,8 +748,11 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				int ancho3 = 4000;
 
 				enviarMensaje(newsockfd, &tamFondo1, sizeof(int));
+				cout << "TAMID1: " << tamFondo1 << endl;
 				enviarMensaje(newsockfd, &spriteId1, sizeof(char)*tamFondo1);
+				cout << "ID Fondo 1: " << spriteId1 << endl;
 				enviarMensaje(newsockfd, &ancho1, sizeof(int));
+				cout << "Ancho 1: " << ancho1 << endl;
 
 				enviarMensaje(newsockfd, &tamFondo2, sizeof(int));
 				enviarMensaje(newsockfd, &spriteId2, sizeof(char)*tamFondo2);
@@ -758,6 +761,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				enviarMensaje(newsockfd, &tamFondo3, sizeof(int));
 				enviarMensaje(newsockfd, &spriteId3, sizeof(char)*tamFondo3);
 				enviarMensaje(newsockfd, &ancho3, sizeof(int));
+
 			} else if(nivelActual == 3){
 
 				string fondo1 = "l3fondo1.png";
@@ -945,6 +949,17 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			int tamanioMensaje = 0;
 			enviarMensaje(newsockfd, &tamanioMensaje, sizeof(int));
 
+			if(estaEnPantallaScore){
+				if(puedeSalirScore()){
+					avanzar = false;
+					camaraX = 0;
+					camaraSet = 0;
+					if(nivelActual < 4){
+						avanzarAlSiguienteNivel();
+					}else terminarJuego();
+				}
+			}else{
+
 			list<int>::iterator itFD = listaFDClientes.begin();
 			if(newsockfd == (*itFD)){
 				//if(numeroCliente == 1){
@@ -1039,17 +1054,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 						quitarBonus(itBonus->getId());
 					}
 				}
-
-				if(estaEnPantallaScore){
-					if(puedeSalirScore()){
-						avanzar = false;
-						camaraX = 0;
-						camaraSet = 0;
-						if(nivelActual < 4){
-							avanzarAlSiguienteNivel();
-						}else terminarJuego();
-					}
-				}
+			}
 			}
 
 			break;
@@ -1187,7 +1192,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 							}
 						}
 
-						if (camaraX >= 8075){ //8075
+						if (camaraX >= 1000){ //8075
 							avanzarCamara = false;
 							jefePresente = true;
 							contenedorEnemigos.iniciarJefe(camaraX, nivelActual);

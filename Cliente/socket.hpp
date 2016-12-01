@@ -52,6 +52,9 @@ class mySocket{
 
 		void cargarDibujables();
 		bool iniciarGrafica(bool &pasarNivel);
+
+		void cambiarDeNivel();
+
 		~mySocket();
 };
 
