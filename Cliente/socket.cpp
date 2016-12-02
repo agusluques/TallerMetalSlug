@@ -127,7 +127,7 @@ bool mySocket::recibirMensaje(void* buffer, int tamanio){
 	int n = read(this->sockfd, buffer, tamanio);
 	if (n < 0) errorSocket = true;
 
-	//char* tmp = (char*)mensaje;
+	//char* tmp = (char*)buffer;
 		int* tmp = (int*)buffer;
 		cout << "RECIBE: " << (*tmp) << endl;
 
@@ -172,6 +172,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 
 		switch(tipoMensaje){
 		case 1:{
+			cout << "RECIBO GRAFICA JUGADORES" << endl;
 			//recibo grafica jugadores
 			int x,y, spx, spy, idObjeto;
 			int tipo;
@@ -196,6 +197,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 			break;
 		}
 		case 2:
+			cout << "MATO ENEMIGO" << endl;
 			//MATAR ENEMIGO!
 			int idObjeto;
 			error = recibirMensaje(&idObjeto, sizeof(int));
@@ -204,6 +206,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 
 			break;
 		case 3:{
+			cout << "RECIBO MENSAJE" << endl;
 			//recibo mensaje
 			int tam;
 
@@ -215,16 +218,17 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 			break;
 		}
 		case 4:{
+			cout << "PIDE CAMBIAR NIVEL" << endl;
 			//cerrarGrafica();
 			error = recibirMensaje(&corte, sizeof(int));
 			cambiarDeNivel();
 			estaEnPantallaScore = false;
-			cout << "SALGO CAMBIAR NIVEL" << endl;
 			cambiaNivel = true;
 
 			break;
 		}
 		case 5:{
+			cout << "INICIAR GRAFICA" << endl;
 			error = recibirMensaje(&corte, sizeof(int));
 			grafica.setearFondoScore(false);
 			iniciarGrafica(pasarNivel);
@@ -236,6 +240,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		}
 
 		case 6: {
+			cout << "RECIBO BALAS" << endl;
 			//recibo balas
 			int id, x, y, tipoDisp, dirBala, spY;
 
@@ -252,6 +257,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		}
 
 		case 9: {
+			cout << "RECIBO BONUS" << endl;
 			//recibo Bonus
 			//cout << "ENTRO A RECIBIR BONUS" << endl;
 			int id, x, y, tipoBonus;
@@ -273,6 +279,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		}
 
 		case 8:{
+			cout << "RECIBO BAJAS BALAS" << endl;
 			//recibo bajas de balas
 			int id;
 			error = recibirMensaje(&id, sizeof(int));
@@ -283,6 +290,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		}
 
 		case 10:{
+			cout << "RECIBO BAJAS BONUS" << endl;
 			int id;
 			error = recibirMensaje(&id, sizeof(int));
 			grafica.quitarBonus(id);
@@ -291,16 +299,18 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		}
 
 		case 11:{
+			cout << "RECIBO SCORE 11" << endl;
 			int score;
 			error = recibirMensaje(&score, sizeof(int));
 
-			cout<<score<<endl;
+			cout << score << endl;
 			//grafica.mostrarScores(score);
 
 			break;
 		}
 
 		case 12:{
+			cout << "RECIBO SCORE 12" << endl;
 			int id,score;
 
 			error = recibirMensaje(&id, sizeof(int));
@@ -312,6 +322,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		}
 
 		case 13:{
+			cout << "RECIBO VIDA" << endl;
 			int id,vida;
 
 			error = recibirMensaje(&id, sizeof(int));
@@ -331,12 +342,13 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		}
 
 		case 7:{
+			cout << "CASE 7" << endl;
 			return true;
 			break;
 		}
 
 		case 20:{
-			cout << "SEEE PASE DE NIVEL VAMO LOCO" << endl;
+			cout << "RECIBO PASE DE NIVEL" << endl;
 
 			//pasarNivel = true;
 			//cerrarGrafica();
@@ -349,6 +361,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 
 		default:
 			break;
+
 		}
 
 		if(!cambiaNivel)
@@ -646,7 +659,7 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 	while( !quit ) {
 		//le envio un mover siempre
 		codigoMover = 'M';
-		enviarMensaje(&codigoMover, sizeof(char));
+		if (!estaEnPantallaScore) enviarMensaje(&codigoMover, sizeof(char));
 
 		//recibo si hay cambios
 		bool huboError = recibirMensaje(pasarNivel);
@@ -664,7 +677,7 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 			grafica.mostrarDibujables();
 		}
 
-		//if(!estaEnPantallaScore){
+		if(!estaEnPantallaScore){
 			//if (!grafica.estaMuerto()){
 			SDL_PumpEvents();
 			const Uint8 *keys = SDL_GetKeyboardState(NULL);
@@ -782,7 +795,7 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 			keyAnterior = keys;
 			hayAnterior = true;
 
-		//}
+		}
 	}
 
 	return returnIGrafica;
