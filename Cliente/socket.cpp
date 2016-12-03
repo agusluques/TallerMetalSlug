@@ -473,7 +473,7 @@ void mySocket::cargarDibujables(){
 
 void mySocket::cambiarDeNivel(){
 	cout << "RE Inicio grafica" << endl;
-
+	grafica.liberar();
 	//pido informacion de los fondos
 	char codigo = '4';
 	enviarMensaje(&codigo, sizeof(char));

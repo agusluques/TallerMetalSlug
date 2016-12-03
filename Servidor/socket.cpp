@@ -440,6 +440,7 @@ void avanzarAlSiguienteNivel(){
 	jefePresente = false;
 	listaDeMensajes.clear();
 	contenedorEnemigos.cargarEnemigosDelNivel(nivelActual,ALTO_VENTANA);
+	
 	contenedorBalas.listaDeBalas.clear();
 	contenedorBonus.listaBonus.clear();
 

@@ -3,7 +3,7 @@
 
 TextureScore::TextureScore() {
 	texture = NULL;
-	font = TTF_OpenFont("OpenSans-ExtraBold.ttf",50);
+	//font = TTF_OpenFont("OpenSans-ExtraBold.ttf",50);
 
 }
 
@@ -34,9 +34,11 @@ void TextureScore::inicializarTexture(SDL_Renderer* window, string aMostrar){
 	texture = NULL;
 	char score[4];
 	strcpy(score, aMostrar.c_str());
+	font = TTF_OpenFont("OpenSans-ExtraBold.ttf",50);
+
 	superficie = TTF_RenderText_Solid(font, score,color);
 	texture = SDL_CreateTextureFromSurface( window, superficie);
-
+	TTF_CloseFont(font);
 	SDL_FreeSurface(superficie);
 }
 
@@ -46,6 +48,7 @@ void TextureScore::renderScore(SDL_Renderer* window){
     puntajeRect.y = ycord;
 	SDL_QueryTexture(texture, NULL, NULL, &puntajeRect.w, &puntajeRect.h);
 	SDL_RenderCopy(window, texture, NULL, &puntajeRect);
+	
 }
 
 TextureScore::~TextureScore() {

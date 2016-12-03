@@ -77,6 +77,8 @@ public:
 
 	int xCamara;
 
+	TTF_Font *font;
+
 	Grafica();
 	virtual ~Grafica();
 	bool init(int ancho, int alto);
@@ -139,6 +141,8 @@ public:
 	bool empiezaDeNuevo();
 
 	void setXCamara(int xCamara);
+
+	void liberar();
 
 };
 

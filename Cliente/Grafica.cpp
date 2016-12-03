@@ -132,6 +132,40 @@ void Grafica::close() {
 	SDL_Quit();
 }
 
+void Grafica::liberar(){
+	SDL_DestroyTexture(spriteFondo1);
+	SDL_DestroyTexture(spriteFondo2);
+	SDL_DestroyTexture(spriteFondo3);
+	SDL_DestroyTexture(puntaje);
+	spriteFondo1 = NULL;
+	spriteFondo2 = NULL;
+	spriteFondo3 = NULL;
+	fondo1 = NULL;
+	fondo2 = NULL;
+	fondo3 = NULL;
+
+
+	SDL_DestroyTexture(soldadosTexture);
+	soldadosTexture = NULL;
+
+	for (list<LTextureEnemigo*>::iterator it2 = listaDibujableEnemigos.begin(); it2 != listaDibujableEnemigos.end(); ++it2){
+		(*it2)->free();
+		delete (*it2);
+	}
+	listaDibujableEnemigos.clear();
+	for (list<TextureBalas*>::iterator it3 = listaDibujableBalas.begin(); it3 != listaDibujableBalas.end(); ++it3){
+		(*it3)->free();
+		delete (*it3);
+	}
+	listaDibujableBalas.clear();
+	for (list<TextureBonus*>::iterator it4 = listaDibujableBonus.begin(); it4 != listaDibujableBonus.end(); ++it4){
+		(*it4)->free();
+		delete (*it4);
+	}
+	listaDibujableBonus.clear();
+
+}
+
 //CARGAR UNA IMAGEN
 SDL_Surface* Grafica::loadSurface( std::string path ) {
 	//CARGAR IMAGEN
@@ -329,37 +363,7 @@ bool Grafica::estaMuerto(){
 	return this->muerto;
 }
 
-void Grafica::mostrarScores(int score){
-	SDL_RenderClear( window );
 
-	TTF_Font *font = TTF_OpenFont("OpenSans-ExtraBold.ttf",50);
-	SDL_Color color = {249, 249, 16, 1};
-	SDL_Surface* superficie = TTF_RenderText_Solid(font, "Scores",color);
-	puntaje = SDL_CreateTextureFromSurface( window, superficie);
-	puntajeRect.x = puntajeRect.y = 250;
-	SDL_QueryTexture(puntaje, NULL, NULL, &puntajeRect.w, &puntajeRect.h);
-	SDL_RenderCopy(window, puntaje, NULL, &puntajeRect);
-	SDL_FreeSurface(superficie);
-	int x = 260;
-	for (list<TextureScore*>::iterator it = listaDibujableScore.begin(); it != listaDibujableScore.end(); ++it) {
-		std::stringstream ss, ss2;
-		ss << (*it)->id;
-		ss2 << (*it)->aumentable;
-		string str = ss.str();
-		string str2 = ss2.str();
-		string texto = "JUGADOR " + str + " HIZO " + str2 + " PUNTOS"; 
-		const char * c = texto.c_str();
-		SDL_Surface* superficie = TTF_RenderText_Solid(font, c,color);
-		puntaje = SDL_CreateTextureFromSurface( window, superficie);
-		puntajeRect.x = puntajeRect.y = x + 50;
-		x = x+50;
-		SDL_QueryTexture(puntaje, NULL, NULL, &puntajeRect.w, &puntajeRect.h);
-		SDL_RenderCopy(window, puntaje, NULL, &puntajeRect);
-		SDL_FreeSurface(superficie);
-
-	}
-
-}
 
 void Grafica::setearFondoScore(bool estado){
 	esFondoScore = estado;
@@ -533,7 +537,7 @@ void Grafica::mostrarDibujables(){
 		listaDibujableScore.sort(Comparator());
 
 
-		TTF_Font *font = TTF_OpenFont("OpenSans-ExtraBold.ttf",50);
+		font = TTF_OpenFont("OpenSans-ExtraBold.ttf",50);
 		SDL_Color color = {249, 249, 16, 1};
 		SDL_Surface* superficie = TTF_RenderText_Solid(font, "SCORES",color);
 		puntaje = SDL_CreateTextureFromSurface( window, superficie);
@@ -542,27 +546,31 @@ void Grafica::mostrarDibujables(){
 		SDL_QueryTexture(puntaje, NULL, NULL, &puntajeRect.w, &puntajeRect.h);
 		SDL_RenderCopy(window, puntaje, NULL, &puntajeRect);
 		SDL_FreeSurface(superficie);
+		SDL_DestroyTexture(puntaje);
 		int y = 130;
 		for (list<TextureScore*>::iterator it = listaDibujableScore.begin(); it != listaDibujableScore.end(); ++it) {
-		std::stringstream ss, ss2;
-		ss << (*it)->id;
-		ss2 << (*it)->aumentable;
-		string str = ss.str();
-		string str2 = ss2.str();
-		string texto = "Jugador " + str + " : " + str2 + " puntos";
-		const char * c = texto.c_str();
-		SDL_Color color = {255, 255, 255, 1};
-		SDL_Surface* superficie = TTF_RenderText_Solid(font, c,color);
-		puntaje = SDL_CreateTextureFromSurface( window, superficie);
-		puntajeRect.x = 50;
-		puntajeRect.y = y + 70;
-		y = y+70;
-		SDL_QueryTexture(puntaje, NULL, NULL, &puntajeRect.w, &puntajeRect.h);
-		SDL_RenderCopy(window, puntaje, NULL, &puntajeRect);
-		SDL_FreeSurface(superficie);
+			std::stringstream ss, ss2;
+			ss << (*it)->id;
+			ss2 << (*it)->aumentable;
+			string str = ss.str();
+			string str2 = ss2.str();
+			string texto = "Jugador " + str + " : " + str2 + " puntos";
+			const char * c = texto.c_str();
+			SDL_Color color = {255, 255, 255, 1};
+			SDL_Surface* superficie = TTF_RenderText_Solid(font, c,color);
+			puntaje = SDL_CreateTextureFromSurface( window, superficie);
+			puntajeRect.x = 50;
+			puntajeRect.y = y + 70;
+			y = y+70;
+			SDL_QueryTexture(puntaje, NULL, NULL, &puntajeRect.w, &puntajeRect.h);
+			SDL_RenderCopy(window, puntaje, NULL, &puntajeRect);
+			SDL_FreeSurface(superficie);
+			SDL_DestroyTexture(puntaje);
 
+		}
+		TTF_CloseFont(font);
 	}
-	}
+	
 
 	for (list<TextureEnergia*>::iterator it = listaDibujableEnergia.begin(); it != listaDibujableEnergia.end(); ++it) {
 		(*it)->renderEnergia(window, altoVentana/20);
