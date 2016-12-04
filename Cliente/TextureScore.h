@@ -11,7 +11,6 @@ using namespace std;
 
 class TextureScore {
 public:
-
 	int id;
 	int xcord;
 	int ycord;

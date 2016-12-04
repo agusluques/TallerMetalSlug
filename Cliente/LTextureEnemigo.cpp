@@ -125,7 +125,7 @@ bool LTextureEnemigo::loadFromFile(SDL_Renderer* window, char* path ) {
 }
 
 void LTextureEnemigo::inicializarTexture(SDL_Renderer* window, char* text){
-	loadFromFile(window, text);
+	//loadFromFile(window, text);
 	//HUYENDO
 	player[0][0].x=0; player[0][0].y=50;
 	player[0][0].w=30; player[0][0].h=40;

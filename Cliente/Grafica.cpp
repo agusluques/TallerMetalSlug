@@ -203,7 +203,8 @@ void Grafica::actualizar(int idObjeto,int x,int y, int spx, int spy, bool avanza
 			nuevo->setSpY(spy);
 			nuevo->setFlip(flip);
 			nuevo->tipo = tipo;
-			nuevo->inicializarTexture(window, "soldado.png"); //pasar nombre como parametro
+			char nombre[] = "soldado.png";
+			nuevo->inicializarTexture(window, nombre); //pasar nombre como parametro
 
 			listaDibujableEnemigos.push_back(nuevo);
 		}
@@ -293,53 +294,54 @@ void Grafica::agregarEnergia(int id, int spY, string imagen){
 }
 
 void Grafica::agregarScores (int id){
-//	bool existe = false;
-//
-//	for (list<TextureScore*>::iterator it = listaDibujableScore.begin(); it != listaDibujableScore.end(); ++it) {
-//		if((*it)->id == id){
-//			existe = true;
-//		}
-//	}
-//
-//	if(!existe){
-//		TextureScore* nuevo = new TextureScore;
-//		nuevo->setId(id);
-//		nuevo->setX(posicionEnergia+20);
-//		nuevo->setY(35);
-//
-//		if (id==1){
-//			SDL_Color color1 = {85,170,230,255}; //celeste
-//			nuevo->setColor(color1);
-//		}
-//		if( id==2){
-//			SDL_Color color2 = {0,0,255,255}; //azul
-//			nuevo->setColor(color2);
-//		}
-//		if (id ==3){
-//			SDL_Color color3 = {255,255,255,255}; //blanco
-//			nuevo->setColor(color3);
-//		}
-//		if (id == 4){
-//			SDL_Color color4 = {0,0,0,255}; //negro
-//			nuevo->setColor(color4);
-//		}
-//
-//		string aMostrar = "0";
-//
-//		nuevo->inicializarTexture(window, aMostrar);
-//
-//		listaDibujableScore.push_back(nuevo);
-//	}
+	bool existe = false;
+
+	for (list<TextureScore*>::iterator it = listaDibujableScore.begin(); it != listaDibujableScore.end(); ++it) {
+		if((*it)->id == id){
+			existe = true;
+			break;
+		}
+	}
+
+	if(!existe){
+		TextureScore* nuevo = new TextureScore;
+		nuevo->setId(id);
+		nuevo->setX(posicionEnergia+20);
+		nuevo->setY(35);
+
+		if (id==1){
+			SDL_Color color1 = {85,170,230,255}; //celeste
+			nuevo->setColor(color1);
+		}
+		if( id==2){
+			SDL_Color color2 = {0,0,255,255}; //azul
+			nuevo->setColor(color2);
+		}
+		if (id ==3){
+			SDL_Color color3 = {255,255,255,255}; //blanco
+			nuevo->setColor(color3);
+		}
+		if (id == 4){
+			SDL_Color color4 = {0,0,0,255}; //negro
+			nuevo->setColor(color4);
+		}
+
+		string aMostrar = "0";
+
+		nuevo->inicializarTexture(window, aMostrar);
+
+		listaDibujableScore.push_back(nuevo);
+	}
 }
 
 void Grafica::actualizarScore(int id, int score){
 	for (list<TextureScore*>::iterator it = listaDibujableScore.begin(); it != listaDibujableScore.end(); ++it) {
 		if((*it)->id == id){
 			(*it)->setAumentable(score);
-			string numero="";
+			string numero = "";
 			numero = static_cast<ostringstream*>(&(ostringstream() << score))->str();
 			(*it)->inicializarTexture(window,numero);
-			(*it)->renderScore(window);
+			//(*it)->renderScore(window);
 		}
 	}
 }
