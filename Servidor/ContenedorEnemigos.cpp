@@ -20,8 +20,8 @@ void ContenedorEnemigos::cargarEnemigosDelNivel(int nivel, int ALTO_VENTANA){
 	ultimoId = 4;
 
 	if (nivel == 1) {
-		nuevoEnemigo(750, ALTO_VENTANA - 100, 2);
-		nuevoEnemigo(800, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(850, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(900, ALTO_VENTANA - 100, 3);
 		nuevoEnemigo(1000, ALTO_VENTANA - 100, 2);
 		/*nuevoEnemigo(1200, ALTO_VENTANA - 100, 3);
 		nuevoEnemigo(1400, ALTO_VENTANA - 100, 3);
@@ -68,8 +68,8 @@ void ContenedorEnemigos::cargarEnemigosDelNivel(int nivel, int ALTO_VENTANA){
 		nuevoEnemigo(7900, ALTO_VENTANA - 100, 4);
 		nuevoEnemigo(8000, ALTO_VENTANA - 100, 2);*/
 	} else if (nivel == 2) {
-		nuevoEnemigo(750, ALTO_VENTANA - 100, 2);
-		nuevoEnemigo(800, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(850, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(900, ALTO_VENTANA - 100, 3);
 		nuevoEnemigo(1000, ALTO_VENTANA - 100, 2);
 		/*nuevoEnemigo(1200, ALTO_VENTANA - 100, 3);
 		nuevoEnemigo(1400, ALTO_VENTANA - 100, 3);
@@ -116,8 +116,8 @@ void ContenedorEnemigos::cargarEnemigosDelNivel(int nivel, int ALTO_VENTANA){
 		nuevoEnemigo(7900, ALTO_VENTANA - 100, 4);
 		nuevoEnemigo(8000, ALTO_VENTANA - 100, 2);*/
 	} else if (nivel == 3) {
-		nuevoEnemigo(750, ALTO_VENTANA - 100, 2);
-		nuevoEnemigo(800, ALTO_VENTANA - 100, 3);
+		nuevoEnemigo(850, ALTO_VENTANA - 100, 2);
+		nuevoEnemigo(900, ALTO_VENTANA - 100, 3);
 		nuevoEnemigo(1000, ALTO_VENTANA - 100, 2);
 		/*nuevoEnemigo(1200, ALTO_VENTANA - 100, 3);
 		nuevoEnemigo(1400, ALTO_VENTANA - 100, 3);
