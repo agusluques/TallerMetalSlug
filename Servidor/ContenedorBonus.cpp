@@ -77,6 +77,7 @@ bool ContenedorBonus::detectarColision(list<Bonus>* listaBonusDeBaja, list<Bonus
 			}
 		}
 		if(huboColision){
+			huboColision = false;
 			break;
 		}
 	}

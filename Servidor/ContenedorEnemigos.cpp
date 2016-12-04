@@ -263,6 +263,7 @@ void ContenedorEnemigos::killAll(list<DibujableServerEnemigo>* listaEnemigosActi
 				//i--;
 			}
 			if(encontrado){
+				encontrado = false;
 				break;
 			}
 		}
@@ -281,6 +282,7 @@ void ContenedorEnemigos::killAll(list<DibujableServerEnemigo>* listaEnemigosActi
 				i->matar();
 			}
 			if(encontrado){
+				encontrado = false;
 				break;
 			}
 		}
@@ -289,17 +291,19 @@ void ContenedorEnemigos::killAll(list<DibujableServerEnemigo>* listaEnemigosActi
 
 bool ContenedorEnemigos::matarEnemigos(int camaraX, list<DibujableServerEnemigo> listaEnemigosDisparados){
 	bool esJefe = false;
+	bool murioJefe = false;
 	for (list<DibujableServerEnemigo>::iterator it = listaEnemigos.begin(); it != listaEnemigos.end(); ++it) {
 		for (list<DibujableServerEnemigo>::iterator it2 = listaEnemigosDisparados.begin(); it2 != listaEnemigosDisparados.end(); ++it2) {
 			if(it2->id == it->id){
 				//cout << "ENTRA CON: " << it2->bala << endl;
 				it->bala = it2->bala;
-				esJefe = it->matar();
+				esJefe = it->matar(); //este retorna falso y cage no muere el jefe para el socket..
+				if(esJefe) murioJefe = true; //esJefe puede cambiar durante el for..
 			}
 		}
 		if(it->x > camaraX + 850) break;
 	}
-	return esJefe;
+	return murioJefe;
 }
 
 void ContenedorEnemigos::iniciarJefe(int camaraX, int nivelActual){

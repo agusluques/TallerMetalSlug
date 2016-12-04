@@ -247,7 +247,10 @@ void ContenedorBalas::detectarColisiones(list<bala> *listaBalasDeBaja, list<Dibu
 						itBalas = listaDeBalas.erase(itBalas);
 						itBalas--;
 					}
-					if(murio) (*itUser)->matar();
+					if(murio){
+						(*itUser)->matar();
+						murio = false;
+					}
 				}
 			}
 		}
