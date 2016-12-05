@@ -19,6 +19,8 @@ mySocket::mySocket(char* puerto, char* IP){
 	this->conectado = false;
 
 	estaEnPantallaScore = false;
+	quitGrafica = false;
+	returnIGrafica = true;
 }
 
 bool mySocket::conexion(){
@@ -128,8 +130,8 @@ bool mySocket::recibirMensaje(void* buffer, int tamanio){
 	if (n < 0) errorSocket = true;
 
 	//char* tmp = (char*)buffer;
-		int* tmp = (int*)buffer;
-		cout << "RECIBE: " << (*tmp) << endl;
+		//int* tmp = (int*)buffer;
+		//cout << "RECIBE: " << (*tmp) << endl;
 
 	return errorSocket;
 }
@@ -172,7 +174,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 
 		switch(tipoMensaje){
 		case 1:{
-			cout << "RECIBO GRAFICA JUGADORES" << endl;
+			//cout << "RECIBO GRAFICA JUGADORES" << endl;
 			//recibo grafica jugadores
 			int x,y, spx, spy, idObjeto;
 			int tipo;
@@ -197,7 +199,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 			break;
 		}
 		case 2:
-			cout << "MATO ENEMIGO" << endl;
+			//cout << "MATO ENEMIGO" << endl;
 			//MATAR ENEMIGO!
 			int idObjeto;
 			error = recibirMensaje(&idObjeto, sizeof(int));
@@ -206,7 +208,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 
 			break;
 		case 3:{
-			cout << "RECIBO MENSAJE" << endl;
+			//cout << "RECIBO MENSAJE" << endl;
 			//recibo mensaje
 			int tam;
 
@@ -218,7 +220,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 			break;
 		}
 		case 4:{
-			cout << "PIDE CAMBIAR NIVEL" << endl;
+			//cout << "PIDE CAMBIAR NIVEL" << endl;
 			//cerrarGrafica();
 			error = recibirMensaje(&corte, sizeof(int));
 			cambiarDeNivel();
@@ -228,7 +230,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 			break;
 		}
 		case 5:{
-			cout << "INICIAR GRAFICA" << endl;
+			//cout << "INICIAR GRAFICA" << endl;
 			error = recibirMensaje(&corte, sizeof(int));
 			grafica.setearFondoScore(false);
 			iniciarGrafica(pasarNivel);
@@ -240,7 +242,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		}
 
 		case 6: {
-			cout << "RECIBO BALAS" << endl;
+			//cout << "RECIBO BALAS" << endl;
 			//recibo balas
 			int id, x, y, tipoDisp, dirBala, spY;
 
@@ -257,7 +259,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		}
 
 		case 9: {
-			cout << "RECIBO BONUS" << endl;
+			//cout << "RECIBO BONUS" << endl;
 			//recibo Bonus
 			//cout << "ENTRO A RECIBIR BONUS" << endl;
 			int id, x, y, tipoBonus;
@@ -279,7 +281,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		}
 
 		case 8:{
-			cout << "RECIBO BAJAS BALAS" << endl;
+			//cout << "RECIBO BAJAS BALAS" << endl;
 			//recibo bajas de balas
 			int id;
 			error = recibirMensaje(&id, sizeof(int));
@@ -290,7 +292,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		}
 
 		case 10:{
-			cout << "RECIBO BAJAS BONUS" << endl;
+			//cout << "RECIBO BAJAS BONUS" << endl;
 			int id;
 			error = recibirMensaje(&id, sizeof(int));
 			grafica.quitarBonus(id);
@@ -299,7 +301,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		}
 
 		case 11:{
-			cout << "RECIBO SCORE 11" << endl;
+			//cout << "RECIBO SCORE 11" << endl;
 			int score;
 			error = recibirMensaje(&score, sizeof(int));
 
@@ -310,7 +312,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		}
 
 		case 12:{
-			cout << "RECIBO SCORE 12" << endl;
+			//cout << "RECIBO SCORE 12" << endl;
 			int id,score;
 
 			error = recibirMensaje(&id, sizeof(int));
@@ -322,7 +324,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		}
 
 		case 13:{
-			cout << "RECIBO VIDA" << endl;
+			//cout << "RECIBO VIDA" << endl;
 			int id,vida;
 
 			error = recibirMensaje(&id, sizeof(int));
@@ -342,7 +344,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		}
 
 		case 7:{
-			cout << "CASE 7" << endl;
+			//cout << "CASE 7" << endl;
 			return true;
 			break;
 		}
@@ -359,6 +361,20 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 			break;
 		}
 
+		case 21:{
+			cout << "RECIBO CIERRE GRAFICA" << endl;
+
+			grafica.setearFondoScore(false);
+			estaEnPantallaScore = false;
+
+			grafica.liberar();
+
+			quitGrafica = true;
+			returnIGrafica = false;
+
+			break;
+		}
+
 		default:
 			break;
 
@@ -367,8 +383,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 		if(!cambiaNivel)
 			error = recibirMensaje(&corte, sizeof(int));
 		cambiaNivel = false;
-
-		cout << "SALGO CASES" << endl;
+		//cout << "SALGO CASES" << endl;
 
 	}
 	return error;
@@ -537,7 +552,6 @@ void mySocket::cambiarDeNivel(){
 }
 
 bool mySocket::iniciarGrafica(bool &pasarNivel){
-	bool returnIGrafica = true;
 	//chequeo que esten todos los jugadores
 	char codigo;
 	codigo = '7';
@@ -641,7 +655,6 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 
 	}
 
-	bool quit = false;
 	pasarNivel = false;
 	SDL_Event event;
 
@@ -656,7 +669,7 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 	estaEnPantallaScore = false;
 	bool hayAnterior = false;
 
-	while( !quit ) {
+	while( !quitGrafica ) {
 		//le envio un mover siempre
 		codigoMover = 'M';
 		if (!estaEnPantallaScore) enviarMensaje(&codigoMover, sizeof(char));
@@ -664,13 +677,13 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 		//recibo si hay cambios
 		bool huboError = recibirMensaje(pasarNivel);
 		if(pasarNivel){
-			quit = true;
+			quitGrafica = true;
 			returnIGrafica = false;
 		}
 		if(huboError){
 			cout << "Hubo error" << endl;
 			grafica.close();
-			quit = true;
+			quitGrafica = true;
 			returnIGrafica = false;
 		} else {
 			//MOSTRAR VENTANA
@@ -701,7 +714,7 @@ bool mySocket::iniciarGrafica(bool &pasarNivel){
 				strcpy(&codigo,"C");
 				enviarMensaje(&codigo, sizeof(char));
 				//grafica.close();
-				quit = true;
+				quitGrafica = true;
 				returnIGrafica = false;
 			}
 			else if( (keys[SDL_GetScancodeFromKey(SDLK_w)]) && (keys[SDL_GetScancodeFromKey(SDLK_d)]) && (keys[SDL_GetScancodeFromKey(SDLK_h)]) ){

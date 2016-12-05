@@ -59,6 +59,7 @@ bool Grafica::init(int ancho, int alto) {
 
 //CERRAR SDL Y LIBERAR SURFACE
 void Grafica::close() {
+	liberar();
 	//LIBERO
 	SDL_DestroyWindow(windowARenderizar);
 	windowARenderizar = NULL;
@@ -128,6 +129,10 @@ void Grafica::close() {
 	camera3.x = 0;
 
 
+	//CIERRO IMG
+	IMG_Quit();
+	//CIERRO TTF
+	TTF_Quit();
 	//CIERRO SDL
 	SDL_Quit();
 }
@@ -162,7 +167,10 @@ void Grafica::liberar(){
 		(*it4)->free();
 		delete (*it4);
 	}
+
 	listaDibujableBonus.clear();
+	listaDibujableBalas.clear();
+	listaDibujableEnemigos.clear();
 
 }
 

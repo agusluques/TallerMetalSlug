@@ -31,6 +31,9 @@ class mySocket{
 		bool conectado;
 		bool estaEnPantallaScore;
 		Grafica grafica;
+
+		bool quitGrafica;
+		bool returnIGrafica;
 	public:
 		int numeroCliente;
 
