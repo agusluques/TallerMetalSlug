@@ -338,6 +338,8 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 				vida = 10;
 			}
 
+			cout << "VIDA: " << vida << endl;
+
 			grafica.actualizarVida(id, vida);
 
 			break;
@@ -371,6 +373,17 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 
 			quitGrafica = true;
 			returnIGrafica = false;
+
+			cout << "00000000000   0000   00000       000 " << endl;
+			cout << "00000000000   0000   000000      000 " << endl;
+			cout << "0000          0000   000 000     000 " << endl;
+			cout << "0000          0000   000  000    000 " << endl;
+			cout << "00000000000   0000   000   000   000 " << endl;
+			cout << "00000000000   0000   000    000  000 " << endl;
+			cout << "0000          0000   000     000 000 " << endl;
+			cout << "0000          0000   000      000000 " << endl;
+			cout << "0000          0000   000       00000 " << endl;
+			cout << "0000          0000   000        0000 " << endl;
 
 			break;
 		}

@@ -969,12 +969,13 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 				int iCont = 0;
 				for (list<DibujableServer*>::iterator itUser = listaDibujables.begin(); itUser != listaDibujables.end(); ++itUser) {
+
+					if(((*itUser)->vida) != ((*itUser)->vidaAnterior)){
+						enviarDanoAConectados((*itUser)->id,(*itUser)->vida);
+					}
 					if(((*itUser)->vida) >= 10){
 						(*itUser)->desconectar();
 						iCont++;
-					}
-					if(((*itUser)->vida) != ((*itUser)->vidaAnterior)){
-						enviarDanoAConectados((*itUser)->id,(*itUser)->vida);
 					}
 				}
 
