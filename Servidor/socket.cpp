@@ -472,7 +472,7 @@ void avanzarAlSiguienteNivel(){
 		(*it)->estaDisparando = false;
 		(*it)->estaEnElPiso = true;
 		(*it)->apunta = false;
-		if(((*it)->vida) > 0){
+		if((((*it)->vida) > 0) && (((*it)->vida) < 10)){
 			(*it)->vida = 0;
 		}
 
