@@ -338,7 +338,7 @@ bool mySocket::recibirMensaje(bool &pasarNivel){
 				vida = 10;
 			}
 
-			cout << "VIDA: " << vida << endl;
+			//cout << "VIDA: " << vida << endl;
 
 			grafica.actualizarVida(id, vida);
 

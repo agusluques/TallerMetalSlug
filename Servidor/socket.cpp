@@ -971,17 +971,23 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				for (list<DibujableServer*>::iterator itUser = listaDibujables.begin(); itUser != listaDibujables.end(); ++itUser) {
 
 					if(((*itUser)->vida) != ((*itUser)->vidaAnterior)){
+						cout << "VIDA ANTERIOR: " << ((*itUser)->vidaAnterior) << endl;
+						cout << "VIDA NUEVA: " << ((*itUser)->vida) << endl;
+
 						enviarDanoAConectados((*itUser)->id,(*itUser)->vida);
+						((*itUser)->vidaAnterior) = ((*itUser)->vida);
 					}
 					if(((*itUser)->vida) >= 10){
+						cout << "VIDA ACA: " << ((*itUser)->vida) << endl;
+						enviarDanoAConectados((*itUser)->id,(*itUser)->vida);
 						(*itUser)->desconectar();
 						iCont++;
 					}
 				}
 
 				if(cantidadJugadores == iCont){
-					cout << "GAME OVER!" << endl;
-					sleep(3);
+					//cout << "GAME OVER!" << endl;
+					sleep(1);
 					terminarJuego();
 				}
 
