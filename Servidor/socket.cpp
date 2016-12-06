@@ -1198,7 +1198,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 							}
 						}
 
-						if (camaraX >= 1000){ //8075
+						if (camaraX >= 8075){ //8075
 							avanzarCamara = false;
 							jefePresente = true;
 							contenedorEnemigos.iniciarJefe(camaraX, nivelActual);
