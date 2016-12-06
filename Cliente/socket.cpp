@@ -512,15 +512,15 @@ void mySocket::cambiarDeNivel(){
 
 	int anchoFondo1, tamId1, anchoFondo2,  tamId2, anchoFondo3, tamId3;
 	recibirMensaje(&tamId1, sizeof(int));
-	cout << "TAMID1: " << tamId1 << endl;
+	//cout << "TAMID1: " << tamId1 << endl;
 	char idFondo1[tamId1];
 	recibirMensaje(&idFondo1, sizeof(char)*tamId1);
-	cout << "ID Fondo 1: " << idFondo1 << endl;
+	//cout << "ID Fondo 1: " << idFondo1 << endl;
 	recibirMensaje(&anchoFondo1, sizeof(int));
-	cout << "Ancho 1: " << anchoFondo1 << endl;
+	//cout << "Ancho 1: " << anchoFondo1 << endl;
 	string resultado1(idFondo1, tamId1);
 	resultado1 = "img/fondos/" + resultado1;
-	cout << "FONDO 1: " << resultado1 << endl;
+	//cout << "FONDO 1: " << resultado1 << endl;
 
 	recibirMensaje(&tamId2, sizeof(int));
 	char idFondo2[tamId2];

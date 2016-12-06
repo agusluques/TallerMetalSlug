@@ -699,7 +699,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 			//cargarFondos(archivoXml);
 			inicioGrafica = true;
 			int tamano = listaFondos.size();
-			cout << "TAMANO: " << tamano << endl;
+			//cout << "TAMANO: " << tamano << endl;
 			enviarMensaje(newsockfd, &tamano, sizeof(int));
 
 			if(nivelActual == 1){
@@ -971,14 +971,14 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 				for (list<DibujableServer*>::iterator itUser = listaDibujables.begin(); itUser != listaDibujables.end(); ++itUser) {
 
 					if(((*itUser)->vida) != ((*itUser)->vidaAnterior)){
-						cout << "VIDA ANTERIOR: " << ((*itUser)->vidaAnterior) << endl;
-						cout << "VIDA NUEVA: " << ((*itUser)->vida) << endl;
+						//cout << "VIDA ANTERIOR: " << ((*itUser)->vidaAnterior) << endl;
+						//cout << "VIDA NUEVA: " << ((*itUser)->vida) << endl;
 
 						enviarDanoAConectados((*itUser)->id,(*itUser)->vida);
 						((*itUser)->vidaAnterior) = ((*itUser)->vida);
 					}
 					if(((*itUser)->vida) >= 10){
-						cout << "VIDA ACA: " << ((*itUser)->vida) << endl;
+						//cout << "VIDA ACA: " << ((*itUser)->vida) << endl;
 						enviarDanoAConectados((*itUser)->id,(*itUser)->vida);
 						(*itUser)->desconectar();
 						iCont++;
