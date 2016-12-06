@@ -969,7 +969,7 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 				int iCont = 0;
 				for (list<DibujableServer*>::iterator itUser = listaDibujables.begin(); itUser != listaDibujables.end(); ++itUser) {
-					if(((*itUser)->vida) == 10){
+					if(((*itUser)->vida) >= 10){
 						(*itUser)->desconectar();
 						iCont++;
 					}
@@ -980,6 +980,8 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 				if(cantidadJugadores == iCont){
 					cout << "GAME OVER!" << endl;
+					sleep(3);
+					terminarJuego();
 				}
 
 
