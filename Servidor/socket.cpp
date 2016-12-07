@@ -405,7 +405,7 @@ void avanzarPantallaScore(){
 		for (list<usuarioClass*>::iterator it = listaDeUsuarios.begin(); it != listaDeUsuarios.end(); ++it) {
 			if((**it).estaConectado()){
 				char nombreAutor[50] = "tu vieja";
-				if((*itD)->estaVivo){
+				if((*itD)->estaVivo && (*itD)->estaConectado()){
 					mensajeClass* mensajeObj = new mensajeClass(nombreAutor, (**it).numCliente(), (*itD)->id, (*itD)->x, (*itD)->y, 0, 9, (*itD)->flip, 0, 0);
 					listaDeMensajes.push_back(mensajeObj);
 				}
@@ -481,8 +481,13 @@ void avanzarAlSiguienteNivel(){
 		(*it)->setX(1+rand() % (150));
 		(*it)->setY(ALTO_VENTANA-100);
 		//me saca a la momia si esta desconectado..
-		(*it)->setSpX(0);
-		(*it)->setSpY(1);
+		if((*it)->estaConectado()){
+			(*it)->setSpX(0);
+			(*it)->setSpY(1);
+		}else{
+			(*it)->setSpX(1);
+			(*it)->setSpY(1);
+		}
 
 		enviarAConectados(i ,(*it)->x, (*it)->y, (*it)->spX, (*it)->spY, (*it)->flip, true, 0);
 	}
