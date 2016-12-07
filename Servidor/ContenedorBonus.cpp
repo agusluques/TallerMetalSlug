@@ -60,8 +60,10 @@ bool ContenedorBonus::detectarColision(list<Bonus>* listaBonusDeBaja, list<Bonus
 			int xPersonaje = (*itPjs)->x;
 			int yPersonaje = (*itPjs)->y;
 			int tipoBonus = it->getTipoBonus();
+			bool vivo = (*itPjs)->estaVivo;
+			bool online = (*itPjs)->estaOnline;
 
-			if((xPersonaje > xBonus - 40) && (xPersonaje < xBonus + 40) && ((yBonus - yPersonaje) <= 40)){
+			if((xPersonaje > xBonus - 40) && (xPersonaje < xBonus + 40) && ((yBonus - yPersonaje) <= 40) && (vivo) && (online)){
 
 				huboColision = true;
 				if(tipoBonus == 6){
