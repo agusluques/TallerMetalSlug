@@ -1211,7 +1211,9 @@ void *atender_cliente(void *arg) //FUNCION PROTOCOLO
 
 						if(avanzarCamara){
 							if(xMin > camaraX){
-								camaraX += VELOCIDAD_JUGADOR;
+								if(VELOCIDAD_JUGADOR > 0){
+									camaraX += VELOCIDAD_JUGADOR;
+								}
 							}
 						}
 
